@@ -1,0 +1,17 @@
+{
+  "api": "1.4.341",
+  "avg_fps": 39.2,
+  "avg_frame_ms": 25.52,
+  "avg_gpu_ms": 24.93,
+  "cpu": "Intel(R) Core(TM) Ultra 9 285H",
+  "engine": "4.7.2-stable (official)",
+  "frames": 1568,
+  "gpu": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "gpu_vendor": "NVIDIA",
+  "low_1pct_fps": 27.5,
+  "p99_frame_ms": 35.28,
+  "preset": "high",
+  "resolution": "2560x1440",
+  "seconds_measured": 40.0,
+  "seed": 4242
+}

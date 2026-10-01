@@ -168,6 +168,21 @@ static func make_environment(preset: String) -> Environment:
 	e.volumetric_fog_temporal_reprojection_enabled = true
 	e.volumetric_fog_temporal_reprojection_amount = 0.9
 
+	# Profiling switches: --env-off=fog,sdfgi,ssil,ssr,ssao,glow
+	var off := String(Game.opts.get("env-off", "")).split(",")
+	if "fog" in off:
+		e.volumetric_fog_enabled = false
+	if "sdfgi" in off:
+		e.sdfgi_enabled = false
+	if "ssil" in off:
+		e.ssil_enabled = false
+	if "ssr" in off:
+		e.ssr_enabled = false
+	if "ssao" in off:
+		e.ssao_enabled = false
+	if "glow" in off:
+		e.glow_enabled = false
+
 	e.adjustment_enabled = true
 	e.adjustment_brightness = 1.0
 	e.adjustment_contrast = 1.04

@@ -1,0 +1,10 @@
+{
+  "name": "noclip-spike-threejs",
+  "private": true,
+  "type": "module",
+  "scripts": { "capture": "node capture.mjs" },
+  "dependencies": {
+    "three": "0.186.1",
+    "playwright-core": "^1.55.0"
+  }
+}

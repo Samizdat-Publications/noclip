@@ -77,7 +77,7 @@ func _run_focus(delta: float) -> void:
 func _save(path: String) -> void:
 	var img := get_viewport().get_texture().get_image()
 	img.save_png(path)
-	_log.append({"t": snappedf(Game.clock, 0.001), "frame": Game.frame, "file": path.get_file(),
+	_log.append({"t": snappedf(Game.clock, 0.001), "frame": Game.frame, "render_frame": Game.frame - 1, "file": path.get_file(),
 		"pos": [snappedf(player.global_position.x, 0.01), snappedf(player.global_position.z, 0.01)],
 		"camcorder": player.camcorder.active})
 

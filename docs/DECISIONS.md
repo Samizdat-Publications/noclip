@@ -20,3 +20,10 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 - Choice: do not touch the guard (settings deny it and CLAUDE.md forbids it). `tools/critic_extract.py` pulls the critic's review verbatim out of its own transcript. Optional one-line fix for Stewart is in NEEDS_STEWART.
 - Alternatives: edit the guard (forbidden), write a second critic agent (would weaken blindness guarantees).
 - Revert: once the guard allows the handback tool, use the critic's reply directly; the extractor still works as a fallback.
+
+## D005 (2026-10-01, S01) Progress pictures for every generated image (Stewart's rule)
+- Every generated PNG (look-dev renders, review captures, critic packets, previews) gets a copy in `progress/` named `NNNN_YYYY-MM-DD_HHMM_sSS_label.jpg`, indexed in `progress/INDEX.md` with what it shows and the git commit. `tools/progress.py` does it; `tools/lookdev.py` and `tools/capture/capture.py` call it automatically. Copies are full-resolution JPEG (quality 92) so the repo stays light; full PNG frames are kept locally in `review/archive/builds/`.
+
+## D006 (2026-10-01, S01) Fluorescent panels are shadowed spot lights, not AreaLight3D (for now)
+- AreaLight3D (new in 4.7) gives correct rectangular lighting, but its shadows draw large curved projection artifacts on floors and walls (progress/0007). Without shadows, light leaks through walls and kills the dark rooms. Choice: SpotLight3D per panel (82 degree cone, soft PCSS via light_size), and the rectangular lens reflections come from SSR of the real emissive lens mesh.
+- Revert: run with `--arealights`, or flip the default in level0_hero.gd once Godot fixes area-light shadows.

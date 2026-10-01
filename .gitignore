@@ -20,3 +20,4 @@ build/
 tools/capture/out/
 spike/threejs/out/
 *.tmp
+review/archive/bakeoff/

@@ -138,7 +138,7 @@ func update_move(player: Node, delta: float) -> void:
 			_cam_cool = rng.randf_range(6.0, 16.0)
 	elif _cam_cool <= 0.0 and rng.randf() < delta * 0.4:
 		_cam_left = rng.randf_range(4.0, 9.0)
-	camcorder = _cam_left > 0.0
+	camcorder = _cam_left > 0.0 and not Game.opts.has("nocam")
 
 	if mode == Mode.PAUSE or mode == Mode.HIDE:
 		crouch = mode == Mode.HIDE

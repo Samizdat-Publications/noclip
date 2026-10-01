@@ -13,6 +13,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(__file__))
 import paths  # noqa: E402
+import progress  # noqa: E402
 
 
 def main():
@@ -22,6 +23,8 @@ def main():
     ap.add_argument("--focus", default="res://data/focus_level0.json")
     ap.add_argument("--extra", nargs="*", default=[])
     ap.add_argument("--cols", type=int, default=2)
+    ap.add_argument("--label", default="lookdev", help="progress picture label")
+    ap.add_argument("--note", default="", help="progress picture note (what changed)")
     a = ap.parse_args()
     out = os.path.abspath(a.out)
     for f in glob.glob(os.path.join(out, "focus", "*.png")):
@@ -44,6 +47,7 @@ def main():
         im = Image.open(s).convert("RGB")
         sheet.paste(im.resize((w, h), Image.LANCZOS), ((i % cols) * w, (i // cols) * h))
     sheet.save(os.path.join(out, "lookdev.jpg"), quality=88)
+    progress.save(sheet, a.label, a.note or ("look-dev poses " + " ".join(a.extra)).strip())
     print("sizes:", Image.open(shots[0]).size, "shots:", len(shots), "->", os.path.join(out, "lookdev.jpg"))
 
 

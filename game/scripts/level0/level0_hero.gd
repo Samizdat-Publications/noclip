@@ -31,6 +31,7 @@ var _thud_timer := 0.0
 var _rng_amb: RandomNumberGenerator
 var _thud_player: AudioStreamPlayer3D
 var _listener_pos := Vector3.ZERO
+var _dump := {"missing_tiles": [], "special_tiles": [], "decals": []}
 
 
 func build(p_seed: int) -> void:
@@ -57,6 +58,25 @@ func build(p_seed: int) -> void:
 	_build_collision()
 	_build_nav()
 	_build_ambience()
+	if Game.opts.has("dump-scene"):
+		_write_dump(String(Game.opts["dump-scene"]))
+
+
+## Everything the seed decided, for other renderers (engine bake-off) and for tests.
+func _write_dump(path: String) -> void:
+	var fx := []
+	for f in fixtures:
+		fx.append({"x": f.position.x, "z": f.position.z, "state": f.state, "energy": f.base_energy,
+			"tint": [f.tint.r, f.tint.g, f.tint.b], "cathode": f.cathode_glow})
+	_dump["seed"] = space_seed
+	_dump["seed_offset"] = [seed_offset.x, seed_offset.y]
+	_dump["leaks"] = leaks.map(func(v): return [v.x, v.y])
+	_dump["fixtures"] = fx
+	_dump["fixture_light_energy"] = Fixture.LIGHT_ENERGY
+	_dump["note"] = "Ceiling tiles not listed in missing_tiles and not covered by a fixture are clean tiles (rnd from special_tiles only when stained). special_tiles lists every placed tile: [i, j, rnd, stained, sag, drop]."
+	var fh := FileAccess.open(path, FileAccess.WRITE)
+	fh.store_string(JSON.stringify(_dump))
+	fh.close()
 
 
 # ---------------------------------------------------------------- layout helpers
@@ -330,7 +350,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 			light.distance_fade_enabled = true
 			light.distance_fade_begin = 22.0
 			light.distance_fade_length = 6.0
-			light.distance_fade_shadow = 13.0
+			light.distance_fade_shadow = float(Game.opts.get("shadow_dist", "13"))
 			fx.add_child(light)
 			fx.light = light
 			if hum_a:
@@ -411,6 +431,7 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 				stained = 1.0
 			var missing := r.randf() < 0.006 and center.distance_to(spawn) > 4.0
 			if missing:
+				_dump["missing_tiles"].append([i, j])
 				continue
 			var sag := 0.0
 			var drop := 0.0
@@ -418,6 +439,7 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 				sag = 0.5
 				drop = r.randf_range(0.015, 0.04)
 			var col := Color(rnd, stained, sag, 1.0)
+			_dump["special_tiles"].append([i, j, snappedf(rnd, 0.001), stained, sag, snappedf(drop, 0.0001)])
 			var y := H
 			var pts := [Vector3(x0, y, z0), Vector3(x0 + TILE, y, z0), Vector3(x0 + TILE, y - drop, z0 + TILE), Vector3(x0, y - drop * 0.4, z0 + TILE)]
 			kit.quad("ceiling", pts, Vector3.DOWN, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)], col)
@@ -453,6 +475,9 @@ func _decal(tex_name: String, pos: Vector3, basis: Basis, size: Vector3, modulat
 	d.distance_fade_length = 6.0
 	d.transform = Transform3D(basis, pos)
 	add_child(d)
+	_dump["decals"].append({"tex": tex_name, "origin": [pos.x, pos.y, pos.z],
+		"basis": [basis.x.x, basis.x.y, basis.x.z, basis.y.x, basis.y.y, basis.y.z, basis.z.x, basis.z.y, basis.z.z],
+		"size": [size.x, size.y, size.z], "modulate": [modulate.r, modulate.g, modulate.b, modulate.a]})
 	return d
 
 

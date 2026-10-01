@@ -32,6 +32,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 import paths  # noqa: E402
+import progress  # noqa: E402
 
 ROOT = paths.ROOT
 REVIEW = os.path.join(ROOT, "review")
@@ -92,6 +93,8 @@ def main():
     ap.add_argument("--perf-seconds", type=float, default=40.0)
     ap.add_argument("--skip-perf", action="store_true")
     ap.add_argument("--extra", nargs="*", default=[], help="extra game args, e.g. preset=medium")
+    ap.add_argument("--label", default="review-build", help="progress picture label")
+    ap.add_argument("--note", default="", help="progress picture note")
     a = ap.parse_args()
 
     seed = a.seed if a.seed is not None else random.SystemRandom().randint(1, 999999)
@@ -135,8 +138,9 @@ def main():
     # 3. Realtime perf run.
     perf = os.path.join(raw, "perf.json")
     if not a.skip_perf:
+        perf_extra = [e for e in extra if not e.startswith(("--track", "--dump-scene"))]
         cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--",
-               f"--seed={seed}", f"--perf={perf}", f"--duration={a.perf_seconds + 6.0}"] + extra
+               f"--seed={seed}", f"--perf={perf}", f"--duration={a.perf_seconds + 6.0}"] + perf_extra
         run(cmd, 600, "perf run")
 
     # 4. Video: trim to the bot run, H.264 + AAC.
@@ -188,6 +192,11 @@ def main():
         shutil.copy(perf, arch)
     os.makedirs(THUMBS, exist_ok=True)
     contact(sorted(glob.glob(os.path.join(arch, "frames", "*.png"))), os.path.join(THUMBS, f"{build_id}.jpg"))
+    progress.save(Image.open(os.path.join(THUMBS, f"{build_id}.jpg")), f"{a.label}-frames",
+                  (a.note + " | " if a.note else "") + f"all review frames, build {build_id}, seed {seed}")
+    sheets_now = sorted(glob.glob(os.path.join(arch, "sheets", "*.png")))
+    if sheets_now:
+        progress.save(progress.grid(sheets_now), f"{a.label}-motion-sheets", f"motion sheets (3x3, 0.4 s apart), build {build_id}")
     meta = {"build_id": build_id, "seed": seed, "git": git_hash(), "date": stamp, "duration": a.duration,
             "stills": len(stills), "focus": len(focus), "sheets": len(bursts), "audio": lufs[-2:], "extra": a.extra}
     json.dump(meta, open(os.path.join(arch, "meta.json"), "w", encoding="utf-8"), indent=2)

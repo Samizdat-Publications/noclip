@@ -1,0 +1,198 @@
+{
+ "seed": 4242,
+ "frames": {
+  "frame_01.png": {
+   "kind": "track",
+   "render_frame": 170,
+   "src": "s_000.png"
+  },
+  "frame_02.png": {
+   "kind": "track",
+   "render_frame": 398,
+   "src": "s_001.png"
+  },
+  "frame_03.png": {
+   "kind": "track",
+   "render_frame": 541,
+   "src": "s_002.png"
+  },
+  "frame_04.png": {
+   "kind": "track",
+   "render_frame": 744,
+   "src": "s_003.png"
+  },
+  "frame_05.png": {
+   "kind": "track",
+   "render_frame": 861,
+   "src": "s_004.png"
+  },
+  "frame_06.png": {
+   "kind": "track",
+   "render_frame": 1060,
+   "src": "s_005.png"
+  },
+  "frame_07.png": {
+   "kind": "track",
+   "render_frame": 1189,
+   "src": "s_006.png"
+  },
+  "frame_08.png": {
+   "kind": "track",
+   "render_frame": 1421,
+   "src": "s_007.png"
+  },
+  "frame_09.png": {
+   "kind": "track",
+   "render_frame": 1592,
+   "src": "s_008.png"
+  },
+  "frame_10.png": {
+   "kind": "pose",
+   "pos": [
+    2.6,
+    1.62,
+    20.6
+   ],
+   "yaw_deg": 0,
+   "pitch_deg": -2,
+   "fov": 78.0,
+   "src": "f_03.png",
+   "note": "yaw_deg is a compass heading: 0 looks toward -Z, 90 toward +X. Camera rotation.y = -radians(yaw_deg), rotation.x = radians(pitch_deg)."
+  },
+  "frame_11.png": {
+   "kind": "pose",
+   "pos": [
+    11.8,
+    1.62,
+    6.9
+   ],
+   "yaw_deg": 180,
+   "pitch_deg": -3,
+   "fov": 78.0,
+   "src": "f_04.png",
+   "note": "yaw_deg is a compass heading: 0 looks toward -Z, 90 toward +X. Camera rotation.y = -radians(yaw_deg), rotation.x = radians(pitch_deg)."
+  },
+  "frame_12.png": {
+   "kind": "pose",
+   "pos": [
+    1.4,
+    1.62,
+    5.2
+   ],
+   "yaw_deg": 90,
+   "pitch_deg": -3,
+   "fov": 78.0,
+   "src": "f_02.png",
+   "note": "yaw_deg is a compass heading: 0 looks toward -Z, 90 toward +X. Camera rotation.y = -radians(yaw_deg), rotation.x = radians(pitch_deg)."
+  },
+  "frame_13.png": {
+   "kind": "pose",
+   "pos": [
+    19.5,
+    1.62,
+    12.4
+   ],
+   "yaw_deg": 0,
+   "pitch_deg": -2,
+   "fov": 78.0,
+   "src": "f_01.png",
+   "note": "yaw_deg is a compass heading: 0 looks toward -Z, 90 toward +X. Camera rotation.y = -radians(yaw_deg), rotation.x = radians(pitch_deg)."
+  },
+  "frame_14.png": {
+   "kind": "track",
+   "render_frame": 1718,
+   "src": "s_009.png"
+  },
+  "frame_15.png": {
+   "kind": "track",
+   "render_frame": 1946,
+   "src": "s_010.png"
+  },
+  "frame_16.png": {
+   "kind": "track",
+   "render_frame": 2101,
+   "src": "s_011.png"
+  },
+  "frame_17.png": {
+   "kind": "track",
+   "render_frame": 2248,
+   "src": "s_012.png"
+  },
+  "frame_18.png": {
+   "kind": "track",
+   "render_frame": 2347,
+   "src": "s_013.png"
+  },
+  "frame_19.png": {
+   "kind": "track",
+   "render_frame": 2568,
+   "src": "s_014.png"
+  },
+  "frame_20.png": {
+   "kind": "track",
+   "render_frame": 2729,
+   "src": "s_015.png"
+  },
+  "frame_21.png": {
+   "kind": "pose",
+   "pos": [
+    22.6,
+    1.62,
+    18.0
+   ],
+   "yaw_deg": 90,
+   "pitch_deg": -2,
+   "fov": 78.0,
+   "src": "f_00.png",
+   "note": "yaw_deg is a compass heading: 0 looks toward -Z, 90 toward +X. Camera rotation.y = -radians(yaw_deg), rotation.x = radians(pitch_deg)."
+  }
+ },
+ "sheets": {
+  "sheet_01.png": [
+   338,
+   350,
+   362,
+   374,
+   386,
+   398,
+   410,
+   422,
+   434
+  ],
+  "sheet_02.png": [
+   844,
+   856,
+   868,
+   880,
+   892,
+   904,
+   916,
+   928,
+   940
+  ],
+  "sheet_03.png": [
+   1483,
+   1495,
+   1507,
+   1519,
+   1531,
+   1543,
+   1555,
+   1567,
+   1579
+  ],
+  "sheet_04.png": [
+   2262,
+   2274,
+   2286,
+   2298,
+   2310,
+   2322,
+   2334,
+   2346,
+   2358
+  ]
+ },
+ "sheet_layout": "3x3 grid, 2560x1440 total, each cell 853x480 (LANCZOS), left-to-right, top-to-bottom",
+ "video": "all track frames 0..duration at 30 fps, 1920x1080 H.264, audio copied from spike/threejs/data/audio_4242.m4a"
+}

@@ -50,6 +50,12 @@ func _ready() -> void:
 		cd.setup(Game.capture_dir, Game.duration, player)
 	if Game.is_perf():
 		add_child(PerfRecorder.new())
+	if Game.opts.has("track"):
+		var tr := TrackRecorder.new()
+		tr.out_path = String(Game.opts["track"])
+		tr.space = space as Level0Hero
+		tr.player = player
+		add_child(tr)
 	print("[NOCLIP] gpu=%s api=%s" % [RenderingServer.get_video_adapter_name(), RenderingServer.get_video_adapter_api_version()])
 
 
