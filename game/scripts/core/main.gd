@@ -20,6 +20,7 @@ func _ready() -> void:
 		get_window().borderless = true
 		get_window().position = Vector2i.ZERO
 		get_window().size = Vector2i(int(res[0]), int(res[1]))
+	_apply_render_settings()
 	space = Level0Hero.new()
 	add_child(space)
 	space.build(Game.run_seed)
@@ -57,6 +58,14 @@ func _ready() -> void:
 		tr.player = player
 		add_child(tr)
 	print("[NOCLIP] gpu=%s api=%s" % [RenderingServer.get_video_adapter_name(), RenderingServer.get_video_adapter_api_version()])
+
+
+## Quality knobs that live on the viewport / rendering server (also profiling switches).
+func _apply_render_settings() -> void:
+	var vp := get_viewport()
+	vp.positional_shadow_atlas_size = int(Game.opts.get("atlas", "8192"))
+	vp.positional_shadow_atlas_16_bits = true
+	RenderingServer.positional_soft_shadow_filter_set_quality(int(Game.opts.get("shadowq", "2")))
 
 
 func _make_post() -> void:

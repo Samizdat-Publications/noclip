@@ -1,0 +1,13 @@
+{
+  "method": "procedural PIL/numpy",
+  "seed": 1997,
+  "files": [
+    "decal_chalk_arrow",
+    "decal_chalk_tally",
+    "decal_chalk_x",
+    "decal_footprint_l",
+    "decal_footprint_r",
+    "exit_sign_emission"
+  ],
+  "cost_usd": 0
+}

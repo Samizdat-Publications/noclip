@@ -31,6 +31,7 @@ var _thud_timer := 0.0
 var _rng_amb: RandomNumberGenerator
 var _thud_player: AudioStreamPlayer3D
 var _listener_pos := Vector3.ZERO
+var _fallen_tile := Vector2i(-1, -1)
 var _dump := {"missing_tiles": [], "special_tiles": [], "decals": []}
 
 
@@ -51,12 +52,17 @@ func build(p_seed: int) -> void:
 	_build_shell(kit)
 	_build_walls(kit)
 	_build_doors(kit)
+	_build_fake_doors(kit)
+	_build_exit_signs(kit)
+	_build_fallen_tile(kit)
 	var fixture_cells := _build_fixtures(kit)
 	_build_ceiling(kit, fixture_cells)
 	kit.commit(self, mats, ["tbar", "housing"])
 	_build_decals()
+	_build_props()
 	_build_collision()
 	_build_nav()
+	_build_traces()
 	_build_ambience()
 	if Game.opts.has("dump-scene"):
 		_write_dump(String(Game.opts["dump-scene"]))
@@ -205,19 +211,20 @@ func _build_doors(kit: MeshKit) -> void:
 		var a: float = minf(d[0], d[2]) if horiz else minf(d[1], d[3])
 		var b: float = maxf(d[0], d[2]) if horiz else maxf(d[1], d[3])
 		var c: float = d[1] if horiz else d[0]
+		var dh: float = float(d[4]) if d.size() > 4 else DH   # some doorways are slightly too small
 		var boxes := []  # [key, min(along, y, across), max(along, y, across)]
-		boxes.append(["wall", Vector3(a, DH, c - T * 0.5), Vector3(b, H, c + T * 0.5)])
-		boxes.append(["trim", Vector3(a, 0.0, c - T * 0.5), Vector3(a + li, DH, c + T * 0.5)])
-		boxes.append(["trim", Vector3(b - li, 0.0, c - T * 0.5), Vector3(b, DH, c + T * 0.5)])
-		boxes.append(["trim", Vector3(a, DH - li, c - T * 0.5), Vector3(b, DH, c + T * 0.5)])
+		boxes.append(["wall", Vector3(a, dh, c - T * 0.5), Vector3(b, H, c + T * 0.5)])
+		boxes.append(["trim", Vector3(a, 0.0, c - T * 0.5), Vector3(a + li, dh, c + T * 0.5)])
+		boxes.append(["trim", Vector3(b - li, 0.0, c - T * 0.5), Vector3(b, dh, c + T * 0.5)])
+		boxes.append(["trim", Vector3(a, dh - li, c - T * 0.5), Vector3(b, dh, c + T * 0.5)])
 		for s in [-1.0, 1.0]:
 			var f: float = c + s * T * 0.5
 			var f2: float = f + s * cp
 			var lo := minf(f, f2)
 			var hi := maxf(f, f2)
-			boxes.append(["trim", Vector3(a - cw, 0.0, lo), Vector3(a, DH + cw, hi)])
-			boxes.append(["trim", Vector3(b, 0.0, lo), Vector3(b + cw, DH + cw, hi)])
-			boxes.append(["trim", Vector3(a - cw, DH, lo), Vector3(b + cw, DH + cw, hi)])
+			boxes.append(["trim", Vector3(a - cw, 0.0, lo), Vector3(a, dh + cw, hi)])
+			boxes.append(["trim", Vector3(b, 0.0, lo), Vector3(b + cw, dh + cw, hi)])
+			boxes.append(["trim", Vector3(a - cw, dh, lo), Vector3(b + cw, dh + cw, hi)])
 		for bx in boxes:
 			var mn: Vector3 = bx[1]
 			var mx: Vector3 = bx[2]
@@ -225,7 +232,60 @@ func _build_doors(kit: MeshKit) -> void:
 				kit.box(bx[0], mn, mx, MeshKit.ALL, H)
 			else:
 				kit.box(bx[0], Vector3(mn.z, mn.y, mn.x), Vector3(mx.z, mx.y, mx.x), MeshKit.ALL, H)
-		solids.append(Rect2())  # doors add no floor obstacles
+
+
+## A finished door frame and a closed door set into a solid wall. It does not open.
+func _build_fake_doors(kit: MeshKit) -> void:
+	for fd in L.get("fake_doors", []):
+		var p := Vector2(fd[0], fd[1])
+		var n := Vector2(fd[2], fd[3])
+		var t := Vector2(-n.y, n.x)
+		var w := 0.92
+		var cw := 0.07
+		var bx := []
+		# casing: two jambs and a head, then the slab slightly proud of the wall, then a knob
+		bx.append(["trim", -w * 0.5 - cw, -w * 0.5, 0.0, DH + cw, 0.0, 0.018])
+		bx.append(["trim", w * 0.5, w * 0.5 + cw, 0.0, DH + cw, 0.0, 0.018])
+		bx.append(["trim", -w * 0.5 - cw, w * 0.5 + cw, DH, DH + cw, 0.0, 0.018])
+		bx.append(["door", -w * 0.5 + 0.004, w * 0.5 - 0.004, 0.006, DH - 0.004, 0.0, 0.012])
+		bx.append(["knob", w * 0.5 - 0.11, w * 0.5 - 0.06, 0.96, 1.01, 0.012, 0.07])
+		for b in bx:
+			var a0: float = b[1]
+			var a1: float = b[2]
+			var y0: float = b[3]
+			var y1: float = b[4]
+			var o0: float = b[5]
+			var o1: float = b[6]
+			var c0 := p + t * a0 + n * o0
+			var c1 := p + t * a1 + n * o1
+			kit.box(b[0], Vector3(minf(c0.x, c1.x), y0, minf(c0.y, c1.y)), Vector3(maxf(c0.x, c1.x), y1, maxf(c0.y, c1.y)), MeshKit.ALL, H)
+
+
+## Exit signs: a lit box above a doorway with a faint red glow on the wall around it.
+func _build_exit_signs(kit: MeshKit) -> void:
+	for es in L.get("exit_signs", []):
+		var p := Vector3(es[0], 2.33, es[1])
+		var n := Vector3(es[2], 0, es[3])
+		var t := Vector3.UP.cross(n)   # the viewer's right when facing the sign
+		var face := MeshInstance3D.new()
+		var q := QuadMesh.new()
+		q.size = Vector2(0.32, 0.16)
+		face.mesh = q
+		face.material_override = mats["exit"]
+		face.transform = Transform3D(Basis(t, Vector3.UP, n), p + n * 0.051)
+		face.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(face)
+		var a := p - t * 0.17 - Vector3(0, 0.09, 0)
+		var b := p + t * 0.17 + Vector3(0, 0.09, 0) + n * 0.05
+		kit.box("housing", Vector3(minf(a.x, b.x), a.y, minf(a.z, b.z)), Vector3(maxf(a.x, b.x), b.y, maxf(a.z, b.z)), MeshKit.ALL, H)
+		var glow := OmniLight3D.new()
+		glow.light_color = Color(1.0, 0.18, 0.1)
+		glow.light_energy = 0.35
+		glow.omni_range = 1.9
+		glow.omni_attenuation = 1.6
+		glow.shadow_enabled = false
+		glow.position = p + n * 0.25
+		add_child(glow)
 
 
 func _build_fixtures(kit: MeshKit) -> Dictionary:
@@ -307,7 +367,9 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 				st = Fixture.State.ON
 			var tint_roll := r.randf()
 			var tint := Color(1.0, 0.975, 0.9)
-			if tint_roll < 0.18:
+			if tint_roll < 0.035:
+				tint = Color(0.74, 0.9, 1.0)     # a cold replacement tube that does not match
+			elif tint_roll < 0.18:
 				tint = Color(0.93, 1.0, 0.86)    # greenish cool-white tube
 			elif tint_roll < 0.3:
 				tint = Color(1.0, 0.93, 0.84)    # warmer, slightly pink aged tube
@@ -333,7 +395,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 				light.set("area_normalize_energy", true)
 			else:
 				var sl := SpotLight3D.new()
-				sl.spot_range = 13.0
+				sl.spot_range = float(Game.opts.get("spot_range", "7"))
 				sl.spot_angle = float(Game.opts.get("spot_angle", "82"))
 				sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "0.7"))
 				sl.spot_attenuation = float(Game.opts.get("spot_atten", "1.4"))
@@ -429,7 +491,7 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 					stained = 1.0
 			if stained == 0.0 and r.randf() < 0.02:
 				stained = 1.0
-			var missing := r.randf() < 0.006 and center.distance_to(spawn) > 4.0
+			var missing := (r.randf() < 0.006 and center.distance_to(spawn) > 4.0) or Vector2i(i, j) == _fallen_tile
 			if missing:
 				_dump["missing_tiles"].append([i, j])
 				continue
@@ -452,6 +514,37 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 	for k in nx + 1:
 		var x := k * TILE
 		kit.box("tbar", Vector3(x - hw, H - hd, 0), Vector3(x + hw, H, extent.y), MeshKit.NY | MeshKit.PX | MeshKit.NX, H)
+
+
+## One ceiling tile has come down and lies on the carpet below its hole.
+func _build_fallen_tile(kit: MeshKit) -> void:
+	var r := Game.rng("level0:fallen")
+	var spawn := Vector2(L["spawn"][0], L["spawn"][1])
+	for k in 40:
+		var i := r.randi_range(2, int(extent.x / TILE) - 3)
+		var j := r.randi_range(2, int(extent.y / TILE) - 3)
+		var c := Vector2((i + 0.5) * TILE, (j + 0.5) * TILE)
+		if c.distance_to(spawn) < 5.0 or _hits_solid(Rect2(c - Vector2(0.7, 0.7), Vector2(1.4, 1.4))):
+			continue
+		_fallen_tile = Vector2i(i, j)
+		var ang := r.randf_range(-0.6, 0.6)
+		var off := Vector2(r.randf_range(-0.25, 0.25), r.randf_range(-0.25, 0.25))
+		var b := Basis(Vector3.UP, ang)
+		var center := Vector3(c.x + off.x, 0.012, c.y + off.y)
+		var hs := TILE * 0.5 - 0.01
+		var tilt := r.randf_range(0.0, 0.035)
+		var pts := []
+		for q in [Vector3(-hs, 0, -hs), Vector3(hs, 0, -hs), Vector3(hs, tilt, hs), Vector3(-hs, tilt, hs)]:
+			pts.append(center + b * q)
+		kit.quad("ceiling", pts, Vector3.UP, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)], Color(r.randf(), 1.0, 0.6, 1.0))
+		# chipped edges
+		for e in 4:
+			var a: Vector3 = pts[e]
+			var bb: Vector3 = pts[(e + 1) % 4]
+			var sides: Array[Vector3] = [Vector3.FORWARD, Vector3.RIGHT, Vector3.BACK, Vector3.LEFT]
+			var nrm: Vector3 = b * sides[e]
+			kit.quad("ceiling", [a, bb, bb - Vector3(0, 0.014, 0), a - Vector3(0, 0.014, 0)], nrm, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 0.02), Vector2(0, 0.02)], Color(0.2, 1.0, 0.8, 1.0))
+		return
 
 
 # ---------------------------------------------------------------- decals
@@ -545,6 +638,110 @@ func _build_decals() -> void:
 		var pos := Vector3(px, 0.28, pz) + n * T * 0.5
 		var gw := r.randf_range(1.2, 2.8)
 		_decal("decal_wall_grime_low", pos, _basis_facing(n), Vector3(gw, 0.3, 0.6), Color(1, 1, 1, r.randf_range(0.5, 0.9)))
+
+
+## Traces of people who were here before: chalk on the walls and a wet footprint trail
+## that walks up to the door that does not open, and stops.
+func _build_traces() -> void:
+	var r := Game.rng("level0:traces")
+	var walls: Array = L["walls"]
+	var chalk := [["decal_chalk_arrow", Vector3(0.95, 0.3, 0.48)], ["decal_chalk_tally", Vector3(0.8, 0.3, 0.4)],
+		["decal_chalk_x", Vector3(0.62, 0.3, 0.62)], ["decal_chalk_arrow", Vector3(0.8, 0.3, 0.4)], ["decal_chalk_tally", Vector3(0.6, 0.3, 0.3)]]
+	var placed := 0
+	var tries := 0
+	while placed < chalk.size() and tries < 200:
+		tries += 1
+		var w: Array = walls[r.randi() % walls.size()]
+		var length: float = absf(w[2] - w[0]) + absf(w[3] - w[1])
+		if length < 2.5:
+			continue
+		var horiz := _is_horizontal(w)
+		var t := r.randf_range(0.2, 0.8)
+		var px: float = lerpf(w[0], w[2], t)
+		var pz: float = lerpf(w[1], w[3], t)
+		var side := 1.0 if r.randf() < 0.5 else -1.0
+		var n := Vector3(0, 0, side) if horiz else Vector3(side, 0, 0)
+		var probe := Vector3(px, 0, pz) + n * 0.6
+		if probe.x < 0.3 or probe.z < 0.3 or probe.x > extent.x - 0.3 or probe.z > extent.y - 0.3 or not is_walkable(probe):
+			continue
+		var c: Array = chalk[placed]
+		var spin := r.randf_range(-0.08, 0.08)
+		var pos := Vector3(px, r.randf_range(1.05, 1.5), pz) + n * T * 0.5
+		var b := _basis_facing(n).rotated(n, spin)
+		if c[0] == "decal_chalk_arrow" and r.randf() < 0.5:
+			b = b.rotated(n, PI)
+		_decal(c[0], pos, b, c[1], Color(1, 1, 1, r.randf_range(0.65, 0.95)))
+		placed += 1
+	# Footprints to the first fake door.
+	var fds: Array = L.get("fake_doors", [])
+	if fds.is_empty():
+		return
+	var fd: Array = fds[0]
+	var door := Vector3(fd[0] + fd[2] * 0.35, 0.0, fd[1] + fd[3] * 0.35)
+	var starts := []
+	for it in get_interest_points():
+		var d: float = it["pos"].distance_to(door)
+		if d > 9.0 and d < 18.0:
+			starts.append(it["pos"])
+	if starts.is_empty():
+		return
+	var from: Vector3 = starts[r.randi() % starts.size()]
+	var path := find_path(from, door)
+	if path.size() < 2:
+		return
+	var pts: Array[Vector3] = []
+	var step := 0.36
+	var acc := 0.0
+	for k in range(path.size() - 1):
+		var a: Vector3 = path[k]
+		var bb: Vector3 = path[k + 1]
+		var seg := bb.distance_to(a)
+		while acc <= seg:
+			pts.append(a.lerp(bb, acc / maxf(seg, 0.001)))
+			acc += step
+		acc -= seg
+	var total := pts.size()
+	for k in total:
+		var here: Vector3 = pts[k]
+		var nxt: Vector3 = pts[mini(k + 1, total - 1)] if k < total - 1 else Vector3(fd[0], 0, fd[1])
+		var dir := Vector3(nxt.x - here.x, 0, nxt.z - here.z)
+		if dir.length() < 0.01:
+			dir = Vector3(-fd[2], 0, -fd[3])
+		dir = dir.normalized()
+		var left := k % 2 == 0
+		var side_v := Vector3.UP.cross(dir) * (0.1 if left else -0.1)
+		var x := Vector3.UP.cross(-dir)
+		var b := Basis(x, Vector3.UP, -dir).rotated(Vector3.UP, r.randf_range(-0.12, 0.12))
+		var age := float(k) / maxf(total - 1, 1)
+		_decal("decal_footprint_l" if left else "decal_footprint_r", here + side_v + Vector3(0, 0.01, 0), b,
+			Vector3(0.13, 0.25, 0.3), Color(1, 1, 1, lerpf(0.25, 0.9, age)))
+
+
+## Props from pipeline/blender (if built): an office chair, an old monitor, boxes.
+func _build_props() -> void:
+	var r := Game.rng("level0:props")
+	var spots := {
+		"prop_office_chair": [[24.3, 6.6], [20.2, 3.1], [27.4, 10.6]],
+		"prop_crt_monitor": [[9.6, 0.45], [5.6, 12.6], [16.4, 20.6]],
+		"prop_cardboard_box": [[0.45, 6.0], [28.6, 20.5], [12.4, 21.2], [7.0, 0.45]],
+	}
+	var counts := {"prop_office_chair": 1, "prop_crt_monitor": 1, "prop_cardboard_box": 2}
+	for name in spots.keys():
+		var path := "res://assets/props/level0/%s.glb" % name
+		if not ResourceLoader.exists(path):
+			continue
+		var scene: PackedScene = load(path)
+		var cands: Array = spots[name].duplicate()
+		for k in int(counts[name]):
+			if cands.is_empty():
+				break
+			var spot: Array = cands.pop_at(r.randi() % cands.size())
+			var inst := scene.instantiate() as Node3D
+			inst.position = Vector3(spot[0], 0.0, spot[1])
+			inst.rotation.y = r.randf() * TAU
+			add_child(inst)
+			var half := 0.28 if name == "prop_office_chair" else 0.22
+			solids.append(Rect2(spot[0] - half, spot[1] - half, half * 2.0, half * 2.0))
 
 
 # ---------------------------------------------------------------- collision and navigation

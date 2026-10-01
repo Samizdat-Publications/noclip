@@ -1,0 +1,41 @@
+{
+  "box": {
+    "tris_blender": 2688,
+    "bbox_blender_min": [
+      -0.2063,
+      -0.1738,
+      0.0
+    ],
+    "bbox_blender_max": [
+      0.2263,
+      0.1619,
+      0.3073
+    ]
+  },
+  "chair": {
+    "tris_blender": 10464,
+    "bbox_blender_min": [
+      -0.3298,
+      -0.2929,
+      0.0007
+    ],
+    "bbox_blender_max": [
+      0.3188,
+      0.3526,
+      0.9423
+    ]
+  },
+  "crt": {
+    "tris_blender": 4390,
+    "bbox_blender_min": [
+      -0.19,
+      -0.2135,
+      0.0
+    ],
+    "bbox_blender_max": [
+      0.19,
+      0.2167,
+      0.38
+    ]
+  }
+}

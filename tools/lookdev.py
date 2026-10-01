@@ -29,7 +29,7 @@ def main():
     out = os.path.abspath(a.out)
     for f in glob.glob(os.path.join(out, "focus", "*.png")):
         os.remove(f)
-    cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--",
+    cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--quit-after", "3000", "--",
            f"--seed={a.seed}", f"--capture={out}", "--duration=0.5", "--stills=0", "--sheets=0",
            f"--focus={a.focus}"] + [f"--{e}" for e in a.extra]
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)

@@ -88,9 +88,33 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	m["housing"] = housing
 
 	var trim := StandardMaterial3D.new()
-	trim.albedo_color = Color(0.72, 0.66, 0.52)
+	trim.albedo_color = Color(0.6, 0.55, 0.43)
 	trim.roughness = 0.42
 	m["trim"] = trim
+
+	var door := StandardMaterial3D.new()
+	door.albedo_color = Color(0.5, 0.45, 0.35)
+	door.roughness = 0.55
+	door.albedo_texture = tex("baseboard_albedo")
+	door.uv1_scale = Vector3(0.2, 0.2, 0.2)
+	m["door"] = door
+
+	var knob := StandardMaterial3D.new()
+	knob.albedo_color = Color(0.55, 0.47, 0.32)
+	knob.metallic = 0.85
+	knob.roughness = 0.38
+	m["knob"] = knob
+
+	var exit := StandardMaterial3D.new()
+	var ex := tex("exit_sign_emission")
+	exit.albedo_color = Color(0.1, 0.02, 0.02)
+	exit.emission_enabled = true
+	exit.emission_texture = ex
+	exit.emission = Color(1, 1, 1)
+	exit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+	exit.emission_energy_multiplier = 2.2
+	exit.roughness = 0.25
+	m["exit"] = exit
 
 	var plenum := StandardMaterial3D.new()
 	plenum.albedo_color = Color(0.08, 0.075, 0.07)

@@ -41,7 +41,7 @@ void fragment() {
 		float line = floor(uv.y * lines);
 		float px = SCREEN_PIXEL_SIZE.x;
 		// Tracking: slow wobble plus a rare band that drifts up the frame.
-		float wob = (vn(uv.y * 6.0 + time * 0.9) - 0.5) * 0.0016 * (1.0 + degrade * 5.0);
+		float wob = (vn(uv.y * 6.0 + time * 0.9) - 0.5) * 0.0008 * (1.0 + degrade * 5.0);
 		float band_y = fract(time * 0.035 + frame_seed * 0.0);
 		float band = smoothstep(0.03, 0.0, abs(uv.y - band_y)) * (0.25 + degrade);
 		wob += (h12(vec2(line, floor(time * 30.0))) - 0.5) * 0.012 * band;
@@ -66,8 +66,11 @@ void fragment() {
 		}
 		iq /= 9.0;
 		iq *= 0.82;
-		// Auto gain: snow rises as the scene gets darker.
-		float gain_noise = mix(0.025, 0.09, smoothstep(0.35, 0.02, yb)) * (1.0 + degrade * 2.5);
+		// Auto gain: in the dark the camera pumps the whole picture brighter, and snow rises with it.
+		float avg = to_yiq(textureLod(screen_tex, vec2(0.5), 9.0).rgb).x;
+		float gain = clamp(0.3 / max(avg, 0.02), 1.0, 2.6);
+		Y *= gain;
+		float gain_noise = (0.02 + 0.03 * (gain - 1.0)) * (1.0 + degrade * 2.5);
 		float n = h12(vec2(floor(uv.x / px * 0.5), line) + frame_seed * 17.0) - 0.5;
 		Y += n * gain_noise;
 		iq += vec2(h12(vec2(line, frame_seed)) - 0.5, h12(vec2(frame_seed, line)) - 0.5) * 0.02 * (1.0 + degrade * 3.0);

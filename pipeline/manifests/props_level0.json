@@ -1,0 +1,18 @@
+{
+  "status": "BLOCKED_NO_CREDITS",
+  "note": "Meshy balance was 3 credits on 2026-10-01 (GET /openapi/v1/balance). First preview POST returned 402 Insufficient funds. No task was created, nothing was spent, no assets generated.",
+  "service": "Meshy text-to-3d (v2), docs checked 2026-10-01",
+  "model": "meshy-7.1 (latest)",
+  "scripts": ["pipeline/meshes/build_props_level0.py", "pipeline/blender/clean_props.py"],
+  "planned_params": {
+    "preview": {"should_remesh": true, "topology": "triangle", "target_polycount": {"chair": 12000, "crt": 6000, "box": 6000}, "auto_size": true, "origin_at": "bottom", "target_formats": ["glb"]},
+    "refine": {"enable_pbr": true, "texture_resolution": "2k", "remove_lighting": true, "target_formats": ["glb"]}
+  },
+  "props": {
+    "prop_office_chair": {"target": "0.95 m tall", "tris_budget": 12000, "task_ids": null, "tris": null, "dims_m": null},
+    "prop_crt_monitor": {"target": "0.38 x 0.38 x 0.42 m", "tris_budget": 6000, "task_ids": null, "tris": null, "dims_m": null},
+    "prop_cardboard_box": {"target": "0.4 x 0.3 x 0.3 m", "tris_budget": 6000, "task_ids": null, "tris": null, "dims_m": null}
+  },
+  "cost_estimate_usd": 0,
+  "credits_needed_estimate": "about 30 credits per prop (20 preview + 10 refine) = about 90 credits for all three; verify against consumed_credits"
+}
