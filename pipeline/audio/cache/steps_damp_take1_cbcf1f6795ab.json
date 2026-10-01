@@ -1,0 +1,17 @@
+{
+ "tag": "steps_damp_take1",
+ "params": {
+  "text": "Single person in sneakers walking at a slow steady pace on damp commercial office carpet, close microphone, no room echo, no other sounds, no voices, no music. Each footstep is a soft muffled thud with a faint wet squish as the damp carpet compresses. Clean isolated footsteps with silence between them.",
+  "duration_seconds": 10.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "steps_damp_take1_cbcf1f6795ab.pcm",
+ "format": "pcm_48000",
+ "credits": 55.0,
+ "est_usd": 0.0165,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-01"
+}

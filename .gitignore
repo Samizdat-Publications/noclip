@@ -5,6 +5,7 @@
 review/inbox/
 review/archive/qa/
 review/archive/raw/
+review/archive/builds/
 # Engine caches (Claude may extend this)
 .godot/
 game/.godot/

@@ -1,0 +1,17 @@
+{
+ "tag": "thud_3",
+ "params": {
+  "text": "A deep slow dull boom of a large heavy mass settling, distant, inside the walls of an abandoned office building, heavily muffled low thump with a faint creak, no voices, no music.",
+  "duration_seconds": 4.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "thud_3_65f25d1be2ec.pcm",
+ "format": "pcm_48000",
+ "credits": 22.0,
+ "est_usd": 0.0066,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-01"
+}

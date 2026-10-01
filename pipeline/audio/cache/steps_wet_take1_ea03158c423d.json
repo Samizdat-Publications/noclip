@@ -1,0 +1,17 @@
+{
+ "tag": "steps_wet_take1",
+ "params": {
+  "text": "Single person in sneakers walking at a slow steady pace on damp commercial office carpet, close microphone, no room echo, no other sounds, no voices, no music. The carpet is soaked: each footstep makes a noticeable wet squelch, squishing water out of the sodden carpet, with a soft heavy thud. Clean isolated footsteps with silence between them.",
+  "duration_seconds": 10.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "steps_wet_take1_ea03158c423d.pcm",
+ "format": "pcm_48000",
+ "credits": 55.0,
+ "est_usd": 0.0165,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-01"
+}

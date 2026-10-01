@@ -1,0 +1,595 @@
+{
+ "asset": "audio_level0",
+ "engine_target": "Godot 4.7",
+ "sample_rate": 48000,
+ "bit_depth": 16,
+ "elevenlabs": {
+  "model_id": "eleven_text_to_sound_v2",
+  "endpoint": "POST /v1/sound-generation",
+  "output_format_requested": "pcm_48000 (fallback mp3_44100_128 + resample)",
+  "doc_checked": "2026-10-01 elevenlabs.io/docs/api-reference/text-to-sound-effects/convert"
+ },
+ "files": {
+  "hum_fixture_a.wav": {
+   "method": "procedural (integer-cycle sines + FFT-periodic noise)",
+   "seed": 1001,
+   "harmonics_hz_amp": {
+    "60": 0.05,
+    "120": 1.0,
+    "180": 0.16,
+    "240": 0.42,
+    "300": 0.09,
+    "360": 0.26,
+    "480": 0.17,
+    "600": 0.1
+   },
+   "buzz_level": 0.05,
+   "buzz_band_hz": [
+    1800,
+    6500
+   ],
+   "wobble_depth_cycles_per_8s": [
+    0.03,
+    0.018
+   ],
+   "duration_s": 8.0,
+   "channels": 1,
+   "target_lufs": -23
+  },
+  "hum_fixture_b.wav": {
+   "method": "procedural (integer-cycle sines + FFT-periodic noise)",
+   "seed": 2002,
+   "harmonics_hz_amp": {
+    "60": 0.07,
+    "120": 1.0,
+    "180": 0.24,
+    "240": 0.62,
+    "300": 0.15,
+    "360": 0.45,
+    "480": 0.34,
+    "600": 0.24,
+    "720": 0.14,
+    "840": 0.08
+   },
+   "buzz_level": 0.085,
+   "buzz_band_hz": [
+    2200,
+    8000
+   ],
+   "wobble_depth_cycles_per_8s": [
+    0.04,
+    0.022
+   ],
+   "duration_s": 8.0,
+   "channels": 1,
+   "target_lufs": -23
+  },
+  "buzz_failing.wav": {
+   "method": "procedural (120 Hz harmonic stack, gated HF sizzle, wrapped Poisson crackle)",
+   "seed": 3003,
+   "duration_s": 6.0,
+   "channels": 1,
+   "target_lufs": -23
+  },
+  "cam_motor_loop.wav": {
+   "method": "procedural (motor harmonics, flutter, FM servo whine, periodic noise)",
+   "seed": 5005,
+   "duration_s": 4.0,
+   "channels": 1,
+   "target_lufs": -23
+  },
+  "room_tone.wav": {
+   "method": "procedural (FFT-periodic noise: shared 22-75 Hz rumble, 90-520 Hz HVAC, faint air; decorrelated stereo; whole-cycle slow breathing). ElevenLabs loop not used: procedural has zero events.",
+   "seed": 4004,
+   "duration_s": 30.0,
+   "channels": 2,
+   "target_lufs": -23
+  },
+  "tube_tick_01.wav": {
+   "method": "procedural (inharmonic metallic modes + contact click + AM zap)",
+   "seed": 7101,
+   "channels": 1,
+   "peak_dbfs": -3
+  },
+  "tube_tick_02.wav": {
+   "method": "procedural (inharmonic metallic modes + contact click + AM zap)",
+   "seed": 7102,
+   "channels": 1,
+   "peak_dbfs": -3
+  },
+  "tube_tick_03.wav": {
+   "method": "procedural (inharmonic metallic modes + contact click + AM zap)",
+   "seed": 7103,
+   "channels": 1,
+   "peak_dbfs": -3
+  },
+  "tube_tick_04.wav": {
+   "method": "procedural (inharmonic metallic modes + contact click + AM zap)",
+   "seed": 7104,
+   "channels": 1,
+   "peak_dbfs": -3
+  },
+  "cam_rec_beep.wav": {
+   "method": "procedural (2.8 kHz band-limited square + 5.6 kHz resonance, 140 ms)",
+   "channels": 1,
+   "peak_dbfs": -3
+  },
+  "step_carpet_damp_01.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 4.434,
+   "pitch_ratio": 0.971,
+   "length_s": 0.141
+  },
+  "step_carpet_damp_02.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 5.578,
+   "pitch_ratio": 0.969,
+   "length_s": 0.223
+  },
+  "step_carpet_damp_03.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 11.563,
+   "pitch_ratio": 1.029,
+   "length_s": 0.176
+  },
+  "step_carpet_damp_04.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 12.703,
+   "pitch_ratio": 0.971,
+   "length_s": 0.17
+  },
+  "step_carpet_damp_05.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 2,
+   "src_start_s": 5.945,
+   "pitch_ratio": 0.954,
+   "length_s": 0.221
+  },
+  "step_carpet_damp_06.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 2,
+   "src_start_s": 8.18,
+   "pitch_ratio": 0.994,
+   "length_s": 0.197
+  },
+  "step_carpet_damp_07.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 2,
+   "src_start_s": 14.544,
+   "pitch_ratio": 1.014,
+   "length_s": 0.132
+  },
+  "step_carpet_damp_08.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 2,
+   "src_start_s": 18.67,
+   "pitch_ratio": 0.961,
+   "length_s": 0.191
+  },
+  "step_carpet_wet_01.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 6.609,
+   "pitch_ratio": 0.981,
+   "length_s": 0.148
+  },
+  "step_carpet_wet_02.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 10.122,
+   "pitch_ratio": 1.05,
+   "length_s": 0.253
+  },
+  "step_carpet_wet_03.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 13.24,
+   "pitch_ratio": 1.022,
+   "length_s": 0.232
+  },
+  "step_carpet_wet_04.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 1,
+   "src_start_s": 16.095,
+   "pitch_ratio": 1.032,
+   "length_s": 0.189
+  },
+  "step_carpet_wet_05.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 2,
+   "src_start_s": 2.137,
+   "pitch_ratio": 1.047,
+   "length_s": 0.142
+  },
+  "step_carpet_wet_06.wav": {
+   "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "take": 2,
+   "src_start_s": 16.973,
+   "pitch_ratio": 1.012,
+   "length_s": 0.147
+  },
+  "distant_thud_01.wav": {
+   "method": "ElevenLabs sound effects 4 s, then 4th-order lowpass 520 Hz + highpass 25 Hz (wall muffling), trimmed, 25 ms fade in / 350 ms out",
+   "prompt": "A single heavy object shifting and thudding on a concrete floor far away inside a large building, heard through several thick walls, extremely muffled, deep and low, a short faint rumble afterwards, no voices, no music, very quiet.",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "length_s": 2.811
+  },
+  "distant_thud_02.wav": {
+   "method": "ElevenLabs sound effects 4 s, then 4th-order lowpass 520 Hz + highpass 25 Hz (wall muffling), trimmed, 25 ms fade in / 350 ms out",
+   "prompt": "Something very heavy being dragged a short distance then dropped, far away in an enormous empty building, heard through concrete walls, muffled and hollow, low frequency only, no voices, no music.",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "length_s": 3.2
+  },
+  "distant_thud_03.wav": {
+   "method": "ElevenLabs sound effects 4 s, then 4th-order lowpass 520 Hz + highpass 25 Hz (wall muffling), trimmed, 25 ms fade in / 350 ms out",
+   "prompt": "A deep slow dull boom of a large heavy mass settling, distant, inside the walls of an abandoned office building, heavily muffled low thump with a faint creak, no voices, no music.",
+   "channels": 1,
+   "peak_dbfs": -3,
+   "length_s": 3.2
+  }
+ },
+ "paid_calls": [
+  {
+   "tag": "steps_damp_take1",
+   "params": {
+    "text": "Single person in sneakers walking at a slow steady pace on damp commercial office carpet, close microphone, no room echo, no other sounds, no voices, no music. Each footstep is a soft muffled thud with a faint wet squish as the damp carpet compresses. Clean isolated footsteps with silence between them.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "steps_damp_take1_cbcf1f6795ab.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  },
+  {
+   "tag": "steps_damp_take2",
+   "params": {
+    "text": "Single person in sneakers walking at a slow steady pace on damp commercial office carpet, close microphone, no room echo, no other sounds, no voices, no music. Each footstep is a soft muffled thud with a faint wet squish as the damp carpet compresses. Clean isolated footsteps with silence between them. Slightly different gait.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "steps_damp_take2_9fecd22dd5d8.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  },
+  {
+   "tag": "steps_wet_take1",
+   "params": {
+    "text": "Single person in sneakers walking at a slow steady pace on damp commercial office carpet, close microphone, no room echo, no other sounds, no voices, no music. The carpet is soaked: each footstep makes a noticeable wet squelch, squishing water out of the sodden carpet, with a soft heavy thud. Clean isolated footsteps with silence between them.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "steps_wet_take1_ea03158c423d.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  },
+  {
+   "tag": "steps_wet_take2",
+   "params": {
+    "text": "Single person in sneakers walking at a slow steady pace on damp commercial office carpet, close microphone, no room echo, no other sounds, no voices, no music. The carpet is soaked: each footstep makes a noticeable wet squelch, squishing water out of the sodden carpet, with a soft heavy thud. Clean isolated footsteps with silence between them. Slightly different gait.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "steps_wet_take2_336c802c9031.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  },
+  {
+   "tag": "thud_1",
+   "params": {
+    "text": "A single heavy object shifting and thudding on a concrete floor far away inside a large building, heard through several thick walls, extremely muffled, deep and low, a short faint rumble afterwards, no voices, no music, very quiet.",
+    "duration_seconds": 4.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "thud_1_8113c713335e.pcm",
+   "format": "pcm_48000",
+   "credits": 22.0,
+   "est_usd": 0.0066,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  },
+  {
+   "tag": "thud_2",
+   "params": {
+    "text": "Something very heavy being dragged a short distance then dropped, far away in an enormous empty building, heard through concrete walls, muffled and hollow, low frequency only, no voices, no music.",
+    "duration_seconds": 4.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "thud_2_64e86fc2d739.pcm",
+   "format": "pcm_48000",
+   "credits": 22.0,
+   "est_usd": 0.0066,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  },
+  {
+   "tag": "thud_3",
+   "params": {
+    "text": "A deep slow dull boom of a large heavy mass settling, distant, inside the walls of an abandoned office building, heavily muffled low thump with a faint creak, no voices, no music.",
+    "duration_seconds": 4.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "thud_3_65f25d1be2ec.pcm",
+   "format": "pcm_48000",
+   "credits": 22.0,
+   "est_usd": 0.0066,
+   "http_attempts": 1,
+   "date": "2026-10-01"
+  }
+ ],
+ "family_target_lufs": {
+  "step_carpet_damp": -24.65,
+  "step_carpet_wet": -22.13,
+  "tube_tick": -25.99,
+  "distant_thud": -25.11
+ },
+ "verification": {
+  "loops": {
+   "hum_fixture_a.wav": {
+    "seconds": 8.0,
+    "samples": 384000,
+    "channels": 1,
+    "lufs": -23.0,
+    "peak_dbfs": -16.09,
+    "seam_jump_over_rms_step": 2.17
+   },
+   "hum_fixture_b.wav": {
+    "seconds": 8.0,
+    "samples": 384000,
+    "channels": 1,
+    "lufs": -23.0,
+    "peak_dbfs": -13.16,
+    "seam_jump_over_rms_step": 0.48
+   },
+   "buzz_failing.wav": {
+    "seconds": 6.0,
+    "samples": 288000,
+    "channels": 1,
+    "lufs": -23.0,
+    "peak_dbfs": -12.73,
+    "seam_jump_over_rms_step": 0.89
+   },
+   "cam_motor_loop.wav": {
+    "seconds": 4.0,
+    "samples": 192000,
+    "channels": 1,
+    "lufs": -23.0,
+    "peak_dbfs": -10.56,
+    "seam_jump_over_rms_step": 0.5
+   },
+   "room_tone.wav": {
+    "seconds": 30.0,
+    "samples": 1440000,
+    "channels": 2,
+    "lufs": -23.0,
+    "peak_dbfs": -9.51,
+    "seam_jump_over_rms_step": 0.36
+   }
+  },
+  "oneshot_families": {
+   "step_carpet_damp": [
+    {
+     "file": "step_carpet_damp_01.wav",
+     "ms": 141,
+     "lufs": -24.7,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_02.wav",
+     "ms": 223,
+     "lufs": -24.6,
+     "peak": -3.9,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_03.wav",
+     "ms": 176,
+     "lufs": -24.6,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_04.wav",
+     "ms": 170,
+     "lufs": -25.4,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_05.wav",
+     "ms": 221,
+     "lufs": -24.6,
+     "peak": -3.8,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_06.wav",
+     "ms": 197,
+     "lufs": -24.9,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_07.wav",
+     "ms": 132,
+     "lufs": -24.6,
+     "peak": -6.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_damp_08.wav",
+     "ms": 191,
+     "lufs": -25.0,
+     "peak": -3.0,
+     "first_sample": 0.0
+    }
+   ],
+   "step_carpet_wet": [
+    {
+     "file": "step_carpet_wet_01.wav",
+     "ms": 148,
+     "lufs": -22.1,
+     "peak": -3.2,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_wet_02.wav",
+     "ms": 253,
+     "lufs": -23.0,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_wet_03.wav",
+     "ms": 232,
+     "lufs": -22.3,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_wet_04.wav",
+     "ms": 189,
+     "lufs": -22.1,
+     "peak": -3.5,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_wet_05.wav",
+     "ms": 142,
+     "lufs": -25.3,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "step_carpet_wet_06.wav",
+     "ms": 147,
+     "lufs": -22.1,
+     "peak": -4.2,
+     "first_sample": 0.0
+    }
+   ],
+   "tube_tick": [
+    {
+     "file": "tube_tick_01.wav",
+     "ms": 320,
+     "lufs": -26.0,
+     "peak": -4.6,
+     "first_sample": 0.0
+    },
+    {
+     "file": "tube_tick_02.wav",
+     "ms": 320,
+     "lufs": -26.7,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "tube_tick_03.wav",
+     "ms": 320,
+     "lufs": -29.2,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "tube_tick_04.wav",
+     "ms": 320,
+     "lufs": -26.0,
+     "peak": -3.7,
+     "first_sample": 0.0
+    }
+   ],
+   "distant_thud": [
+    {
+     "file": "distant_thud_01.wav",
+     "ms": 2811,
+     "lufs": -25.1,
+     "peak": -3.0,
+     "first_sample": 0.0
+    },
+    {
+     "file": "distant_thud_02.wav",
+     "ms": 3200,
+     "lufs": -25.1,
+     "peak": -9.9,
+     "first_sample": 0.0
+    },
+    {
+     "file": "distant_thud_03.wav",
+     "ms": 3200,
+     "lufs": -26.1,
+     "peak": -3.0,
+     "first_sample": 0.0
+    }
+   ]
+  },
+  "step_pool": {
+   "damp": 12,
+   "wet": 8
+  }
+ },
+ "cost": {
+  "paid_calls": 7,
+  "est_total_usd": 0.0858,
+  "note": "est_usd uses character-cost header credits x $0.0003/credit (conservative); cached re-runs cost 0. Lead consolidates into docs/SPEND.md."
+ }
+}

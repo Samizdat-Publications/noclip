@@ -1,0 +1,347 @@
+{
+  "asset": "textures_level0",
+  "generated_by": "pipeline/textures/build_level0.py (modules: tex_common, mat_carpet_wall, mat_ceiling_etc, mat_decals, previews)",
+  "run_command": "python pipeline/textures/build_level0.py",
+  "method": "Fully procedural (numpy/scipy/OpenCV). Every noise field is synthesised in the Fourier domain, so all tiling maps are periodic by construction. No image-generation model used: procedural gives guaranteed seamlessness, exact metric scale (pattern repeat = 7.5 cm columns, 3 mm loops) and is cheap to reproduce.",
+  "paid_calls": [],
+  "cost_usd": 0.0,
+  "models_prompts": "none (no OpenAI/Gemini/Meshy calls made)",
+  "conventions": {
+    "normal": "OpenGL, green = +Y up (Godot)",
+    "albedo": "sRGB 8-bit",
+    "roughness_ao_height": "linear 8-bit grey",
+    "emission": "sRGB 8-bit"
+  },
+  "seeds": {
+    "carpet": 1001,
+    "wallpaper": 2002,
+    "ceiling": 3003,
+    "troffer": 4004,
+    "baseboard": 5005,
+    "waterdamage": 6001,
+    "grime_low": 6002,
+    "wetpatch": 6003,
+    "ceiling_stain": 6004,
+    "mold": 6005
+  },
+  "materials": {
+    "carpet": {
+      "size": "2048x2048",
+      "world_size_m": [
+        1.0,
+        1.0
+      ],
+      "method": "jittered hex-ish loop lattice (341x341 loops, ~6 px = ~3 mm pitch) splatted with an elliptical loop kernel by periodic FFT convolution; per-loop height and tint variance, dirt specks, faint low-contrast traffic matting; height -> normal(strength 4.2), AO from height, roughness 0.88-0.97",
+      "mean_albedo": [
+        138.0,
+        116.0,
+        68.0
+      ],
+      "rough_p5_p95": [
+        0.8841574903568515,
+        0.9656671663005415
+      ]
+    },
+    "wallpaper": {
+      "size": "2048x2048",
+      "world_size_m": [
+        0.6,
+        0.6
+      ],
+      "method": "analytic mask: double pinstripes every 256 px (7.5 cm), elongated diamond lozenges with centre dot + tiny interstitial dot, alternate columns offset half step; ochre ink 8.4% darker/more saturated; vinyl stipple and paper fibre; roll seam at x=0 (lifted lip + dark line, periodic); roughness 0.55-0.75",
+      "mean_albedo": [
+        200.8,
+        182.7,
+        111.6
+      ],
+      "ink_luminance_drop_pct": 8.44,
+      "stripe_period_px": 256,
+      "lozenge_step_px": 128
+    },
+    "ceiling_tile": {
+      "size": "1024x1024",
+      "world_size_m": [
+        0.6,
+        0.6
+      ],
+      "method": "thresholded-contour worm fissures + pinholes, 10 px (6 mm) bevel on all four edges (non-tiling by design); stained variant = irregular tide-line ring multiplied onto the clean albedo, bevel 40% stained",
+      "mean_albedo_interior": [
+        222.0,
+        216.0,
+        196.0
+      ],
+      "bevel_px": 10.0
+    },
+    "troffer_lens": {
+      "size": "512x1024",
+      "world_size_m": [
+        0.6,
+        1.2
+      ],
+      "method": "square-pyramid prism grid in normal map, plain 14 px frame; emission with edge falloff, two faint tube bands, 22 insect silhouettes and dust concentrated at the bottom (long-axis) end. Pitch is 4 px (4.69 mm at this resolution) rather than 4 mm: an integer pixel pitch avoids aliasing; at 853 px/m a true 4 mm pitch would be 3.4 px.",
+      "prism_pitch_px": 4.0,
+      "prism_pitch_mm": 4.69,
+      "insects": 22
+    },
+    "baseboard": {
+      "size": "1024x128",
+      "world_size_m": [
+        1.0,
+        0.1
+      ],
+      "method": "cove-base profile height (lip, groove, face, toe) + periodic grain, line-stroke scuffs and grime gradient; tiles horizontally",
+      "mean_albedo": [
+        122.0,
+        100.0,
+        72.0
+      ]
+    },
+    "decals": {
+      "decal_wall_waterdamage": {
+        "max_alpha": 0.92,
+        "coverage_pct": 31.1
+      },
+      "decal_wall_grime_low": {
+        "max_alpha": 0.7653036996623939
+      },
+      "decal_floor_wetpatch": {
+        "max_alpha": 0.62
+      },
+      "decal_ceiling_stain": {
+        "max_alpha": 0.6573651816466595
+      },
+      "decal_mold": {
+        "clusters": 22,
+        "spots": 3886,
+        "max_alpha": 0.95
+      }
+    }
+  },
+  "decal_notes": "RGBA, straight (non-premultiplied) alpha, transparent borders, not tiling. Optional decal normal maps skipped: they add nothing at decal scale. decal_wall_waterdamage: top of wall = row 0. decal_wall_grime_low: bottom of wall = last row.",
+  "seam_check_note": "ratio of wrap-around pixel step to a normal neighbour step; ~1 = invisible. wallpaper_normal/ao cols are high on purpose: the roll seam line sits exactly at the left tile edge.",
+  "seam_check_wrap_step_over_neighbour_step": {
+    "carpet_albedo": {
+      "rows": 1.23,
+      "cols": 1.05
+    },
+    "carpet_normal": {
+      "rows": 1.2,
+      "cols": 0.96
+    },
+    "carpet_roughness": {
+      "rows": 1.02,
+      "cols": 0.96
+    },
+    "carpet_ao": {
+      "rows": 1.33,
+      "cols": 1.02
+    },
+    "carpet_height": {
+      "rows": 1.2,
+      "cols": 1.03
+    },
+    "wallpaper_albedo": {
+      "rows": 0.97,
+      "cols": 0.95
+    },
+    "wallpaper_normal": {
+      "rows": 0.98,
+      "cols": 3.19
+    },
+    "wallpaper_roughness": {
+      "rows": 1.04,
+      "cols": 0.94
+    },
+    "wallpaper_ao": {
+      "rows": 1.02,
+      "cols": 6.32
+    },
+    "baseboard_albedo": {
+      "cols": 1.22
+    },
+    "baseboard_normal": {
+      "cols": 1.04
+    },
+    "baseboard_roughness": {
+      "cols": 1.22
+    }
+  },
+  "output_files": {
+    "baseboard_albedo.png": {
+      "size": [
+        1024,
+        128
+      ],
+      "mode": "RGB"
+    },
+    "baseboard_normal.png": {
+      "size": [
+        1024,
+        128
+      ],
+      "mode": "RGB"
+    },
+    "baseboard_roughness.png": {
+      "size": [
+        1024,
+        128
+      ],
+      "mode": "L"
+    },
+    "carpet_albedo.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    "carpet_ao.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "L"
+    },
+    "carpet_height.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "L"
+    },
+    "carpet_normal.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    "carpet_roughness.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "L"
+    },
+    "ceiling_tile_albedo.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "ceiling_tile_ao.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    "ceiling_tile_normal.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "ceiling_tile_roughness.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    "ceiling_tile_stained_albedo.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "decal_ceiling_stain.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA"
+    },
+    "decal_floor_wetpatch.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA"
+    },
+    "decal_mold.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA"
+    },
+    "decal_wall_grime_low.png": {
+      "size": [
+        2048,
+        512
+      ],
+      "mode": "RGBA"
+    },
+    "decal_wall_waterdamage.png": {
+      "size": [
+        1024,
+        2048
+      ],
+      "mode": "RGBA"
+    },
+    "troffer_lens_albedo.png": {
+      "size": [
+        512,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "troffer_lens_emission.png": {
+      "size": [
+        512,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "troffer_lens_normal.png": {
+      "size": [
+        512,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "wallpaper_albedo.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    "wallpaper_ao.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "L"
+    },
+    "wallpaper_normal.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    "wallpaper_roughness.png": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "L"
+    }
+  },
+  "runtime_seconds": 27.8
+}

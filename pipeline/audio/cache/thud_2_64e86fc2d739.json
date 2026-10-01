@@ -1,0 +1,17 @@
+{
+ "tag": "thud_2",
+ "params": {
+  "text": "Something very heavy being dragged a short distance then dropped, far away in an enormous empty building, heard through concrete walls, muffled and hollow, low frequency only, no voices, no music.",
+  "duration_seconds": 4.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "thud_2_64e86fc2d739.pcm",
+ "format": "pcm_48000",
+ "credits": 22.0,
+ "est_usd": 0.0066,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-01"
+}
