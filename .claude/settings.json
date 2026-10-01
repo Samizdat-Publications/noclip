@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(godot *)",
+      "Bash(blender *)",
+      "Bash(ffmpeg *)",
+      "Bash(ffprobe *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(python *)",
+      "Bash(py *)",
+      "Bash(pip *)",
+      "Bash(gh *)",
+      "Bash(butler *)",
+      "Bash(winget *)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Bash(cat .env*)",
+      "Bash(type .env*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Edit(./.claude/agents/player-critic.md)",
+      "Write(./.claude/agents/player-critic.md)",
+      "Edit(./.claude/hooks/critic_guard.mjs)",
+      "Write(./.claude/hooks/critic_guard.mjs)"
+    ]
+  }
+}

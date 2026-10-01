@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.local
+# Review scratch (critiques and scores ARE committed)
+review/inbox/
+review/archive/qa/
+review/archive/raw/
+# Engine caches (Claude may extend this)
+.godot/
+game/.godot/
+node_modules/
+__pycache__/
+*.blend1
+# Local-only Claude data (unrelated plugin caches)
+.claude/data/
+.claude/settings.local.json
+# Build output and capture scratch
+build/
+tools/capture/out/
+spike/threejs/out/
+*.tmp
