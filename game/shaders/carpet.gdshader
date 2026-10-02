@@ -55,7 +55,7 @@ void fragment() {
 	// Heathered fibers: color varies at the centimeter scale, so far carpet still reads as fabric.
 	float heather = n_value(p * 31.0 + 7.0) * 0.6 + n_value(p * 83.0) * 0.4;
 	alb *= mix(0.86, 1.1, heather);
-	alb *= vec3(0.93, 0.9, 0.8);
+	alb *= vec3(0.8, 0.74, 0.62);   // darker, browner than the walls: value separation (critique 005)
 
 	// Large-scale color drift: traffic lanes, sun fade, old cleaning.
 	alb *= mix(vec3(0.86, 0.85, 0.84), vec3(1.07, 1.05, 1.0), n_fbm(p * 0.07 + seed_offset * 0.3));
@@ -68,7 +68,7 @@ void fragment() {
 	float damp = max(wet, mottle * wet_amount);
 	alb *= mix(1.0, 0.52, damp);
 	alb *= 1.0 - 0.22 * rim;
-	rough = mix(rough, 0.48, wet);
+	rough = mix(rough, 0.56, wet);
 	rough = mix(rough, rough * 0.86, mottle);
 	nrm = mix(nrm, vec3(0.5, 0.5, 1.0), wet * 0.55);
 
@@ -81,14 +81,14 @@ void fragment() {
 	float edge = box + (n_fbm(p * 0.9 + 11.0) - 0.5) * 1.6;
 	float flood = smoothstep(0.25, -0.35, edge);
 	alb = mix(alb, alb * vec3(0.32, 0.3, 0.26), smoothstep(0.6, -0.6, edge));
-	rough = mix(rough, 0.34 + 0.08 * n_value(p * 3.0), flood);
+	rough = mix(rough, 0.62 + 0.08 * n_value(p * 3.0), flood);
 	nrm = mix(nrm, vec3(0.5 + 0.015 * sin(p.x * 9.0 + p.y * 4.0), 0.5, 1.0), flood);
 
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.25;
-	SPECULAR = mix(mix(0.2, 0.42, wet), 0.18, flood);
+	SPECULAR = mix(mix(0.2, 0.42, wet), 0.12, flood);
 	NORMAL_MAP = nrm;
 	NORMAL_MAP_DEPTH = normal_strength;
 }

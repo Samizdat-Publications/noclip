@@ -73,6 +73,7 @@ func build(p_seed: int) -> void:
 	_build_fake_doors(kit)
 	_build_exit_signs(kit)
 	_build_fallen_tile(kit)
+	_build_wrong_architecture(kit)
 	var fixture_cells := _build_fixtures(kit)
 	_build_ceiling(kit, fixture_cells)
 	kit.commit(self, mats, ["tbar", "housing"])
@@ -463,7 +464,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 				var sl := SpotLight3D.new()
 				sl.spot_range = float(Game.opts.get("spot_range", "7"))
 				sl.spot_angle = float(Game.opts.get("spot_angle", "82"))
-				sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "1.8"))
+				sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "1.25"))
 				sl.spot_attenuation = float(Game.opts.get("spot_atten", "1.4"))
 				sl.light_size = float(Game.opts.get("light_size", "1.2"))
 				light = sl
@@ -801,9 +802,9 @@ func _build_traces() -> void:
 const PROPS := {
 	"prop_office_chair": {"n": 1, "half": 0.3, "spots": [[24.3, 6.6], [20.2, 3.1], [27.4, 10.6]]},
 	"prop_office_chair_alt_sf": {"n": 1, "half": 0.3, "spots": [[8.0, 11.8], [16.6, 27.8], [28.2, 17.0]]},
-	"prop_folding_chair_sf": {"n": 2, "half": 0.25, "spots": [[2.0, 1.2], [9.9, 1.0], [22.6, 19.6], [4.5, 27.5], [27.8, 28.6]]},
-	"prop_crt_monitor_sf": {"n": 1, "half": 0.22, "spots": [[9.6, 0.45], [5.6, 12.6], [16.4, 20.6]], "tint": [0.95, 0.88, 0.72]},
-	"prop_cardboard_box_sf": {"n": 2, "half": 0.3, "spots": [[0.5, 6.0], [28.6, 20.5], [12.4, 21.2], [7.0, 0.5]]},
+	"prop_folding_chair_sf": {"n": 2, "half": 0.25, "spots": [[2.0, 1.2], [11.6, 3.4], [22.6, 19.6], [4.5, 27.5], [27.8, 28.6]]},
+	"prop_crt_monitor_sf": {"n": 1, "half": 0.22, "spots": [[12.5, 0.5], [5.6, 12.6], [16.4, 20.6]], "tint": [0.95, 0.88, 0.72]},
+	"prop_cardboard_box_sf": {"n": 2, "half": 0.3, "spots": [[0.5, 6.0], [28.6, 20.5], [12.4, 21.2], [2.0, 3.4]]},
 	"prop_cardboard_box": {"n": 1, "half": 0.24, "spots": [[13.6, 29.5], [0.5, 12.5], [29.5, 14.0]]},
 }
 
@@ -830,6 +831,7 @@ func _build_props() -> void:
 			if spec.has("tint"):
 				_tint(inst, Color(spec["tint"][0], spec["tint"][1], spec["tint"][2]))
 			var half: float = spec["half"]
+			_contact_shadow(Vector3(spot[0], 0.0, spot[1]), half)
 			solids.append(Rect2(spot[0] - half, spot[1] - half, half * 2.0, half * 2.0))
 
 
@@ -852,7 +854,77 @@ func _build_splices() -> void:
 			inst.rotation.y = deg_to_rad(float(sp["yaw"]))
 			add_child(inst)
 			var half: float = sp.get("half", 0.25)
+			if float(sp.get("y", 0.0)) >= 0.0:
+				_contact_shadow(Vector3(x, 0.0, z), half)
 			solids.append(Rect2(x - half, z - half, half * 2.0, half * 2.0))
+
+
+## A soft dark footprint under a prop so it sits on the carpet (critique 005: props looked
+## like they floated).
+func _contact_shadow(p: Vector3, half: float) -> void:
+	var sz := half * 2.6
+	_decal("decal_contact", p, _basis_facing(Vector3.UP), Vector3(sz, 0.4, sz), Color(1, 1, 1, 0.75))
+
+
+## Copy errors that read as deliberate: a ceiling troffer installed sideways on a wall, still
+## lit, and a flight of carpeted stairs that climbs straight into the ceiling tiles.
+func _build_wrong_architecture(kit: MeshKit) -> void:
+	for wf in L.get("wall_fixtures", []):
+		var n := Vector3(wf[2], 0.0, wf[3])
+		var t := Vector3.UP.cross(n)
+		var pos := Vector3(wf[0], wf[4], wf[1])
+		var fx := Fixture.new()
+		fx.name = "wall_fixture"
+		fx.position = Vector3(pos.x, 0.0, pos.z)
+		add_child(fx)
+		var lens := MeshInstance3D.new()
+		var q := QuadMesh.new()
+		q.size = Vector2(0.58, 1.18)
+		lens.mesh = q
+		lens.material_override = mats["lens"]
+		lens.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		lens.transform = Transform3D(Basis(t, Vector3.UP, n), pos + n * 0.012)
+		add_child(lens)
+		fx.lens = lens
+		var a := pos - t * 0.32 - Vector3(0, 0.62, 0)
+		var b := pos + t * 0.32 + Vector3(0, 0.62, 0) + n * 0.008
+		kit.box("housing", Vector3(minf(a.x, b.x), a.y, minf(a.z, b.z)), Vector3(maxf(a.x, b.x), b.y, maxf(a.z, b.z)), MeshKit.ALL, H)
+		var sl := SpotLight3D.new()
+		sl.spot_range = 7.0
+		sl.spot_angle = 80.0
+		sl.spot_angle_attenuation = 1.25
+		sl.spot_attenuation = 1.4
+		sl.light_size = 1.0
+		sl.shadow_enabled = true
+		sl.shadow_bias = 0.06
+		sl.shadow_normal_bias = 2.6
+		sl.light_color = Color(0.96, 1.0, 0.9)
+		sl.transform = Transform3D(Basis.looking_at(n, Vector3.UP), pos + n * 0.05)
+		add_child(sl)
+		fx.light = sl
+		fx.setup(Fixture.State.ON, Game.rng("level0:wallfixture"), 0.9, Color(0.96, 1.0, 0.9))
+		fx.apply()
+		fixtures.append(fx)
+	for st in L.get("stairs", []):
+		var o := Vector2(st[0], st[1])
+		var d := Vector2(st[2], st[3])
+		var side := Vector2(-d.y, d.x)
+		if side.x < 0.0 or side.y < 0.0:
+			side = -side
+		var w: float = st[4]
+		var rise := 0.18
+		var run := 0.28
+		var steps := int(ceil(H / rise)) + 1
+		for i in steps:
+			var top := minf((i + 1) * rise, H + 0.2)
+			var p0 := o + d * (i * run)
+			var p1 := o + d * ((i + 1) * run) + side * w
+			var lo := Vector3(minf(p0.x, p1.x), 0.0, minf(p0.y, p1.y))
+			var hi := Vector3(maxf(p0.x, p1.x), top, maxf(p0.y, p1.y))
+			kit.box("carpet", lo, hi, MeshKit.PY, H)
+			kit.box("trim", lo, hi, MeshKit.SIDES, H)
+		var e := o + d * (steps * run) + side * w
+		solids.append(Rect2(minf(o.x, e.x), minf(o.y, e.y), absf(e.x - o.x), absf(e.y - o.y)))
 
 
 ## Ages a model's color (for example, white plastic yellowed by years of fluorescent light).

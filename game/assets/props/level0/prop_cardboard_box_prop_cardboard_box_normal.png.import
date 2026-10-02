@@ -2,29 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bndb4d5qiiu1e"
-path="res://.godot/imported/prop_cardboard_box_prop_cardboard_box_normal.png-a4232fc3811998003581e74d9673060d.ctex"
+uid="uid://cxvy270ohmtkm"
+path.bptc="res://.godot/imported/prop_cardboard_box_prop_cardboard_box_normal.png-a4232fc3811998003581e74d9673060d.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "93aa514aa910ba04a8ff15024de8fd9d"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/level0/prop_cardboard_box_prop_cardboard_box_normal.png"
-dest_files=["res://.godot/imported/prop_cardboard_box_prop_cardboard_box_normal.png-a4232fc3811998003581e74d9673060d.ctex"]
+dest_files=["res://.godot/imported/prop_cardboard_box_prop_cardboard_box_normal.png-a4232fc3811998003581e74d9673060d.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

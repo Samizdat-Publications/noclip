@@ -2,24 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwkw26e18r00g"
-path="res://.godot/imported/prop_crt_monitor_sf_Image_2.png-dea1c7655ac23480b0a6251493c4d47d.ctex"
+uid="uid://b7d2jcprhqh7j"
+path.bptc="res://.godot/imported/prop_crt_monitor_sf_Image_2.png-dea1c7655ac23480b0a6251493c4d47d.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "c0c07960df8ef768c03b8c8e75e536a8"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/level0/prop_crt_monitor_sf_Image_2.png"
-dest_files=["res://.godot/imported/prop_crt_monitor_sf_Image_2.png-dea1c7655ac23480b0a6251493c4d47d.ctex"]
+dest_files=["res://.godot/imported/prop_crt_monitor_sf_Image_2.png-dea1c7655ac23480b0a6251493c4d47d.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

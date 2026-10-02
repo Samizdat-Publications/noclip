@@ -31,6 +31,7 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L010 | 002 | claude | hurts | Dark rooms are flat murky brown, a cutoff instead of a gradient | FIX | S01: flat ambient fill 0.07 to 0.015 so darkness is shaped by spill and bounce; light concentrated into pools |
 | L011 | 002 | claude | nitpick | Camcorder overlay never changes; hard cut between camcorder and clean view | FIX | S01: roll-and-snow transition when the camera comes up or goes down; battery drains and the last bar blinks |
 | L012 | 002 | claude | hurts | Nothing to film, nothing to find, no threat (pace 4) | FIX (small) + DEFER M4/M5 | S01: one scripted dread beat per run (lights ahead die one by one toward you, the hum dies with them, later they stutter back); the bot stops and films it. Monster M4, run loop M5 |
+| L013 | 003/004 | claude (bake-off) | note | Bake-off packets (camcorder off, early build): repeated "nothing happens", "lights stuck on", "perf", "too clean a camera" | DONE (as engine evidence) | Used only to pick the engine (D011). Unique item: carpet read as glossy linoleum in the early build, already fixed by L006. Camera complaints do not apply (camcorder was switched off for a fair engine test) |
 
 ## Closed
 

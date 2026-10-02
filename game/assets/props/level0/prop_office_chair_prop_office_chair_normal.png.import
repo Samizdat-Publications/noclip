@@ -2,29 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7hmai02xq08l"
-path="res://.godot/imported/prop_office_chair_prop_office_chair_normal.png-8e2e5735e12ba004e9dbc7b60e481f31.ctex"
+uid="uid://bpk4o3glck15c"
+path.bptc="res://.godot/imported/prop_office_chair_prop_office_chair_normal.png-8e2e5735e12ba004e9dbc7b60e481f31.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "440488d68f2e1d70bda0419ac5d046e3"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/level0/prop_office_chair_prop_office_chair_normal.png"
-dest_files=["res://.godot/imported/prop_office_chair_prop_office_chair_normal.png-8e2e5735e12ba004e9dbc7b60e481f31.ctex"]
+dest_files=["res://.godot/imported/prop_office_chair_prop_office_chair_normal.png-8e2e5735e12ba004e9dbc7b60e481f31.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

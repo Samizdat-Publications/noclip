@@ -141,6 +141,16 @@ def exit_sign():
     return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
 
+def contact_shadow(n=512):
+    """Soft dark blob under props so they sit on the carpet."""
+    y, x = np.mgrid[0:n, 0:n] / (n - 1) * 2 - 1
+    r = np.sqrt(x ** 2 + y ** 2)
+    a = np.clip(1 - r, 0, 1) ** 1.8 * 0.85
+    img = np.zeros((n, n, 4), dtype=np.float32)
+    img[..., 0], img[..., 1], img[..., 2], img[..., 3] = 0.05, 0.04, 0.03, a
+    return Image.fromarray((img * 255).astype(np.uint8), "RGBA")
+
+
 def main():
     rnd = random.Random(SEED)
     os.makedirs(OUT, exist_ok=True)
@@ -152,6 +162,7 @@ def main():
         "decal_footprint_l": footprint(rnd, True),
         "decal_footprint_r": footprint(rnd, False),
         "exit_sign_emission": exit_sign(),
+        "decal_contact": contact_shadow(),
     }
     for k, im in made.items():
         im.save(os.path.join(OUT, k + ".png"))

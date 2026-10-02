@@ -13,6 +13,7 @@ var focus: Array = []
 var _focus_i := -1
 var _focus_wait := 0.0
 var _log: Array = []
+var _event_sheet := -1
 
 
 func setup(p_dir: String, p_duration: float, p_player: Player) -> void:
@@ -25,6 +26,11 @@ func setup(p_dir: String, p_duration: float, p_player: Player) -> void:
 	var r := Game.rng("capture")
 	var n_st := int(Game.opts.get("stills", "18"))
 	var n_sh := int(Game.opts.get("sheets", "4"))
+	# One motion sheet is held back and taken when something actually happens in the run
+	# (like a player grabbing footage of the moment). Falls back to the end if nothing does.
+	if n_sh > 1:
+		n_sh -= 1
+		_event_sheet = n_sh
 	var t0 := 4.5
 	var t1 := duration - 1.0
 	for i in n_st:
@@ -43,6 +49,14 @@ func setup(p_dir: String, p_duration: float, p_player: Player) -> void:
 
 
 func _process(_delta: float) -> void:
+	if _event_sheet >= 0 and Game.clock > 3.0:
+		var sp: Space = player.space
+		var fire := (sp != null and sp.attention_until > Game.clock) or Game.clock >= duration - 5.0
+		if fire:
+			for f in 9:
+				shots.append({"t": Game.clock + 0.3 + f * 0.4, "path": "%s/sheets/k%02d_f%d.png" % [dir, _event_sheet, f]})
+			shots.sort_custom(func(a, b): return a["t"] < b["t"])
+			_event_sheet = -1
 	while not shots.is_empty() and Game.clock >= float(shots[0]["t"]):
 		var s: Dictionary = shots.pop_front()
 		_save(s["path"])

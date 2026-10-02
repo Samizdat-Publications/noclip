@@ -2,24 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://i2fr2y1v4md7"
-path="res://.godot/imported/prop_office_chair_alt_sf_Image_2.png-5f22470b8f632fb7c44d352dfef1871d.ctex"
+uid="uid://demv475504h3s"
+path.bptc="res://.godot/imported/prop_office_chair_alt_sf_Image_2.png-5f22470b8f632fb7c44d352dfef1871d.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "4af724916a0ea4ec54ed81f8311cc6db"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/level0/prop_office_chair_alt_sf_Image_2.png"
-dest_files=["res://.godot/imported/prop_office_chair_alt_sf_Image_2.png-5f22470b8f632fb7c44d352dfef1871d.ctex"]
+dest_files=["res://.godot/imported/prop_office_chair_alt_sf_Image_2.png-5f22470b8f632fb7c44d352dfef1871d.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

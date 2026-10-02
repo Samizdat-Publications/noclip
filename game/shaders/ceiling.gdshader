@@ -21,6 +21,9 @@ void fragment() {
 	alb *= mix(0.9, 1.03, fract(rnd * 7.31));
 	alb *= mix(vec3(1.0), vec3(0.95, 0.92, 0.84), fract(rnd * 3.17) * 0.7);
 	alb *= 1.0 - 0.35 * COLOR.b;
+	// Keep the ceiling a pale, slightly gray off-white so it separates from the yellow walls.
+	float l = dot(alb, vec3(0.2126, 0.7152, 0.0722));
+	alb = mix(vec3(l), alb, 0.7) * 1.06;
 	ALBEDO = alb;
 	ROUGHNESS = use_tex ? texture(rough_tex, uv).r : 0.93;
 	AO = use_tex ? texture(ao_tex, uv).r : 1.0;

@@ -170,7 +170,8 @@ static func make_environment(preset: String) -> Environment:
 	e.ssil_intensity = 0.9
 	e.ssil_sharpness = 0.98
 
-	e.ssr_enabled = preset == "high"
+	# SSR off: it smeared the bright lenses into milky blobs on wet carpet (critique 005) and costs ~2 fps.
+	e.ssr_enabled = preset == "high" and Game.opts.has("ssr")
 	e.ssr_max_steps = 56
 	e.ssr_fade_in = 0.1
 	e.ssr_fade_out = 1.6

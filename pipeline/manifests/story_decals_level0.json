@@ -7,7 +7,8 @@
     "decal_chalk_x",
     "decal_footprint_l",
     "decal_footprint_r",
-    "exit_sign_emission"
+    "exit_sign_emission",
+    "decal_contact"
   ],
   "cost_usd": 0
 }
