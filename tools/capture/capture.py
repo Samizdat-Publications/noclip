@@ -92,7 +92,7 @@ def main():
                     help="focus shot list (res:// path), or 'auto' to let the level pick its landmarks; max 25%% of frames are used")
     ap.add_argument("--perf-seconds", type=float, default=40.0)
     ap.add_argument("--skip-perf", action="store_true")
-    ap.add_argument("--perf-runs", type=int, default=2, help="best of N realtime runs, each on an idle GPU")
+    ap.add_argument("--perf-runs", type=int, default=3, help="best of N realtime runs, each on an idle GPU; runs that shared the GPU lose")
     ap.add_argument("--extra", nargs="*", default=[], help="extra game args, e.g. preset=medium")
     ap.add_argument("--label", default="review-build", help="progress picture label")
     ap.add_argument("--note", default="", help="progress picture note")
@@ -169,11 +169,25 @@ def main():
             tmp = perf + f".run{k}"
             cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--",
                    f"--seed={seed}", f"--perf={tmp}", f"--duration={a.perf_seconds + 6.0}"] + perf_extra
+            # Watch the GPU per process during the run: a run that shared it with anything else is
+            # not trusted (another project's renders start at random times).
+            pm_log = tmp + ".pmon"
+            pm = subprocess.Popen(["nvidia-smi", "pmon", "-s", "u", "-d", "2"], stdout=open(pm_log, "w"), stderr=subprocess.STDOUT)
             run(cmd, 600, f"perf run {k + 1}")
+            pm.kill()
+            other = 0
+            for line in open(pm_log, errors="replace"):
+                q = line.split()
+                if len(q) > 3 and q[3].isdigit() and int(q[3]) > 5 and "godot" not in line.lower():
+                    other += 1
             if os.path.exists(tmp):
                 d = json.load(open(tmp))
-                if best is None or d["avg_fps"] > best[0]:
-                    best = (d["avg_fps"], tmp)
+                clean = other == 0
+                note = "" if clean else f" (GPU shared: {other} samples, not trusted)"
+                log(f"perf run {k + 1}: {d['avg_fps']} / {d['low_1pct_fps']}{note}")
+                key = (clean, d["avg_fps"])
+                if best is None or key > best[0]:
+                    best = (key, tmp)
         if best:
             shutil.copy(best[1], perf)
 

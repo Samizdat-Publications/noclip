@@ -25,7 +25,14 @@ Level 0 is now a place with its own tricks. Through the camcorder, some walls ha
 - Critic loops tonight: 009, 010, 011 (gate 1), 012 (gate 2), 013, 014, 015 (final).
 
 ## Not done / known broken (be blunt)
-(fill)
+- Visual quality is the gap: Lighting, Shadows and Materials sit at 4 to 7 across critics (ship gate needs 8). Gemini's Lighting swings 3 to 7 between runs; both keep saying "flat, evenly lit, no bounce". The corner occlusion strips (D031) are the first piece of a look pass; GI bounce, exposure and props are next (M3.5 in the roadmap).
+- The held camcorder still reads badly in stills mid-lift ("lumpy black blob", L092) even after two model swaps and a baked wear texture.
+- Streaming steps: p95 about 9 to 12 ms, peaks 14 to 19 ms at 1440p (QA), not the 7 ms I measured at 720p. Frame pacing is still fine (100 s run: max frame 20 ms, none over 25 ms) but a step split is due (L098).
+- M2 did not pass its gate (Opus Surreal 6 twice). Not built: portal doorways, overlapping spaces, impossible stairs, the four-turn loop.
+- The figure: critics still call it a placeholder man when they see it far away (Monster 4 to 7); it only appears in captures when the bot films a long view.
+- Cubicle panels look like plain slabs; doors have no hinges or kick plates (L095). Tall rooms' upper walls are blank (L094).
+- Exit-time "leaked instances" messages from static materials (harmless). 27 invalid-UID warnings at launch remain for older assets.
+- Gemini sometimes ignores the video's audio; critic.py now sends the soundtrack separately too (L096).
 
 ## Critic: latest scores and top open LEDGER items
 (fill table from review/scores.csv)
@@ -34,7 +41,10 @@ Level 0 is now a place with its own tricks. Through the camcorder, some walls ha
 (fill)
 
 ## Next milestone and the first 3 concrete steps
-(fill)
+M3.5 Look pass (D030; effort xhigh), then M4 the Entity (needs Meshy credits from Stewart).
+1. Lighting: try more warm GI bounce (SDFGI energy 0.7 to 0.9, bounce feedback 0.6 to 0.8) while keeping darkness through fewer lit panels; check how auto exposure compresses lit rooms (A/B lookdev on seeds 4242 and 777, then one critic loop).
+2. Held camcorder: keep it below the frame until the last third of the lift, or render it as a dark silhouette; judge on the video, not stills (L092). Door slabs with hinges, kick plates and handles; tall-room upper walls with streaks (L094, L095).
+3. Split the heaviest chunk build steps (walls+AO, decals, props) to bring 1440p peaks under 10 ms (L098), then a 10-minute walk on an idle GPU.
 
 ## Gotchas learned
 - Python on Windows writes CRLF in text mode: always open(..., newline='\n') when patching repo files.
