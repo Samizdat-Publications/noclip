@@ -1,104 +1,77 @@
-# Handoff: session 03 to 04 (10/02/2026)
+# Handoff: session 04 to 05 (10/02/2026)
 
 ## State in one paragraph
-Level 0 is now a place with its own tricks. Through the camcorder, some walls have a door that only the tape sees: walk through and you are in a sealed pocket where a survey crew left a camera on a tripod filming the wall under a warm work light (seams, D022). A real, scanned office worker copied slightly wrong appears only on tape at the end of long halls, stutters between held poses, comes closer each time you lower and raise the camera, and on the last look stands close, lit and twisted before it is gone and its light dies (D021). Rooms copied three times too tall have a door hung halfway up the wall and stairs that climb into the air (D023); some hall stretches have a ceiling that comes down low (D029); chairs and the crew's camcorders turn to face you while you are not looking (D025). The loop corridor's jump is verified invisible on video thanks to a 34 to 46 m horizon fade that also ends streaming pop-in (D020). Materials are photographic now (Gemini-made carpet and an original chevron-pinstripe wallpaper), with wall wear, a 24-piece graffiti set, office leftovers as small stories, and a new held camcorder model. Sound gained room reverb by size, positional squelchy steps, wall occlusion of hums, breathing tied to stamina and fear, a duck and drone when the figure is out, and fixed pitch for every generated sound (a decode bug had pitched them all an octave down). Performance went from 74 to about 90 to 107 fps average at 1440p (1% low 61 to 72; final capture 90.7 / 71.0 on a clean run). M2 closed after two failed gate attempts (Opus Surreal 6 both times, D028); M3 (sound) met its exit (Gemini Sound 7 to 8 in builds 011 to 015), critique 016 heard a hum too loud and too steady (Sound 5, L099); after the fix (D032) Gemini gave Sound 8 twice and called the hum "perfectly balanced". The final loop (018) is the best of the night on Gemini (Lighting 8, Shadows 7, Materials 7, Atmosphere 8, Performance 9) and Claude (Lighting 7, Camera 8, Performance 9); both now name the tape figure as the weakest part (Monster 3 to 4).
+Session 04 ran in the daytime with Stewart checking in, and his direction outranked the plan: rooms that are small outside and giant inside, crawling and climbing, an abstract monster, live crew members, and the "remembered wrong" feel of the reference stills. Built: storerooms (3.6 m blocks standing free in big rooms) whose doorway is a portal into a 72 x 72 m pillar hall built under the level; you walk in with no visible jump, and the hall's far door, under an exit sign at the dark end, lets you out of the same storeroom door you went in by (D036). A crawl stance that comes on by itself at low openings (or Z), crawl holes (fully cased doorways 72 cm tall), and ladders in tall rooms up to a nook 3.9 m up (D037). The monster has a design and a rigged model: the Occupant, the building's own copy of a person papered in our wallpaper (Meshy 7.1, 9 animations), to be shown abstractly as loose wallpaper strips (D035, VISION). VISION gained "Remembered wrong", "Being watched", live Halden field teams and plural abstract monsters; the roadmap now runs M3.6 (remembered wrong, look toward the stills), M4 (Entity and watchers), M4.5 (Halden teams). Stewart fixed the critic hand-back guard (D033).
 
 ## Playable now (exact run command)
-- Double-click `Play NOCLIP.bat` in `C:\Users\stewa\ClaudeProjects\Noclip`. Controls: WASD, mouse, Shift sprint, Ctrl crouch, hold right mouse for the camcorder, F3 performance overlay, Esc pause (Q quits).
-- Or `godot --path game`; `-- --seed=N` reproduce, `-- --autoplay` bot, `-- --hero` S01 slice, `-- --log-stream` streaming/loop/rearrange log, `-- --tape-always --log-tape` force and log the tape figure.
-- Debug walker for filmed checks: `-- --route=east [--route-stay] [--route-cam=1.5-7,8.5-12]`; `python tools/film.py OUT --frames N --times a,b,c -- <game args>` records a Movie Maker clip and pulls frames into a sheet.
-- Review capture: `python tools/capture/capture.py` (about 12 to 15 minutes; perf runs wait for an idle GPU and keep the best of 3; a run that shared the GPU with another program loses).
-- Fast checks: `python tools/gdcheck.py` (scripts plus an audio sanity check), `godot_console --headless --path game --script res://scripts/tests_gen_determinism.gd`.
+- Double-click `Play NOCLIP.bat` in `C:\Users\stewa\ClaudeProjects\Noclip`. Controls: WASD, mouse, Shift sprint, Ctrl crouch, Z crawl (it also happens on its own at low holes), walk into a ladder to climb it, hold right mouse for the camcorder, F3 performance overlay, Esc pause (Q quits).
+- The storeroom: from the start, go east down the long hall; it stands in a big room on the left or right within about 30 m (chunk 1,0 in 198 of 200 seeds).
+- Debug: `-- --start=x,z,yaw_deg` starts at a spot; `-- --start-room=1:0,63,36,1,0` starts inside a storeroom's hall (hall-local x, z, facing); `--route=north|south|east|west` walks straight; `--log-portal`, `--portal_never`, `--portal_always`, `--portal_scale=0.6`, `--hall_lights=32`.
+- Review capture: `python tools/capture/capture.py`. Tests: `godot_console --headless --path game --script res://scripts/tests_closet.gd` (storeroom placement), `tests_holes.gd -- SEED` (lists holes and ladders), `tests_spawn_seam.gd`, `tests_gen_determinism.gd`.
 
 ## Done this session (commit, evidence)
-- Loop corridor verified on Movie Maker frames and made invisible: 34-46 m horizon fade (D020, 5e03bbf; progress/0063 frame pair and x6 diff).
-- Tape figure rebuilt (D021): rigged CC-BY scan posed wrong, held poses with frame-skip tears, closer on each re-look, lit body, twisted-head and pointing poses, lurches while watched, close final beat, tape-only contact shadow (5e03bbf, 977b111, 905da09, bd91a57; progress/0062, 0081).
-- Tape-only seams into survey pockets (D022, a8c7894; progress/0068-0070 eye vs tape vs inside, bot visit sheet).
-- Scale-error tall rooms with a door up the wall and stairs into the air (D023, b56860c, 1cbee1b); low-ceiling hall stretches and dark-panel runs (D029, 905da09).
-- Unobserved rearrangement: chairs and crew camcorders turn to face you unseen (D025, b56860c, fdfcabd).
-- Perf: PCSS off, SSIL off (D024): 60-65 to 78 fps on the probe seed; captures 87-98 fps avg, 64-72 fps 1% low at 2560x1440; 10-minute walk 102.2 / 66.4, p99 14.1 ms (seed 9001).
-- Streaming steps split (977b111): at 720p max 7.1 ms; QA at 1440p p95 9 to 12 ms, peaks 14 to 19 ms (was 16 to 24 ms).
-- Materials: graffiti v2 (24 pieces, gemini-3-pro-image), carpet v2, wallpaper v2 (original print), wall wear decals, office leftovers as stories, worn trims, camcorder v3 baked wear (5e03bbf, b56860c, 905da09, c146ab4, f77d0b5; progress/0064, 0067, 0071-0099).
-- Lighting: room moods, palette (cold, green, recolor, halogen pockets, survey stencils), haze scatter (D027), corner shading, readable dark rooms (c66447f, 8ad5a82, 905da09, bd91a57).
-- Sound (M3 start, D026): room reverb zones, positional squelch steps, hum occlusion, breathing, duck and drone, distant one-shots; PCM decode fix (every generated sound had been an octave low) (4a165d9, 0c9a040). Gemini Sound 7 to 8 in builds 011 to 015; 5 in the final 016 ("the hum is too loud and monotonous", L099).
-- Tools: tools/film.py (filmed checks), RouteInput debug walker, audio sanity checks in gdcheck and capture, capture perf waits for an idle GPU, watches it per process and keeps the best of 3, perf hitch counters, focus shots load their surroundings.
-- Corner occlusion strips (D031, 5966470) and the QA fixes (55b73c1).
-- Overtime after the 016 handoff (D032): the building hum on its own bus, 3 dB quieter, detuned per fixture, drifting, with a power sag into near silence every minute or two (db625a3; Gemini Sound 5 to 8 in 017); carpet anti-tiling offsets and 12 ft roll strips, seams softened after 017 (db625a3, 00d5ddb; progress/0115); tape figure grounded (feet in the pile, wider contact shadow, its own light haze), nearer first looks, turned-away pose only for the close beat (00d5ddb; filmed check progress/0120). Rectangular light-pool projector built and A/B'd (progress/0116-0117) but switched to opt-in: 4 ms of GPU and it thinned the haze (L103).
-- Critic loops tonight: 009, 010, 011 (M2 gate 1), 012 (M2 gate 2), 013, 014, 015, 016, 017, 018 (final).
+- Rooms bigger inside than outside (D036, a191471): storeroom placement (tests_closet.gd: chunk 1,0 in 198/200 seeds, about 7 percent of other chunks), PortalRoom hall under the level at the first free depth, Portal node (SubViewport camera, seamless crossing on the physics tick, near plane at the doorway, dark fogged stand-in when out of range), far door back out of the storeroom, bot visit routine, focus shots, debug starts. Evidence: progress/0129 (first look), 0134 and 0135 (crossing frames matched in brightness within about 3 percent), 0136 (far door out), 0137 (doorway still). Cost while a doorway is on screen: about 3.5 ms at 1440p (L114).
+- Crawl and climb (D037, c4fbd94): crawl stance (auto at low openings, Z), ladders, crawl holes (about a third of chunks), tall-room ladders to a lit nook 3.9 m up; collision over low doorways, on tall walls above 2.6 m, and no ceiling slab over tall rooms. Evidence: progress crawl-hole and ladder-climb sheets.
+- The Occupant (D035, 3030083, c4fbd94): concepts (progress/0123, 0124), Meshy 7.1 models C_2 and C_4 (progress/0125, 0126), C_4 rigged with 9 animations (progress/0138; game/assets/entity/occupant_rigged.glb and anims/). Not in the game yet.
+- Exit signs lit from behind the plate with a soft spill (L119, 173a660; progress/0145).
+- Design: VISION "Remembered wrong", "Being watched", live Halden field teams, abstract plural monsters; ROADMAP M2b crawl and climb, M3.6, M4 with watchers, M4.5 Halden teams (7646414). Stewart's notes copied to STEWART_FEEDBACK.md.
+- Critic guard: Stewart's edit tested (D033); the critic now hands back directly. CLAUDE.md updated.
+- Critic loops: 019, 020 (final).
 
 ## Not done / known broken (be blunt)
-- Visual quality is the gap: Lighting, Shadows and Materials sit at 4 to 7 across critics (ship gate needs 8). Gemini's Lighting swings 3 to 7 between runs; both keep saying "flat, evenly lit, no bounce". The corner occlusion strips (D031) are the first piece of a look pass; GI bounce, exposure and props are next (M3.5 in the roadmap).
-- The held camcorder still reads badly in stills mid-lift ("lumpy black blob", L092) even after two model swaps and a baked wear texture.
-- Streaming steps: p95 about 9 to 12 ms, peaks 14 to 19 ms at 1440p (QA), not the 7 ms I measured at 720p. Frame pacing is still fine (100 s run: max frame 20 ms, none over 25 ms) but a step split is due (L098).
-- M2 did not pass its gate (Opus Surreal 6 twice). Not built: portal doorways, overlapping spaces, impossible stairs, the four-turn loop.
-- The figure: critics still call it a placeholder man when they see it far away (Monster 4 to 7); it only appears in captures when the bot films a long view.
-- Cubicle panels look like plain slabs; doors have no hinges or kick plates (L095). Tall rooms' upper walls are blank (L094).
-- Exit-time "leaked instances" messages from static materials (harmless). 27 invalid-UID warnings at launch remain for older assets.
-- Gemini sometimes ignores the video's audio; critic.py now sends the soundtrack separately too (L096).
+- The Occupant is not in the game: no strip shader, no AI, no watchers layer yet (M4). The tape figure is still the only presence and critics still call it a placeholder (Monster 4 to 5).
+- Halden field teams are design only (M4.5).
+- The crawl into the plenum over the rooms (in VISION) is not built: ceiling tiles have no top faces and the ceiling collision is a slab.
+- The bot does not use ladders or crawl holes on purpose (it may stumble through a hole); nothing shows them in captures unless a focus shot does.
+- Portals cost about 3.5 ms while on screen (portal view at 60 percent resolution, a second full render with SDFGI and haze); the far side's own glow cannot be undone exactly (gain 1.22 and 8 percent desaturation measured on video).
+- Perf in the 019 capture was contaminated by another program on the GPU (53.9 / 27.4). Clean runs on seed 84174 (60 s autoplay, 1440p): mine 75.7 / 51.4; QA 73.4 / 54.4 and 85.1 / 51.2 with portals, 92.6 / 68.1 without (runs vary by about 15 percent). The 1% low target (50) is only just met.
+- Signed Meshy download URLs (expiring 2026-10-05) were committed in pipeline/manifests/entity_meshy.json in 3030083 and c4fbd94; stripped at session end and build_entity_meshy.py now never writes them, but they stay in history (no history rewrite; they are download links to our own models, not keys).
+- At the end of this session the 020 capture build differs from HEAD by one line: the nook lamp range (L123), filmed (progress/0148) but not critic-reviewed.
+- Still open: the held camcorder reads as a pistol (L092), same mustard everywhere (L118), wall-foot gradient artifact (L117), carpet tiling and wallpaper banding (L104), a floating chair Gemini reported (L116, unverified).
 
 ## Critic: latest scores and top open LEDGER items
 Columns: First, Light, Shadow, Mater., Atmos., Camera, Surreal, Monster, Sound, Pace, Perf, Keep.
 | Loop | Build | Critic | F | L | Sh | M | At | Ca | Su | Mo | So | Pa | Pe | K |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| S02 end | 9200e2f | Claude | 6 | 6 | 6 | 6 | 6 | 7 | 5 | 6 | NA | 5 | 6 | 6 |
-| S02 end | 9200e2f | Gemini | 6 | 7 | 5 | 4 | 7 | 6 | 8 | 3 | 5 | 7 | 4 | 6 |
-| 009 | c66447f | Claude | 7 | 7 | 7 | 6 | 6 | 8 | 7 | NA | NA | 5 | 7 | 6 |
-| 009 | c66447f | Gemini | 6 | 5 | 4 | 4 | 7 | 8 | 8 | 6 | 7 | 6 | 3 | 7 |
-| 010 | b56860c | Claude | 6 | 6 | 6 | 6 | 6 | 7 | 6 | 5 | NA | 5 | 8 | 6 |
-| 010 | b56860c | Gemini | 6 | 5 | 5 | 5 | 7 | 8 | 5 | 4 | 6 | 7 | 9 | 7 |
-| 011 M2 gate 1 | 977b111 | Opus | 6 | 6 | 6 | 5 | 6 | 7 | 6 | NA | NA | 5 | 8 | 6 |
-| 011 M2 gate 1 | 977b111 | Gemini | 7 | 6 | 5 | 6 | 8 | 8 | 8 | NA | 8 | 7 | 8 | 8 |
-| 012 M2 gate 2 | bc73bfd | Opus | 6 | 6 | 6 | 6 | 6 | 7 | 6 | 5 | NA | 5 | 8 | 6 |
-| 012 M2 gate 2 | bc73bfd | Gemini | 5 | 4 | 3 | 5 | 8 | 8 | 6 | 7 | 7 | 7 | 9 | 7 |
-| 013 | 905da09 | Claude | 6 | 6 | 6 | 7 | 5 | 7 | 5 | NA | NA | 5 | 9 | 5 |
-| 013 | 905da09 | Gemini | 7 | 6 | 5 | 6 | 8 | 8 | 8 | NA | 8 | 7 | 9 | 8 |
-| 014 | c146ab4 | Claude | 6 | 6 | 6 | 6 | 6 | 7 | 6 | 5 | NA | 5 | 9 | 6 |
-| 014 | c146ab4 | Gemini | 6 | 5 | 5 | 4 | 7 | 7 | 8 | 6 | 8 | 7 | 9 | 7 |
-| 015 | f77d0b5 | Claude | 5 | 6 | 6 | 6 | 5 | 7 | 6 | 4 | NA | 5 | 9 | 6 |
-| 015 | f77d0b5 | Gemini | 5 | 4 | 4 | 6 | 7 | 8 | 7 | NA | 8 | 6 | 9 | 7 |
-| 016 | 5966470 | Claude | 7 | 7 | 7 | 7 | 6 | 8 | 6 | 5 | NA | 6 | 9 | 7 |
-| 016 | 5966470 | Gemini | 4 | 4 | 3 | 4 | 6 | 7 | 4 | 4 | 5 | 7 | 9 | 6 |
-| 017 | db625a3 | Claude | 6 | 6 | 5 | 6 | 6 | 7 | 6 | 5 | NA | 5 | 6 | 6 |
-| 017 | db625a3 | Gemini | 5 | 3 | 3 | 4 | 7 | 8 | 7 | 7 | 8 | 7 | 5 | 7 |
-| 018 final | 00d5ddb | Claude | 7 | 7 | 6 | 6 | 6 | 8 | 6 | 4 | NA | 6 | 9 | 6 |
-| 018 final | 00d5ddb | Gemini | 7 | 8 | 7 | 7 | 8 | 8 | 6 | 3 | 8 | 7 | 9 | 7 |
-017 was the light projector build (it cost 4 ms and thinned the haze; perf runs also shared the GPU), which is why Performance fell to 5 to 6; 018 has it off. Gemini's scores swing hard between runs of similar builds (Lighting 4 to 6, Surreal 4 to 8); read its trend, not one run. Gemini twice ignored the video's sound in 015; the critic script now sends the soundtrack separately (L096).
-Top open LEDGER items: L108 the figure reads as an ordinary man (Monster 3 to 4; M4), L109 big fogged rooms (floating far walls, "sand dune" carpet), L110 bright rooms flat next to great dark ones, L093 flat lighting / weak AO, L104 wallpaper repeat, L101 round pools (projector too expensive, try another way), L092 held camcorder, L094/L106 tall-room upper walls, L095 doors and partitions, L105 carpet reads dry, L098 streaming peaks.
-Protected (critics' "working, don't touch"): the camcorder overlay and tape glitches, the seam reveal (chalk door to glowing doorway), the survey pockets (tripod shadow, stencils), the long fogged halls, the chalk graffiti, the wallpaper close up, performance.
-
+| 018 (S03 final) | 00d5ddb | Claude | 7 | 7 | 6 | 6 | 6 | 8 | 6 | 4 | NA | 6 | 9 | 6 |
+| 018 (S03 final) | 00d5ddb | Gemini | 7 | 8 | 7 | 7 | 8 | 8 | 6 | 3 | 8 | 7 | 9 | 7 |
+| 019 | c4fbd94 | Claude | 7 | 7 | 6 | 6 | 6 | 8 | 7 | 4 | NA | 5 | 6 | 6 |
+| 019 | c4fbd94 | Gemini | 6 | 4 | 2 | 5 | 7 | 7 | 8 | 5 | 6 | 7 | 3 | 7 |
+| 020 (S04 final) | 173a660 | Claude | 7 | 7 | 6 | 6 | 6 | 7 | 8 | 6 | NA | NA | 7 | 6 |
+| 020 (S04 final) | 173a660 | Gemini | 4 | 3 | 3 | 4 | 6 | 6 | 8 | 4 | 5 | 6 | 5 | 6 |
+Surreal is now 7 to 8 on both critics (the storeroom hall: "the signature moment", "fantastic and seamless"). The 019 performance scores came from perf runs that shared the GPU with another program (L115; clean re-run 75.7 / 51.4). Gemini's Lighting and Shadows swing from 8/7 (018) to 3/3 (020) on similar lighting; read its trend over several runs. Both critics agree the next gains are the look (lighting depth, materials, color variety) and a monster that does something.
+Top open LEDGER items: L118 one mustard everywhere, L120 the hall's far door and walls, L092/L125 the held camcorder (reads as a pistol), L104 wallpaper and carpet repeat, L117 wall-foot gradient, L121/L122/L116 three props to verify (glowing bucket, something in a doorway top, a floating chair), L114 portal cost, L108 the figure (M4).
+Protected: the camcorder overlay, the chalk-door seam, the long fogged halls, the tripod room, the small door onto the giant hall and the hall's fog shafts, the figure with its floor reflection, the hum mix.
 
 ## qa-auditor result (pass/fail per claim)
-qa-auditor checked 12 claims (logs in review/archive/qa/s03/). Fixes made after it are noted.
-1. Boots, gdcheck (with audio check), --hero: PASS.
-2. Generator determinism: PASS (narrow: layout generator only).
-3. Loop jump invisible: PASS (frames 64.1 to 64.4 s, no spike).
-4. Seams: layer 12 and no collision PASS; "spawn chunk always has one" FAILED (21% of seeds). FIXED after the audit: a faulty exclusion skipped every full-width room; tests_spawn_seam.gd now passes 200/200 (55b73c1).
-5. Tape figure: layer 11 and the approach PASS; "its light dies" FAILED (dead code). FIXED (55b73c1): log now shows "light killed=true".
-6. Streaming steps "max about 7 ms": FAILED. QA measured p95 9 to 12 ms and peaks 14 to 19 ms at 1440p (I had measured 7.1 ms at 720p). Claim corrected; L098 open. Frame pacing still fine: a clean 100 s run had max frame 20.3 ms, none over 25 ms.
-7. Performance: PARTIAL. QA's 46 s re-run 89.8 / 58.7; its 94 s runs gave 1% lows near 33 fps, but those overlapped another project's Blender renders on the shared GPU. My 100 s re-run with per-process GPU logging and no other GPU activity: 107.1 avg, 70.2 1% low, p99 13.5 ms (review/archive/qa/s03/perf_100s_clean_builder.json). capture.py now discards runs that shared the GPU.
-8. PCM decode fix and sound rebuild: PASS.
-9. Spend about $8.6: PASS ($8.75 at audit time; final total below).
-10. Progress copies: FAILED (candidate sheets missing). FIXED: progress/0102 to 0108.
-11. No secrets committed: PASS.
-12. Working tree clean: PARTIAL at the time (camcorder .import UIDs, progress files). FIXED and committed.
-
+qa-auditor checked 12 claims (logs and frames in review/archive/qa/s04/). Fixes after it are noted.
+1. gdcheck: PASS.
+2. Storeroom placement: PASS (2 of 200 seeds without one in chunk 1,0; 7.2 percent of other chunks; the draft said about 9, corrected).
+3. Determinism and spawn seam tests: PASS.
+4. Portal crossing seamless: PASS ("[portal] t=3.30 ... through door"; central-frame brightness 113.7, 114.9, 112.0, 112.7, 114.4 across the crossing, a 2.6 percent spread; the frames look like the same hall).
+5. Far door leads out: PASS ("through far" at y about 0 at the storeroom door, then the room).
+6. Crawl: PASS (the room crawled into is very dark).
+7. Climb: PASS (the nook is lit and readable).
+8. Performance: PARTIAL (73.4 / 54.4 and 85.1 / 51.2 with portals, 92.6 / 68.1 without, idle GPU; the handoff numbers corrected to these).
+9. Occupant assets and spend: PARTIAL (assets and the 92 credits PASS; signed Meshy URLs in the manifest FAILED: stripped, and the build script now strips them on save).
+10. Critic guard: PASS (hand-back exit 0; a read of docs/VISION.md exit 2).
+11. No secrets: PARTIAL (no keys, no .env; only the signed URLs above).
+12. Progress copies and em dashes: PARTIAL (the 16 concept images were only in contact sheets: copied to progress/0149 to 0164; the only em dashes are in Gemini's verbatim critiques, as in every session since S01).
+Also found: a black unlit band on the storeroom door jamb when you press against it (minor, L126); engine exit-time leak messages and about 70 invalid-UID warnings (re-import would clear them); duplicate critic rows in SPEND.md (removed).
 
 ## Next milestone and the first 3 concrete steps
-M3.5 Look pass (D030; effort xhigh), then M4 the Entity (needs Meshy credits from Stewart).
-1. Big bright rooms (L110, L109): fewer lit panels with real dark gaps between pools, the horizon fade on partition walls (critic: "floating panels with gaps"), and the carpet's wet pattern losing contrast with distance ("sand dunes"). Use seed 732323 (018) and 864628 (016) big rooms for A/B lookdev. Then warm GI bounce (SDFGI energy 0.7 to 0.9) if the rooms still read flat.
-2. Held camcorder: keep it below the frame until the last third of the lift, or render it as a dark silhouette; judge on the video, not stills (L092). Door slabs with hinges, kick plates and handles; tall-room upper walls with streaks (L094, L095).
-3. Wallpaper anti-repeat (varying offsets like the carpet, per-wall grime, L104); light pools shaped without the projector (L101); then split the heaviest chunk build steps to bring 1440p peaks under 10 ms (L098) and a 10-minute walk on an idle GPU.
+M3.6 Remembered wrong batch 1 plus the look toward Stewart's reference stills (effort xhigh), then M4 (the Occupant, the Dropout, the watchers).
+1. Look: cleaner, more saturated mono-yellow with brighter panel rows and plain walls (grime concentrated), and at least one hall with a different palette behind a portal or seam (L118); fix the wall-foot gradient (L117). A/B lookdev against the reference feel, then a critic loop.
+2. Remembered-wrong rules, batch 1: handle-less doors, freestanding door frames, almost-right signs, category objects, chairs facing walls, a floor opening onto the lit ceiling of the level below.
+3. The watchers, cheap first: the tall room's high door opening a crack with something looking out; a figure drawn only at the screen edge. Then the Occupant strip shader on occupant_rigged.glb.
 
 ## Gotchas learned
-- Python on Windows writes CRLF in text mode: always open(..., newline='\n') when patching repo files.
-- Never let an asset job write into game/ while a capture runs: the capture imports at start and once imported a half-written WAV (a full-scale square wave, +0.7 LUFS). gdcheck and capture.py now refuse such files.
-- ElevenLabs pcm_48000 is interleaved stereo (l0_lib._decode fixed).
-- Another project's overnight Blender render queue shares the RTX 5070 Ti; perf numbers taken during it are meaningless. capture.py waits for an idle GPU, logs per-process GPU use (nvidia-smi pmon) and keeps the best clean run of 3.
-- Godot: a skinned mesh's VERTEX in vertex() is post-skinning; fog_disabled is needed for a dark figure to read against a hazy far end; StandardMaterial distance-fade dither glitters at distance (use plain.gdshader); Area3D reverb needs monitorable=true; Decals have layers (tape-only decals work).
-- GDScript: `var x := cond ? a : null`-style ternaries and untyped Array elements need explicit types.
-
-- Godot light projectors (Light3D.light_projector) are expensive here: about 4 ms at 1440p with ~14 shadowed spots, regardless of texture size, and volumetric fog samples them too (the haze outside the pool thins). Opt-in only (--projector).
-- tools/progress.py takes the session number from the first line of HANDOFF.md, so pictures made after the new handoff is written are tagged with the next session; 0115 onward were renamed back to s03.
+- A Camera3D environment override drops the volumetric haze when the camera renders in a SubViewport (Godot 4.7.2). Portal cameras use the world environment and the portal shader undoes AgX (copied from 4.7 tonemap.glsl and environment_storage.cpp).
+- Halls built during the loading moment exist before the player's camera; anything that grabs the camera at build time must pick it up again later.
+- Resetting volumetric fog temporal reprojection on a teleport darkens the haze for a few frames; across a portal (same picture both sides) keep it.
+- The chunk ceiling collision was a single slab at 2.6 m over the whole chunk, tall rooms included; walls had collision only up to 2.6 m.
+- The Meshy account is shared with Stewart's other projects; its balance drops between calls for reasons that are not ours.
+- A heredoc containing many nested quotes broke bash once; patch scripts are now written with the Write tool.
 
 ## Decisions made
-D020 horizon, D021 figure, D022 seams, D023 tall rooms, D024 perf, D025 rearrangement, D026 sound architecture, D027 light in the air, D028 M2 closed, D029 halls and wallpaper, D030 look pass before the Entity, D031 corner occlusion, D032 hum, carpet rolls, light projector (opt-in).
+D033 critic hand-back (Stewart's edit), D034 Stewart's priorities, D035 the Occupant, D036 storeroom portals, D037 crawl and climb.

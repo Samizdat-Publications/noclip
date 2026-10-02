@@ -150,6 +150,7 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L123 | 020 | claude | nitpick | Orange slits in ceiling tile gaps | FIX (S04 end) | The ladder nook's amber lamp reached the ceiling of the room below and lit its grid gaps; range 2.6 to 1.4 m (not yet filmed) |
 | L124 | 020 | claude | nitpick | Pillars wear the wallpaper at a giant scale; carpet reads as sandy noise in the hall | DEFER M3.6 | The hall's 4.4 m walls stretch the UV height; pillars in the hall should be painted concrete |
 | L125 | 020 | gemini | hurts | No physical lift of the camcorder (it snaps to the filter) | DEFER | Related to L092 (the held camcorder) |
+| L126 | QA S04 | qa-auditor | nitpick | A black unlit band on the storeroom door jamb when pressed against it (between the portal view and the wall) | DEFER | The jamb lining inside the portal box depth: extend the portal box sides to cover the lining, or light the lining |
 
 ## Closed
 

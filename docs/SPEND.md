@@ -43,10 +43,8 @@ Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques 
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 015_gemini.md | 1 | $0.09 (24600 in / 3459 out tokens) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 015_gemini.md | 1 | $0.12 (27639 in / 5033 out tokens) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 016_gemini.md | 1 | $0.09 (27639 in / 2879 out tokens) |
-| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 017_gemini.md | 1 | $0.10 (est) |
-| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 018_gemini.md | 1 | $0.09 (est) |
 
-Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and wallpaper about $1.3, sounds about $0.5, eleven video critiques about $1.0). Sketchfab models were free CC-BY downloads.
+Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and wallpaper about $1.3, sounds about $0.5, video critiques about $1.0; two hand-written duplicate critic rows removed in S04). Sketchfab models were free CC-BY downloads.
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 017_gemini.md | 1 | $0.10 (27638 in / 3623 out tokens) |
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 018_gemini.md | 1 | $0.09 (27639 in / 2534 out tokens) |
 
@@ -59,8 +57,6 @@ Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and w
 | 2026-10-02 | S04 | Meshy (rigging, height 2.35 m) | Occupant C_4 rig (build_entity_rig.py); 5 credits | 1 | 5 credits |
 | 2026-10-02 | S04 | Meshy (animations, 9 action_ids in one task) | Occupant C_4 clips idle walk run lunge look twitch crouch crawl scream; 27 credits. Balance 1698 to 1666 | 1 | 27 credits |
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 019_gemini.md | 1 | $0.09 (27641 in / 3154 out tokens) |
-| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 019_gemini.md | 1 | $0.09 (est) |
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 020_gemini.md | 1 | $0.09 (27639 in / 3001 out tokens) |
-| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 020_gemini.md | 1 | $0.09 (est) |
 
-Session 04 total: about $2.42 of Gemini (monster concepts $2.15, three video critiques about $0.27) and 92 Meshy credits (two image-to-3D models, a rig, nine animations) of the 1,000-credit budget Stewart set.
+Session 04 total: about $2.52 of Gemini (monster concepts $2.15, four video critiques 017 to 020 about $0.37; 017 and 018 were the S03 overtime loops) and 92 Meshy credits (two image-to-3D models, a rig, nine animations) of the 1,000-credit budget Stewart set.

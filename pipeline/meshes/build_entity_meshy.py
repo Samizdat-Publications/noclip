@@ -27,10 +27,21 @@ def load():
     return json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"tasks": {}}
 
 
+def _unsign(o):
+    """Signed download URLs (query strings with Signature=...) never go into the repo (QA S04)."""
+    if isinstance(o, dict):
+        return {k: _unsign(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_unsign(v) for v in o]
+    if isinstance(o, str) and o.startswith("http") and "?" in o:
+        return o.split("?", 1)[0]
+    return o
+
+
 def save(m):
     MANIFEST.parent.mkdir(parents=True, exist_ok=True)
     with open(MANIFEST, "w", newline="\n") as f:
-        json.dump(m, f, indent=2)
+        json.dump(_unsign(m), f, indent=2)
 
 
 def data_uri(path):
