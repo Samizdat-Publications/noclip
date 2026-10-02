@@ -54,6 +54,11 @@ func build(p_seed: int) -> void:
 	var r := Game.rng("level0:look")
 	seed_offset = Vector2(r.randf_range(0.0, 50.0), r.randf_range(0.0, 50.0))
 	mats = Level0Look.make_materials(seed_offset)
+	var sb: Array = L.get("shear_bands", [])
+	if sb.size() > 0:
+		var b: Array = sb[0]
+		(mats["wall"] as ShaderMaterial).set_shader_parameter("shear_rect", Vector4(b[0], b[1], b[2], b[3]))
+		(mats["wall"] as ShaderMaterial).set_shader_parameter("shear_band", Vector3(b[4], b[5], b[6]))
 	var fc: Array = L.get("flood_candidates", [])
 	if fc.size() > 0:
 		var f: Array = fc[r.randi() % fc.size()]
@@ -73,6 +78,7 @@ func build(p_seed: int) -> void:
 	kit.commit(self, mats, ["tbar", "housing"])
 	_build_decals()
 	_build_props()
+	_build_splices()
 	_build_collision()
 	_build_nav()
 	_build_traces()
@@ -825,6 +831,28 @@ func _build_props() -> void:
 				_tint(inst, Color(spec["tint"][0], spec["tint"][1], spec["tint"][2]))
 			var half: float = spec["half"]
 			solids.append(Rect2(spot[0] - half, spot[1] - half, half * 2.0, half * 2.0))
+
+
+## Generation-loss splice errors (VISION "Generation loss", DECISIONS D009): things copied
+## slightly wrong. A chair halfway into a wall, a box sunk into the carpet, the same chair
+## repeated like a looped frame.
+func _build_splices() -> void:
+	for sp in L.get("splices", []):
+		var path := "res://assets/props/level0/%s.glb" % sp["prop"]
+		if not ResourceLoader.exists(path):
+			continue
+		var scene: PackedScene = load(path)
+		var n := int(sp.get("repeat", 1))
+		var step: Array = sp.get("step", [0.0, 0.0])
+		for k in n:
+			var inst := scene.instantiate() as Node3D
+			var x: float = float(sp["pos"][0]) + float(step[0]) * k
+			var z: float = float(sp["pos"][1]) + float(step[1]) * k
+			inst.position = Vector3(x, float(sp.get("y", 0.0)), z)
+			inst.rotation.y = deg_to_rad(float(sp["yaw"]))
+			add_child(inst)
+			var half: float = sp.get("half", 0.25)
+			solids.append(Rect2(x - half, z - half, half * 2.0, half * 2.0))
 
 
 ## Ages a model's color (for example, white plastic yellowed by years of fluorescent light).

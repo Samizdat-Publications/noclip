@@ -12,6 +12,27 @@ Everything here is a strong starting point, not a cage. You have authority to ch
 ## Tone reference
 The 2026 film plays the Backrooms as endless liminal spaces that feel like warped memories of real places: mostly clean cinematic images, with VHS camcorder footage used sparingly. We do the same. The normal view is cinematic and grounded. The camcorder is a device in your hands, and what it shows is where the horror lives. Do not copy the film's creatures, story, or shots. Capture the feeling only.
 
+## Generation loss (the core twist, added S01, DECISIONS D009)
+The Backrooms are made of recordings, the way a VHS tape is dubbed from a dub. Every place is a copy of a real place, and every level deeper is another generation of copying. The wrongness follows rules the player can learn:
+- **Generation 1 (Level 0): almost right.** Splice errors: furniture clipped halfway into walls or sunk into the carpet, the same object repeated like a looped frame, a doorway slightly too small, a wall band where the wallpaper pattern jumps sideways like a tracking error.
+- **Deeper generations:** bands of geometry shear sideways, color bleeds out of objects into the walls, detail smears (textures soften, edges round off, objects become featureless "category" versions of themselves), text stops resolving, lights drift off color, sounds come back slightly reversed or pitched.
+- **One dial:** each level has a `fidelity` value that drives materials, props, light, text and sound together, so the decay reads as one consistent thing.
+- **The camcorder** is the one device that shows the place for what it is (seams, the Entity, the true shape of a room).
+- **You become part of it:** your recovered death tapes are copied into later runs (your chalk, your footprints, your dropped camera).
+- Reference and what not to copy: docs/reference/film_2026_research.md.
+
+## Halden Duplicating (placeholder name, DECISIONS D010)
+A 1990s tape-duplication company whose clean-room crews (white suits, hoods, lab coats) entered the Backrooms through their own mastering equipment. They treat it as a recording and want the "master" at the bottom. They are not your friends and not your enemies:
+- In the store hub between runs, their buyer trades your recovered tapes for gear (the progression shop, M5).
+- In levels (M6): tripod camcorders left recording empty halls, labeled tape crates, chalk survey codes, a field team crossing a far corridor. Sometimes they leave supplies. Sometimes they degauss a sector (lights and hum die, the Entity notices) or lock a door behind you.
+- Never reproduce the film's organization (a former MRI company); everything about Halden is ours.
+
+## The Store (Stewart's fixed decision; built in M5)
+The game starts in a furniture store after closing. You enter the Backrooms by walking through what looks like a solid wall in the back of the showroom, outlined in duct tape. The store is also the hub between runs. (The kickoff referred to this section, but it was missing from the file; reconstructed in S01 from the kickoff prompt.)
+- **Ours, not the film's:** you are a night closer, not the owner; the way in is a taped section of showroom wall, not a basement; the store has its own name, signage and 1990s discount-warehouse identity; no therapist or family plot.
+- **Hub loop:** after a run you wake by the taped wall with your tape. The Halden buyer is there some nights. The store slowly changes between runs as the Backrooms bleed into it (a lamp left on in the wrong display, a chair you saw down there).
+- **Architecture (already in code):** the store is a `Space` like any level; the taped wall is a `Threshold` of kind NOCLIP_WALL whose target is a Level 0 `Space` built behind it, so walking through is one continuous step (scripts/world/space.gd, threshold.gd, core/main.gd).
+
 ## Game concept (working title: NOCLIP)
 You slipped out of reality and you are holding a camcorder. Go deeper, film what you find, and try to get back out with the tape.
 
@@ -43,6 +64,7 @@ Each level needs its own lighting signature, material set, sound signature, a no
 | The Run (set piece) | Red-lit corridor, lights dying behind you | Rising roar, your breathing | A chase. Pure adrenaline, used sparingly |
 
 ## The Entity (original design; refine freely)
+S01 note: the 2026 film's threats are degraded human copies, so the M4 design must move clearly away from "a worse copy of a person". Strong direction that fits generation loss: something that exists properly only on tape, a dropout in the recording. To the naked eye it is an absence (light bends wrong, the hum dies, a gap in the wallpaper pattern); through the camcorder it is fully there. Decide in M4 and log it.
 Seed concept: **the Occupant.** A tall humanoid that is a misremembered person. The proportions are slightly wrong (forearms too long, neck a little too long), the face is smeared like a paused VHS frame, and it wears the clothes of nobody in particular.
 - **On camera** it moves in stutters, frame-skipping like bad tape. **Off camera** it moves smoothly and quietly.
 - **Senses:** hearing first (sprinting, dropped items, the camcorder's beep), then sight. The camcorder's IR light attracts it.

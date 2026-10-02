@@ -771,7 +771,7 @@ async function main() {
 		assignPool();
 		updateExposure( dt, false );
 		frameU.value = ( frameNo ++ ) % 1000;
-		pipeline.render();
+		if ( PARAMS.has( 'direct' ) ) renderer.render( scene, camera ); else pipeline.render();
 	}
 
 	function setTrackFrame( idx ) {

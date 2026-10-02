@@ -11,7 +11,8 @@ One milestone per session is the norm; big milestones may take two. Reorder or s
 - Exit: harness runs end to end with one command; at least three critic loops on the hero slice; critic Lighting and Atmosphere at 7 or higher.
 
 ## M2: Infinite Level 0 and the non-euclidean toolkit (effort: xhigh)
-- Seeded, chunk-streamed generator (room grammar, WFC, or graph-based; your call) using a Blender-generated modular kit.
+- Seeded, chunk-streamed generator (room grammar, WFC, or graph-based; your call). S01 built Level 0 from code (MeshKit + shaders) rather than a Blender kit; keep that unless a kit clearly looks better.
+- Generation loss as a system (VISION, D009): a per-level `fidelity` dial driving splice errors (props clipped into walls and floors, looped-frame repeats, tracking-shear bands), detail loss and color bleed. Level 0 is generation 1.
 - Lighting that stays great when procedural: fixture grid grammar, dead-panel clusters, GI that keeps up with streaming, no light leaks.
 - Toolkit from VISION: portals, overlapping spaces, loops, unobserved rearrangement, impossible stairs. Navigation that understands portals.
 - Exit: a 10 minute bot walk with no seams, hitches, or pops; critic "Surreal / non-euclidean wow" at 7 or higher; perf targets held.
@@ -28,6 +29,8 @@ One milestone per session is the norm; big milestones may take two. Reorder or s
 - Exit: critic Monster and Atmosphere at 7 or higher on both critics.
 
 ## M5: The run loop and progression (effort: high)
+- The Store hub (VISION "The Store"): the taped-wall Threshold into a Level 0 Space built behind it, one continuous step.
+- Halden Duplicating's buyer in the hub: trade recovered tapes for gear (VISION, D010).
 - Full loop: start, descend, Seams, Tape, death or escape, recovered tape.
 - Meta progression: gear, Known Seams shortcuts, lore tapes, past-run echoes (chalk, footprints, dropped camcorder with replay), depth record, Daily Descent.
 - Menus, notebook, settings (including reduced flicker mode), save system.
@@ -35,6 +38,7 @@ One milestone per session is the norm; big milestones may take two. Reorder or s
 
 ## M6: Deeper levels (effort: xhigh; likely two sessions)
 - Underlot, Pipeworks, The Pools, After Hours, and The Run set piece, each with its own lighting, sound, twist, and entity modifier. A second entity type.
+- Each level is a later generation (lower fidelity). Halden field teams appear: tripod cameras, tape crates, degaussed sectors, a team crossing a far corridor.
 - Exit: each level scores 7 or higher on Lighting and Atmosphere in its own capture.
 
 ## M7: Ship (effort: high)

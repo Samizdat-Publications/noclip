@@ -34,3 +34,13 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 
 ## D008 (2026-10-01, S01) Props come from Sketchfab (CC0/CC-BY only) and procedural Blender; Meshy is saved for the monster
 - Meshy had 3 credits. Everyday props are better as real-world-style models: Sketchfab CC0/CC-BY downloads via `pipeline/meshes/sketchfab_fetch.py` (credited in docs/CREDITS.md; NC/ND/SA/store licenses rejected), plus procedural Blender models where Sketchfab has nothing good. Meshy (300 free onboarding credits per Stewart) is reserved for the original monster in M4, where on-theme generation, rigging and animation matter.
+
+## D009 (2026-10-01, S01) Core twist: the Backrooms are generation loss of recordings
+- Stewart wants the film's general concept (spaces as distorted memories that lose fidelity with depth, furniture halfway through walls) with our own twist. Research (docs/reference/film_2026_research.md) showed the film's own premise is "the place copies the protagonist's furniture store", so that cannot be our twist.
+- Choice: the Backrooms are made of recordings, like a VHS tape dubbed from a dub. Level 0 is a first-generation copy with splice errors (props clipped into walls and floors, looped-frame repeats, a sheared tracking band in a wall). Each level deeper is another generation: geometry shears in bands, color bleeds into materials, detail and text smear away. The camcorder sees the place for what it is. Your own death tapes become part of later runs. One `fidelity` value per level drives materials, props, light, text and sound.
+- Alternatives: "copies of the store" (too close to the film), pure dream logic (no rules for the player to learn).
+- Revert: VISION section "Generation loss"; nothing in code depends on it beyond the Level 0 splice-error props and the wall shear band.
+
+## D010 (2026-10-01, S01) An ambiguous organization: Halden Duplicating (placeholder name)
+- Stewart asked for suited people from the real world who work in the Backrooms, not quite on your side. The film's extraction team (a former MRI company) is its own organization, so ours is original and grows out of D009: a 1990s tape-duplication company whose clean-room crews (white suits, lab coats) study the place as a recording and hunt for the "master" deep down. They buy your recovered tapes (the hub trading loop, M5), but field teams also degauss sectors (lights and sound die, the Entity notices), sometimes leave supplies, sometimes lock doors behind you. Traces: tripod camcorders recording empty halls, labeled tape crates, chalk survey codes.
+- Revert: drop the organization from VISION; nothing in code depends on it yet.

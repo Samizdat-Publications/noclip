@@ -82,9 +82,10 @@ Do NOT stop for: a choice you can make, a bug you can debug, an API hiccup (retr
    - What you need from him (exact steps), or "Nothing".
    - The next session launch in a code block, exactly this shape:
      ```
-     cd C:\dev\noclip
+     cd C:\Users\stewa\ClaudeProjects\Noclip
      claude --model claude-opus-5-5 --effort <level> --permission-mode auto
      ```
+     (The project lives in `C:\Users\stewa\ClaudeProjects\Noclip`, not `C:\dev\noclip`; see DECISIONS D001. In the desktop app, open that folder.)
      then the prompt to paste in its own code block. Effort: `high` by default, `xhigh` for rendering, procgen, non-euclidean, or AI-heavy milestones, `max` only for a stubborn deep bug.
 
 ### HANDOFF.md template
@@ -101,16 +102,21 @@ Do NOT stop for: a choice you can make, a bug you can debug, an API hiccup (retr
 ## Decisions made (links to DECISIONS.md entries)
 ```
 
-## Repository layout (create in M1; change freely, then update this section)
+## Repository layout (as built in S01; change freely, then update this section)
 ```
-CLAUDE.md, START_HERE.md, KICKOFF_PROMPT.md
+CLAUDE.md, START_HERE.md, KICKOFF_PROMPT.md, "Play NOCLIP.bat" (double-click to play)
 .claude/agents/  .claude/hooks/  .claude/settings.json
-docs/      VISION.md ROADMAP.md DECISIONS.md HANDOFF.md handoffs/ NEEDS_STEWART.md SPEND.md STEWART_FEEDBACK.md
-game/      engine project
-pipeline/  blender/ textures/ audio/ meshes/ manifests/   (scripts that generate every asset)
-tools/     capture/ critic_gemini/ build/ publish/
+docs/      VISION.md ROADMAP.md DECISIONS.md HANDOFF.md handoffs/ NEEDS_STEWART.md SPEND.md STEWART_FEEDBACK.md CREDITS.md
+game/      Godot 4.7 project: scenes/main.tscn, scripts/{core,world,level0,player,capture}, shaders/, data/ (layouts, shot lists), assets/
+pipeline/  textures/ audio/ blender/ meshes/ manifests/   (scripts that generate or fetch every asset)
+tools/     capture/capture.py (one-command review capture), critic_gemini/critic.py, critic_extract.py, scores.py,
+           lookdev.py (builder-only renders), perfprobe.sh, progress.py, import_presets.py, paths.py, layout_preview.py
 review/    inbox/ archive/ critiques/ LEDGER.md scores.csv store_page.md
+progress/  numbered progress pictures + INDEX.md (every generated image gets a copy here)
+spike/     threejs/ (the S01 engine bake-off, kept for reference)
 ```
+- Critic reviews: the critic guard blocks the critic's hand-back tool, so after each critic run use `python tools/critic_extract.py <agent_id> review/critiques/NNN_claude.md` (DECISIONS D004).
+- Stewart's rule: every generated image gets a copy in `progress/` via `python tools/progress.py` (lookdev.py and capture.py do it automatically). Name them so the history can be pieced back together.
 
 ## Engineering standards
 - Determinism: all procgen is seeded and a seed reproduces a level exactly. The harness and the qa-auditor depend on it.

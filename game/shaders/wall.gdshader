@@ -21,6 +21,10 @@ uniform vec2 seed_offset = vec2(0.0);
 uniform float pattern_contrast = 2.4;
 uniform vec3 tex_mean = vec3(0.584, 0.474, 0.162);
 
+// Generation loss: a band of wall where the copy slipped sideways like a tracking error.
+uniform vec4 shear_rect = vec4(-100.0, -100.0, -99.0, -99.0);   // x0, z0, x1, z1 (world)
+uniform vec3 shear_band = vec3(1.1, 1.4, 0.07);                 // y0, y1, horizontal slip (m)
+
 varying vec3 wpos;
 
 void vertex() {
@@ -29,7 +33,15 @@ void vertex() {
 
 void fragment() {
 	vec2 uv = UV / tile;
+	bool in_rect = wpos.x > shear_rect.x && wpos.x < shear_rect.z && wpos.z > shear_rect.y && wpos.z < shear_rect.w;
+	float in_band = in_rect ? step(shear_band.x, wpos.y) * step(wpos.y, shear_band.y) : 0.0;
+	float band_edge = in_rect ? max(exp(-pow((wpos.y - shear_band.x) / 0.004, 2.0)), exp(-pow((wpos.y - shear_band.y) / 0.004, 2.0))) : 0.0;
+	uv.x += in_band * shear_band.z / tile.x;
 	vec3 alb = use_tex ? texture(albedo_tex, uv).rgb : base_color;
+	if (in_band > 0.5 && use_tex) {
+		// a little chroma slip inside the band, as on a bad dub
+		alb.r = texture(albedo_tex, uv + vec2(0.012, 0.0)).r;
+	}
 	alb = max(tex_mean + (alb - tex_mean) * pattern_contrast, vec3(0.0));
 	float rough = use_tex ? texture(rough_tex, uv).r : 0.68;
 	float ao = use_tex ? texture(ao_tex, uv).r : 1.0;
@@ -59,6 +71,7 @@ void fragment() {
 	alb *= mix(0.82, 1.0, smoothstep(0.0, 0.22, y));
 	alb *= mix(0.9, 1.0, smoothstep(ceiling_h, ceiling_h - 0.12, y));
 
+	alb = mix(alb, alb * 1.25 + vec3(0.02), band_edge * 0.6);
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;

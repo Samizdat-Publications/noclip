@@ -71,7 +71,7 @@ async function launch( port ) {
 		executablePath: CHROME, headless: false,
 		args: [ '--enable-unsafe-webgpu', '--force_high_performance_gpu', '--disable-gpu-vsync', '--disable-frame-rate-limit',
 			'--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding', '--disable-background-timer-throttling',
-			'--window-position=0,0', '--window-size=1280,760', '--ignore-gpu-blocklist', '--enable-webgpu-developer-features' ]
+			'--window-position=0,0', '--window-size=1280,760', '--ignore-gpu-blocklist', '--enable-webgpu-developer-features', '--no-proxy-server', '--proxy-bypass-list=*' ]
 	} );
 	const ctx = await browser.newContext( process.env.NO_VIEWPORT ? { viewport: null } : { viewport: { width: 2560, height: 1440 }, deviceScaleFactor: 1 } );
 	const page = await ctx.newPage();
@@ -260,6 +260,7 @@ async function test( page ) {
 	const { browser, page, info } = L;
 	try {
 		if ( mode === 'test' ) await test( page );
+		else if ( mode === 'eval' ) console.log( JSON.stringify( await page.evaluate( process.env.EVAL_JS ), null, 1 ) );
 		else {
 			if ( mode === 'all' ) { fs.rmSync( PACKET, { recursive: true, force: true } ); }
 			fs.mkdirSync( PACKET, { recursive: true } );
