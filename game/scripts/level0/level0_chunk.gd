@@ -493,7 +493,7 @@ func _build_ladders(kit: MeshKit) -> void:
 		glow.position = Vector3((x0 + x1) * 0.5, top + 0.35, (z0 + z1) * 0.5) - Vector3(n.x, 0.0, n.y) * 0.5
 		glow.light_color = Color(1.0, 0.72, 0.42)
 		glow.light_energy = 0.35
-		glow.omni_range = 2.6
+		glow.omni_range = 1.4      # 2.6 reached the next room's ceiling below and lit its grid gaps orange (020)
 		glow.omni_attenuation = 1.6
 		glow.light_volumetric_fog_energy = 0.0
 		add_child(glow)

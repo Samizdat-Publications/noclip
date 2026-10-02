@@ -33,7 +33,7 @@ Stewart asked for rooms that are small outside, giant inside, and loop back para
 - Then: overlapping rooms (two rooms in one space, which one you are in depends on the door), impossible stairs, the corridor that grows each time you run it.
 - Crawl and climb (Stewart, S04): crawl automatically into openings too low to crouch through (or hold Ctrl), climb ladders by walking into them; low crawl holes between rooms, square openings high on walls with ladders, ladders up through a missing ceiling tile into the plenum (crawl over the rooms, drop out elsewhere).
 - Exit: both critics Surreal 7 or higher on two loops, no visible seam at a portal on video, perf targets held, Stewart's notes.
-- Status S04: storeroom portals into a hall under the level, far door back out of the storeroom (D036), crossing filmed seamless (progress/0134 to 0137).
+- Status S04: storeroom portals into a hall under the level, far door back out of the storeroom (D036), crossing filmed seamless (progress/0134 to 0137); crawl stance, crawl holes and tall-room ladders (D037). Critics: Surreal 7 and 8 (019), 8 and 8 (020): the Surreal part of the exit is met on two loops. Not built yet: overlapping rooms, impossible stairs, the growing corridor, the plenum crawl.
 
 ## M3.5: Look pass (effort: xhigh) (added S03)
 The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6), Shadows and depth (Gemini 4 to 5) and Materials (4 to 7); the ship gate needs 8. One focused session before the Entity:

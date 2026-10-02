@@ -60,3 +60,7 @@ Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and w
 | 2026-10-02 | S04 | Meshy (animations, 9 action_ids in one task) | Occupant C_4 clips idle walk run lunge look twitch crouch crawl scream; 27 credits. Balance 1698 to 1666 | 1 | 27 credits |
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 019_gemini.md | 1 | $0.09 (27641 in / 3154 out tokens) |
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 019_gemini.md | 1 | $0.09 (est) |
+| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 020_gemini.md | 1 | $0.09 (27639 in / 3001 out tokens) |
+| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 020_gemini.md | 1 | $0.09 (est) |
+
+Session 04 total: about $2.42 of Gemini (monster concepts $2.15, three video critiques about $0.27) and 92 Meshy credits (two image-to-3D models, a rig, nine animations) of the 1,000-credit budget Stewart set.

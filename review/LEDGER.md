@@ -144,6 +144,12 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L117 | 019 | claude | nitpick | A wavy soft gradient along the foot of walls reads as an artifact, not grime | DEFER M3.6 | Probably the corner occlusion strips meeting the wet wall decals; tune strength and give the strip a straight, even edge |
 | L118 | 019 | claude | hurts | Same mustard everywhere; wants a second color temperature and different room types behind portals and seams | DEFER M3.6 | Remembered-wrong batch 1 and halls with their own palette (a cold hall, a dark hall) |
 | L119 | Stewart S04 | stewart | hurts | Exit sign: a hard red-white ball covered the letters | FIX (S04) | The lamp sat 9 cm from the sign face; now 45 cm out and below, the plate glows from behind, a soft red spill on the wall, little light in the haze (progress exit-sign-backlit) |
+| L120 | 020 | claude | hurts | The hall's far exit door reads as a flat black rectangle from a distance; the far walls are blank grey | DEFER M3.6 | The far portal's dark stand-in shows when it is out of render range: let it render from further (cheap at small screen size) or fade it to the haze color; give the hall walls trims, stains and doors |
+| L121 | 020 | claude | hurts | A mop bucket glows white and floats in the hall | DEFER (verify) | A level prop in the hall (leak bucket); check its layer and lighting in the hall, and that it sits on the floor |
+| L122 | 020 | claude | hurts | A dark shape clipped into a doorway top (an upside-down chair in the ceiling?), and carpet streaks at the portal threshold (frame_20) | DEFER (verify) | Check the Rearranger near storerooms and the portal box's bottom edge |
+| L123 | 020 | claude | nitpick | Orange slits in ceiling tile gaps | FIX (S04 end) | The ladder nook's amber lamp reached the ceiling of the room below and lit its grid gaps; range 2.6 to 1.4 m (not yet filmed) |
+| L124 | 020 | claude | nitpick | Pillars wear the wallpaper at a giant scale; carpet reads as sandy noise in the hall | DEFER M3.6 | The hall's 4.4 m walls stretch the UV height; pillars in the hall should be painted concrete |
+| L125 | 020 | gemini | hurts | No physical lift of the camcorder (it snaps to the filter) | DEFER | Related to L092 (the held camcorder) |
 
 ## Closed
 
