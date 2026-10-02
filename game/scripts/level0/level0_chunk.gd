@@ -454,6 +454,7 @@ func _build_doors(kit: MeshKit) -> void:
 ## A finished door frame and a closed door set into a solid wall. It does not open.
 func _build_fake_doors(kit: MeshKit) -> void:
 	for fd in L.get("fake_doors", []):
+		var y0: float = float(fd[4]) if fd.size() > 4 else 0.0
 		var p := Vector2(fd[0], fd[1])
 		var n := Vector2(fd[2], fd[3])
 		var t := Vector2(-n.y, n.x)
@@ -469,13 +470,13 @@ func _build_fake_doors(kit: MeshKit) -> void:
 		for b in bx:
 			var a0: float = b[1]
 			var a1: float = b[2]
-			var y0: float = b[3]
-			var y1: float = b[4]
+			var yb0: float = b[3]
+			var yb1: float = b[4]
 			var o0: float = b[5]
 			var o1: float = b[6]
 			var c0 := p + t * a0 + n * o0
 			var c1 := p + t * a1 + n * o1
-			kit.box(b[0], Vector3(minf(c0.x, c1.x), y0, minf(c0.y, c1.y)), Vector3(maxf(c0.x, c1.x), y1, maxf(c0.y, c1.y)), MeshKit.ALL, H)
+			kit.box(b[0], Vector3(minf(c0.x, c1.x), y0 + yb0, minf(c0.y, c1.y)), Vector3(maxf(c0.x, c1.x), y0 + yb1, maxf(c0.y, c1.y)), MeshKit.ALL, H)
 
 
 ## Exit signs: a lit box above a doorway with a faint red glow on the wall around it.
@@ -562,6 +563,26 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 				_make_fixture(kit, r, cells, c, false, "%d:%d" % [i, j], ctx)
 	for ff in L.get("floor_fixtures", []):
 		_make_floor_fixture(kit, Vector2(ff[0], ff[1]))
+	# Every dead room keeps one weak tube, so its shape still reads (gate critique 011, L045).
+	if not L.has("loop"):
+		for dz in ctx["dark_zones"]:
+			var zone := dz as Rect2
+			var best: Fixture = null
+			var bd := 1e9
+			var alive := false
+			for fx in fixtures:
+				var p2 := Vector2(fx.position.x, fx.position.z)
+				if fx.mount != Fixture.Mount.CEILING or not zone.has_point(p2):
+					continue
+				if fx.state != Fixture.State.DEAD:
+					alive = true
+				var dd := p2.distance_to(zone.get_center())
+				if dd < bd:
+					bd = dd
+					best = fx
+			if not alive and best:
+				best.setup(Fixture.State.PULSE, _rng("fixture:dz:%d" % fixtures.find(best)), 0.3, best.tint)
+				best.apply()
 	return cells
 
 
@@ -1542,7 +1563,8 @@ func _build_seam_fx() -> void:
 		sl.spot_angle_attenuation = 1.6
 		sl.shadow_enabled = true
 		sl.shadow_bias = 0.04
-		sl.light_size = 0.08
+		sl.shadow_blur = 3.0
+		sl.light_size = 0.25   # soft PCSS on this one close, hard light (critique 011: jagged tripod shadow)
 		sl.distance_fade_enabled = true
 		sl.distance_fade_begin = 22.0
 		sl.distance_fade_length = 6.0
@@ -1611,7 +1633,8 @@ func _build_stairs(kit: MeshKit, st: Array) -> void:
 			for t in [0.15, 0.5, 0.85]:
 				for u in [0.1, 0.5, 0.9]:
 					var q: Vector2 = o + d * ((i + t) * run) + side * (w * u)
-					_ceiling_holes[Vector2i(floori(q.x / TILE), floori(q.y / TILE))] = true
+					if _ceil_at(q) <= H + 0.01:
+						_ceiling_holes[Vector2i(floori(q.x / TILE), floori(q.y / TILE))] = true
 	var length := steps * run
 	var bb: Array = aabb.call(o3 + side3 * w, o3 + dir3 * length + side3 * (w + 0.014) + Vector3(0, 0.1, 0))
 	kit.box("baseboard", bb[0], bb[1], MeshKit.ALL, H)

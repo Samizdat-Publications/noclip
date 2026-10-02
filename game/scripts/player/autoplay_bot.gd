@@ -44,6 +44,7 @@ var _seam_t := 0.0
 var _heading_t := 0.0
 var _relook_t := 0.0
 var _seam_looked_up := {}
+var _long_t := 0.0
 
 
 func _init() -> void:
@@ -295,6 +296,13 @@ func update_move(player: Node, delta: float) -> void:
 	# Ease off when the target direction is far from where we look (people turn, then walk).
 	var off := absf(angle_difference(pl.yaw, yaw_of(dir)))
 	move *= clampf(1.25 - off, 0.25, 1.0)
+
+	# A long view ahead: someone who knows what shows on tape lifts the camera to look.
+	_long_t -= delta
+	if _long_t <= 0.0:
+		_long_t = 1.0
+		if _cam_left <= 0.0 and _cam_cool <= 0.0 and space.view_depth(pos, pl.yaw, 30.0) >= 22.0 and rng.randf() < 0.6:
+			_cam_left = rng.randf_range(4.5, 7.0)
 
 	_sprint_cool -= delta
 	if _sprint_left > 0.0:

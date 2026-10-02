@@ -350,7 +350,7 @@ func _try_start(cam_on: bool) -> void:
 	var depth := space.view_depth(player.global_position, yaw, 34.0)
 	if depth < MIN_DEPTH:
 		return
-	if _rng.randf() > 0.5 and not Game.opts.has("tape-always"):
+	if _rng.randf() > (0.8 if _encounters == 0 else 0.5) and not Game.opts.has("tape-always"):
 		_next_ok = Game.clock + 6.0   # not every time
 		return
 	var dir := Vector3(-sin(yaw), 0.0, -cos(yaw))

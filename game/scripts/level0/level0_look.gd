@@ -91,14 +91,11 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 
 	var trim := StandardMaterial3D.new()
 	# Painted door frames, chipped and grimy (critique 009, L058: the plain lining read as a broken mesh).
-	trim.albedo_color = Color(0.62, 0.57, 0.46)
-	trim.roughness = 0.62
-	if tex("baseboard_albedo"):
-		trim.albedo_texture = tex("baseboard_albedo")
-		trim.uv1_scale = Vector3(1.6, 1.6, 1.6)
-		trim.normal_enabled = tex("baseboard_normal") != null
-		trim.normal_texture = tex("baseboard_normal")
-		trim.normal_scale = 0.5
+	# Plain enamel paint on hollow-metal frames, crisp edges (critique 011: a textured casing
+	# looked melted). Grime comes from the decals around it.
+	trim.albedo_color = Color(0.56, 0.52, 0.44)
+	trim.roughness = 0.48
+	trim.metallic = 0.05
 	m["trim"] = trim
 
 	var door := StandardMaterial3D.new()
@@ -159,7 +156,7 @@ static func make_environment(preset: String) -> Environment:
 	e.background_color = Color(0, 0, 0)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.42, 0.38, 0.24)
-	e.ambient_light_energy = float(Game.opts.get("ambient", "0.015"))
+	e.ambient_light_energy = float(Game.opts.get("ambient", "0.022"))   # dark rooms readable, not void (L045)
 	e.reflected_light_source = Environment.REFLECTION_SOURCE_BG
 
 	e.tonemap_mode = Environment.TONE_MAPPER_AGX

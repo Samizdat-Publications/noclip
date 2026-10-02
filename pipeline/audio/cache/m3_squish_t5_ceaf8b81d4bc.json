@@ -1,0 +1,17 @@
+{
+ "tag": "m3_squish_t5",
+ "params": {
+  "text": "Close-miked footsteps of one person in soft rubber-soled sneakers walking slowly on soaked, waterlogged thick office carpet. Each step is a soft muffled thump with a loud wet squelch and squish as water squeezes out of the sodden pile, then a small suck as the foot lifts. No heel click, no wooden knock, no hollow boom. Dry room, no echo, no voices, no music. Silence between steps. Slower pace.",
+  "duration_seconds": 10.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "m3_squish_t5_ceaf8b81d4bc.pcm",
+ "format": "pcm_48000",
+ "credits": 55.0,
+ "est_usd": 0.0165,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

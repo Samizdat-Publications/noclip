@@ -95,7 +95,7 @@ func apply() -> void:
 		field.mark(field_index)
 	if light:
 		# A panel three times too high still has to reach the floor (a tall room, D023).
-		light.light_energy = LIGHT_ENERGY * base_energy * level * pow(ceiling_h / 2.6, 1.25)
+		light.light_energy = LIGHT_ENERGY * base_energy * level * pow(ceiling_h / 2.6, 1.0)
 		light.visible = level > 0.002
 	if lens:
 		lens.set_instance_shader_parameter("light_level", level * base_energy)

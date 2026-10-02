@@ -18,11 +18,11 @@ void fragment() {
 	float et = m.y + wob * 0.5;
 	float e = min(ex, et);
 	float flick = 0.55 + 0.45 * h2(vec2(frame, 3.0));
-	float edge = exp(-pow(max(e, 0.0) / 0.011, 2.0)) * flick;
-	float halo = exp(-max(e, 0.0) / 0.07) * 0.12;
+	float edge = exp(-pow(max(e, 0.0) / 0.009, 2.0)) * flick * (0.35 + 0.65 * step(0.45, h2(vec2(row, floor(frame / 2.0)))));
+	float halo = exp(-max(e, 0.0) / 0.05) * 0.05;
 	float snow = step(0.9, h2(floor(FRAGCOORD.xy / 2.0) + frame * 1.7)) * smoothstep(0.18, 0.0, e) * 0.35;
 	float lines = step(0.988, h2(vec2(row, floor(frame * 0.5) + 1.0))) * 0.07;
-	vec3 col = vec3(0.82, 0.9, 1.0) * (edge * 1.0 + halo) + vec3(0.75, 0.8, 0.9) * snow + vec3(0.9, 0.86, 0.72) * lines;
+	vec3 col = vec3(0.82, 0.9, 1.0) * (edge * 0.5 + halo) + vec3(0.75, 0.8, 0.9) * snow + vec3(0.9, 0.86, 0.72) * lines;
 	// chroma slip on the cut, red one side, blue the other
 	col.r += 0.35 * exp(-pow((e - 0.012) / 0.008, 2.0)) * flick;
 	col.b += 0.25 * exp(-pow((e + 0.006) / 0.008, 2.0)) * flick;

@@ -629,6 +629,7 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 	if lf.get("tall", false):
 		L["tall_rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, H * 3.0])
 		kind = "tall"
+		_tall_cues(L, rr)
 	if lf.get("pocket", false):
 		# The random draws above still happen so the rest of the chunk keeps its sequence.
 		if kind == "hall":
@@ -746,6 +747,36 @@ func _pick_tall_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> void
 		cands[tr.randi() % cands.size()]["tall"] = true
 
 
+## Scale cues for a tall room (gate critique 011: "giant blank boxes"): a door copied a second
+## time halfway up one wall, and a flight of stairs that climbs along another and stops in the air.
+func _tall_cues(L: Dictionary, rr: Rect2) -> void:
+	var c := rr.get_center()
+	var along_x := rr.size.x >= rr.size.y
+	# The high door on a long wall, facing into the room.
+	var hz := rr.position.y + T * 0.5 if along_x else c.y
+	var hx := c.x if along_x else rr.position.x + T * 0.5
+	var hn := Vector2(0, 1) if along_x else Vector2(1, 0)
+	L["fake_doors"].append([hx, hz, hn.x, hn.y, 2.85])
+	# Stairs along the opposite long wall, when it is long enough and no door is in the way.
+	var steps_len := 19 * 0.28
+	if along_x and rr.size.x >= steps_len + 1.2:
+		var o := Vector2(rr.position.x + 0.6, rr.end.y - T * 0.5 - 1.05)
+		var ok := true
+		for k in 7:
+			if _near_door(L, o + Vector2(k * 0.9, 0.5), 1.3):
+				ok = false
+		if ok:
+			L["stairs"].append([o.x, o.y, 1.0, 0.0, 1.05])
+	elif not along_x and rr.size.y >= steps_len + 1.2:
+		var o2 := Vector2(rr.end.x - T * 0.5 - 1.05, rr.position.y + 0.6)
+		var ok2 := true
+		for k in 7:
+			if _near_door(L, o2 + Vector2(0.5, k * 0.9), 1.3):
+				ok2 = false
+		if ok2:
+			L["stairs"].append([o2.x, o2.y, 0.0, 1.0, 1.05])
+
+
 ## Builds the block, its seam and what is inside. Returns where a visitor would stand to look at
 ## the seam (the room's interest point).
 func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
@@ -845,9 +876,9 @@ func _room_mood(L: Dictionary, rr: Rect2, first: int) -> void:
 			fx[i].append("dim")
 	var tint_roll := mr.randf()
 	if tint_roll < 0.1:
-		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.64, 0.83, 1.0])    # cold blue-white
+		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.76, 0.87, 1.0])    # cold blue-white
 	elif tint_roll < 0.16:
-		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.78, 1.0, 0.66])    # sick green
+		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.86, 0.97, 0.8])    # sickly pale green
 	if not L.has("recolor") and mr.randf() < 0.09:
 		var cols := [[0.80, 0.98, 0.86], [1.0, 0.82, 0.78], [0.80, 0.86, 1.0]]
 		var col: Array = cols[mr.randi() % cols.size()]

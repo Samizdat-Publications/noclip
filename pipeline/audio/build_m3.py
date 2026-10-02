@@ -48,12 +48,30 @@ def paid(meta):
                                    ("tag", "params", "file", "format", "credits", "est_usd", "http_attempts", "date")})
 
 
+def norm_iter(x, target, iters=6):
+    """Integrated LUFS gating depends on level (absolute gate), so converge by iteration."""
+    for _ in range(iters):
+        x = L.norm_lufs(x, target)
+        if abs(L.lufs(x) - target) < 0.05:
+            break
+    return x
+
+
 def envelope(x, ms=6):
     n = max(1, int(ms * SR / 1000))
     return np.convolve(np.abs(x), np.ones(n) / n, mode="same")
 
 
 # ============================================================ breathing loops
+def agc(x, ms=900, power=0.6):
+    """Slow leveler: pulls loud breaths down and quiet ones up so no single gasp dominates a quiet loop."""
+    env = envelope(x, ms) + 1e-5
+    ref = np.percentile(env, 75)
+    g = np.clip((env / ref) ** (-power), 0.25, 4.0)
+    g = np.convolve(g, np.ones(int(0.2 * SR)) / int(0.2 * SR), mode="same")
+    return x * g
+
+
 def find_loop(x, lo_s, hi_s, xf_s=0.30):
     """Pick two breath-gap minima lo..hi seconds apart with matching level; return (loop array, info, cost)."""
     env = envelope(x, 120)
@@ -69,13 +87,16 @@ def find_loop(x, lo_s, hi_s, xf_s=0.30):
             d = (j - i) / SR
             if d < lo_s or d > hi_s or j + xf > len(x):
                 continue
-            cost = abs(env[i] - env[j]) + 0.5 * (env[i] + env[j]) + 0.02 * abs(d - 0.5 * (lo_s + hi_s))
+            seg_env = env[i:j]
+            peaky = seg_env.max() / (np.percentile(seg_env, 80) + 1e-6)     # one gasp dominating = bad
+            cost = abs(env[i] - env[j]) + 0.5 * (env[i] + env[j]) + 0.02 * abs(d - 0.5 * (lo_s + hi_s)) + 0.15 * peaky
             if best is None or cost < best[0]:
                 best = (cost, i, j)
     if best is None:
         return None, None, 1e9
     cost, i, j = best
     seg = x[i:j + xf].copy()
+    seg = agc(seg)
     n = j - i
     loop = seg[:n].copy()
     t = np.linspace(0, np.pi / 2, xf)
@@ -130,7 +151,7 @@ for name, b in BREATHS.items():
             best = (cost, loop, info, tk, txt)
     assert best, f"no loop for {name}"
     cost, loop, info, tk, txt = best
-    loop = L.norm_lufs(loop - loop.mean(), b["lufs"])
+    loop = norm_iter(loop - loop.mean(), b["lufs"])
     L.write_wav(name, loop)
     seam_report(name, loop)
     reg(name, method="ElevenLabs take, high-pass/low-pass, loop cut between two breath-gap minima, 0.3 s equal-power crossfade",
@@ -166,7 +187,7 @@ def drone(dur=24.0, seed=3030):
 
 
 d = drone()
-d = L.norm_lufs(d - d.mean(), -30.0)
+d = norm_iter(d - d.mean(), -30.0)
 L.write_wav("drone_dread_loop.wav", d)
 seam_report("drone_dread_loop.wav", d)
 reg("drone_dread_loop.wav", method="procedural: two detuned ~41.25 Hz harmonic oscillators beating at 0.33 Hz, a quieter pair near 62 Hz "
@@ -210,7 +231,7 @@ for name, (txt, dur) in DISTANT.items():
     if len(z) < int(1.6 * SR):
         z = np.concatenate([z, np.zeros(int(1.6 * SR) - len(z))])
     z = L.fade(z, 8, 450)
-    z = L.norm_lufs(z - z.mean(), -30.0)
+    z = norm_iter(z - z.mean(), -30.0)
     L.write_wav(name, z)
     reg(name, method="ElevenLabs take, 1.8 kHz 4th-order lowpass (through walls), synthetic 2 s reverb IR convolved, trimmed to activity, "
         "8 ms in / 450 ms out", prompt=txt, channels=1, target_lufs=-30, duration_s=round(len(z) / SR, 3))
@@ -304,9 +325,14 @@ for k, c in enumerate(chosen, 1):
     a = eq_notch_box(a)
     a = L.butter(a, "low", 9000, 2)
     a = L.fade(a, 8, 25)
-    a = L.norm_lufs(a, -26.0)
-    if L.peak_db(a) > -3.0:                      # peak over budget: bring the peak down (loudness then lands a touch lower)
-        a = L.norm_peak(a, -3.0)
+    a = norm_iter(a, -26.0)
+    for _ in range(8):                           # peak over -3 dBFS: soft-limit the thump, then re-level to -26 LUFS
+        if L.peak_db(a) <= -3.0:
+            break
+        th = 10 ** (-5.0 / 20)
+        a = np.tanh(a / th) * th
+        a = norm_iter(a, -26.0)
+    assert L.peak_db(a) <= -2.95, L.peak_db(a)
     name = f"step_carpet_squish_{k:02d}.wav"
     L.write_wav(name, a)
     squish_names.append(name)

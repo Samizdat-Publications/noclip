@@ -135,12 +135,12 @@ func _update_viewmodel() -> void:
 	if not viewmodel.visible:
 		return
 	var e := 1.0 - pow(1.0 - r, 1.6)   # quick to come into view, settles onto the eye
-	var low := Vector3(0.17, -0.34, -0.33)
+	var low := Vector3(0.21, -0.4, -0.36)
 	var eye := Vector3(0.0, 0.0, 0.004)
 	var p := low.lerp(eye, e) + Vector3(0.0, sin(e * PI) * 0.06, sin(e * PI) * -0.05)
 	var low_rot := Quaternion.from_euler(Vector3(-0.8, 0.3, 0.35))
 	var q := low_rot.slerp(Quaternion.IDENTITY, pow(e, 0.8))
-	viewmodel.transform = Transform3D(Basis(q), p)
+	viewmodel.transform = Transform3D(Basis(q).scaled(Vector3.ONE * 0.82), p)
 
 
 func _process(delta: float) -> void:
