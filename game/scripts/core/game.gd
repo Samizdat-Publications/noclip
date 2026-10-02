@@ -140,6 +140,13 @@ func _setup_audio_buses() -> void:
 	rev.wet = 0.11
 	rev.predelay_msec = 18.0
 	AudioServer.add_bus_effect(w, rev)
+	# The building's hum (fixture hums and the room tone) on its own bus inside World, so the
+	# level director can let it drift and sag (L099: "too loud and never changes").
+	AudioServer.add_bus()
+	var hb := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(hb, "Hum")
+	AudioServer.set_bus_send(hb, "World")
+	AudioServer.set_bus_volume_db(hb, -3.0)
 	AudioServer.add_bus()
 	var u := AudioServer.bus_count - 1
 	AudioServer.set_bus_name(u, "UI")

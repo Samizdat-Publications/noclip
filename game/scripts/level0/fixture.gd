@@ -22,6 +22,7 @@ var cathode_glow: float = 0.0
 var rng: RandomNumberGenerator
 var mount: int = Mount.CEILING
 var ceiling_h := 2.6
+var along_x := true           # the panel's long axis (its light pool is stretched the same way)
 var variant := 0              # picks hum and tick variants, stable per fixture
 var audio_offset := 0.0       # where its hum loop starts, so neighbors are not in phase
 var field: FixtureField       # told whenever the level changes (ceiling glow)
@@ -68,6 +69,12 @@ static func make_ceiling_light() -> SpotLight3D:
 	sl.distance_fade_begin = 22.0
 	sl.distance_fade_length = 6.0
 	sl.distance_fade_shadow = float(Game.opts.get("shadow_dist", "13"))
+	# A soft rounded-rectangle pool, longer along the panel (L101: "round pools under square
+	# panels"). pipeline/textures/build_light_projector.py; u is the panel's long axis.
+	if not Game.opts.has("no_projector"):
+		var pj := "res://assets/textures/level0/troffer_projector.png"
+		if ResourceLoader.exists(pj):
+			sl.light_projector = load(pj)
 	return sl
 
 
@@ -102,7 +109,8 @@ func apply() -> void:
 		lens.set_instance_shader_parameter("tint", Vector3(tint.r, tint.g, tint.b))
 		lens.set_instance_shader_parameter("cathode", cathode_glow)
 	if hum:
-		hum.volume_db = (-80.0 if level < 0.08 else lerpf(-14.0, -6.0, clampf(level, 0.0, 1.0))) + float(hum.get_meta("occ_db", 0.0))
+		# Some ballasts are quieter than others (0 to -4.8 dB by fixture), L099.
+		hum.volume_db = (-80.0 if level < 0.08 else lerpf(-14.0, -6.0, clampf(level, 0.0, 1.0)) - float(variant % 5) * 1.2) + float(hum.get_meta("occ_db", 0.0))
 	if buzz:
 		var failing := state == State.STARTER or state == State.PULSE or state == State.DROPOUT
 		buzz.volume_db = (lerpf(-30.0, -8.0, clampf(level, 0.0, 1.0)) if failing and level > 0.05 else -80.0) + float(buzz.get_meta("occ_db", 0.0))

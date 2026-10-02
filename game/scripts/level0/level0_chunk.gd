@@ -795,6 +795,7 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	fx.name = "fixture_" + id.replace(":", "_")
 	fx.position = Vector3(c.x, 0.0, c.y)
 	fx.ceiling_h = fh
+	fx.along_x = along_x
 	fx.variant = variant
 	fx.audio_offset = offset
 	add_child(fx)
@@ -809,6 +810,7 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	if not pooled:
 		var light := Fixture.make_ceiling_light()
 		light.position = Vector3(0, fh - 0.004, 0)
+		light.rotation = Vector3(-PI * 0.5, 0.0 if along_x else PI * 0.5, 0.0)
 		light.light_color = tint
 		fx.add_child(light)
 		fx.light = light
@@ -1604,7 +1606,7 @@ func _build_wrong_architecture(kit: MeshKit) -> void:
 		var sl := Fixture.make_ceiling_light()
 		sl.spot_angle = 80.0
 		sl.light_color = Color(0.96, 1.0, 0.9)
-		sl.transform = Transform3D(Basis.looking_at(n, Vector3.UP), pos + n * 0.05)
+		sl.transform = Transform3D(Basis.looking_at(n, Vector3.UP) * Basis(Vector3.BACK, PI * 0.5), pos + n * 0.05)   # projector long axis up the panel
 		add_child(sl)
 		fx.light = sl
 		fx.setup(Fixture.State.ON, _rng("level0:wallfixture"), 0.9, Color(0.96, 1.0, 0.9))

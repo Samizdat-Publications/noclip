@@ -46,7 +46,9 @@ func _ready() -> void:
 		if s:
 			_tick_streams.append(s)
 	for k in HUMS:
-		_hums.append(_player(1.1, 9.0))
+		var hp := _player(1.1, 9.0)
+		hp.bus = &"Hum"
+		_hums.append(hp)
 	for k in BUZZES:
 		_buzzes.append(_player(1.4, 14.0))
 		var tk := _player(1.6, 16.0)
@@ -221,7 +223,7 @@ func _give(fx: Fixture, slot: String, obj) -> void:
 	match slot:
 		"light":
 			var l: SpotLight3D = obj
-			l.global_transform = Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0, 0)), top - Vector3(0, 0.004, 0))
+			l.global_transform = Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0 if fx.along_x else PI * 0.5, 0)), top - Vector3(0, 0.004, 0))
 			l.spot_range = _base_range * fx.ceiling_h / 2.6
 			l.light_color = fx.tint
 			fx.light = l
@@ -230,7 +232,9 @@ func _give(fx: Fixture, slot: String, obj) -> void:
 			h.global_position = top - Vector3(0, 0.05, 0)
 			if not _hum_streams.is_empty():
 				h.stream = _hum_streams[fx.variant % _hum_streams.size()]
-			h.pitch_scale = 1.0 + (fx.variant % 11 - 5) * 0.001
+			# Neighbors a few percent apart beat against each other, so the hum wavers as you
+			# walk instead of one steady tone (L099).
+			h.pitch_scale = 1.0 + (fx.variant % 11 - 5) * 0.006
 			fx.hum = h
 			h.play(fx.audio_offset)
 		"buzz":

@@ -38,8 +38,18 @@ uniform float reflect_strength = 0.55;
 
 uniform vec3 world_shift = vec3(0.0);   // a loop copy samples its template's patterns
 
+uniform float roll_width = 3.66;   // 12 ft broadloom rolls (L100)
+uniform float roll_strength = 1.0;
+
 varying vec3 wpos;
 varying vec3 wraw;
+
+// Sample with a slowly varying offset (after Inigo Quilez's "texture repetition" trick): the
+// offset jumps between a handful of values across the floor and the two nearest are blended,
+// so the photographic carpet never shows the same patch in a grid (L100).
+vec2 _nt_off(float i) {
+	return sin(vec2(3.0, 7.0) * i) * 0.5 + 0.5;
+}
 
 void vertex() {
 	wraw = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -52,16 +62,23 @@ void fragment() {
 	mat2 R = mat2(vec2(0.8, -0.6), vec2(0.6, 0.8));
 	vec2 uv2 = (R * p) / (tile * 1.37) + vec2(0.31, 0.57);
 	float bl = smoothstep(0.3, 0.7, n_fbm3(p * 0.45 + 5.0));
+	float ntk = n_value(p * 0.21 + 3.3) * 7.0;
+	float ntf = smoothstep(0.25, 0.75, fract(ntk));
+	vec2 uva = uv1 + _nt_off(floor(ntk));
+	vec2 uvb = uv1 + _nt_off(floor(ntk) + 1.0);
+	vec2 gdx = dFdx(uv1);
+	vec2 gdy = dFdy(uv1);
 
 	vec3 alb;
 	float rough;
 	float ao;
 	vec3 nrm;
 	if (use_tex) {
-		alb = mix(texture(albedo_tex, uv1).rgb, texture(albedo_tex, uv2).rgb, bl);
-		rough = mix(texture(rough_tex, uv1).r, texture(rough_tex, uv2).r, bl);
-		ao = mix(texture(ao_tex, uv1).r, texture(ao_tex, uv2).r, bl);
-		nrm = mix(texture(normal_tex, uv1).rgb, texture(normal_tex, uv2).rgb, bl);
+		vec3 a1 = mix(textureGrad(albedo_tex, uva, gdx, gdy).rgb, textureGrad(albedo_tex, uvb, gdx, gdy).rgb, ntf);
+		alb = mix(a1, texture(albedo_tex, uv2).rgb, bl * 0.6);
+		rough = mix(mix(textureGrad(rough_tex, uva, gdx, gdy).r, textureGrad(rough_tex, uvb, gdx, gdy).r, ntf), texture(rough_tex, uv2).r, bl * 0.6);
+		ao = mix(mix(textureGrad(ao_tex, uva, gdx, gdy).r, textureGrad(ao_tex, uvb, gdx, gdy).r, ntf), texture(ao_tex, uv2).r, bl * 0.6);
+		nrm = mix(mix(textureGrad(normal_tex, uva, gdx, gdy).rgb, textureGrad(normal_tex, uvb, gdx, gdy).rgb, ntf), texture(normal_tex, uv2).rgb, bl * 0.6);
 	} else {
 		alb = base_color * mix(0.85, 1.1, n_value(p * 40.0));
 		rough = 0.92;
@@ -89,11 +106,30 @@ void fragment() {
 	// Large-scale color drift: traffic lanes, sun fade, old cleaning.
 	alb *= mix(vec3(0.86, 0.85, 0.84), vec3(1.07, 1.05, 1.0), n_fbm(p * 0.07 + seed_offset * 0.3));
 
+	// Broadloom rolls (L100): strips 12 ft wide, each from a slightly different dye lot and with
+	// its pile laid the other way, so it looks lighter or darker depending on where you stand.
+	// A straight seam where two rolls meet. Straight lines across a big room read as a real floor
+	// where noise alone reads as clouds.
+	float rx = p.x / roll_width + 0.37;
+	float rid = floor(rx);
+	float rh = n_hash12(vec2(rid, 17.0) + seed_offset);
+	vec3 lot = mix(vec3(0.95, 0.955, 0.965), vec3(1.045, 1.035, 1.01), rh);
+	vec3 Vc = CAMERA_POSITION_WORLD - wraw;
+	vec2 vxz = Vc.xz / max(length(Vc), 0.001);
+	float pile = (mod(rid, 2.0) < 1.0 ? 1.0 : -1.0) * vxz.y;
+	float sheen_dir = 1.0 + 0.06 * pile;
+	float sd = abs(fract(rx) - 0.5) * 2.0;           // 1 at a seam
+	float sw = 0.016 / roll_width;
+	float sfw = max(fwidth(sd), 1e-4);
+	float seam = smoothstep(1.0 - max(sw, sfw * 1.5), 1.0, sd) * clamp(sw / sfw, 0.0, 1.0);   // fades out before it can shimmer
+	alb *= mix(vec3(1.0), lot * sheen_dir, roll_strength);
+	alb *= 1.0 - 0.28 * seam * roll_strength;
+
 	// Wet patches with a darker tide-line rim, plus fine damp mottling everywhere.
 	float field = n_fbm(p * wet_scale + seed_offset);
 	float wet = smoothstep(wet_lo, wet_hi, field) * wet_amount;
 	float rim = exp(-pow((field - wet_lo - 0.01) / 0.012, 2.0)) * wet_amount;
-	float mottle = smoothstep(0.42, 0.78, n_fbm(p * 1.7 + 3.0)) * 0.45;
+	float mottle = smoothstep(0.42, 0.78, n_fbm(p * 1.7 + 3.0)) * 0.32;
 	float damp = max(wet, mottle * wet_amount);
 	alb *= mix(1.0, 0.52, damp);
 	alb *= 1.0 - 0.22 * rim;
