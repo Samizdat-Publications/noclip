@@ -1,10 +1,19 @@
 class_name Camcorder
 extends CanvasLayer
 ## The camcorder in your hands (hold right mouse). Its overlay IS the HUD: REC, the tape
-## timestamp, battery. M1: the VHS image and sounds. Later: infrared, battery drain, and
-## showing things the naked eye cannot see.
+## timestamp, battery. Holding the button lifts the physical camera to your eye (a viewmodel
+## on the player camera); the viewfinder image cuts in only once the eyecup is at your eye,
+## and lowering reverses it (critique 006, L025). Later: infrared and showing things the
+## naked eye cannot see.
+
+const RAISE_T := 0.3
+const LOWER_T := 0.34
 
 var active := false
+var want := false
+## 0 = held low out of view, 1 = eyecup at the eye.
+var raise := 0.0
+var viewmodel: Node3D
 var fov := 60.0
 var degrade := 0.0
 var _rect: ColorRect
@@ -75,9 +84,15 @@ func _player(name: String, db: float) -> AudioStreamPlayer:
 
 
 func set_active(on: bool) -> void:
+	want = on
+
+
+func _switch(on: bool) -> void:
 	if on == active:
 		return
 	active = on
+	if Game.opts.has("log-cam"):
+		print("[cam] %s frame=%d" % ["on" if on else "off", Game.frame])
 	_burst = 0.28   # the picture rolls and snows for a moment when the camera comes up or goes down
 	if on:
 		visible = true
@@ -91,7 +106,32 @@ func set_active(on: bool) -> void:
 		_motor.stop()
 
 
+## Where the physical camcorder sits for the current raise amount (local to the player camera).
+func _update_viewmodel() -> void:
+	if viewmodel == null:
+		return
+	var r := raise
+	viewmodel.visible = r > 0.01 and not active
+	if not viewmodel.visible:
+		return
+	var e := 1.0 - pow(1.0 - r, 1.6)   # quick to come into view, settles onto the eye
+	var low := Vector3(0.17, -0.34, -0.33)
+	var eye := Vector3(0.0, 0.0, 0.004)
+	var p := low.lerp(eye, e) + Vector3(0.0, sin(e * PI) * 0.06, sin(e * PI) * -0.05)
+	var low_rot := Quaternion.from_euler(Vector3(-0.8, 0.3, 0.35))
+	var q := low_rot.slerp(Quaternion.IDENTITY, pow(e, 0.8))
+	viewmodel.transform = Transform3D(Basis(q), p)
+
+
 func _process(delta: float) -> void:
+	if want:
+		raise = minf(raise + delta / RAISE_T, 1.0)
+		if raise >= 1.0:
+			_switch(true)
+	else:
+		_switch(false)
+		raise = maxf(raise - delta / LOWER_T, 0.0)
+	_update_viewmodel()
 	_burst = maxf(_burst - delta, 0.0)
 	if _hide_in >= 0.0:
 		_hide_in -= delta

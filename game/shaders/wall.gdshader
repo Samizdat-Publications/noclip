@@ -33,6 +33,16 @@ void vertex() {
 
 void fragment() {
 	vec2 uv = UV / tile;
+	// Wallpaper hangs in sheets 0.53 m wide; each sheet's pattern sits a few millimeters off its
+	// neighbor and the seams show as a hairline with a lifted edge (critique 006: walls looked flat).
+	float sheet_w = 0.53;
+	float sx = (UV.x + seed_offset.x * 3.0) / sheet_w;
+	float sheet = floor(sx);
+	float sf = fract(sx) * sheet_w;   // meters from this sheet's left edge
+	float sh = n_hash12(vec2(sheet, 7.0));
+	uv.y += (sh - 0.5) * 0.012 / tile.y;
+	float seam_dark = exp(-pow(sf / 0.0012, 2.0)) + exp(-pow((sheet_w - sf) / 0.0012, 2.0));
+	float lift = step(0.82, sh) * smoothstep(0.004, 0.0, sf) * smoothstep(1.4, 2.4, wpos.y);
 	bool in_rect = wpos.x > shear_rect.x && wpos.x < shear_rect.z && wpos.z > shear_rect.y && wpos.z < shear_rect.w;
 	float in_band = in_rect ? step(shear_band.x, wpos.y) * step(wpos.y, shear_band.y) : 0.0;
 	float band_edge = in_rect ? max(exp(-pow((wpos.y - shear_band.x) / 0.004, 2.0)), exp(-pow((wpos.y - shear_band.y) / 0.004, 2.0))) : 0.0;
@@ -73,6 +83,13 @@ void fragment() {
 	alb *= mix(0.9, 1.0, smoothstep(ceiling_h, ceiling_h - 0.12, y));
 
 	alb = mix(alb, alb * 1.12 + vec3(0.015), band_edge * 0.35);
+	alb *= 1.0 - 0.35 * seam_dark;
+	alb = mix(alb, alb * 1.15 + vec3(0.02), lift * 0.6);
+	// Grime where hands and shoulders brush the wall, and scuffs low down from chairs and feet.
+	float hands = smoothstep(0.62, 0.8, n_fbm3(vec2(s * 1.7, y * 2.2) + 41.0)) * smoothstep(0.7, 1.0, y) * smoothstep(1.6, 1.3, y);
+	alb *= 1.0 - 0.12 * hands * damage;
+	float scuff = smoothstep(0.7, 0.86, n_value(vec2(s * 9.0, y * 3.0) + 13.0)) * smoothstep(0.55, 0.18, y);
+	alb *= 1.0 - 0.18 * scuff * damage;
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;

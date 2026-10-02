@@ -40,8 +40,8 @@
   "flood_candidates": [[19.5, 15.7, 24.6, 20.6], [25.4, 13.2, 29.8, 20.8], [0.2, 22.0, 6.4, 29.6]],
   "tint_zones": [[0.0, 19.0, 13.0, 21.6, 0.74, 0.92, 1.0]],
   "splices": [
-    {"prop": "prop_office_chair", "pos": [13.02, 9.6], "yaw": 90, "y": 0.0, "half": 0.3},
-    {"prop": "prop_office_chair_alt_sf", "pos": [16.2, 25.2], "yaw": 203, "y": -0.36, "half": 0.3},
+    {"prop": "prop_office_chair", "pos": [13.2, 9.6], "yaw": 270, "y": 0.0, "half": 0.3, "seam": [1, 0]},
+    {"prop": "prop_office_chair_alt_sf", "pos": [16.2, 25.2], "yaw": 203, "flip": true, "half": 0.3},
     {"prop": "prop_folding_chair_sf", "pos": [15.2, 0.55], "yaw": 180, "y": 0.0, "half": 0.25, "repeat": 3, "step": [1.15, 0.0]}
   ],
   "shear_bands": [[6.0, 3.85, 8.8, 4.15, 1.02, 1.46, 0.036]],

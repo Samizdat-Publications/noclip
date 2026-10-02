@@ -49,6 +49,7 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 		ceil.set_shader_parameter("stain_tex", stain)
 	elif tex("ceiling_tile_albedo"):
 		ceil.set_shader_parameter("stain_tex", tex("ceiling_tile_albedo"))
+	ceil.set_shader_parameter("halo_strength", float(Game.opts.get("halo", "0.8")))
 	m["ceiling"] = ceil
 
 	var lens := _shader("res://shaders/troffer_lens.gdshader")
@@ -82,11 +83,8 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	tbar.metallic = 0.0
 	m["tbar"] = tbar
 
-	var housing := StandardMaterial3D.new()
-	housing.albedo_color = Color(0.9, 0.89, 0.85)
-	housing.roughness = 0.35
-	housing.metallic = 0.2
-	m["housing"] = housing
+	m["housing"] = _shader("res://shaders/housing.gdshader")
+	m["housing"].set_shader_parameter("reveal_glow", float(Game.opts.get("reveal", "0.9")))
 
 	var trim := StandardMaterial3D.new()
 	trim.albedo_color = Color(0.6, 0.55, 0.43)
@@ -113,7 +111,7 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	exit.emission_texture = ex
 	exit.emission = Color(1, 1, 1)
 	exit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
-	exit.emission_energy_multiplier = 2.2
+	exit.emission_energy_multiplier = 1.3
 	exit.roughness = 0.25
 	m["exit"] = exit
 
@@ -146,21 +144,21 @@ static func make_environment(preset: String) -> Environment:
 	e.tonemap_mode = Environment.TONE_MAPPER_AGX
 	e.tonemap_exposure = 1.0
 	e.tonemap_agx_white = 10.0
-	e.tonemap_agx_contrast = 1.18
+	e.tonemap_agx_contrast = float(Game.opts.get("agx_c", "1.3"))
 
 	e.sdfgi_enabled = preset != "low"
 	e.sdfgi_use_occlusion = true
 	e.sdfgi_cascades = 3
 	e.sdfgi_min_cell_size = 0.1
-	e.sdfgi_bounce_feedback = 0.95
-	e.sdfgi_energy = 1.7
+	e.sdfgi_bounce_feedback = float(Game.opts.get("gi_fb", "0.6"))
+	e.sdfgi_energy = float(Game.opts.get("gi", "1.0"))
 	e.sdfgi_read_sky_light = false
 	e.sdfgi_normal_bias = 1.1
 	e.sdfgi_probe_bias = 1.1
 
 	e.ssao_enabled = true
 	e.ssao_radius = 1.0
-	e.ssao_intensity = 2.2
+	e.ssao_intensity = float(Game.opts.get("ssao", "3.0"))
 	e.ssao_power = 1.6
 	e.ssao_detail = 0.6
 	e.ssao_light_affect = 0.08
@@ -193,7 +191,7 @@ static func make_environment(preset: String) -> Environment:
 	e.set_glow_level(5, 0.0)
 
 	e.volumetric_fog_enabled = true
-	e.volumetric_fog_density = 0.022
+	e.volumetric_fog_density = float(Game.opts.get("fog", "0.016"))
 	e.volumetric_fog_albedo = Color(0.95, 0.92, 0.82)
 	e.volumetric_fog_emission = Color(0, 0, 0)
 	e.volumetric_fog_anisotropy = 0.45
@@ -229,7 +227,7 @@ static func make_environment(preset: String) -> Environment:
 static func make_camera_attributes() -> CameraAttributesPractical:
 	var c := CameraAttributesPractical.new()
 	c.auto_exposure_enabled = true
-	c.auto_exposure_scale = 0.42
+	c.auto_exposure_scale = float(Game.opts.get("ae", "0.36"))
 	c.auto_exposure_speed = 0.55
 	c.auto_exposure_min_sensitivity = 60.0
 	c.auto_exposure_max_sensitivity = 1100.0

@@ -54,7 +54,19 @@ void fragment() {
 
 	// Heathered fibers: color varies at the centimeter scale, so far carpet still reads as fabric.
 	float heather = n_value(p * 31.0 + 7.0) * 0.6 + n_value(p * 83.0) * 0.4;
-	alb *= mix(0.86, 1.1, heather);
+	alb *= mix(0.84, 1.12, heather);
+	// Berber yarn: dark brown and pale flecks a centimeter or two across, so the carpet still
+	// reads as woven fabric at walking distance (critique 006: "flat ochre with no texture").
+	float fk = n_value(p * 70.0);
+	float fk2 = n_value(p * 52.0 + 9.7);
+	alb *= mix(1.0, 0.74, smoothstep(0.22, 0.12, fk));
+	alb *= mix(1.0, 1.14, smoothstep(0.8, 0.9, fk));
+	alb *= mix(vec3(1.0), vec3(0.8, 0.74, 0.68), smoothstep(0.16, 0.08, fk2));
+	// Rows of tufts: faint lines of light and shade across the pile.
+	float rows = 0.5 + 0.5 * sin((p.x * 0.8 + p.y * 0.6) * 230.0);
+	alb *= mix(0.95, 1.04, rows * smoothstep(0.2, 0.8, n_value(p * 2.0 + 4.0)));
+	// Pile direction: brushed patches look lighter or darker depending on how the fibers lie.
+	alb *= mix(0.9, 1.08, n_fbm3(vec2(p.x * 1.4 + p.y * 0.3, p.y * 0.55) + 21.0));
 	alb *= vec3(0.8, 0.74, 0.62);   // darker, browner than the walls: value separation (critique 005)
 
 	// Large-scale color drift: traffic lanes, sun fade, old cleaning.
@@ -68,7 +80,9 @@ void fragment() {
 	float damp = max(wet, mottle * wet_amount);
 	alb *= mix(1.0, 0.52, damp);
 	alb *= 1.0 - 0.22 * rim;
-	rough = mix(rough, 0.56, wet);
+	// Damp sheen (critique 006, L027): wet fibers lie flat and catch the panels as a soft smear.
+	// SSR stays off (D012), so this is only the lights' own highlight, never a mirror blob.
+	rough = mix(rough, 0.52, wet);
 	rough = mix(rough, rough * 0.86, mottle);
 	nrm = mix(nrm, vec3(0.5, 0.5, 1.0), wet * 0.55);
 
@@ -81,14 +95,14 @@ void fragment() {
 	float edge = box + (n_fbm(p * 0.9 + 11.0) - 0.5) * 1.6;
 	float flood = smoothstep(0.25, -0.35, edge);
 	alb = mix(alb, alb * vec3(0.32, 0.3, 0.26), smoothstep(0.6, -0.6, edge));
-	rough = mix(rough, 0.62 + 0.08 * n_value(p * 3.0), flood);
+	rough = mix(rough, 0.5 + 0.08 * n_value(p * 3.0), flood);
 	nrm = mix(nrm, vec3(0.5 + 0.015 * sin(p.x * 9.0 + p.y * 4.0), 0.5, 1.0), flood);
 
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.25;
-	SPECULAR = mix(mix(0.2, 0.42, wet), 0.12, flood);
+	SPECULAR = mix(mix(0.2, 0.36, wet), 0.3, flood);
 	NORMAL_MAP = nrm;
 	NORMAL_MAP_DEPTH = normal_strength;
 }

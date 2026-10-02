@@ -20,7 +20,7 @@ var cam: Camera3D
 var camcorder: Camcorder
 var yaw := 0.0
 var pitch := 0.0
-var base_fov := 78.0
+var base_fov := 70.0   # 78 stretched the walls at the screen edges (critique 006, L024)
 
 var _eye := EYE
 var _phase := 0.0
@@ -29,7 +29,6 @@ var _stride := STRIDE_WALK
 var _stamina := 1.0
 var _kick := 0.0
 var _speed := 0.0
-var _roll := 0.0
 var _sprinting := false
 var _crouching := false
 var _cap: CollisionShape3D
@@ -57,7 +56,34 @@ func _ready() -> void:
 	cam.current = true
 	camcorder = Camcorder.new()
 	add_child(camcorder)
+	var vm_path := "res://assets/props/player/camcorder.glb"
+	if ResourceLoader.exists(vm_path):
+		var vm := (load(vm_path) as PackedScene).instantiate() as Node3D
+		cam.add_child(vm)
+		_prep_viewmodel(vm)
+		vm.visible = false
+		camcorder.viewmodel = vm
 	_setup_steps()
+
+
+## The held camcorder is part of the view, not the world: no shadows, no GI.
+func _prep_viewmodel(n: Node) -> void:
+	if n is GeometryInstance3D:
+		var g := n as GeometryInstance3D
+		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		g.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
+		g.extra_cull_margin = 1.0
+	if n is MeshInstance3D:
+		# Dark charcoal plastic: the baked atlas reads too pale under the panels.
+		var mi := n as MeshInstance3D
+		for i in mi.mesh.get_surface_count():
+			var m := mi.mesh.surface_get_material(i)
+			if m is BaseMaterial3D and m.resource_name == "camcorder_body":
+				var d := (m as BaseMaterial3D).duplicate() as BaseMaterial3D
+				d.albedo_color = d.albedo_color * Color(0.32, 0.32, 0.33)
+				mi.set_surface_override_material(i, d)
+	for c in n.get_children():
+		_prep_viewmodel(c)
 
 
 func spawn(t: Transform3D) -> void:
@@ -160,9 +186,8 @@ func _process(delta: float) -> void:
 	var sway_p := (sin(clk * 0.93) * 0.0035 + sin(clk * 2.1 + 1.0) * 0.0012) * breath
 	var sway_y := (sin(clk * 0.61 + 2.0) * 0.003) * breath
 	_kick = lerpf(_kick, 0.0, 1.0 - exp(-10.0 * delta))
-	var strafe := input.move.x
-	_roll = lerpf(_roll, -strafe * 0.008, 1.0 - exp(-4.0 * delta))
-	var b := Basis.from_euler(Vector3(pitch + sway_p - _kick, yaw + sway_y, _roll + bob_h * 0.15))
+	# No camera roll: strafe lean and bob roll made the walls look like they were toppling (L024).
+	var b := Basis.from_euler(Vector3(pitch + sway_p - _kick, yaw + sway_y, 0.0))
 	var right := Basis(Vector3.UP, yaw) * Vector3.RIGHT
 	cam.global_transform = Transform3D(b, t.origin + Vector3(0.0, _eye + bob_v, 0.0) + right * bob_h)
 	var target_fov := camcorder.fov if camcorder.active else base_fov

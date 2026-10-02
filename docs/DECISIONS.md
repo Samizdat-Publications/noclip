@@ -55,3 +55,13 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 
 ## D012 (2026-10-01, S01) Screen-space reflections off by default
 - SSR reflected the very bright troffer lenses as milky white blobs on wet and flooded carpet (critique 005, progress/0031) and cost about 2 fps. Wet carpet is rendered as darker and only slightly less rough instead. Re-enable with `--ssr` when a reflection setup that clamps emissive brightness exists (needed for The Pools in M6).
+
+## D013 (2026-10-01, S02) Fixture lighting: panels kept clear of walls, pooled cones, ceiling glow field
+- Problem (critique 006, L021): every panel is a point spot light; panels placed on a fixed grid sat right against walls and painted bright curved arcs on them ("sideways spotlights").
+- Choice: (1) the fixture grid slides each panel by whole ceiling tiles to the spot with the most wall clearance (`_place_fixture`), like a real reflected-ceiling plan; (2) cone falloff 1.25 to 1.5 and distance falloff 1.4 to 1.7, so light pools under each panel; (3) less GI bounce (SDFGI energy 1.7 to 1.0, feedback 0.95 to 0.6), more SSAO (3.0), AgX contrast 1.3, auto exposure 0.36, haze density 0.016; (4) more dead panels (18 percent, four dead clusters) so lit pools alternate with gloom; (5) a tiny "fixture field" texture (one texel per tile, live flicker level) that the ceiling shader blurs into the glow a lit panel throws on its neighbors, and that lights the troffer reveal (`scripts/level0/fixture_field.gd`, `shaders/housing.gdshader`).
+- Alternatives tried: virtual light source above the ceiling (rejected: SDFGI ray-marches light occlusion through the SDF, so the ceiling would block all bounce), cosine-profile 89 degree cones (rejected: spot shadow maps use a 2x angle perspective, so shadow resolution collapses).
+- Revert: game args `--spot_cone=1.25 --spot_atten=1.4 --gi=1.7 --gi_fb=0.95 --dead_rate=0.06 --clusters=2 --halo=0` (look switches in level0_look.gd and level0_hero.gd), and skip `_place_fixture`.
+
+## D014 (2026-10-01, S02) Splice errors must read as deliberate
+- Opus gate: the chair cut through its seat and the chair sunk into the carpet read as broken assets (L023). Choice: the cut chair now faces into the wall with only its front buried (column, back and base stay whole) and a dark splice seam on the wallpaper; the sunk chair became a chair standing upside down on the ceiling (a flipped copy). The stairs into the ceiling are now built from the level's own wallpaper, carpet, vinyl nosing, skirt board and a handrail, and climb through an open gap in the tiles into the dark plenum (L022).
+- Revert: `splices` and `stairs` entries in game/data/level0_hero.json; `_build_stairs` in level0_hero.gd.

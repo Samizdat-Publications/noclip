@@ -29,6 +29,8 @@ def main():
     out = os.path.abspath(a.out)
     for f in glob.glob(os.path.join(out, "focus", "*.png")):
         os.remove(f)
+    # Import first: new class_name scripts and new assets are only known after an import.
+    subprocess.run([paths.godot(), "--headless", "--path", paths.GAME, "--import"], capture_output=True, timeout=600)
     cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--quit-after", "3000", "--",
            f"--seed={a.seed}", f"--capture={out}", "--duration=0.5", "--stills=0", "--sheets=0",
            f"--focus={a.focus}"] + [f"--{e}" for e in a.extra]

@@ -1,0 +1,10 @@
+[
+  {"pos": [1.4, 5.2], "yaw": 90, "pitch": -3, "settle": 2.5},
+  {"pos": [11.8, 6.9], "yaw": 180, "pitch": -3, "settle": 2.5},
+  {"pos": [15.2, 9.6], "yaw": 255, "pitch": -4, "settle": 2.5},
+  {"pos": [16.6, 3.4], "yaw": 95, "pitch": -2, "settle": 2.5},
+  {"pos": [7.0, 20.3], "yaw": 90, "pitch": -2, "settle": 2.5},
+  {"pos": [5.5, 11.2], "yaw": 20, "pitch": -2, "settle": 2.5},
+  {"pos": [22.0, 18.0], "yaw": 270, "pitch": -2, "settle": 2.5},
+  {"pos": [7.6, 2.0], "yaw": 270, "pitch": 4, "settle": 2.5}
+]

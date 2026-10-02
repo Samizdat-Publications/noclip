@@ -1,0 +1,148 @@
+{
+  "asset": "camcorder_viewmodel",
+  "ticket": "L025",
+  "script": "pipeline/blender/build_camcorder.py",
+  "command": "\"C:/Program Files/Blender Foundation/Blender 5.1/blender.exe\" -b -P pipeline/blender/build_camcorder.py -- --res 1024 --samples 64 --bake-samples 24",
+  "blender": "5.1",
+  "seed": 9404,
+  "generator": "fully procedural (bmesh + modifiers + Cycles bake), no downloads, no paid APIs, no cost",
+  "output": "game/assets/props/player/camcorder.glb",
+  "textures_dir": "pipeline/meshes/baked_camcorder",
+  "texture_res": 1024,
+  "textures_embedded_in_glb": true,
+  "tri_count": 4304,
+  "bounds_gltf_min": [
+    -0.0205,
+    -0.127,
+    -0.24
+  ],
+  "bounds_gltf_max": [
+    0.1225,
+    0.0208,
+    0.0007
+  ],
+  "size_m_xyz": [
+    0.143,
+    0.1478,
+    0.2407
+  ],
+  "glb_bytes": 3074128,
+  "axes": {
+    "forward": "-Z (lens)",
+    "up": "+Y",
+    "right": "+X (operator's right)",
+    "units": "meters",
+    "origin": "centre of the eyecup back opening (eye position); model extends into -Z",
+    "body_offset_m": "body centre about +0.045 X, -0.07 Y (glTF); see notes",
+    "viewfinder_tilt_deg_front_up": 3.0
+  },
+  "materials": [
+    {
+      "name": "camcorder_body",
+      "note": "one baked atlas: base color / normal (OpenGL +Y) / ORM; plastic base ~0.045 rough ~0.55, knurled matte black ring, rubber eyecup r~0.9, fabric strap r~0.95, silver REC button, edge wear from curvature, fine grain bump"
+    },
+    {
+      "name": "lens_glass",
+      "base_color_linear": [
+        0.012,
+        0.016,
+        0.06
+      ],
+      "roughness": 0.05,
+      "metallic": 0.0
+    },
+    {
+      "name": "tally",
+      "base_color_linear": [
+        0.35,
+        0.01,
+        0.005
+      ],
+      "emissive_color": [
+        1.0,
+        0.08,
+        0.05
+      ],
+      "emissive_strength": 2.0
+    }
+  ],
+  "parts": {
+    "body_lwh_m": [
+      0.16,
+      0.11,
+      0.115
+    ],
+    "lens_barrel_dia_m": 0.055,
+    "lens_barrel_len_m": 0.06,
+    "viewfinder_dia_m": 0.03,
+    "viewfinder_len_m": 0.07,
+    "strap_standoff_m": 0.015,
+    "knurl_teeth": 44,
+    "bevel_m": 0.008
+  },
+  "bake": {
+    "rough_mean": 0.573,
+    "ao_mean": 0.504,
+    "metal_max": 0.349
+  },
+  "glb": {
+    "tris": 4304,
+    "gltf_bounds_min": [
+      -0.0205,
+      -0.127,
+      -0.24
+    ],
+    "gltf_bounds_max": [
+      0.1225,
+      0.0208,
+      0.0007
+    ],
+    "size_xyz_m": [
+      0.143,
+      0.1478,
+      0.2407
+    ],
+    "materials": [
+      {
+        "name": "camcorder_body",
+        "emissive": null,
+        "ext": []
+      },
+      {
+        "name": "lens_glass",
+        "emissive": null,
+        "ext": []
+      },
+      {
+        "name": "tally",
+        "emissive": [
+          1,
+          0.07999999821186066,
+          0.05000000074505806
+        ],
+        "ext": [
+          "KHR_materials_emissive_strength"
+        ]
+      }
+    ],
+    "images": [
+      [
+        "image/png",
+        "camcorder_normal"
+      ],
+      [
+        "image/png",
+        "camcorder_orm"
+      ],
+      [
+        "image/png",
+        "camcorder_basecolor"
+      ]
+    ],
+    "bytes": 3074128,
+    "extensions": [
+      "KHR_materials_emissive_strength"
+    ]
+  },
+  "preview": "pipeline/blender/previews/camcorder_preview.png"
+}

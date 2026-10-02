@@ -24,7 +24,17 @@ from PIL import Image
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 PROG = os.path.join(ROOT, "progress")
 INDEX = os.path.join(PROG, "INDEX.md")
-DEFAULT_SESSION = 1
+# The session number comes from the current handoff ("# Handoff: session NN to MM" means
+# this is session MM), so pictures are tagged correctly without editing this file.
+def _current_session():
+    try:
+        m = re.search(r"session\s+(\d+)\s+to\s+(\d+)", open(os.path.join(ROOT, "docs", "HANDOFF.md"), encoding="utf-8").readline(), re.I)
+        return int(m.group(2)) if m else 1
+    except OSError:
+        return 1
+
+
+DEFAULT_SESSION = _current_session()
 
 
 def _next_number():
