@@ -2,24 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://61cskjxium64"
-path="res://.godot/imported/camcorder_camcorder_basecolor.png-7f3f0aa18120c48d73ce7f0bc4b01722.ctex"
+uid="uid://g8jxiakd20jw"
+path.bptc="res://.godot/imported/camcorder_camcorder_basecolor.png-7f3f0aa18120c48d73ce7f0bc4b01722.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "ffe3111874d90ad9dd66b7239d93549f"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/player/camcorder_camcorder_basecolor.png"
-dest_files=["res://.godot/imported/camcorder_camcorder_basecolor.png-7f3f0aa18120c48d73ce7f0bc4b01722.ctex"]
+dest_files=["res://.godot/imported/camcorder_camcorder_basecolor.png-7f3f0aa18120c48d73ce7f0bc4b01722.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

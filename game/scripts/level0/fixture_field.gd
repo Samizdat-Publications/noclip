@@ -15,6 +15,7 @@ var _fixtures: Array[Fixture] = []
 var _cells: Array = []     # per fixture: Array of Vector2i texels
 var _last: Array[Color] = []
 var _dirty := true
+var _pending := {}         # fixture indices whose level changed since the last update
 
 
 func _init(p_origin: Vector2, p_size_m: Vector2, p_cell: float) -> void:
@@ -31,9 +32,20 @@ func texel(p: Vector2) -> Vector2i:
 
 
 func add(fx: Fixture, cells: Array) -> void:
+	fx.field = self
+	fx.field_index = _fixtures.size()
 	_fixtures.append(fx)
 	_cells.append(cells)
 	_last.append(Color(-1, -1, -1, 1))
+	_pending[fx.field_index] = true
+
+
+func mark(i: int) -> void:
+	_pending[i] = true
+
+
+func has_pending() -> bool:
+	return not _pending.is_empty()
 
 
 ## Pushes the field to a material (ceiling, housing) that declares the field uniforms.
@@ -45,7 +57,11 @@ func bind(m: ShaderMaterial) -> void:
 
 
 func update() -> void:
-	for i in _fixtures.size():
+	if _pending.is_empty():
+		return
+	var todo := _pending.keys()
+	_pending.clear()
+	for i in todo:
 		var fx := _fixtures[i]
 		var v := clampf(fx.level * fx.base_energy, 0.0, 1.0)
 		var c := Color(fx.tint.r * v, fx.tint.g * v, fx.tint.b * v, 1.0)

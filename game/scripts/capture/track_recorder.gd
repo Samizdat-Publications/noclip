@@ -5,7 +5,7 @@ extends Node
 ## bake-off: --track=FILE.json. Runs last in the frame so it sees the final camera.
 
 var out_path := ""
-var space: Level0Hero
+var space: Space
 var player: Player
 var frames: Array = []
 var _done := false
@@ -22,8 +22,8 @@ func _process(_delta: float) -> void:
 	var q := cam.global_transform.basis.get_rotation_quaternion()
 	var o := cam.global_transform.origin
 	var lv := {}
-	for i in space.fixtures.size():
-		var fx: Fixture = space.fixtures[i]
+	for i in space.get("fixtures").size():
+		var fx: Fixture = space.get("fixtures")[i]
 		if fx.is_processing():
 			lv[str(i)] = snappedf(fx.level, 0.001)
 	frames.append([Game.frame, snappedf(Game.clock, 0.0001), snappedf(o.x, 0.0001), snappedf(o.y, 0.0001), snappedf(o.z, 0.0001),

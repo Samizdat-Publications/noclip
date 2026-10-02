@@ -42,7 +42,9 @@ func setup(p_dir: String, p_duration: float, p_player: Player) -> void:
 		for f in 9:
 			shots.append({"t": ts + f * 0.4, "path": "%s/sheets/k%02d_f%d.png" % [dir, k, f]})
 	shots.sort_custom(func(a, b): return a["t"] < b["t"])
-	if Game.focus_file != "" and FileAccess.file_exists(Game.focus_file):
+	if Game.focus_file == "auto" and player.space.has_method("get_focus_shots"):
+		focus = player.space.get_focus_shots(int(Game.opts.get("focus_n", "8")))
+	elif Game.focus_file != "" and FileAccess.file_exists(Game.focus_file):
 		var data = JSON.parse_string(FileAccess.get_file_as_string(Game.focus_file))
 		if data is Array:
 			focus = data

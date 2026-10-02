@@ -22,6 +22,15 @@ uniform float wet_lo = 0.56;
 uniform float wet_hi = 0.70;
 // Standing water: one flooded stretch per level (x0, z0, x1, z1), ragged edges.
 uniform vec4 flood_rect = vec4(-100.0, -100.0, -99.0, -99.0);
+// Live panel levels of this chunk (scripts/level0/fixture_field.gd): wet carpet shows a soft,
+// blurred reflection of the panels overhead, found by bouncing the view ray off the floor up to
+// the ceiling plane. Never a hot spot (critique 007, L034).
+uniform sampler2D field_tex : filter_linear, repeat_disable;
+uniform vec2 field_origin = vec2(0.0);
+uniform float field_cell = 0.6;
+uniform vec2 field_size = vec2(1.0);
+uniform float ceiling_h = 2.6;
+uniform float reflect_strength = 0.9;
 
 varying vec3 wpos;
 
@@ -82,7 +91,7 @@ void fragment() {
 	alb *= 1.0 - 0.22 * rim;
 	// Damp sheen (critique 006, L027): wet fibers lie flat and catch the panels as a soft smear.
 	// SSR stays off (D012), so this is only the lights' own highlight, never a mirror blob.
-	rough = mix(rough, 0.52, wet);
+	rough = mix(rough, 0.62, wet);
 	rough = mix(rough, rough * 0.86, mottle);
 	nrm = mix(nrm, vec3(0.5, 0.5, 1.0), wet * 0.55);
 
@@ -95,14 +104,35 @@ void fragment() {
 	float edge = box + (n_fbm(p * 0.9 + 11.0) - 0.5) * 1.6;
 	float flood = smoothstep(0.25, -0.35, edge);
 	alb = mix(alb, alb * vec3(0.32, 0.3, 0.26), smoothstep(0.6, -0.6, edge));
-	rough = mix(rough, 0.5 + 0.08 * n_value(p * 3.0), flood);
+	rough = mix(rough, 0.6 + 0.08 * n_value(p * 3.0), flood);
 	nrm = mix(nrm, vec3(0.5 + 0.015 * sin(p.x * 9.0 + p.y * 4.0), 0.5, 1.0), flood);
 
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.25;
-	SPECULAR = mix(mix(0.2, 0.36, wet), 0.3, flood);
+	SPECULAR = mix(mix(0.2, 0.22, wet), 0.2, flood);
+	// Soft reflection of the lit panels above, in wet patches and the flooded room.
+	float sheen = max(wet * 0.75, flood) + mottle * 0.15;
+	if (sheen > 0.01) {
+		vec3 V = normalize(CAMERA_POSITION_WORLD - wpos);
+		vec3 R = reflect(-V, vec3(0.0, 1.0, 0.0));
+		if (R.y > 0.02) {
+			vec2 pc = wpos.xz + R.xz * ((ceiling_h - wpos.y) / R.y);
+			vec2 t = (pc - field_origin) / field_cell;
+			// Wider blur farther away along the ray (rough, wet fibers smear the image).
+			float spread = 0.6 + 0.25 * length(R.xz) / max(R.y, 0.05);
+			vec3 refl = vec3(0.0);
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					refl += texture(field_tex, (t + vec2(float(i), float(j)) * spread) / field_size).rgb;
+				}
+			}
+			refl /= 9.0;
+			float fres = 0.03 + 0.5 * pow(1.0 - clamp(V.y, 0.0, 1.0), 4.0);
+			EMISSION = refl * vec3(1.0, 0.96, 0.86) * fres * sheen * reflect_strength;
+		}
+	}
 	NORMAL_MAP = nrm;
 	NORMAL_MAP_DEPTH = normal_strength;
 }

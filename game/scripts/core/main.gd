@@ -1,6 +1,7 @@
 extends Node3D
 ## The World: holds the active Space, the Player, the global look (environment, lens), and
-## the review tools. M1 boots straight into the Level 0 hero slice. M5 adds the furniture
+## the review tools. M2 boots into the infinite Level 0 (Level0World); `--hero` loads the S01
+## look-dev hero slice instead. M5 adds the furniture
 ## store hub: the store is another Space, and its duct-taped wall is a Threshold whose
 ## target is a Level 0 Space built behind it, so the crossing is one continuous walk.
 
@@ -21,7 +22,8 @@ func _ready() -> void:
 		get_window().position = Vector2i.ZERO
 		get_window().size = Vector2i(int(res[0]), int(res[1]))
 	_apply_render_settings()
-	space = Level0Hero.new()
+	# M2: the game is the infinite Level 0; the S01 hero slice stays as a reference (--hero).
+	space = Level0Hero.new() if Game.opts.has("hero") else Level0World.new()
 	add_child(space)
 	space.build(Game.run_seed)
 
@@ -54,7 +56,7 @@ func _ready() -> void:
 	if Game.opts.has("track"):
 		var tr := TrackRecorder.new()
 		tr.out_path = String(Game.opts["track"])
-		tr.space = space as Level0Hero
+		tr.space = space
 		tr.player = player
 		add_child(tr)
 	print("[NOCLIP] gpu=%s api=%s" % [RenderingServer.get_video_adapter_name(), RenderingServer.get_video_adapter_api_version()])

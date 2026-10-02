@@ -2,29 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdr4rhrdu0ri7"
-path="res://.godot/imported/camcorder_camcorder_normal.png-69ded2a1fc2e5dade40b22366c74868d.ctex"
+uid="uid://cgxkkx51um78j"
+path.bptc="res://.godot/imported/camcorder_camcorder_normal.png-69ded2a1fc2e5dade40b22366c74868d.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "c1ec4ea909bfb676d48cb3ebc4897183"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/player/camcorder_camcorder_normal.png"
-dest_files=["res://.godot/imported/camcorder_camcorder_normal.png-69ded2a1fc2e5dade40b22366c74868d.ctex"]
+dest_files=["res://.godot/imported/camcorder_camcorder_normal.png-69ded2a1fc2e5dade40b22366c74868d.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

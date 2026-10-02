@@ -111,7 +111,7 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	exit.emission_texture = ex
 	exit.emission = Color(1, 1, 1)
 	exit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
-	exit.emission_energy_multiplier = 1.3
+	exit.emission_energy_multiplier = 0.85   # letters stay legible under the bloom (L037)
 	exit.roughness = 0.25
 	m["exit"] = exit
 
@@ -151,7 +151,7 @@ static func make_environment(preset: String) -> Environment:
 	e.sdfgi_cascades = 3
 	e.sdfgi_min_cell_size = 0.1
 	e.sdfgi_bounce_feedback = float(Game.opts.get("gi_fb", "0.6"))
-	e.sdfgi_energy = float(Game.opts.get("gi", "1.0"))
+	e.sdfgi_energy = float(Game.opts.get("gi", "0.7"))
 	e.sdfgi_read_sky_light = false
 	e.sdfgi_normal_bias = 1.1
 	e.sdfgi_probe_bias = 1.1
@@ -161,7 +161,7 @@ static func make_environment(preset: String) -> Environment:
 	e.ssao_intensity = float(Game.opts.get("ssao", "3.0"))
 	e.ssao_power = 1.6
 	e.ssao_detail = 0.6
-	e.ssao_light_affect = 0.08
+	e.ssao_light_affect = float(Game.opts.get("ssao_la", "0.45"))   # corners darken under direct light too (L032)
 
 	e.ssil_enabled = preset == "high"
 	e.ssil_radius = 4.0
@@ -230,6 +230,6 @@ static func make_camera_attributes() -> CameraAttributesPractical:
 	c.auto_exposure_scale = float(Game.opts.get("ae", "0.36"))
 	c.auto_exposure_speed = 0.55
 	c.auto_exposure_min_sensitivity = 60.0
-	c.auto_exposure_max_sensitivity = 1100.0
+	c.auto_exposure_max_sensitivity = float(Game.opts.get("ae_max", "650"))   # dark rooms stay dark (L032)
 	c.exposure_multiplier = 1.0
 	return c

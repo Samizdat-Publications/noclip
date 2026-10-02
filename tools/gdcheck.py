@@ -14,8 +14,16 @@ subprocess.run([paths.godot(), "--headless", "--path", paths.GAME, "--import"], 
 r = subprocess.run([paths.godot(), "--headless", "--path", paths.GAME, "--quit-after", "40", "--", "--seed=1234", "--autoplay"]
                    + [f"--{a}" for a in sys.argv[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600)
 out = (r.stdout or "") + (r.stderr or "")
-bad = [l for l in out.splitlines() if ("ERROR" in l or "Parse Error" in l) and "invalid UID" not in l and "still in use" not in l and "leaked" not in l]
-for l in bad[:30]:
-    print(l)
+lines = out.splitlines()
+bad = []
+for i, l in enumerate(lines):
+    if ("ERROR" in l or "Parse Error" in l) and "invalid UID" not in l and "still in use" not in l and "leaked" not in l:
+        nxt = lines[i + 1].strip() if i + 1 < len(lines) and lines[i + 1].strip().startswith("at:") else ""
+        bad.append(l + ("  " + nxt if nxt else ""))
+seen = set()
+for l in bad:
+    if l not in seen and len(seen) < 25:
+        seen.add(l)
+        print(l)
 print("gdcheck:", "FAIL" if bad else "ok", f"({len(bad)} error lines)")
 sys.exit(1 if bad else 0)

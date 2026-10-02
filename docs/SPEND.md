@@ -10,3 +10,4 @@ Soft cap per session: `SESSION_SPEND_CAP_USD` from .env (default 40). Estimates 
 | 2026-10-01 | S01 | Gemini (gemini-3.1-pro-preview) | video critic -> 006_gemini.md | 1 | $0.08 (20631 in / 3313 out tokens) |
 
 Session 01 total: about $0.17 of a $40 cap.
+| 2026-10-01 | auto | Gemini (gemini-3.1-pro-preview) | video critic -> 007_gemini.md | 1 | $0.09 (20631 in / 3752 out tokens) |

@@ -12,6 +12,7 @@ extends Node3D
 ## reproduces every flicker frame-exactly under Movie Maker.
 
 enum State { ON, DEAD, STARTER, PULSE, DROPOUT, EVENT }
+enum Mount { CEILING, WALL, FLOOR }
 
 var state: int = State.ON
 var base_energy: float = 1.0
@@ -19,6 +20,12 @@ var tint: Color = Color(1.0, 0.98, 0.9)
 var level: float = 1.0
 var cathode_glow: float = 0.0
 var rng: RandomNumberGenerator
+var mount: int = Mount.CEILING
+var ceiling_h := 2.6
+var variant := 0              # picks hum and tick variants, stable per fixture
+var audio_offset := 0.0       # where its hum loop starts, so neighbors are not in phase
+var field: FixtureField       # told whenever the level changes (ceiling glow)
+var field_index := -1
 
 var light: Light3D
 var lens: MeshInstance3D
@@ -39,6 +46,33 @@ var _orig_state: int = -1
 const LIGHT_ENERGY := 2.2
 
 
+## The light every ceiling troffer uses (also lent out by FixturePool): a wide, soft, shadowed
+## spot pointing down. Look values and their history: DECISIONS D006, D007, D013.
+static func make_ceiling_light() -> SpotLight3D:
+	var sl := SpotLight3D.new()
+	sl.spot_range = float(Game.opts.get("spot_range", "7"))
+	sl.spot_angle = float(Game.opts.get("spot_angle", "82"))
+	sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "1.5"))
+	sl.spot_attenuation = float(Game.opts.get("spot_atten", "1.7"))
+	sl.light_size = float(Game.opts.get("light_size", "0.7"))   # firmer shadows from pillars (L032)
+	sl.rotation = Vector3(-PI * 0.5, 0, 0)
+	sl.shadow_enabled = not Game.opts.has("noshadow")
+	sl.shadow_bias = float(Game.opts.get("sbias", "0.06"))
+	sl.shadow_blur = float(Game.opts.get("shadow_blur", "2.5"))
+	sl.shadow_normal_bias = float(Game.opts.get("nbias", "2.6"))
+	sl.light_specular = 0.85
+	sl.light_volumetric_fog_energy = float(Game.opts.get("fog_light", "1.3"))
+	sl.distance_fade_enabled = true
+	sl.distance_fade_begin = 22.0
+	sl.distance_fade_length = 6.0
+	sl.distance_fade_shadow = float(Game.opts.get("shadow_dist", "13"))
+	return sl
+
+
+func is_failing() -> bool:
+	return state == State.STARTER or state == State.PULSE or state == State.DROPOUT or (state == State.EVENT and _orig_state != State.ON and _orig_state != State.DEAD)
+
+
 func setup(p_state: int, p_rng: RandomNumberGenerator, p_energy: float, p_tint: Color) -> void:
 	state = p_state
 	rng = p_rng
@@ -55,6 +89,8 @@ func setup(p_state: int, p_rng: RandomNumberGenerator, p_energy: float, p_tint: 
 
 
 func apply() -> void:
+	if field:
+		field.mark(field_index)
 	if light:
 		light.light_energy = LIGHT_ENERGY * base_energy * level
 		light.visible = level > 0.002
