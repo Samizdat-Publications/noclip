@@ -655,7 +655,7 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			kind = "room"
 			while L["pillars"].size() > 0 and rr.has_point(Vector2(L["pillars"][-1][0], L["pillars"][-1][1])):
 				L["pillars"].pop_back()
-		focus = _pocket(L, rr, spawn_chunk)
+		focus = _pocket(L, rr, spawn_chunk, int(lf["pocket"]))
 	elif kind == "room":
 		_partitions(r, L, rr)
 	L["rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, kind])
@@ -728,24 +728,26 @@ func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> vo
 	var pr := _rng("pocket:%d:%d" % [cx, cz])
 	if not spawn_chunk and pr.randf() > 0.45:
 		return
-	var best: Dictionary = {}
-	var best_score := -1e9
-	for lf in leaves:
-		if lf.get("corridor", false):
-			continue
-		var rm: Rect2i = lf["m"]
-		if rm.size.x < POCKET + 2 or rm.size.y < POCKET + 2:
-			continue
-		var rr: Rect2 = lf["rect"]
-		if rr.has_point(Vector2(3.0, rr.get_center().y)) and spawn_chunk:
-			continue
-		# Near the start in the spawn chunk; otherwise any, seeded.
-		var score := -rr.get_center().distance_to(Vector2(10.0, 9.6)) if spawn_chunk else pr.randf()
-		if score > best_score:
-			best_score = score
-			best = lf
-	if not best.is_empty():
-		best["pocket"] = true
+	# A 3-module block; in the spawn chunk, fall back to a 2-module one so the start always has a
+	# seam (QA S03: 21 percent of seeds had none).
+	for size in ([POCKET, 2] if spawn_chunk else [POCKET]):
+		var best: Dictionary = {}
+		var best_score := -1e9
+		for lf in leaves:
+			if lf.get("corridor", false):
+				continue
+			var rm: Rect2i = lf["m"]
+			if rm.size.x < size + 2 or rm.size.y < size + 2:
+				continue
+			var rr: Rect2 = lf["rect"]
+			# Near the start in the spawn chunk; otherwise any, seeded.
+			var score := -rr.get_center().distance_to(Vector2(10.0, 9.6)) if spawn_chunk else pr.randf()
+			if score > best_score:
+				best_score = score
+				best = lf
+		if not best.is_empty():
+			best["pocket"] = size
+			return
 
 
 ## Scale error (art direction #3, D023): about one chunk in five has a room copied at the wrong
@@ -798,14 +800,14 @@ func _tall_cues(L: Dictionary, rr: Rect2) -> void:
 
 ## Builds the block, its seam and what is inside. Returns where a visitor would stand to look at
 ## the seam (the room's interest point).
-func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
+func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool, size: int = POCKET) -> Vector2:
 	var pr := _rng("pocket:in:%d:%d" % [int(rr.position.x * 10), int(rr.position.y * 10)] + "%d" % L["chunk"][0] + ":%d" % L["chunk"][1])
 	var rm := Rect2i(Vector2i(roundi(rr.position.x / MOD), roundi(rr.position.y / MOD)), Vector2i(roundi(rr.size.x / MOD), roundi(rr.size.y / MOD)))
-	var kx := rm.position.x + 1 + pr.randi_range(0, rm.size.x - POCKET - 2)
-	var kz := rm.position.y + 1 + pr.randi_range(0, rm.size.y - POCKET - 2)
+	var kx := rm.position.x + 1 + pr.randi_range(0, rm.size.x - size - 2)
+	var kz := rm.position.y + 1 + pr.randi_range(0, rm.size.y - size - 2)
 	var x0 := kx * MOD
 	var z0 := kz * MOD
-	var ps := POCKET * MOD
+	var ps := size * MOD
 	var x1 := x0 + ps
 	var z1 := z0 + ps
 	# The seam faces the side with the most room in front of it.
@@ -828,7 +830,9 @@ func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
 		var horiz: bool = f == "N" or f == "S"
 		var a: float = w[0] if horiz else w[1]
 		var line: float = w[1] if horiz else w[0]
-		for k in [0, 2]:
+		for k in size:
+			if k == 1:
+				continue   # the seam
 			var s0: float = a + k * MOD
 			L["walls"].append([s0, line, s0 + MOD, line] if horiz else [line, s0, line, s0 + MOD])
 		var m0 := a + MOD

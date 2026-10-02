@@ -21,10 +21,17 @@ Status after S02 (started): infinite chunk-streamed Level 0 (Level0Gen BSP rooms
 - Exit: a 10 minute bot walk with no seams, hitches, or pops; critic "Surreal / non-euclidean wow" at 7 or higher; perf targets held.
 
 ## M3: Sound (effort: high)
-Status after S03: STARTED (D026): room reverb zones, positional footsteps, occlusion, breathing (stamina, fear), world duck and drone with the tape figure, distant one-shots, PCM decode bug fixed (every generated sound had been an octave low). Gemini Sound 7 to 8 in S03 gate builds.
+Status after S03: EXIT CRITERION MET (Gemini Sound 8, 8, 8 in critiques 013, 014, 015; 7 and 8 at the M2 gates), gate with Stewart's listening notes pending. Built (D026): room reverb zones by size, positional squelch footsteps, wall occlusion for hum and buzz, breathing driven by stamina and fear, world duck and a drone while the tape figure is out, distant one-shots, work-light hum, seam draft, tape dropouts, reversed breath, dying tubes; the PCM decode bug fixed (every generated sound had been an octave low). Still to do: HRTF (Steam Audio GDExtension, deferred), music layers, an ambience director that stages silence before events, a mixer with settings sliders.
 - Audio architecture: spatial HRTF, reverb zones from room size, occlusion, per-fixture hum and buzz, footsteps by surface and wetness, breathing, ambience director with silence.
 - ElevenLabs asset pass with loudness normalization.
 - Exit: Gemini critic Sound at 7 or higher.
+
+## M3.5: Look pass (effort: xhigh) (added S03)
+The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6), Shadows and depth (Gemini 4 to 5) and Materials (4 to 7); the ship gate needs 8. One focused session before the Entity:
+- Corner occlusion strips along every wall base, ceiling line and vertical corner (deterministic, visible on video), contact shading under all props.
+- GI: more warm bounce color while darkness comes from fewer lit panels, check auto-exposure compression, lit surfaces near panels.
+- The held camcorder out of frame until late in the lift (L092), door slabs with hinges and kick plates, better partitions, tall-room upper walls (L094).
+- Exit: Gemini and Claude Lighting and Shadows 7+ on two consecutive loops.
 
 ## M4: The Entity (effort: xhigh)
 - Design per VISION, Meshy to Blender pipeline, animation set, shader distortion, VHS face smear.

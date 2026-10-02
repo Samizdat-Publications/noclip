@@ -30,3 +30,11 @@
 - Pending patch (not applied): scratchpad patch_m3c.py = carpet water-bead glints (L081) + camcorder viewmodel materials (L073). Apply AFTER the perf re-measure.
 - Props job running: water cooler, filing cabinet, step ladder, mop bucket, cubicle panel, desk, stacked chairs -> place them in rooms/halls to break sameness (L074).
 - RULE: never run a capture or perf probe while an asset job renders or writes into game/.
+
+## 05:00-06:15
+- 014 (c146ab4, perf best-of-3 96.8/72.1): Claude 6/6/6/6/6/7/6/5/NA/5/9/6; Gemini 6/5/5/4/7/7/8/6/8/7/9/7. Figure appeared.
+- bd91a57 loop-8 fixes; f77d0b5 camcorder v3 baked wear.
+- 015 FINAL loop (f77d0b5, perf 92.5/64.4): Claude 5/6/6/6/5/7/6/4/NA/5/9/6; Gemini (re-run with soundtrack sent separately) 5/4/4/6/7/8/7/NA/8/6/9/7. Two earlier Gemini runs on 015 said "no audio" (kept as 015_gemini_noaudio*.md).
+- 38a9cce: ledger L092-L096, critic.py sends audio separately.
+- QA auditor running on 12 claims; corner AO patch written (scratchpad patch_ao.py + game/shaders/corner_ao.gdshader) to apply AFTER QA.
+- Roadmap: M3 exit met (Gemini Sound 8 x3); M3.5 look pass added (D030).

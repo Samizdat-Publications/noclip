@@ -291,9 +291,15 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 		_final_t -= delta
 		if _final_t <= 0.0 or d < 3.5:
 			_final = false
-			_vanish(true)
+			# Gone, and the light it stood under dies (QA S03: this used to be dead code).
 			if _light_fx and is_instance_valid(_light_fx):
 				_light_fx.kill(0.0)
+				space.attention_point = _light_fx.global_position + Vector3(0, 2.4, 0)
+				space.attention_until = Game.clock + 2.5
+				space.attention_kind = &"light"
+			if Game.opts.has("log-tape"):
+				print("[tape] last look over at t=%.1f, light killed=%s" % [Game.clock, _light_fx != null])
+			_vanish(true)
 			return
 	elif d < 8.0:
 		_vanish(true)
