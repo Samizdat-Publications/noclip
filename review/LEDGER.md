@@ -5,6 +5,9 @@ Status: FIX (then fixed in commit X), DEFER (to milestone), REJECT (real reason)
 A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWART.
 
 ## Protected ("working, don't touch")
+- The building hum and room tone as mixed after D032: "perfectly balanced to be maddening but not deafening" (Gemini 018), "oppressive" (017).
+- The chalk door that tears open into a glowing doorway through the camcorder; the survey tripod room with the long figure shadow on the wall (017, 018).
+- Dark rooms seen with lit doorways and light spilling onto the floor; the corridor perspective with haze and troffer glow (018).
 - The dark room seen from a lit hall, and the dim room with the orange-edged dead panel (005).
 - Chalk circle mark and muddy footprints that sell "this place remembers you" (005).
 - Lone chair for scale in the pillar hall (005).
@@ -120,10 +123,20 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L096 | 015 | gemini | note | Gemini twice said the clip had no audio (repeat of L038) | DONE | tools/critic_gemini/critic.py now also sends the soundtrack as a separate audio file; 015 re-run heard it (Sound 8) |
 | L097 | QA S03 | qa-auditor | hurts | Long 94 s perf runs showed a 1% low near 33 fps | DONE (not a game problem) | Re-measured 100 s on an idle GPU with per-process logging: 107.1 avg, 70.2 1% low, max frame 20.3 ms, 0 frames over 25 ms; the QA runs overlapped another project's Blender renders. capture.py now waits for an idle GPU and keeps the best of 2 |
 | L098 | QA S03 | qa-auditor | hurts | Chunk build steps peak at 14 to 19 ms at 1440p (claim was 7 ms) | FIX next session | Measured by QA (p95 9 to 12 ms). Split the walls and decal steps further; spread prop instancing |
-| L099 | 016 | gemini | hurts | The fluorescent hum is mixed too loud and never changes (Sound 5; 011-015 called the hum a strength) | FIX (db625a3, D032) | Hum bus 3 dB down, per-fixture pitch spread 3% and loudness 0 to -4.8 dB, slow drift, a power sag every 50 to 110 s (13 dB down for 3.5 to 8 s). Awaiting critique 017 |
-| L100 | 016 | gemini | hurts | Carpet tiling obvious in big rooms | FIX (db625a3, D032) | Varying texture offsets (repetition trick), 12 ft broadloom roll strips with dye lot, pile sheen and seams; mottle softened. Awaiting critique 017 |
-| L101 | 016 | gemini | nitpick | Round light pools under square panels | FIX (db625a3, D032) | Rounded-rectangle light projector along each panel, 60% outside the pool (also darker corners). Awaiting critique 017 |
-| L102 | 016 | claude | hurts | The figure floats slightly, often faces away, stays too distant | FIX next session | Check the contact decal and foot height; fewer turned-away poses; let the first encounter start nearer |
+| L099 | 016 | gemini | hurts | The fluorescent hum is mixed too loud and never changes (Sound 5; 011-015 called the hum a strength) | FIX (db625a3, D032), verified 017 | Hum bus 3 dB down, per-fixture pitch spread 3% and loudness 0 to -4.8 dB, slow drift, a power sag every 50 to 110 s (13 dB down for 3.5 to 8 s). Gemini 017: Sound 5 to 8, "the oppressive fluorescent hum" now listed as working |
+| L100 | 016 | gemini | hurts | Carpet tiling obvious in big rooms | FIX (db625a3, 00d5ddb, D032) | Varying texture offsets (repetition trick), 12 ft broadloom roll strips with dye lot, pile sheen and seams; mottle softened. Claude 017: "more patchy variation than the repeating weave" but "hard seam lines", so seams softened to 0.1 |
+| L101 | 016 | gemini | nitpick | Round light pools under square panels | DEFER M3.5 (D032) | The projector worked (Claude 017: "panels now throw soft rectangular pools") but cost 4 ms and thinned the haze (L103); opt-in only. Next: shape pools another way (e.g. two narrower spots per panel or a cheap floor decal) |
+| L102 | 016 | claude | hurts | The figure floats slightly, often faces away, stays too distant | FIX (00d5ddb) | Feet sunk 2.5 cm into the pile, wider contact shadow, its own light haze (half the hall's) instead of none, the turned-away pose kept for the close final look, first looks at 13.5 to 19 m (was 17 to 23). Filmed check progress/0120. Awaiting critique 018 |
+| L103 | 017 | claude+gemini | hurts | Light pool projector thinned the distance haze and the damp floor sheen, and cost 4 ms of GPU time (Performance 5 to 6) | FIX (00d5ddb) | Projector made opt-in (--projector); it also dimmed the lights' share of the volumetric fog outside the pool. Revisit only if a cheaper way to shape pools appears (D032) |
+| L104 | 017 | gemini+claude | hurts | The same wallpaper smudge repeats every few feet down a hall; horizontal brightness bands (Claude 018) | FIX next session | Break the wallpaper repeat the way the carpet now does (varying offsets), and vary wall grime per wall |
+| L105 | 017 | gemini | hurts | Carpet reads dry, not damp ("carpet that never dries") | DEFER M3.5 | Mostly the projector (L103) killing grazing highlights; re-judge on 018, then raise wet coverage near leaks |
+| L106 | 017 | claude | hurts | Tall room light streaks look like a stretched texture, not light shafts | DEFER M3.5 | Same as L094: tall-room upper walls need their own treatment |
+| L107 | 017 | claude | hurts | The figure never does anything in the frames ("make it commit") | DEFER M4 | The Entity milestone; meanwhile L102 brings it nearer on later looks |
+| L108 | 018 | claude+gemini | hurts | The figure reads as an ordinary man, small, gray and pasted in, not lit by the room (Claude Monster 4, Gemini 3: "a guy in jeans facing the wall") | DEFER M4 | The Entity replaces it. Note: the L102 haze (0.006) may be what turned it gray; try it at 0 or tie it to the hall's real light first thing |
+| L109 | 018 | claude | hurts | Big fogged rooms: far walls look like floating panels with gaps and a flat fog line; the carpet turns to "sand dunes" far off | FIX next session | Check the horizon fade on partition walls in wide rooms; fade the wet-field contrast with distance |
+| L110 | 018 | claude | hurts | Bright evenly lit rooms go flat and tinted while dark ones are great; too big a gap between them | DEFER M3.5 | Fewer lit panels in big rooms, dark gaps between pools (same family as L093) |
+| L111 | 018 | claude | nitpick | Mop bucket reads as a flat glowing yellow blob | FIX next session | Check its material (unlit or emissive by mistake) |
+| L112 | 018 | gemini | nitpick | Hard boundary into a dark room instead of a falloff; footsteps sound hard, not squishy | DEFER M3.5 | Light the first meters of a dark room from the doorway; louder squish layer |
 
 ## Closed
 

@@ -43,6 +43,9 @@ Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques 
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 015_gemini.md | 1 | $0.09 (24600 in / 3459 out tokens) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 015_gemini.md | 1 | $0.12 (27639 in / 5033 out tokens) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 016_gemini.md | 1 | $0.09 (27639 in / 2879 out tokens) |
+| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 017_gemini.md | 1 | $0.10 (est) |
+| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 018_gemini.md | 1 | $0.09 (est) |
 
-Session 03 total: about $9.05 of a $40 cap (graffiti v2 about $6.4, carpet and wallpaper about $1.3, sounds about $0.5, nine video critiques about $0.8). Sketchfab models were free CC-BY downloads.
+Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and wallpaper about $1.3, sounds about $0.5, eleven video critiques about $1.0). Sketchfab models were free CC-BY downloads.
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 017_gemini.md | 1 | $0.10 (27638 in / 3623 out tokens) |
+| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 018_gemini.md | 1 | $0.09 (27639 in / 2534 out tokens) |
