@@ -67,6 +67,10 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L043 | 008 | claude | hurts | The loop and the surreal hook are not legible in stills; wants one unmistakable "that is wrong" frame | FIX in S03 | Make the bot traverse the loop in captures (it turned back this run), a focus shot of the repeated chair/tally, scale-error rooms, more splices in view |
 | L044 | 008 | claude | nitpick | Orange cathode rims on dead tubes and the floor troffer look pasted on (no spill) | FIX in S03 | Small orange glow on adjacent tiles via the fixture field; floor troffer needs spill on carpet and a frame |
 | L045 | 008 | claude | nitpick | Crushed blacks in dark frames; a dead room can go fully black | FIX in S03 | Raise the floor of auto exposure / a little ambient in dead zones; every dead room keeps a weak source |
+| L046 | 008 | gemini | ruins it | The tape figure looks like a low-poly default mannequin painted black (Monster 3); "kills the tension the moment you see it" | FIX in S03 | Same as L040, now top priority: break the silhouette (static, smear, partial dropout, wrong proportions in motion), never show it clean or centered; M4 designs the real Entity |
+| L047 | 008 | gemini | hurts | Footsteps sound like hard shoes on dry concrete; carpet looks bone dry (corkboard) | FIX in S03 (quick) / M3 | Swap in squelchier wet-carpet steps on wet patches, louder; stronger damp darkening and the panel reflections in wet patches; repeat of L027/L034 |
+| L048 | 008 | gemini | hurts | Camcorder still feels like an instant toggle in the video | FIX in S03 | The 0.3 s lift is too short to read at 30 fps; lengthen to about 0.5 s, show more of the body and hands-free sway, delay the overlay until the eyecup |
+| L049 | 008 | gemini | hurts | No corner occlusion where walls meet floor and ceiling in lit rooms; 75 fps judged heavy for bare corridors | FIX in S03 / M7 | Baked corner darkening in the wall shader (distance to the wall's ends), check light culling through walls; perf pass is M7 |
 
 ## Closed
 
