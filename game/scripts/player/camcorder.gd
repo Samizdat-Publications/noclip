@@ -87,10 +87,25 @@ func set_active(on: bool) -> void:
 	want = on
 
 
+var _active_since := 0.0
+
+
+## Up, recording, and past the power-on snow.
+func settled() -> bool:
+	return active and Game.clock - _active_since > 0.6
+
+
+## A short burst of roll and snow (something just left the frame).
+func glitch() -> void:
+	_burst = 0.28
+
+
 func _switch(on: bool) -> void:
 	if on == active:
 		return
 	active = on
+	if on:
+		_active_since = Game.clock
 	if Game.opts.has("log-cam"):
 		print("[cam] %s frame=%d" % ["on" if on else "off", Game.frame])
 	_burst = 0.28   # the picture rolls and snows for a moment when the camera comes up or goes down

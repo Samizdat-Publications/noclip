@@ -26,6 +26,7 @@ var _building_chunk: Level0Chunk
 var _steps: Array = []
 var pool: FixturePool
 var director: Level0Director
+var tape: TapeEvents
 var _player := Vector3.ZERO
 var _stream_t := 0.0
 var build_log: Array = []     # [frame, coord, step, msec] for profiling
@@ -44,6 +45,10 @@ func build(p_seed: int) -> void:
 	director = Level0Director.new()
 	director.space = self
 	add_child(director)
+	tape = TapeEvents.new()
+	tape.name = "tape_events"
+	tape.space = self
+	add_child(tape)
 	# The first ring is built at once (this is the loading moment); the rest streams.
 	var start := Vector3(12, 0, 12)
 	_player = start
@@ -128,7 +133,15 @@ func _stream() -> void:
 			_queue.append(c)
 
 
+var _pos_log_t := 0.0
+
+
 func _process(delta: float) -> void:
+	if Game.opts.has("log-stream"):
+		_pos_log_t -= delta
+		if _pos_log_t <= 0.0:
+			_pos_log_t = 10.0
+			print("[pos] t=%.0f (%.1f, %.1f)" % [Game.clock, _player.x, _player.z])
 	_stream_t -= delta
 	if _stream_t <= 0.0:
 		_stream_t = 0.25
@@ -224,10 +237,34 @@ func get_interest_points() -> Array:
 	return out
 
 
+var _last_chunk := Vector2i(1 << 20, 0)
+
+
 func set_listener(p: Vector3) -> void:
+	if Game.opts.has("log-stream") and chunk_of(p) != _last_chunk:
+		_last_chunk = chunk_of(p)
+		print("[stream] t=%.1f player chunk %s pos (%.1f, %.1f) loaded=%d" % [Game.clock, _last_chunk, p.x, p.z, chunks.size()])
 	_player = p
 	pool.listener = p
 	director.listener = p
+
+
+func attach_player(p: Player) -> void:
+	tape.player = p
+
+
+## The lit ceiling panel nearest to p (within r), or null.
+func fixture_near(p: Vector3, r: float) -> Fixture:
+	var best: Fixture = null
+	var bd := r
+	for fx in pool.fixtures:
+		if not is_instance_valid(fx):
+			continue
+		var d := Vector2(fx.global_position.x - p.x, fx.global_position.z - p.z).length()
+		if d < bd and fx.level > 0.5:
+			bd = d
+			best = fx
+	return best
 
 
 func set_view(_p: Vector3, fwd: Vector3) -> void:
@@ -243,6 +280,8 @@ func find_path(from: Vector3, to: Vector3) -> PackedVector3Array:
 		return PackedVector3Array()
 	var seq := _chunk_route(ca, cb)
 	if seq.is_empty():
+		if Game.opts.has("log-stream"):
+			print("[path] no chunk route %s -> %s" % [ca, cb])
 		return PackedVector3Array()
 	var out := PackedVector3Array()
 	var cur := from
@@ -254,6 +293,8 @@ func find_path(from: Vector3, to: Vector3) -> PackedVector3Array:
 		if i < seq.size() - 1:
 			var cross := _crossing(c, seq[i + 1], cur, to)
 			if cross.is_empty():
+				if Game.opts.has("log-stream"):
+					print("[path] no crossing %s -> %s" % [c, seq[i + 1]])
 				return out
 			target = cross[0]
 			next_start = cross[1]
@@ -296,8 +337,12 @@ func _crossing(a: Vector2i, b: Vector2i, from: Vector3, to: Vector3) -> Array:
 	var best := []
 	var best_cost := 1e9
 	for g in gates:
-		var t: float = g[0] + 0.6
-		while t <= g[1] - 0.6 + 0.001:
+		var ts := [(g[0] + g[1]) * 0.5]
+		var t0: float = g[0] + 0.3
+		while t0 <= g[1] - 0.3:
+			ts.append(t0)
+			t0 += 0.6
+		for t in ts:
 			var pa: Vector3
 			var pb: Vector3
 			var base := cha.position
@@ -314,7 +359,6 @@ func _crossing(a: Vector2i, b: Vector2i, from: Vector3, to: Vector3) -> Array:
 				if cost < best_cost:
 					best_cost = cost
 					best = [pa, pb]
-			t += 0.6
 	return best
 
 
@@ -322,6 +366,9 @@ func _crossing(a: Vector2i, b: Vector2i, from: Vector3, to: Vector3) -> Array:
 ## splice errors near the spawn, framed from a few meters away, plus a few open views.
 func get_focus_shots(n: int = 8) -> Array:
 	var out := []
+	# The opening view down the spawn hall.
+	var spawn_xf := get_spawn_transform()
+	out.append({"pos": [spawn_xf.origin.x, spawn_xf.origin.z], "yaw": rad_to_deg(-spawn_xf.basis.get_euler().y), "pitch": 1.0, "settle": 2.5})
 	var keys := chunks.keys()
 	keys.sort_custom(func(a, b): return a.length_squared() < b.length_squared() or (a.length_squared() == b.length_squared() and (a.x < b.x or (a.x == b.x and a.y < b.y))))
 	for c in keys:

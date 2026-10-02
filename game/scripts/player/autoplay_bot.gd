@@ -35,10 +35,13 @@ var _pitch_v := 0.0
 var _stuck_t := 0.0
 var _last_pos := Vector3.ZERO
 var _started := false
+var _heading := Vector3.FORWARD
 
 
 func _init() -> void:
 	rng = Game.rng("bot")
+	var h := rng.randf() * TAU
+	_heading = Vector3(sin(h), 0.0, cos(h))
 
 
 static func yaw_of(d: Vector3) -> float:
@@ -56,6 +59,11 @@ func _pick_target(player: Player) -> void:
 		if d < 3.0:
 			continue
 		var score := rng.randf() * (0.5 + minf(d, 18.0) / 18.0)
+		# In an endless level, keep a loose direction of travel so the walk actually goes
+		# somewhere instead of circling the start.
+		if space.has_method("get_focus_shots"):
+			var to: Vector3 = (p["pos"] - player.global_position).normalized()
+			score *= 1.0 + 0.9 * maxf(0.0, to.dot(_heading))
 		if score > best_score:
 			best_score = score
 			best = p

@@ -44,11 +44,41 @@ func _rng(salt: String) -> RandomNumberGenerator:
 
 # ------------------------------------------------------------------ edges
 
+## Highways (art direction, docs/reference/art_direction_s02.md): some chunk rows carry an
+## east-west corridor two modules wide that runs straight through every chunk of the row, and
+## some columns a north-south one. Its lights sit on one global 3 m rhythm, so a highway is the
+## long vanishing-point hallway where distance cannot be judged. Returns the first module of the
+## strip, or -1. Row 0 always has one: the run starts looking down a long hall.
+func hwy_row(cz: int) -> int:
+	if cz == 0:
+		return 8
+	var r := _rng("hwy:row:%d" % cz)
+	return r.randi_range(5, 13) if r.randf() < 0.3 else -1
+
+
+func hwy_col(cx: int) -> int:
+	var r := _rng("hwy:col:%d" % cx)
+	return r.randi_range(5, 13) if r.randf() < 0.22 else -1
+
+
 ## Gaps (open intervals in meters along the edge, 0..CHUNK) of a shared chunk edge.
 ## axis "V": the vertical line x = ex * CHUNK spanning chunk row ez.
 ## axis "H": the horizontal line z = ez * CHUNK spanning chunk column ex.
 func edge_gaps(axis: String, ex: int, ez: int) -> Array:
 	var r := _rng("edge:%s:%d:%d" % [axis, ex, ez])
+	# A highway crossing this edge: the boundary is walled except for the corridor (and maybe one
+	# far door), so the hall reads as one continuous corridor.
+	var hw := hwy_row(ez) if axis == "V" else hwy_col(ex)
+	if hw >= 0:
+		var hg := [[hw * MOD, (hw + 2) * MOD, "open"]]
+		if r.randf() < 0.5:
+			for attempt in 8:
+				var k := r.randi_range(2, NMOD - 3)
+				if k < hw - 3 or k > hw + 4:
+					hg.append([(k + 0.5) * MOD - DOOR_W * 0.5, (k + 0.5) * MOD + DOOR_W * 0.5, "door"])
+					break
+		hg.sort_custom(func(a, b): return a[0] < b[0])
+		return hg
 	if r.randf() < 0.32:
 		return [[0.0, CHUNK]]
 	var gaps := []
@@ -160,7 +190,8 @@ func generate(cx: int, cz: int) -> Dictionary:
 	var max_depth := 5 if style < 0.55 else (4 if style < 0.85 else 3)   # maze, mixed, halls
 	if spawn_chunk:
 		max_depth = 4
-	_split(r, L, Rect2i(0, 0, NMOD, NMOD), root_gaps, 0, max_depth, leaves)
+	for part in _highways(r, L, cx, cz, root_gaps, leaves):
+		_split(r, L, part[0], part[1], 0, max_depth, leaves)
 	# --- rooms, fixtures, pillars
 	for lf in leaves:
 		_furnish_room(r, L, lf, spawn_chunk)
@@ -177,7 +208,106 @@ func generate(cx: int, cz: int) -> Dictionary:
 	_landmarks(r, L, leaves, spawn_chunk)
 	if spawn_chunk:
 		L["spawn"] = _spawn_point(L, leaves)
+		# The opening stretch of the spawn hall is lit: the first image is the long bright hall.
+		for lf in leaves:
+			if lf.get("highway", false):
+				var hr2: Rect2 = lf["rect"]
+				L["lit_zones"] = [[0.0, hr2.position.y, 16.0, hr2.end.y]]
 	return L
+
+
+## Cuts the highway strips out of the chunk (walls with a few doors into the rest) and returns
+## the remaining rectangles with their side gaps, ready for the BSP. Without highways it returns
+## the whole chunk.
+func _highways(r: RandomNumberGenerator, L: Dictionary, cx: int, cz: int, root_gaps: Dictionary, leaves: Array) -> Array:
+	var hr := hwy_row(cz)
+	var hc := hwy_col(cx)
+	if hr < 0 and hc < 0:
+		return [[Rect2i(0, 0, NMOD, NMOD), root_gaps]]
+	var row_walls := {}
+	var col_walls := {}
+	if hr >= 0:
+		for line in [hr, hr + 2]:
+			var gaps := _corridor_doors(r, hc)
+			_emit_wall(r, L, false, line, 0, NMOD, gaps)
+			row_walls[line] = gaps
+		var strip := Rect2i(0, hr, NMOD, 2)
+		leaves.append({"m": strip, "rect": Rect2(Vector2(strip.position) * MOD, Vector2(strip.size) * MOD), "depth": 0, "corridor": true, "highway": true})
+	if hc >= 0:
+		for line in [hc, hc + 2]:
+			var gaps := _corridor_doors(r, hr)
+			_emit_wall(r, L, true, line, 0, NMOD, gaps)
+			col_walls[line] = gaps
+		# The column strip, minus the crossing square that belongs to the row strip.
+		var spans := [[0, NMOD]] if hr < 0 else [[0, hr], [hr + 2, NMOD]]
+		for sp in spans:
+			if sp[1] - sp[0] < 1:
+				continue
+			var strip := Rect2i(hc, sp[0], 2, sp[1] - sp[0])
+			leaves.append({"m": strip, "rect": Rect2(Vector2(strip.position) * MOD, Vector2(strip.size) * MOD), "depth": 0, "corridor": true, "highway": true})
+	# The remaining rectangles.
+	var xs := [[0, NMOD]] if hc < 0 else [[0, hc], [hc + 2, NMOD]]
+	var zs := [[0, NMOD]] if hr < 0 else [[0, hr], [hr + 2, NMOD]]
+	var out := []
+	for xr in xs:
+		for zr in zs:
+			if xr[1] - xr[0] < 1 or zr[1] - zr[0] < 1:
+				continue
+			var rect := Rect2i(xr[0], zr[0], xr[1] - xr[0], zr[1] - zr[0])
+			var g := {
+				"W": root_gaps["W"] if xr[0] == 0 else col_walls[hc + 2],
+				"E": root_gaps["E"] if xr[1] == NMOD else col_walls[hc],
+				"N": root_gaps["N"] if zr[0] == 0 else row_walls[hr + 2],
+				"S": root_gaps["S"] if zr[1] == NMOD else row_walls[hr],
+			}
+			out.append([rect, g])
+	return out
+
+
+## Door gaps (modules) along a highway wall: one or two doors, plus the crossing with the other
+## highway if there is one. Mostly unbroken, so the hall stays long and blank.
+func _corridor_doors(r: RandomNumberGenerator, cross: int) -> Array:
+	var gaps := []
+	if cross >= 0:
+		gaps.append([float(cross), float(cross + 2), "open"])
+	var n := 1 if r.randf() < 0.7 else 2
+	var tries := 0
+	while gaps.size() < n + (1 if cross >= 0 else 0) and tries < 20:
+		tries += 1
+		var m := r.randi_range(2, NMOD - 3)
+		var clash := false
+		for g in gaps:
+			if m < g[1] + 2 and m + 1 > g[0] - 2:
+				clash = true
+		if not clash:
+			gaps.append([m + 0.5 - DOOR_W * 0.5 / MOD, m + 0.5 + DOOR_W * 0.5 / MOD, "door"])
+	gaps.sort_custom(func(a, b): return a[0] < b[0])
+	return gaps
+
+
+## Emits a wall along module line `line` from a0 to a1 (modules) broken by `gaps` (modules),
+## with door casings in the door-sized gaps.
+func _emit_wall(r: RandomNumberGenerator, L: Dictionary, vertical: bool, line: int, a0: int, a1: int, gaps: Array) -> void:
+	var lm := line * MOD
+	var t := float(a0)
+	var runs := []
+	for g in gaps:
+		if g[0] > t + 0.01:
+			runs.append([t, g[0]])
+		t = maxf(t, g[1])
+	if t < a1 - 0.01:
+		runs.append([t, float(a1)])
+	for run in runs:
+		if vertical:
+			L["walls"].append([lm, run[0] * MOD, lm, run[1] * MOD])
+		else:
+			L["walls"].append([run[0] * MOD, lm, run[1] * MOD, lm])
+	for g in gaps:
+		if g.size() > 2 and g[2] == "door":
+			var d := [lm, g[0] * MOD, lm, g[1] * MOD] if vertical else [g[0] * MOD, lm, g[1] * MOD, lm]
+			if r.randf() < (1.0 - fidelity) * 0.6:
+				d.append(r.randf_range(1.84, 1.92))
+			L["doors"].append(d)
 
 
 ## Recursive split. `gaps` holds, per side of rect (W/E/N/S), the open intervals in modules
@@ -401,6 +531,10 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 
 
 func _spawn_point(L: Dictionary, leaves: Array) -> Array:
+	for lf in leaves:
+		if lf.get("highway", false) and (lf["rect"] as Rect2).size.x > (lf["rect"] as Rect2).size.y:
+			var c: Vector2 = (lf["rect"] as Rect2).get_center()
+			return [3.0, c.y, 90.0]
 	# The room nearest the chunk center that has a lit fixture, facing its longest view.
 	var best := Vector2(12, 12)
 	var bd := 1e9
@@ -453,7 +587,7 @@ func _near_door(L: Dictionary, p: Vector2, rad: float) -> bool:
 func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_chunk: bool) -> void:
 	var loss := clampf(1.0 - fidelity, 0.0, 1.0) * 10.0   # 1.0 at fidelity 0.9 (Level 0)
 	var rooms := leaves.filter(func(lf): return not lf.get("corridor", false))
-	var corridors := leaves.filter(func(lf): return lf.get("corridor", false))
+	var corridors := leaves.filter(func(lf): return lf.get("corridor", false) and not lf.get("highway", false))
 	_seeded_shuffle(r, rooms)
 	_seeded_shuffle(r, corridors)
 	# Soaked room.

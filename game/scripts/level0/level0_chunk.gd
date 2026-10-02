@@ -119,8 +119,10 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 		func() -> void:
 			kit.commit(self, mats, ["tbar", "housing"]),
 		func() -> void:
-			_build_decals()
-			_build_props()
+			_build_decals(),
+		func() -> void:
+			_build_props(),
+		func() -> void:
 			_build_splices(),
 		func() -> void:
 			_build_collision()
@@ -483,8 +485,14 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 		if c.distance_to(cl) < 3.6:
 			near_cluster = true
 	var dead_rate: float = ctx["dead_rate"]
+	var dim := false
 	if in_dark:
+		# A dead room keeps one weak, breathing tube so you can still read its shape (VISION:
+		# blacks deep, silhouettes readable).
 		st = Fixture.State.STARTER if roll < 0.12 else Fixture.State.DEAD
+		if roll >= 0.12 and roll < 0.34:
+			st = Fixture.State.PULSE
+			dim = true
 	elif near_cluster and roll < 0.6:
 		st = Fixture.State.DEAD
 	elif roll < dead_rate:
@@ -500,6 +508,9 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 			st = Fixture.State.PULSE
 	if c.distance_to(ctx["spawn"]) < 3.2 and st != Fixture.State.PULSE:
 		st = Fixture.State.ON
+	for lz in L.get("lit_zones", []):
+		if Rect2(lz[0], lz[1], lz[2] - lz[0], lz[3] - lz[1]).has_point(c):
+			st = Fixture.State.ON
 	var tint_roll := r.randf()
 	var tint := Color(1.0, 0.975, 0.9)
 	if tint_roll < 0.035:
@@ -512,6 +523,8 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 		if Rect2(tz[0], tz[1], tz[2] - tz[0], tz[3] - tz[1]).has_point(c):
 			tint = Color(tz[4], tz[5], tz[6])   # a stretch where every tube is a cold replacement
 	var energy := r.randf_range(0.82, 1.04)
+	if dim:
+		energy *= 0.32
 	var variant := r.randi()
 	var offset := r.randf_range(0.0, 7.9)
 
@@ -970,7 +983,7 @@ func _build_props() -> void:
 			var path0 := "res://assets/props/level0/%s.glb" % pr[0]
 			if not ResourceLoader.exists(path0):
 				continue
-			var inst0 := (load(path0) as PackedScene).instantiate() as Node3D
+			var inst0 := PropCache.make(path0)
 			inst0.position = Vector3(pr[1], 0.0, pr[2])
 			inst0.rotation.y = deg_to_rad(float(pr[3]))
 			add_child(inst0)
@@ -988,13 +1001,12 @@ func _build_props() -> void:
 		var path := "res://assets/props/level0/%s.glb" % name
 		if not ResourceLoader.exists(path):
 			continue
-		var scene: PackedScene = load(path)
 		var cands: Array = spec["spots"].duplicate()
 		for k in int(spec["n"]):
 			if cands.is_empty():
 				break
 			var spot: Array = cands.pop_at(r.randi() % cands.size())
-			var inst := scene.instantiate() as Node3D
+			var inst := PropCache.make(path)
 			inst.position = Vector3(spot[0], 0.0, spot[1])
 			inst.rotation.y = r.randf() * TAU
 			add_child(inst)
@@ -1013,11 +1025,10 @@ func _build_splices() -> void:
 		var path := "res://assets/props/level0/%s.glb" % sp["prop"]
 		if not ResourceLoader.exists(path):
 			continue
-		var scene: PackedScene = load(path)
 		var n := int(sp.get("repeat", 1))
 		var step: Array = sp.get("step", [0.0, 0.0])
 		for k in n:
-			var inst := scene.instantiate() as Node3D
+			var inst := PropCache.make(path)
 			var x: float = float(sp["pos"][0]) + float(step[0]) * k
 			var z: float = float(sp["pos"][1]) + float(step[1]) * k
 			var flip := bool(sp.get("flip", false))
@@ -1194,33 +1205,28 @@ func _build_nav() -> void:
 	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar.update()
-	for s in solids:
-		if s.size.x * s.size.y <= 0.0:
-			continue
-		var g := s.grow(AGENT_R)
-		var i0 := clampi(int(floor(g.position.x / CELL)), 0, _grid_n.x - 1)
-		var i1 := clampi(int(ceil(g.end.x / CELL)), 0, _grid_n.x - 1)
-		var j0 := clampi(int(floor(g.position.y / CELL)), 0, _grid_n.y - 1)
-		var j1 := clampi(int(ceil(g.end.y / CELL)), 0, _grid_n.y - 1)
-		for i in range(i0, i1 + 1):
-			for j in range(j0, j1 + 1):
-				var c := Vector2((i + 0.5) * CELL, (j + 0.5) * CELL)
-				if g.has_point(c):
-					astar.set_point_solid(Vector2i(i, j), true)
-	# People walk down the middle of corridors, not along the wall.
+	var whole := Rect2i(Vector2i.ZERO, _grid_n)
+	# People walk down the middle of corridors, not along the wall (filled region by region in
+	# C++: a per-cell GDScript loop cost ~20 ms per streamed chunk).
 	for s in solids:
 		if s.size.x * s.size.y <= 0.0:
 			continue
 		var g2 := s.grow(AGENT_R + 0.45)
-		var a0 := clampi(int(floor(g2.position.x / CELL)), 0, _grid_n.x - 1)
-		var a1 := clampi(int(ceil(g2.end.x / CELL)), 0, _grid_n.x - 1)
-		var b0 := clampi(int(floor(g2.position.y / CELL)), 0, _grid_n.y - 1)
-		var b1 := clampi(int(ceil(g2.end.y / CELL)), 0, _grid_n.y - 1)
-		for i in range(a0, a1 + 1):
-			for j in range(b0, b1 + 1):
-				var id := Vector2i(i, j)
-				if not astar.is_point_solid(id):
-					astar.set_point_weight_scale(id, 4.0)
+		var a0 := Vector2i(floori(g2.position.x / CELL), floori(g2.position.y / CELL))
+		var a1 := Vector2i(ceili(g2.end.x / CELL), ceili(g2.end.y / CELL))
+		var rw := Rect2i(a0, a1 - a0 + Vector2i.ONE).intersection(whole)
+		if rw.has_area():
+			astar.fill_weight_scale_region(rw, 4.0)
+	# Solid: every cell whose center lies inside the wall grown by the agent radius.
+	for s in solids:
+		if s.size.x * s.size.y <= 0.0:
+			continue
+		var g := s.grow(AGENT_R)
+		var c0 := Vector2i(ceili(g.position.x / CELL - 0.5), ceili(g.position.y / CELL - 0.5))
+		var c1 := Vector2i(floori(g.end.x / CELL - 0.5), floori(g.end.y / CELL - 0.5))
+		var rs := Rect2i(c0, c1 - c0 + Vector2i.ONE).intersection(whole)
+		if rs.has_area():
+			astar.fill_solid_region(rs, true)
 
 
 func _cell(p: Vector3) -> Vector2i:

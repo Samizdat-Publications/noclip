@@ -190,5 +190,7 @@ func _process(delta: float) -> void:
 	var b := Basis.from_euler(Vector3(pitch + sway_p - _kick, yaw + sway_y, 0.0))
 	var right := Basis(Vector3.UP, yaw) * Vector3.RIGHT
 	cam.global_transform = Transform3D(b, t.origin + Vector3(0.0, _eye + bob_v, 0.0) + right * bob_h)
+	# Render layer 11 holds what exists only on tape (TapeEvents); the eye never draws it.
+	cam.cull_mask = (0xFFFFF | TapeEvents.LAYER_TAPE) if camcorder.active else (0xFFFFF & ~TapeEvents.LAYER_TAPE)
 	var target_fov := camcorder.fov if camcorder.active else base_fov
 	cam.fov = lerpf(cam.fov, target_fov, 1.0 - exp(-9.0 * delta))

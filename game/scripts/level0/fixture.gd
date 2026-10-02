@@ -136,6 +136,18 @@ func _process(delta: float) -> void:
 	apply()
 
 
+## A lit tube hiccups once and recovers (a tell that something stands under it).
+func stutter() -> void:
+	if level < 0.5 or state == State.EVENT:
+		return
+	if _orig_state == -1:
+		_orig_state = state
+	state = State.EVENT
+	_queue = [[0.03, 0.15, 0], [0.06, 0.9, 0], [0.05, 0.05, 0], [0.12, 1.0, 0], [0.04, 0.3, 0], [0.3, 1.0, 0]]
+	_seg_left = 0.0
+	set_process(true)
+
+
 ## Scripted event: the tube gives a last stutter and goes out (after `delay` seconds).
 func kill(delay: float) -> void:
 	if _orig_state == -1:

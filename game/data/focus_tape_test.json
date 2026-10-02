@@ -1,0 +1,5 @@
+[
+  {"pos": [3.0, 10.8], "yaw": 90, "pitch": 1, "settle": 3.0, "camcorder": true},
+  {"pos": [3.0, 10.8], "yaw": 90, "pitch": 1, "settle": 3.0, "camcorder": false},
+  {"pos": [3.0, 10.8], "yaw": 270, "pitch": 1, "settle": 3.0, "camcorder": true}
+]

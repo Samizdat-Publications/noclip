@@ -230,6 +230,6 @@ static func make_camera_attributes() -> CameraAttributesPractical:
 	c.auto_exposure_scale = float(Game.opts.get("ae", "0.36"))
 	c.auto_exposure_speed = 0.55
 	c.auto_exposure_min_sensitivity = 60.0
-	c.auto_exposure_max_sensitivity = float(Game.opts.get("ae_max", "650"))   # dark rooms stay dark (L032)
+	c.auto_exposure_max_sensitivity = float(Game.opts.get("ae_max", "900"))   # dark rooms stay dark (L032)
 	c.exposure_multiplier = 1.0
 	return c

@@ -36,6 +36,8 @@ func _ready() -> void:
 	player.space = space
 	add_child(player)
 	player.spawn(space.get_spawn_transform())
+	if space.has_method("attach_player"):
+		space.attach_player(player)
 	if Game.autoplay:
 		var bot := AutoplayBot.new()
 		bot.space = space
