@@ -8,6 +8,7 @@ uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
 uniform float time = 0.0;
 uniform float degrade = 0.0;
 uniform float frame_seed = 0.0;
+uniform float burst = 0.0;   // 1 = the picture is just coming up (roll and snow)
 
 float h12(vec2 p) {
 	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -48,7 +49,10 @@ void fragment() {
 		// Head-switching noise in the last lines.
 		float hs = smoothstep(0.975, 0.995, uv.y);
 		wob += hs * ((h12(vec2(line, floor(time * 60.0))) - 0.5) * 0.03 + 0.012);
-		vec2 suv = vec2(uv.x + wob, (line + 0.5) / lines);
+		// Coming up / going down: vertical roll plus strong horizontal tearing.
+		float roll = burst * burst * 0.35;
+		wob += burst * (h12(vec2(line * 0.25, floor(time * 60.0))) - 0.5) * 0.08;
+		vec2 suv = vec2(uv.x + wob, fract((line + 0.5) / lines + roll));
 
 		// Luma: slightly soft, then edge-enhanced (the VHS halo).
 		vec3 c0 = texture(screen_tex, suv).rgb;
@@ -79,6 +83,7 @@ void fragment() {
 		c = c * vec3(0.93, 0.92, 0.88) + vec3(0.035, 0.03, 0.04);
 		c *= 1.0 - 0.06 * mod(line + floor(frame_seed), 2.0);
 		c = mix(c, vec3(h12(vec2(uv.x * 900.0, line + time))), hs * 0.5);
+		c = mix(c, vec3(h12(vec2(uv.x * 700.0 + time * 13.0, line))), burst * 0.55);
 		// Soft lens vignette inside the 4:3 frame.
 		vec2 lu = vec2((uv.x - x0) / w, uv.y) - 0.5;
 		c *= 1.0 - 0.45 * smoothstep(0.12, 0.5, dot(lu, lu));

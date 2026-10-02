@@ -64,7 +64,7 @@ func _ready() -> void:
 func _apply_render_settings() -> void:
 	var vp := get_viewport()
 	vp.positional_shadow_atlas_size = int(Game.opts.get("atlas", "8192"))
-	vp.positional_shadow_atlas_16_bits = true
+	vp.positional_shadow_atlas_16_bits = Game.opts.has("atlas16")   # 16-bit depth bands on grazing walls
 	RenderingServer.positional_soft_shadow_filter_set_quality(int(Game.opts.get("shadowq", "2")))
 
 

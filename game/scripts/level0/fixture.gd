@@ -11,7 +11,7 @@ extends Node3D
 ## Everything is driven by the game clock and a per-fixture random stream, so a seed
 ## reproduces every flicker frame-exactly under Movie Maker.
 
-enum State { ON, DEAD, STARTER, PULSE, DROPOUT }
+enum State { ON, DEAD, STARTER, PULSE, DROPOUT, EVENT }
 
 var state: int = State.ON
 var base_energy: float = 1.0
@@ -34,6 +34,7 @@ var _pulse_phase: float = 0.0
 var _pulse_freq: float = 0.7
 var _shown: float = 1.0
 var _was_bright: bool = true
+var _orig_state: int = -1
 
 const LIGHT_ENERGY := 2.2
 
@@ -99,7 +100,38 @@ func _process(delta: float) -> void:
 	apply()
 
 
+## Scripted event: the tube gives a last stutter and goes out (after `delay` seconds).
+func kill(delay: float) -> void:
+	if _orig_state == -1:
+		_orig_state = state
+	state = State.EVENT
+	_queue = [[delay, level, 0], [0.05, 0.12, 0], [0.04, 0.95, 0], [0.09, 0.0, 0], [0.03, 0.55, 0], [0.05, 0.0, 0], [100000.0, 0.0, 0]]
+	_seg_left = 0.0
+	set_process(true)
+
+
+## Scripted event: the tube struggles back on, then returns to its normal behavior.
+func restore(delay: float) -> void:
+	if _orig_state == -1:
+		return
+	state = State.EVENT
+	_queue = [[delay, 0.0, 0], [rng.randf_range(0.3, 0.9), 0.03, 0], [0.05, 0.9, 0], [0.1, 0.05, 0], [0.06, 1.0, 0], [0.14, 0.06, 0], [0.4, 1.0, 0]]
+	_seg_left = 0.0
+	set_process(true)
+
+
 func _plan() -> void:
+	if state == State.EVENT:
+		if _queue.is_empty() and _orig_state != -1 and level > 0.5:
+			state = _orig_state
+			_orig_state = -1
+			if state == State.ON or state == State.DEAD:
+				_queue.append([0.1, 1.0 if state == State.ON else 0.0, 0])
+				set_process(false)
+				return
+		else:
+			_queue.append([1.0, level, 0])
+			return
 	match state:
 		State.STARTER:
 			_queue.append([rng.randf_range(0.5, 2.2), 0.03, 0])

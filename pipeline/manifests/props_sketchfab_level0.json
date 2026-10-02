@@ -1,0 +1,202 @@
+{
+ "tool": "pipeline/meshes/sketchfab_fetch.py + pipeline/blender/clean_props_sketchfab.py",
+ "api": "Sketchfab Data API v3",
+ "date": "2026-10-01",
+ "cost_usd": 0,
+ "items": [
+  {
+   "asset": "prop_crt_monitor",
+   "glb": "game/assets/props/level0/prop_crt_monitor_sf.glb",
+   "uid": "95f4083ec9f4443c8d4bd10473c669ff",
+   "title": "CRT Monitor (remodel)",
+   "author": "ECEL_GAMES",
+   "license": "CC Attribution",
+   "license_slug": "by",
+   "url": "https://sketchfab.com/3d-models/crt-monitor-remodel-95f4083ec9f4443c8d4bd10473c669ff",
+   "faces_before": 3044,
+   "tris_after": 3044,
+   "dims_m_xyz_yup": [
+    0.36,
+    0.448,
+    0.392
+   ],
+   "yaw_deg": -90.0,
+   "scale_drive": "w=0.36",
+   "textures": [
+    [
+     "Image_0",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_1",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_2",
+     [
+      1024,
+      1024
+     ]
+    ]
+   ],
+   "preview": "pipeline/meshes/previews/prop_crt_monitor_sf.png"
+  },
+  {
+   "asset": "prop_cardboard_box",
+   "glb": "game/assets/props/level0/prop_cardboard_box_sf.glb",
+   "uid": "3c8b08023b61484aa583994da991274c",
+   "title": "Box",
+   "author": "Artem Goyko",
+   "license": "CC Attribution",
+   "license_slug": "by",
+   "url": "https://sketchfab.com/3d-models/box-3c8b08023b61484aa583994da991274c",
+   "faces_before": 230,
+   "tris_after": 230,
+   "dims_m_xyz_yup": [
+    0.381,
+    0.3,
+    0.571
+   ],
+   "yaw_deg": 0.0,
+   "scale_drive": "h=0.3",
+   "textures": [
+    [
+     "Image_0",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_1",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_2",
+     [
+      1024,
+      1024
+     ]
+    ]
+   ],
+   "preview": "pipeline/meshes/previews/prop_cardboard_box_sf.png"
+  },
+  {
+   "asset": "prop_office_chair_alt",
+   "glb": "game/assets/props/level0/prop_office_chair_alt_sf.glb",
+   "uid": "e004c2eb29444df689bef4018f9409d5",
+   "title": "Office chair (used)",
+   "author": "SlagPerch 3D",
+   "license": "CC Attribution",
+   "license_slug": "by",
+   "url": "https://sketchfab.com/3d-models/office-chair-used-e004c2eb29444df689bef4018f9409d5",
+   "faces_before": 35972,
+   "tris_after": 14999,
+   "dims_m_xyz_yup": [
+    0.561,
+    0.95,
+    0.673
+   ],
+   "yaw_deg": 0.0,
+   "scale_drive": "h=0.95",
+   "textures": [
+    [
+     "Image_0",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_1",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_2",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_3",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_4",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_5",
+     [
+      1024,
+      1024
+     ]
+    ]
+   ],
+   "preview": "pipeline/meshes/previews/prop_office_chair_alt_sf.png"
+  },
+  {
+   "asset": "prop_folding_chair",
+   "glb": "game/assets/props/level0/prop_folding_chair_sf.glb",
+   "uid": "c5bc470c3c9b4dc190f654cd7ac1405b",
+   "title": "Simple metal foldable chair",
+   "author": "neverfollow81",
+   "license": "CC Attribution",
+   "license_slug": "by",
+   "url": "https://sketchfab.com/3d-models/simple-metal-foldable-chair-c5bc470c3c9b4dc190f654cd7ac1405b",
+   "faces_before": 1116,
+   "tris_after": 1116,
+   "dims_m_xyz_yup": [
+    0.459,
+    0.8,
+    0.468
+   ],
+   "yaw_deg": -90.0,
+   "scale_drive": "h=0.8",
+   "textures": [
+    [
+     "Image_0",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_1",
+     [
+      1024,
+      1024
+     ]
+    ],
+    [
+     "Image_2",
+     [
+      1024,
+      1024
+     ]
+    ]
+   ],
+   "preview": "pipeline/meshes/previews/prop_folding_chair_sf.png"
+  }
+ ],
+ "rejected_candidates": "see notes: GAMICO 2e03f3, fizyman f2ff00 (CRT, kept in cache), Korotkov c4e967 (box), AK STUDIO af2f07 / Red Fox b228a2 (chairs), MaX3Dd/Tsawodi folding chairs, Misiyuk 0ad340 trash can (glossy black, not chosen)"
+}

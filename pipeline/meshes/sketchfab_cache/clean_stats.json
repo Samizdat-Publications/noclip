@@ -1,0 +1,187 @@
+{
+  "prop_crt_monitor_sf": {
+    "uid": "95f4083ec9f4443c8d4bd10473c669ff",
+    "tris_before": 3044,
+    "tris_after": 3044,
+    "raw_dims_blender_xyz": [
+      2.0,
+      2.177,
+      2.49
+    ],
+    "dims_m": {
+      "x": 0.36,
+      "y_up": 0.448,
+      "z": 0.392
+    },
+    "yaw": -90.0,
+    "drive": "w=0.36",
+    "textures": [
+      [
+        "Image_0",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_1",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_2",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "glb": "game/assets/props/level0/prop_crt_monitor_sf.glb"
+  },
+  "prop_cardboard_box_sf": {
+    "uid": "3c8b08023b61484aa583994da991274c",
+    "tris_before": 230,
+    "tris_after": 230,
+    "raw_dims_blender_xyz": [
+      1.333,
+      2.0,
+      1.05
+    ],
+    "dims_m": {
+      "x": 0.381,
+      "y_up": 0.3,
+      "z": 0.571
+    },
+    "yaw": 0.0,
+    "drive": "h=0.3",
+    "textures": [
+      [
+        "Image_0",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_1",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_2",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "glb": "game/assets/props/level0/prop_cardboard_box_sf.glb"
+  },
+  "prop_office_chair_alt_sf": {
+    "uid": "e004c2eb29444df689bef4018f9409d5",
+    "tris_before": 35972,
+    "tris_after": 14999,
+    "raw_dims_blender_xyz": [
+      0.57,
+      0.685,
+      0.966
+    ],
+    "dims_m": {
+      "x": 0.561,
+      "y_up": 0.95,
+      "z": 0.673
+    },
+    "yaw": 0.0,
+    "drive": "h=0.95",
+    "textures": [
+      [
+        "Image_0",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_1",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_2",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_3",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_4",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_5",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "glb": "game/assets/props/level0/prop_office_chair_alt_sf.glb"
+  },
+  "prop_folding_chair_sf": {
+    "uid": "c5bc470c3c9b4dc190f654cd7ac1405b",
+    "tris_before": 1116,
+    "tris_after": 1116,
+    "raw_dims_blender_xyz": [
+      1.149,
+      1.173,
+      2.005
+    ],
+    "dims_m": {
+      "x": 0.459,
+      "y_up": 0.8,
+      "z": 0.468
+    },
+    "yaw": -90.0,
+    "drive": "h=0.8",
+    "textures": [
+      [
+        "Image_0",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_1",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "Image_2",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "glb": "game/assets/props/level0/prop_folding_chair_sf.glb"
+  }
+}

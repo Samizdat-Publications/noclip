@@ -404,14 +404,22 @@ async function main() {
 		};
 		fixtures.forEach( ( f, k ) => { if ( f.state === 0 ) addLight( 0, k ); } );
 		animIdx.forEach( ( k, a ) => addLight( 1 + a, k ) );
-		// blur each layer (2 box passes, radius 2 texels ~0.47 m)
+		// blur each layer: 2 tight box passes (~0.47 m), then mix in a wide spill (~2 m) so light bleeds through doors into dark rooms
 		const tmp = new Float32Array( GI_N * GI_N );
+		const blur = ( o, rad, passes ) => {
+			for ( let pass = 0; pass < passes; pass ++ ) {
+				for ( let j = 0; j < GI_N; j ++ ) for ( let i = 0; i < GI_N; i ++ ) { let s = 0, c = 0; for ( let d = - rad; d <= rad; d ++ ) { const ii = i + d; if ( ii >= 0 && ii < GI_N ) { s += giF[ o + j * GI_N + ii ]; c ++; } } tmp[ j * GI_N + i ] = s / c; }
+				for ( let j = 0; j < GI_N; j ++ ) for ( let i = 0; i < GI_N; i ++ ) { let s = 0, c = 0; for ( let d = - rad; d <= rad; d ++ ) { const jj = j + d; if ( jj >= 0 && jj < GI_N ) { s += tmp[ jj * GI_N + i ]; c ++; } } giF[ o + j * GI_N + i ] = s / c; }
+			}
+		};
 		for ( let L = 0; L < GL; L ++ ) {
 			const o = L * GI_N * GI_N;
-			for ( let pass = 0; pass < 2; pass ++ ) {
-				for ( let j = 0; j < GI_N; j ++ ) for ( let i = 0; i < GI_N; i ++ ) { let s = 0, c = 0; for ( let d = - 2; d <= 2; d ++ ) { const ii = i + d; if ( ii >= 0 && ii < GI_N ) { s += giF[ o + j * GI_N + ii ]; c ++; } } tmp[ j * GI_N + i ] = s / c; }
-				for ( let j = 0; j < GI_N; j ++ ) for ( let i = 0; i < GI_N; i ++ ) { let s = 0, c = 0; for ( let d = - 2; d <= 2; d ++ ) { const jj = j + d; if ( jj >= 0 && jj < GI_N ) { s += tmp[ jj * GI_N + i ]; c ++; } } giF[ o + j * GI_N + i ] = s / c; }
-			}
+			const orig = giF.slice( o, o + GI_N * GI_N );
+			blur( o, 8, 3 );
+			const wide = giF.slice( o, o + GI_N * GI_N );
+			giF.set( orig, o );
+			blur( o, 2, 2 );
+			for ( let p = 0; p < GI_N * GI_N; p ++ ) giF[ o + p ] = giF[ o + p ] * 0.85 + wide[ p ] * 0.35 + ( L === 0 ? 0.035 : 0 );
 		}
 	}
 	APP.giCPU = ( x, z, w ) => {
@@ -523,7 +531,20 @@ async function main() {
 		return m;
 	}
 	const tbarMat = plainMat( [ 0.80, 0.79, 0.74 ], 0.45 );
-	const trimMat = plainMat( [ 0.60, 0.56, 0.46 ], 0.4 );
+	// painted trim: worn semi-gloss paint, scuffed and darker toward the floor
+	const trimMat = new THREE.MeshStandardNodeMaterial();
+	{
+		const P = positionWorld;
+		const n1 = mx_noise_float( P.mul( 3.1 ) ).mul( 0.5 ).add( 0.5 );
+		const n2 = mx_noise_float( P.mul( 23.0 ).add( 4.0 ) ).mul( 0.5 ).add( 0.5 );
+		const low = smoothstep( 0.45, 0.0, P.y );
+		const albedo = vec3( 0.60, 0.56, 0.46 ).mul( mix( 0.86, 1.02, n1 ) ).mul( mix( 0.94, 1.0, n2 ) ).mul( mix( vec3( 1 ), vec3( 0.62, 0.55, 0.44 ), low.mul( 0.8 ) ) );
+		trimMat.colorNode = albedo;
+		trimMat.roughnessNode = mix( 0.32, 0.55, n1 );
+		trimMat.metalnessNode = float( 0 );
+		trimMat.normalNode = normalMap( texture( T.wallpaper_normal, uv().mul( 0.35 ) ), vec2( 0.25 ) );
+		trimMat.emissiveNode = indirect( albedo, float( 1 ) );
+	}
 	const houseMat = plainMat( [ 0.86, 0.86, 0.84 ], 0.35, 0.8 );
 	const plenMat = plainMat( [ 0.035, 0.032, 0.03 ], 0.95, 0.15 );
 
@@ -542,20 +563,17 @@ async function main() {
 	const cathodes = fixtures.map( ( f ) => f.cathode || 0 );
 	const cathArr = uniformArray( cathodes, 'float' );
 	const lensK = uniform( L_NITS * 1.15 );
-	const lensMat = new THREE.MeshStandardNodeMaterial();
+	// the lens is an emitter: unlit material (rect lights evaluated on a surface 4 mm from their own plane give LTC noise)
+	const lensMat = new THREE.MeshBasicNodeMaterial();
 	{
-		const fid = attribute( 'fid', 'float' ).toInt();
+		const fid = attribute( 'fid', 'float' ).add( 0.5 ).floor().toInt(); // round: the interpolated varying is not exact
 		const lv = levels.element( fid );
 		const cath = cathArr.element( fid );
 		const lu = uv();
-		const albedo = texture( T.troffer_lens_albedo, lu ).rgb;
-		const em = mix( texture( T.troffer_lens_emission, lu ).bias( 1.6 ).rgb, vec3( 0.8 ), 0.4 );
+		const albedo = texture( T.troffer_lens_albedo, lu ).rgb.mul( 0.85 );
+		const em = mix( texture( T.troffer_lens_emission, lu ).rgb, vec3( 0.8 ), 0.35 );
 		const ends = smoothstep( 0.1, 0.0, lu.y ).add( smoothstep( 0.9, 1.0, lu.y ) ).mul( smoothstep( 0.0, 0.15, lu.x ).mul( smoothstep( 1.0, 0.85, lu.x ) ) );
-		lensMat.colorNode = albedo.mul( 0.85 );
-		lensMat.roughnessNode = float( 0.35 );
-		lensMat.metalnessNode = float( 0 );
-		lensMat.normalNode = normalMap( texture( T.troffer_lens_normal, lu ), vec2( 0.5 ) );
-		lensMat.emissiveNode = em.mul( vertexColor() ).mul( lv ).mul( lensK )
+		lensMat.colorNode = em.mul( vertexColor() ).mul( lv ).mul( lensK )
 			.add( vec3( 1.0, 0.38, 0.08 ).mul( cath ).mul( ends ).mul( 2.5 ) )
 			.add( indirect( albedo, float( 0.6 ) ) );
 	}
@@ -623,7 +641,7 @@ async function main() {
 		} );
 		light.colorNode = colU.mul( vis() );
 		light.rotation.x = - Math.PI / 2;
-		light.position.set( 0, H_CEIL + 0.005, 0 );
+		light.position.set( 0, LENS_Y + 0.004, 0 );
 		scene.add( light );
 		pool.push( { light, colU, layerU, fix: - 1 } );
 	}
@@ -645,11 +663,13 @@ async function main() {
 	giPass.sliceCount.value = 2;
 	giPass.stepCount.value = 8;
 	giPass.radius.value = 3.0;
-	giPass.giIntensity.value = 1.6;
+	giPass.giIntensity.value = 0.0; // screen-space GI sparkles on dim surfaces at this sample count; bounce comes from the baked 2D GI map instead
 	giPass.aoIntensity.value = 1.15;
 	giPass.thickness.value = 0.6;
-	const aoN = giPass.getAONode(), giN = giPass.getGINode();
-	const comp = vec4( colorT.rgb.mul( aoN ).add( diffT.rgb.mul( giN.rgb.min( vec3( 0.25 ) ) ) ), colorT.a );
+	const aoN = giPass.getAONode();
+	// keep AO off emitters (its 4x4 sampling lattice shows up on the very bright lenses)
+	const emitMask = smoothstep( 1.2, 3.0, max( colorT.r, max( colorT.g, colorT.b ) ) );
+	const comp = vec4( colorT.rgb.mul( mix( aoN, float( 1 ), emitMask ) ), colorT.a );
 	const taa = traa( comp, depthT, velT, camera );
 	const taaTex = taa.getTextureNode();
 	const bloomPass = bloom( taa, 0.16, 0.45, 2.6 );
@@ -660,12 +680,12 @@ async function main() {
 		const d = suv.sub( 0.5 );
 		const r2 = dot( d, d );
 		const off = d.mul( r2 ).mul( 0.0045 );
-		const c = vec3( taaTex.sample( suv.sub( off ) ).r, taa.g, taaTex.sample( suv.add( off ) ).b ).add( bloomPass.rgb );
+		const c = PARAMS.has( 'notaa' ) ? comp.rgb : vec3( taaTex.sample( suv.sub( off ) ).r, taa.g, taaTex.sample( suv.add( off ) ).b ).add( bloomPass.rgb );
 		const asp = vec2( d.x.mul( 16 / 9 ), d.y );
 		const vig = float( 1 ).sub( smoothstep( 0.35, 1.25, length( asp ) ).mul( 0.42 ) );
 		const n = hash( suv.mul( vec2( 2560, 1440 ) ).floor().add( frameU.mul( vec2( 17.13, 31.71 ) ) ).dot( vec2( 1.0, 4096.0 ) ) );
 		const n2 = hash( suv.mul( vec2( 2560, 1440 ) ).floor().add( frameU.mul( vec2( 7.3, 11.9 ) ).add( 91.0 ) ).dot( vec2( 1.0, 4096.0 ) ) );
-		const grain = n.add( n2 ).sub( 1.0 ).mul( 0.055 );
+		const grain = n.add( n2 ).sub( 1.0 ).mul( PARAMS.has( 'nograin' ) ? 0.0 : 0.055 );
 		const ce = c.mul( vig ).mul( exposureU ).max( 0 );
 		const cc = pow( ce.div( 0.18 ), vec3( 1.12 ) ).mul( 0.18 ); // gentle filmic contrast around mid grey
 		return vec4( cc.mul( grain.add( 1.0 ) ), 1.0 );
@@ -713,7 +733,7 @@ async function main() {
 				const I = L_NITS * f.energy * curLevels[ k ];
 				e.colU.value.setRGB( f.tint[ 0 ] * I, f.tint[ 1 ] * I, f.tint[ 2 ] * I );
 				e.layerU.value = l;
-				e.light.position.set( f.x, H_CEIL + 0.005, f.z );
+				e.light.position.set( f.x, LENS_Y + 0.004, f.z );
 				e.light.visible = true;
 			} else {
 				e.colU.value.setRGB( 0, 0, 0 );

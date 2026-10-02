@@ -1,41 +1,168 @@
 {
   "box": {
-    "tris_blender": 2688,
+    "tris_blender": 3208,
     "bbox_blender_min": [
-      -0.2063,
-      -0.1738,
+      -0.2062,
+      -0.1544,
       0.0
     ],
     "bbox_blender_max": [
-      0.2263,
-      0.1619,
-      0.3073
-    ]
+      0.2259,
+      0.1807,
+      0.3049
+    ],
+    "bake": {
+      "metal_max": 0.0,
+      "rough_mean": 0.69,
+      "ao_mean": 0.371
+    },
+    "parts": {
+      "prop_cardboard_box": 2232,
+      "prop_cardboard_box_lid": 976
+    },
+    "glb": {
+      "tris": 3208,
+      "bounds_min": [
+        -0.2062,
+        0,
+        -0.1807
+      ],
+      "bounds_max": [
+        0.2259,
+        0.3049,
+        0.1544
+      ],
+      "size_xyz_yup": [
+        0.4321,
+        0.3049,
+        0.3351
+      ],
+      "images": 3,
+      "materials": [
+        "mat_prop_cardboard_box"
+      ],
+      "bytes": 8584988,
+      "extensions": [],
+      "uv_sets": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    "textures": {
+      "basecolor": "pipeline/meshes/baked_props_level0/box/prop_cardboard_box_basecolor.png",
+      "normal": "pipeline/meshes/baked_props_level0/box/prop_cardboard_box_normal.png",
+      "orm": "pipeline/meshes/baked_props_level0/box/prop_cardboard_box_orm.png"
+    },
+    "tex_res": 2048
   },
   "chair": {
-    "tris_blender": 10464,
+    "tris_blender": 11444,
     "bbox_blender_min": [
       -0.3298,
       -0.2929,
-      0.0007
+      0.0
     ],
     "bbox_blender_max": [
       0.3188,
       0.3526,
       0.9423
-    ]
+    ],
+    "bake": {
+      "metal_max": 1.0,
+      "rough_mean": 0.61,
+      "ao_mean": 0.522
+    },
+    "glb": {
+      "tris": 11444,
+      "bounds_min": [
+        -0.3298,
+        0,
+        -0.3526
+      ],
+      "bounds_max": [
+        0.3188,
+        0.9423,
+        0.2929
+      ],
+      "size_xyz_yup": [
+        0.6486,
+        0.9423,
+        0.6455
+      ],
+      "images": 3,
+      "materials": [
+        "mat_prop_office_chair"
+      ],
+      "bytes": 13384472,
+      "extensions": [],
+      "uv_sets": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    "textures": {
+      "basecolor": "pipeline/meshes/baked_props_level0/chair/prop_office_chair_basecolor.png",
+      "normal": "pipeline/meshes/baked_props_level0/chair/prop_office_chair_normal.png",
+      "orm": "pipeline/meshes/baked_props_level0/chair/prop_office_chair_orm.png"
+    },
+    "tex_res": 2048
   },
   "crt": {
-    "tris_blender": 4390,
+    "tris_blender": 4814,
     "bbox_blender_min": [
       -0.19,
-      -0.2135,
+      -0.212,
       0.0
     ],
     "bbox_blender_max": [
       0.19,
-      0.2167,
+      0.2077,
       0.38
-    ]
+    ],
+    "bake": {
+      "metal_max": 0.0,
+      "rough_mean": 0.486,
+      "ao_mean": 0.467
+    },
+    "glb": {
+      "tris": 4814,
+      "bounds_min": [
+        -0.19,
+        0,
+        -0.2077
+      ],
+      "bounds_max": [
+        0.19,
+        0.38,
+        0.212
+      ],
+      "size_xyz_yup": [
+        0.38,
+        0.38,
+        0.4197
+      ],
+      "images": 3,
+      "materials": [
+        "mat_prop_crt_monitor",
+        "mat_crt_led"
+      ],
+      "bytes": 3129400,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ],
+      "uv_sets": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    "textures": {
+      "basecolor": "pipeline/meshes/baked_props_level0/crt/prop_crt_monitor_basecolor.png",
+      "normal": "pipeline/meshes/baked_props_level0/crt/prop_crt_monitor_normal.png",
+      "orm": "pipeline/meshes/baked_props_level0/crt/prop_crt_monitor_orm.png"
+    },
+    "tex_res": 1024
   }
 }

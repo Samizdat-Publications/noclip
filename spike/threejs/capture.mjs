@@ -73,14 +73,16 @@ async function launch( port ) {
 			'--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding', '--disable-background-timer-throttling',
 			'--window-position=0,0', '--window-size=1280,760', '--ignore-gpu-blocklist', '--enable-webgpu-developer-features' ]
 	} );
-	const ctx = await browser.newContext( { viewport: { width: 2560, height: 1440 }, deviceScaleFactor: 1 } );
+	const ctx = await browser.newContext( process.env.NO_VIEWPORT ? { viewport: null } : { viewport: { width: 2560, height: 1440 }, deviceScaleFactor: 1 } );
 	const page = await ctx.newPage();
 	page.on( 'console', ( m ) => { const t = m.text(); if ( m.type() === 'error' || m.type() === 'warning' ) console.log( '[console]', m.type(), t.slice( 0, 400 ) ); } );
 	page.on( 'pageerror', ( e ) => console.log( '[pageerror]', e.message ) );
-	await page.goto( `http://127.0.0.1:${port}/index.html?${extraQuery}` );
-	await page.waitForFunction( () => window.APP && ( window.APP.status === 'ready' || window.APP.status.startsWith( 'error' ) ), null, { timeout: 300000 } );
+	try {
+		await page.goto( `http://127.0.0.1:${port}/index.html?${extraQuery}` );
+		await page.waitForFunction( () => window.APP && ( window.APP.status === 'ready' || window.APP.status.startsWith( 'error' ) ), null, { timeout: 150000 } );
+	} catch ( e ) { await browser.close(); throw e; }
 	const st = await page.evaluate( () => window.APP.status );
-	if ( st !== 'ready' ) throw new Error( st );
+	if ( st !== 'ready' ) { await browser.close(); throw new Error( st ); }
 	const info = await page.evaluate( () => window.APP.adapterInfo );
 	log( 'GPU adapter:', JSON.stringify( info ) );
 	if ( ! info || ! /nvidia/i.test( JSON.stringify( info ) ) ) log( 'WARNING: adapter does not look like the NVIDIA GPU' );
@@ -157,7 +159,7 @@ async function video( page, dir ) {
 	const n = track.frames.length;
 	videoSink = spawn( FFMPEG, [ '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'mjpeg', '-i', '-',
 		'-i', path.join( HERE, 'data', 'audio_4242.m4a' ), '-map', '0:v', '-map', '1:a',
-		'-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-r', '30', '-c:a', 'copy', '-shortest', '-movflags', '+faststart', outFile ], { stdio: [ 'pipe', 'inherit', 'inherit' ] } );
+		'-vf', 'scale=in_range=pc:out_range=tv,format=yuv420p', '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-color_range', 'tv', '-r', '30', '-c:a', 'copy', '-movflags', '+faststart', outFile ], { stdio: [ 'pipe', 'inherit', 'inherit' ] } );
 	const done = new Promise( ( r ) => videoSink.on( 'close', r ) );
 	const t0 = Date.now();
 	const CH = 30;
@@ -250,7 +252,12 @@ async function test( page ) {
 	const port = server.address().port;
 	log( 'server on', port, 'mode', mode );
 	const t0 = Date.now();
-	const { browser, page, info } = await launch( port );
+	let L = null;
+	for ( let attempt = 1; attempt <= 3 && ! L; attempt ++ ) {
+		try { L = await launch( port ); } catch ( e ) { log( `launch attempt ${attempt} failed: ${String( e && e.message || e ).slice( 0, 300 )}` ); }
+	}
+	if ( ! L ) throw new Error( 'could not start the renderer' );
+	const { browser, page, info } = L;
 	try {
 		if ( mode === 'test' ) await test( page );
 		else {

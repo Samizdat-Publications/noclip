@@ -21,7 +21,7 @@ MANIFEST = ROOT / "pipeline/manifests/props_level0.json"
 
 SPEC = {
     "chair": dict(name="prop_office_chair", tris=12000, tex=2048, seed=1101),
-    "crt": dict(name="prop_crt_monitor", tris=6000, tex=2048, seed=2202),
+    "crt": dict(name="prop_crt_monitor", tris=6000, tex=1024, seed=2202),
     "box": dict(name="prop_cardboard_box", tris=4000, tex=2048, seed=3303),
 }
 
@@ -220,6 +220,7 @@ def join(objs, name):
         mw = o.matrix_world.copy()
         o.data.transform(mw)
         if os.environ.get("PROP_DEBUG"):
+            print("PART", o.name, sum(len(q.vertices) - 2 for q in o.data.polygons))
             zs = [v.co.z for v in o.data.vertices]
             if zs and min(zs) < -0.001:
                 print("DEBUG below floor:", o.name, round(min(zs), 4))
@@ -427,24 +428,28 @@ def mat_fabric(seed):
     mid = s.noise(45.0, 5.0, 0.55)
     big = s.noise(5.0, 3.0)
     blot = s.noise(11.0, 4.0, 0.6)
-    base = s.mix(s.sstep(big, 0.35, 0.7), (0.040, 0.042, 0.046), (0.070, 0.071, 0.074))
-    base = s.mul(base, s.mix(grain, (0.8, 0.8, 0.82), (1.15, 1.15, 1.15)))
-    base = s.mul(base, s.mix(chk, (0.88, 0.88, 0.88), (1.1, 1.1, 1.1)), 0.9)
+    base = s.mix(s.sstep(big, 0.3, 0.72), (0.036, 0.039, 0.045), (0.085, 0.087, 0.092))
+    base = s.mul(base, s.mix(grain, (0.75, 0.75, 0.78), (1.2, 1.2, 1.2)))
+    base = s.mul(base, s.mix(chk, (0.82, 0.82, 0.82), (1.12, 1.12, 1.12)), 0.9)
     # seat front edge faded lighter (seat only: z below the backrest)
-    front = s.math("MULTIPLY", s.sstep(s.y, -0.12, -0.24), s.sstep(s.z, 0.56, 0.5))
-    front = s.math("MULTIPLY", front, s.remap(mid, 0.25, 0.75, 0.5, 1.0))
-    base = s.mix(front, base, (0.145, 0.146, 0.150))
-    # centre-of-seat wear
-    wear = s.math("MULTIPLY", s.sstep(s.math("ADD", s.math("MULTIPLY", s.x, s.x), s.math("MULTIPLY", s.math("ADD", s.y, 0.02), s.math("ADD", s.y, 0.02))), 0.04, 0.0), s.sstep(s.z, 0.56, 0.5))
-    base = s.mix(s.math("MULTIPLY", wear, 0.35), base, (0.095, 0.097, 0.100))
+    front = s.math("MULTIPLY", s.sstep(s.y, -0.11, -0.24), s.math("MULTIPLY", s.sstep(s.z, 0.56, 0.5), 1.0))
+    front = s.math("MULTIPLY", front, s.remap(mid, 0.2, 0.8, 0.55, 1.0))
+    base = s.mix(s.math("MULTIPLY", front, 0.9), base, (0.185, 0.186, 0.19))
+    # centre-of-seat wear (shiny, lighter)
+    r2 = s.math("ADD", s.math("MULTIPLY", s.x, s.x), s.math("MULTIPLY", s.math("ADD", s.y, 0.02), s.math("ADD", s.y, 0.02)))
+    wear = s.math("MULTIPLY", s.sstep(r2, 0.045, 0.0), s.sstep(s.z, 0.56, 0.5))
+    base = s.mix(s.math("MULTIPLY", wear, 0.45), base, (0.115, 0.118, 0.122))
+    # backrest lumbar wear and top-edge hand wear
+    wb = s.math("MULTIPLY", s.sstep(s.math("ADD", s.math("MULTIPLY", s.x, s.x), s.math("MULTIPLY", s.math("SUBTRACT", s.z, 0.72), s.math("SUBTRACT", s.z, 0.72))), 0.03, 0.0), s.sstep(s.z, 0.56, 0.6))
+    base = s.mix(s.math("MULTIPLY", wb, 0.3), base, (0.12, 0.122, 0.125))
     # stains: brown blotches + a pale dried splash
-    st = s.sstep(blot, 0.62, 0.72)
-    base = s.mix(s.math("MULTIPLY", st, 0.75), base, (0.032, 0.026, 0.020))
-    sp = s.sstep(s.noise(23.0, 4.0, 0.6), 0.66, 0.74)
-    base = s.mix(s.math("MULTIPLY", sp, 0.45), base, (0.115, 0.108, 0.095))
+    st = s.sstep(blot, 0.60, 0.70)
+    base = s.mix(s.math("MULTIPLY", st, 0.8), base, (0.030, 0.023, 0.017))
+    sp = s.sstep(s.noise(23.0, 4.0, 0.6), 0.64, 0.72)
+    base = s.mix(s.math("MULTIPLY", sp, 0.55), base, (0.135, 0.125, 0.105))
     # dust on up-facing surfaces
     dust = s.math("MULTIPLY", s.sstep(s.nz, 0.35, 0.95), s.remap(mid, 0.2, 0.8, 0.2, 0.9))
-    base = s.mix(s.math("MULTIPLY", dust, 0.35), base, (0.16, 0.155, 0.145))
+    base = s.mix(s.math("MULTIPLY", dust, 0.4), base, (0.19, 0.185, 0.17))
     # upholstery seams
     seam_dist = s.math("ABSOLUTE", s.math("SUBTRACT", s.math("ABSOLUTE", s.x), 0.085))
     seam_b = s.math("MULTIPLY", s.sstep(seam_dist, 0.0022, 0.0006), s.sstep(s.z, 0.575, 0.585))
@@ -452,11 +457,14 @@ def mat_fabric(seed):
     seam_s = s.math("MULTIPLY", s.sstep(seat_d, 0.0022, 0.0006), s.sstep(s.z, 0.52, 0.49))
     seam_s = s.math("MULTIPLY", seam_s, s.sstep(s.nz, 0.3, 0.7))
     seam = s.math("MAXIMUM", seam_b, seam_s)
-    base = s.mul(base, (0.45, 0.45, 0.47), seam)
+    base = s.mul(base, (0.40, 0.40, 0.42), seam)
+    cav = s.sstep(s.pt, 0.49, 0.40)
+    base = s.mul(base, (0.6, 0.6, 0.6), cav)
     h = s.math("ADD", s.math("MULTIPLY", chk, 0.55), s.math("MULTIPLY", grain, 0.45))
     h = s.math("SUBTRACT", h, s.math("MULTIPLY", seam, 1.4))
-    nrm = s.bump(h, 0.55, 0.0012)
-    rough = s.remap(mid, 0.2, 0.8, 0.80, 0.97)
+    nrm = s.bump(h, 0.7, 0.0012)
+    rough = s.remap(mid, 0.2, 0.8, 0.78, 0.97)
+    rough = s.mixf(s.math("MAXIMUM", wear, front), rough, 0.62)
     s.finish(base, rough, 0.0, nrm)
     return m
 
@@ -472,6 +480,8 @@ def mat_plastic_black(seed):
     base = s.mix(s.math("MULTIPLY", scuff, 0.7), base, (0.075, 0.075, 0.078))
     edge = s.sstep(s.pt, 0.505, 0.58)
     base = s.mix(s.math("MULTIPLY", edge, 0.8), base, (0.085, 0.085, 0.09))
+    cav = s.sstep(s.pt, 0.495, 0.42)
+    base = s.mix(s.math("MULTIPLY", cav, 0.5), base, (0.10, 0.095, 0.085))
     dust = s.math("MULTIPLY", s.sstep(s.nz, 0.3, 0.95), s.remap(mid, 0.2, 0.8, 0.15, 1.0))
     base = s.mix(s.math("MULTIPLY", dust, 0.5), base, (0.15, 0.145, 0.135))
     rough = s.mixf(s.sstep(mid, 0.3, 0.7), 0.36, 0.62)
@@ -512,25 +522,35 @@ def mat_steel(seed):
 def mat_beige(seed):
     m = new_mat("plastic_beige_aged")
     s = Sh(m, seed)
-    big = s.noise(3.5, 3.0)
-    mid = s.noise(26.0, 5.0, 0.6)
+    big = s.noise(3.0, 4.0, 0.6)
+    mid = s.noise(22.0, 5.0, 0.62)
+    grain = s.noise(260.0, 2.0)
     fine = s.noise(420.0, 2.0)
-    streak = s.noise(18.0, 4.0, 0.6, aniso=(1.5, 1.5, 0.12))
-    base = s.mix(s.sstep(big, 0.3, 0.7), (0.50, 0.425, 0.285), (0.56, 0.455, 0.255))
-    # yellowing worse on top, grime heavier near the bottom and rear
-    yel = s.math("MULTIPLY", s.sstep(s.z, 0.18, 0.37), s.remap(mid, 0.2, 0.8, 0.4, 1.0))
-    base = s.mix(s.math("MULTIPLY", yel, 0.55), base, (0.52, 0.37, 0.17))
-    grime = s.math("MAXIMUM", s.sstep(s.z, 0.17, 0.04), s.math("MULTIPLY", s.sstep(s.y, 0.0, 0.16), 0.55))
-    base = s.mix(s.math("MULTIPLY", grime, s.remap(mid, 0.2, 0.8, 0.35, 0.8)), base, (0.20, 0.16, 0.10))
-    sm = s.sstep(streak, 0.55, 0.75)
-    base = s.mix(s.math("MULTIPLY", sm, 0.5), base, (0.27, 0.21, 0.12))
+    streak = s.noise(16.0, 4.0, 0.62, aniso=(1.6, 1.6, 0.10))
+    base = s.mix(s.sstep(big, 0.25, 0.75), (0.36, 0.285, 0.165), (0.52, 0.405, 0.215))
+    base = s.mul(base, s.mix(grain, (0.9, 0.9, 0.9), (1.1, 1.1, 1.1)))
+    # sun/age yellowing, worse on top faces and at the front
+    yel = s.math("MULTIPLY", s.sstep(s.z, 0.14, 0.37), s.remap(mid, 0.2, 0.8, 0.3, 1.0))
+    base = s.mix(s.math("MULTIPLY", yel, 0.65), base, (0.47, 0.31, 0.11))
+    # grime: heavy near the bottom and at the rear, blotchy
+    grime = s.math("MAXIMUM", s.sstep(s.z, 0.20, 0.04), s.math("MULTIPLY", s.sstep(s.y, -0.02, 0.16), 0.6))
+    base = s.mix(s.math("MULTIPLY", grime, s.remap(mid, 0.2, 0.8, 0.35, 0.95)), base, (0.17, 0.13, 0.075))
+    # dirty run marks / handling smudges
+    sm = s.sstep(streak, 0.52, 0.74)
+    base = s.mix(s.math("MULTIPLY", sm, 0.65), base, (0.21, 0.155, 0.08))
+    # grease smudges where hands touch (chin, top edges)
+    hand = s.math("MULTIPLY", s.sstep(s.noise(40.0, 3.0), 0.55, 0.72), s.sstep(s.z, 0.14, 0.09))
+    base = s.mix(s.math("MULTIPLY", hand, 0.6), base, (0.25, 0.19, 0.10))
     edge = s.sstep(s.pt, 0.505, 0.58)
-    base = s.mix(s.math("MULTIPLY", edge, 0.45), base, (0.66, 0.58, 0.40))
+    base = s.mix(s.math("MULTIPLY", edge, 0.45), base, (0.56, 0.46, 0.29))
+    cav = s.sstep(s.pt, 0.495, 0.42)
+    base = s.mix(s.math("MULTIPLY", cav, 0.75), base, (0.10, 0.07, 0.04))
     dust = s.math("MULTIPLY", s.sstep(s.nz, 0.4, 0.95), s.remap(mid, 0.2, 0.8, 0.15, 1.0))
-    base = s.mix(s.math("MULTIPLY", dust, 0.4), base, (0.52, 0.47, 0.37))
-    rough = s.mixf(s.sstep(mid, 0.3, 0.7), 0.42, 0.66)
-    rough = s.mixf(s.math("MAXIMUM", sm, dust), rough, 0.8)
-    nrm = s.bump(s.math("ADD", s.math("MULTIPLY", fine, 0.7), s.math("MULTIPLY", mid, 0.3)), 0.22, 0.0007)
+    base = s.mix(s.math("MULTIPLY", dust, 0.5), base, (0.45, 0.41, 0.33))
+    rough = s.mixf(s.sstep(mid, 0.3, 0.7), 0.36, 0.66)
+    rough = s.mixf(s.math("MAXIMUM", sm, dust), rough, 0.85)
+    rough = s.mixf(hand, rough, 0.3)
+    nrm = s.bump(s.math("ADD", s.math("MULTIPLY", fine, 0.7), s.math("MULTIPLY", mid, 0.3)), 0.25, 0.0007)
     s.finish(base, rough, 0.0, nrm)
     return m
 
@@ -544,10 +564,10 @@ def mat_glass(seed):
     rr = s.math("ADD", s.math("MULTIPLY", s.math("DIVIDE", s.x, 0.15), s.math("DIVIDE", s.x, 0.15)),
                 s.math("MULTIPLY", s.math("DIVIDE", s.math("SUBTRACT", s.z, 0.2275), 0.12), s.math("DIVIDE", s.math("SUBTRACT", s.z, 0.2275), 0.12)))
     base = s.mix(s.sstep(rr, 0.0, 1.6), (0.040, 0.054, 0.047), (0.022, 0.031, 0.027))
-    dust = s.math("ADD", s.math("MULTIPLY", s.sstep(smear, 0.4, 0.78), 0.55), s.math("MULTIPLY", s.sstep(rr, 0.7, 1.9), 0.45))
+    dust = s.math("ADD", s.math("MULTIPLY", s.sstep(smear, 0.45, 0.85), 0.40), s.math("MULTIPLY", s.sstep(rr, 0.9, 2.0), 0.35))
     dust = s.math("MULTIPLY", dust, s.remap(fine, 0.3, 0.7, 0.55, 1.0))
     base = s.mix(s.math("MULTIPLY", dust, 0.8), base, (0.19, 0.185, 0.165))
-    rough = s.mixf(s.math("MINIMUM", dust, 1.0), 0.07, 0.75)
+    rough = s.mixf(s.math("MINIMUM", dust, 1.0), 0.045, 0.55)
     s.finish(base, rough, 0.0, None)
     return m
 
@@ -564,33 +584,48 @@ def mat_cardboard_outer(seed):
     s = Sh(m, seed)
     mid = s.noise(30.0, 5.0, 0.6)
     fibre = s.noise(260.0, 3.0, 0.6, aniso=(1.0, 1.0, 0.25))
-    big = s.noise(4.0, 3.0)
+    fibre2 = s.noise(90.0, 4.0, 0.6, aniso=(1.0, 1.0, 0.2))
+    big = s.noise(3.5, 3.0)
     flute = s.math("SINE", s.math("MULTIPLY", s.math("ADD", s.x, s.y), 2 * math.pi / 0.008))
-    base = s.mix(s.sstep(big, 0.3, 0.7), (0.43, 0.285, 0.15), (0.50, 0.35, 0.185))
-    base = s.mul(base, s.mix(fibre, (0.85, 0.85, 0.85), (1.12, 1.12, 1.12)))
-    # faded, dusty top
-    base = s.mix(s.math("MULTIPLY", s.sstep(s.z, 0.12, 0.3), 0.35), base, (0.56, 0.44, 0.27))
-    # unprinted pale label panel on the long front face
-    lab = s.math("MULTIPLY", s.math("MULTIPLY", s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", s.x, -0.04)), 0.075, 0.07), s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", s.z, 0.17)), 0.05, 0.046)), s.sstep(s.y, -0.14, -0.15))
-    base = s.mix(s.math("MULTIPLY", lab, 0.35), base, (0.56, 0.45, 0.30))
-    # water damage: wobbling tide line 6..10 cm
-    tide = s.math("ADD", 0.06, s.math("MULTIPLY", s.remap(s.noise(9.0, 3.0, 0.5), 0.3, 0.7), 0.04))
-    wet = s.sstep(s.z, s.math("ADD", tide, 0.004), s.math("SUBTRACT", tide, 0.006))
+    base = s.mix(s.sstep(big, 0.25, 0.75), (0.36, 0.235, 0.12), (0.52, 0.365, 0.19))
+    base = s.mul(base, s.mix(fibre, (0.8, 0.8, 0.8), (1.15, 1.15, 1.15)))
+    base = s.mul(base, s.mix(fibre2, (0.88, 0.88, 0.88), (1.1, 1.1, 1.1)))
+    # faded, sun/dust-bleached upper half
+    base = s.mix(s.math("MULTIPLY", s.sstep(s.z, 0.12, 0.3), 0.35), base, (0.55, 0.43, 0.26))
+    # faded one-colour print frame on the long front face (no text)
+    fx = s.math("ABSOLUTE", s.math("SUBTRACT", s.math("ABSOLUTE", s.x), 0.14))
+    fz = s.math("ABSOLUTE", s.math("SUBTRACT", s.z, 0.175))
+    fz2 = s.math("ABSOLUTE", s.math("SUBTRACT", fz, 0.0))
+    frame_v = s.math("MULTIPLY", s.sstep(fx, 0.0026, 0.0012), s.sstep(fz, 0.062, 0.058))
+    frame_h = s.math("MULTIPLY", s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", fz, 0.06)), 0.0026, 0.0012), s.sstep(s.math("ABSOLUTE", s.x), 0.142, 0.138))
+    frame = s.math("MAXIMUM", frame_v, frame_h)
+    frame = s.math("MULTIPLY", frame, s.math("MULTIPLY", s.sstep(s.y, -0.13, -0.15), s.remap(mid, 0.25, 0.75, 0.25, 0.8)))
+    base = s.mix(s.math("MULTIPLY", frame, 0.7), base, (0.17, 0.10, 0.06))
+    # scuffs and abrasion: lighter fibres where edges rub
+    edge = s.sstep(s.pt, 0.51, 0.6)
+    base = s.mix(s.math("MULTIPLY", edge, 0.6), base, (0.62, 0.50, 0.32))
+    # water damage: wobbling tide line, 6..10 cm up the sides
+    tide = s.math("ADD", 0.055, s.math("ADD", s.math("MULTIPLY", s.remap(s.noise(7.0, 3.0, 0.5, aniso=(1.0, 1.0, 0.3)), 0.3, 0.7), 0.04),
+                                       s.math("MULTIPLY", s.remap(s.noise(55.0, 3.0, 0.5, aniso=(1.0, 1.0, 0.4)), 0.3, 0.7), 0.012)))
+    wet = s.sstep(s.z, s.math("ADD", tide, 0.006), s.math("SUBTRACT", tide, 0.012))
     deep = s.sstep(s.z, tide, 0.0)
-    base = s.mix(s.math("MULTIPLY", wet, 0.88), base, (0.24, 0.145, 0.07))
-    base = s.mix(s.math("MULTIPLY", deep, 0.6), base, (0.15, 0.085, 0.04))
-    line = s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", s.z, tide)), 0.0045, 0.0005)
-    line = s.math("MULTIPLY", line, s.remap(mid, 0.2, 0.8, 0.5, 1.0))
-    base = s.mix(s.math("MULTIPLY", line, 0.8), base, (0.12, 0.07, 0.03))
-    halo = s.math("MULTIPLY", s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", s.z, s.math("ADD", tide, 0.012))), 0.012, 0.0), 0.4)
-    base = s.mix(halo, base, (0.52, 0.38, 0.17))
-    # mould specks in the damp zone
-    mold = s.math("MULTIPLY", s.sstep(s.voronoi(160.0, "F1", "Distance"), 0.09, 0.03), wet)
+    base = s.mix(s.math("MULTIPLY", wet, 0.85), base, (0.26, 0.155, 0.075))
+    base = s.mix(s.math("MULTIPLY", deep, 0.55), base, (0.14, 0.08, 0.04))
+    line = s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", s.z, tide)), 0.0050, 0.0008)
+    line = s.math("MULTIPLY", line, s.remap(mid, 0.2, 0.8, 0.4, 1.0))
+    base = s.mix(s.math("MULTIPLY", line, 0.75), base, (0.13, 0.075, 0.035))
+    halo = s.math("MULTIPLY", s.sstep(s.math("ABSOLUTE", s.math("SUBTRACT", s.z, s.math("ADD", tide, 0.014))), 0.014, 0.0), 0.35)
+    base = s.mix(halo, base, (0.50, 0.36, 0.16))
+    # mould specks and dark grime in the damp zone
+    mold = s.math("MULTIPLY", s.sstep(s.voronoi(170.0, "F1", "Distance"), 0.09, 0.03), wet)
     mold = s.math("MULTIPLY", mold, s.sstep(s.noise(25.0, 3.0), 0.5, 0.7))
-    base = s.mix(s.math("MULTIPLY", mold, 0.8), base, (0.045, 0.05, 0.035))
-    h = s.math("ADD", s.math("MULTIPLY", fibre, 0.5), s.math("MULTIPLY", flute, 0.06))
-    nrm = s.bump(h, 0.35, 0.0006)
-    rough = s.mixf(wet, s.remap(mid, 0.2, 0.8, 0.82, 0.95), 0.72)
+    base = s.mix(s.math("MULTIPLY", mold, 0.85), base, (0.040, 0.046, 0.032))
+    # general dust / grime on up-facing parts
+    dust = s.math("MULTIPLY", s.sstep(s.nz, 0.5, 0.95), s.remap(mid, 0.2, 0.8, 0.3, 1.0))
+    base = s.mix(s.math("MULTIPLY", dust, 0.25), base, (0.50, 0.46, 0.38))
+    h = s.math("ADD", s.math("MULTIPLY", fibre, 0.5), s.math("ADD", s.math("MULTIPLY", flute, 0.05), s.math("MULTIPLY", fibre2, 0.35)))
+    nrm = s.bump(h, 0.45, 0.0007)
+    rough = s.mixf(wet, s.remap(mid, 0.2, 0.8, 0.8, 0.95), 0.7)
     s.finish(base, rough, 0.0, nrm)
     return m
 
@@ -674,7 +709,7 @@ def build_chair(seed):
                             rot=(0, 0, heading + math.pi / 2), bevel=0.0012, seg=1)
             parts.append(plate)
             wc = Vector((tip.x, tip.y, 0.0262)) + hs * (0.0075 * sgn) + hd * 0.013
-            wh = cyl_obj(f"wheel{k}{sgn}", 0.0262, 0.0262, 0.0105, wc, rub, 14, rot=(0, math.pi / 2, heading + math.pi / 2), bevel=0.0018, seg=1)
+            wh = cyl_obj(f"wheel{k}{sgn}", 0.0262, 0.0262, 0.0105, wc, rub, 12, rot=(0, math.pi / 2, heading + math.pi / 2), bevel=0.0018, seg=1)
             parts.append(wh)
         ax = Vector((tip.x, tip.y, 0.0262)) + hd * 0.013
         parts.append(cyl_obj(f"axle{k}", 0.0035, 0.0035, 0.040, ax, ste, 8, rot=(0, math.pi / 2, heading + math.pi / 2)))
@@ -685,7 +720,7 @@ def build_chair(seed):
     parts.append(cyl_obj("piston", 0.0155, 0.0155, 0.075, (0, 0, 0.3675), ste, 14))
     # seat mechanism / pan
     parts.append(box_obj("mech", (0.21, 0.20, 0.036), (0, 0.02, 0.389), pla, bevel=0.007, seg=2))
-    pan = box_obj("pan", (0.440, 0.410, 0.026), (0, -0.012, 0.420), pla, bevel=0.010, seg=3, cuts=4)
+    pan = box_obj("pan", (0.440, 0.410, 0.026), (0, -0.012, 0.420), pla, bevel=0.010, seg=3, cuts=3)
     deform(pan, lambda p: round_plan(p, 0.22, 0.205, 3.6))
     parts.append(pan)
     parts.append(cyl_obj("tiltknob", 0.019, 0.017, 0.032, (-0.05, -0.095, 0.386), pla, 14, rot=(math.pi / 2, 0, 0), bevel=0.002, seg=1))
@@ -713,8 +748,8 @@ def build_chair(seed):
     # backrest (cushion + rear shell) tilted back 5.7 degrees
     tilt = math.radians(-5.7)
     centre = Vector((0, 0.235, 0.765))
-    back = box_obj("backrest", (0.450, 0.048, 0.335), (0, 0, 0), fab, bevel=0.016, seg=4, cuts=7, angle=30)
-    shell = box_obj("backshell", (0.470, 0.020, 0.355), (0, 0.0155, 0), pla, bevel=0.007, seg=3, cuts=6, angle=30)
+    back = box_obj("backrest", (0.450, 0.048, 0.335), (0, 0, 0), fab, bevel=0.016, seg=4, cuts=10, angle=30)
+    shell = box_obj("backshell", (0.470, 0.020, 0.355), (0, 0.0155, 0), pla, bevel=0.007, seg=3, cuts=5, angle=30)
 
     def wrap(p, edge=0.030):
         p.y -= edge * (p.x / 0.235) ** 2
@@ -774,6 +809,7 @@ def build_crt(seed):
     pocket = loft("pocket", [r0, r1], bei, caps=(True, True))
     groove = box_obj("groove", (0.25, 0.012, 0.0022), (-0.045, -0.2105, 0.0985), pla)
     boolean_diff(shell, [pocket, groove])
+    add_bevel(shell, 0.0030, 2, 40)
     parts.append(shell)
     # curved glass (convex, recessed)
     nx, nz = 34, 26
@@ -804,7 +840,7 @@ def build_crt(seed):
     glass = to_obj("glass", bm, gla)
     parts.append(glass)
     # tapered rear housing
-    L = 0.280
+    L = 0.275
     ys = [-0.100 + L * (k / 10) for k in range(11)]
     rings = []
     for k, y in enumerate(ys):
@@ -826,14 +862,14 @@ def build_crt(seed):
     boolean_diff(rear, cutters)
     parts.append(rear)
     # buttons / LED / knobs on the chin
-    parts.append(box_obj("power", (0.024, 0.010, 0.012), (0.115, -0.2085, 0.0745), bei, bevel=0.0022, seg=2))
+    parts.append(box_obj("power", (0.024, 0.010, 0.012), (0.115, -0.2065, 0.0745), bei, bevel=0.0022, seg=2))
     parts.append(cyl_obj("led", 0.0028, 0.0028, 0.003, (0.088, -0.2105, 0.0745), led, 10, rot=(math.pi / 2, 0, 0)))
     parts.append(cyl_obj("bezel_led", 0.0045, 0.0045, 0.0012, (0.088, -0.2095, 0.0745), pla, 12, rot=(math.pi / 2, 0, 0)))
     for i, x in enumerate((-0.12, -0.093)):
-        parts.append(cyl_obj(f"knob{i}", 0.0075, 0.0065, 0.008, (x, -0.2085, 0.0745), bei, 14, rot=(math.pi / 2, 0, 0), bevel=0.0012, seg=1))
+        parts.append(cyl_obj(f"knob{i}", 0.0075, 0.0065, 0.008, (x, -0.2065, 0.0745), bei, 14, rot=(math.pi / 2, 0, 0), bevel=0.0012, seg=1))
     # rear panel + cable stub
-    parts.append(box_obj("backpanel", (0.095, 0.008, 0.040), (0.0, 0.1795, 0.135), pla, bevel=0.0018, seg=1))
-    cpts = [Vector(p) for p in [(0.03, 0.172, 0.135), (0.03, 0.190, 0.134), (0.03, 0.204, 0.128), (0.03, 0.2105, 0.112), (0.03, 0.2105, 0.090)]]
+    parts.append(box_obj("backpanel", (0.095, 0.008, 0.040), (0.0, 0.1745, 0.135), pla, bevel=0.0018, seg=1))
+    cpts = [Vector(p) for p in [(0.03, 0.167, 0.135), (0.03, 0.183, 0.134), (0.03, 0.1955, 0.128), (0.03, 0.2015, 0.112), (0.03, 0.2015, 0.092)]]
     cable = tube("cable", cpts, [0.0085, 0.0070, 0.0062, 0.0062, 0.0062], (1, 0, 0), rub, 8)
     parts.append(cable)
     ob = join(parts, "prop_crt_monitor")
@@ -862,6 +898,7 @@ def build_box(seed):
         ob = to_obj(name, bm, mats)
         ob.location = (0, 0, zc)
         deform(ob, dfn)
+        add_bevel(ob, 0.0065, 1, 40)    # softened folded corners
         sol = ob.modifiers.new("solid", "SOLIDIFY")
         sol.thickness = T
         sol.offset = -1.0
@@ -888,8 +925,8 @@ def build_box(seed):
         p.y += 0.050 * k * (1 if p.y < 0 else 0.0)
         p.z -= 0.042 * k * smoothstep(0.18, 0.28, z) + 0.010 * k
         # crumple noise
-        p.x += 0.0045 * k * math.sin(p.y * 83 + p.z * 41)
-        p.y += 0.0045 * k * math.sin(p.x * 77 + p.z * 53)
+        p.x += 0.0075 * k * math.sin(p.y * 83 + p.z * 41) * math.sin(p.z * 23 + 1.0)
+        p.y += 0.0075 * k * math.sin(p.x * 77 + p.z * 53) * math.sin(p.z * 19 + 2.0)
         # general worn waviness of the rim
         if z > 0.26:
             p.z += 0.0022 * math.sin(p.x * 31 + 1.3) * math.cos(p.y * 27)
@@ -910,7 +947,7 @@ def build_box(seed):
 
     lid = shell_obj("prop_cardboard_box_lid", LW, LD, LH, 0, 5, False, lid_fn)
     # lid rests slightly askew: dropped toward the crushed corner, turned a few degrees
-    lid.location = (0.007, -0.005, 0.2345 + LH / 2)
+    lid.location = (0.010, 0.013, 0.2345 + LH / 2)
     lid.rotation_euler = (math.radians(1.3), math.radians(3.1), math.radians(-2.6))
     # hand-hole ovals through both short ends: 0.10 wide (y) x 0.028 tall (z)
     bm = bmesh.new()
@@ -1239,12 +1276,14 @@ def main():
         if key == "crt":
             led_idx = next(i for i, s in enumerate(ob.material_slots) if s.material and s.material.name.startswith("led_green"))
         lm = led_material("mat_crt_led") if key == "crt" else None
-        for p in ob.data.polygons:
-            p.material_index = 1 if (led_idx is not None and p.material_index == led_idx) else 0
+        led_faces = [p.index for p in ob.data.polygons if led_idx is not None and p.material_index == led_idx]
         ob.data.materials.clear()
         ob.data.materials.append(fm)
         if lm:
             ob.data.materials.append(lm)
+        for i in led_faces:
+            ob.data.polygons[i].material_index = 1
+        print("[%s] led faces: %d of %d" % (key, len(led_faces), len(ob.data.polygons)))
         ob.name = cfg["name"]
         ob.data.name = cfg["name"]
         objs = [ob]

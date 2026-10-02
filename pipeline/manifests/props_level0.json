@@ -1,18 +1,130 @@
 {
-  "status": "BLOCKED_NO_CREDITS",
-  "note": "Meshy balance was 3 credits on 2026-10-01 (GET /openapi/v1/balance). First preview POST returned 402 Insufficient funds. No task was created, nothing was spent, no assets generated.",
-  "service": "Meshy text-to-3d (v2), docs checked 2026-10-01",
-  "model": "meshy-7.1 (latest)",
-  "scripts": ["pipeline/meshes/build_props_level0.py", "pipeline/blender/clean_props.py"],
-  "planned_params": {
-    "preview": {"should_remesh": true, "topology": "triangle", "target_polycount": {"chair": 12000, "crt": 6000, "box": 6000}, "auto_size": true, "origin_at": "bottom", "target_formats": ["glb"]},
-    "refine": {"enable_pbr": true, "texture_resolution": "2k", "remove_lighting": true, "target_formats": ["glb"]}
+  "status": "DONE",
+  "method": "procedural Blender",
+  "note": "Meshy was blocked on credits (402, balance 3 on 2026-10-01); no paid APIs used. Supersedes the earlier BLOCKED_NO_CREDITS manifest.",
+  "blender": "5.1.2",
+  "script": "pipeline/blender/build_props_procedural.py",
+  "command": "blender -b -P pipeline/blender/build_props_procedural.py -- [--only chair,crt,box] [--res N] [--samples N]",
+  "cost_estimate_usd": 0,
+  "seeds": {
+    "chair": 1101,
+    "crt": 2202,
+    "box": 3303
+  },
+  "params": {
+    "bake": "Cycles, DIFFUSE color pass 24 samples, ROUGHNESS, tangent NORMAL (OpenGL), AO 32 samples, metallic via emission; margin 16px extend",
+    "uv": "smart project 66deg, average island scale, pack margin 0.003; no UV2 (let Godot generate lightmap UV2)",
+    "export": "GLB Y-up, textures embedded, one atlas material per prop (+ emissive LED slot on CRT), ORM packed R=AO G=rough B=metal with glTF Occlusion group",
+    "tex_sizes": {
+      "chair": 2048,
+      "crt": 1024,
+      "box": 2048
+    },
+    "preview": "Cycles 64 samples, denoised, 1024px, key area light above + fill"
   },
   "props": {
-    "prop_office_chair": {"target": "0.95 m tall", "tris_budget": 12000, "task_ids": null, "tris": null, "dims_m": null},
-    "prop_crt_monitor": {"target": "0.38 x 0.38 x 0.42 m", "tris_budget": 6000, "task_ids": null, "tris": null, "dims_m": null},
-    "prop_cardboard_box": {"target": "0.4 x 0.3 x 0.3 m", "tris_budget": 6000, "task_ids": null, "tris": null, "dims_m": null}
-  },
-  "cost_estimate_usd": 0,
-  "credits_needed_estimate": "about 30 credits per prop (20 preview + 10 refine) = about 90 credits for all three; verify against consumed_credits"
+    "prop_office_chair": {
+      "glb": "game/assets/props/level0/prop_office_chair.glb",
+      "tris": 11444,
+      "dims_m_yup_xyz": [
+        0.6486,
+        0.9423,
+        0.6455
+      ],
+      "bounds_min": [
+        -0.3298,
+        0,
+        -0.3526
+      ],
+      "bounds_max": [
+        0.3188,
+        0.9423,
+        0.2929
+      ],
+      "materials": [
+        "mat_prop_office_chair"
+      ],
+      "textures": {
+        "basecolor": "pipeline/meshes/baked_props_level0/chair/prop_office_chair_basecolor.png",
+        "normal": "pipeline/meshes/baked_props_level0/chair/prop_office_chair_normal.png",
+        "orm": "pipeline/meshes/baked_props_level0/chair/prop_office_chair_orm.png"
+      },
+      "bake_stats": {
+        "metal_max": 1.0,
+        "rough_mean": 0.61,
+        "ao_mean": 0.522
+      },
+      "glb_bytes": 13384472,
+      "preview": "pipeline/meshes/previews/prop_office_chair.png"
+    },
+    "prop_crt_monitor": {
+      "glb": "game/assets/props/level0/prop_crt_monitor.glb",
+      "tris": 4814,
+      "dims_m_yup_xyz": [
+        0.38,
+        0.38,
+        0.4197
+      ],
+      "bounds_min": [
+        -0.19,
+        0,
+        -0.2077
+      ],
+      "bounds_max": [
+        0.19,
+        0.38,
+        0.212
+      ],
+      "materials": [
+        "mat_prop_crt_monitor",
+        "mat_crt_led"
+      ],
+      "textures": {
+        "basecolor": "pipeline/meshes/baked_props_level0/crt/prop_crt_monitor_basecolor.png",
+        "normal": "pipeline/meshes/baked_props_level0/crt/prop_crt_monitor_normal.png",
+        "orm": "pipeline/meshes/baked_props_level0/crt/prop_crt_monitor_orm.png"
+      },
+      "bake_stats": {
+        "metal_max": 0.0,
+        "rough_mean": 0.486,
+        "ao_mean": 0.467
+      },
+      "glb_bytes": 3129400,
+      "preview": "pipeline/meshes/previews/prop_crt_monitor.png"
+    },
+    "prop_cardboard_box": {
+      "glb": "game/assets/props/level0/prop_cardboard_box.glb",
+      "tris": 3208,
+      "dims_m_yup_xyz": [
+        0.4321,
+        0.3049,
+        0.3351
+      ],
+      "bounds_min": [
+        -0.2062,
+        0,
+        -0.1807
+      ],
+      "bounds_max": [
+        0.2259,
+        0.3049,
+        0.1544
+      ],
+      "materials": [
+        "mat_prop_cardboard_box"
+      ],
+      "textures": {
+        "basecolor": "pipeline/meshes/baked_props_level0/box/prop_cardboard_box_basecolor.png",
+        "normal": "pipeline/meshes/baked_props_level0/box/prop_cardboard_box_normal.png",
+        "orm": "pipeline/meshes/baked_props_level0/box/prop_cardboard_box_orm.png"
+      },
+      "bake_stats": {
+        "metal_max": 0.0,
+        "rough_mean": 0.69,
+        "ao_mean": 0.371
+      },
+      "glb_bytes": 8584988,
+      "preview": "pipeline/meshes/previews/prop_cardboard_box.png"
+    }
+  }
 }

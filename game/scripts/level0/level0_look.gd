@@ -59,6 +59,7 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 		var ln := tex("troffer_lens_normal")
 		if ln:
 			lens.set_shader_parameter("normal_tex", ln)
+	lens.set_shader_parameter("emission_energy", float(Game.opts.get("lens_e", "2.4")))
 	m["lens"] = lens
 
 	var base := StandardMaterial3D.new()
@@ -116,6 +117,16 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	exit.roughness = 0.25
 	m["exit"] = exit
 
+	var plate := StandardMaterial3D.new()
+	plate.albedo_color = Color(0.8, 0.76, 0.66)
+	plate.roughness = 0.42
+	m["plate"] = plate
+
+	var slot := StandardMaterial3D.new()
+	slot.albedo_color = Color(0.04, 0.035, 0.03)
+	slot.roughness = 0.8
+	m["slot"] = slot
+
 	var plenum := StandardMaterial3D.new()
 	plenum.albedo_color = Color(0.08, 0.075, 0.07)
 	plenum.roughness = 0.95
@@ -129,7 +140,7 @@ static func make_environment(preset: String) -> Environment:
 	e.background_color = Color(0, 0, 0)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.42, 0.38, 0.24)
-	e.ambient_light_energy = 0.04
+	e.ambient_light_energy = float(Game.opts.get("ambient", "0.015"))
 	e.reflected_light_source = Environment.REFLECTION_SOURCE_BG
 
 	e.tonemap_mode = Environment.TONE_MAPPER_AGX
@@ -169,7 +180,7 @@ static func make_environment(preset: String) -> Environment:
 	e.glow_normalized = true
 	e.glow_intensity = 0.85
 	e.glow_strength = 1.0
-	e.glow_bloom = 0.03
+	e.glow_bloom = float(Game.opts.get("bloom", "0.1"))
 	e.glow_hdr_threshold = 0.95
 	e.glow_hdr_scale = 2.0
 	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT

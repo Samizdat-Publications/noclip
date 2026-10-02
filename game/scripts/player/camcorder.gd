@@ -16,6 +16,8 @@ var _batt: Label
 var _beep: AudioStreamPlayer
 var _motor: AudioStreamPlayer
 var _rec_time := 0.0
+var _burst := 0.0
+var _hide_in := -1.0
 var _start_minutes := 0
 
 
@@ -76,20 +78,34 @@ func set_active(on: bool) -> void:
 	if on == active:
 		return
 	active = on
-	visible = on
+	_burst = 0.28   # the picture rolls and snows for a moment when the camera comes up or goes down
 	if on:
+		visible = true
+		_hide_in = -1.0
 		if _beep.stream:
 			_beep.play()
 		if _motor.stream:
 			_motor.play()
 	else:
+		_hide_in = 0.14
 		_motor.stop()
 
 
 func _process(delta: float) -> void:
-	if not active:
+	_burst = maxf(_burst - delta, 0.0)
+	if _hide_in >= 0.0:
+		_hide_in -= delta
+		if _hide_in < 0.0:
+			visible = false
+	if not visible:
 		return
 	_rec_time += delta
+	# Battery drains over the run; the last bar blinks.
+	var bars := clampi(4 - int(Game.clock / 80.0), 1, 4)
+	var shown := "▮".repeat(bars) + "▯".repeat(4 - bars)
+	if bars == 1 and fmod(Game.clock, 1.0) < 0.5:
+		shown = "▯▯▯▯"
+	_batt.text = shown
 	var vp := get_viewport().get_visible_rect().size
 	var w := vp.y * 4.0 / 3.0
 	var x0 := (vp.x - w) * 0.5
@@ -110,4 +126,5 @@ func _process(delta: float) -> void:
 	var m := _rect.material as ShaderMaterial
 	m.set_shader_parameter("time", Game.clock)
 	m.set_shader_parameter("frame_seed", float(Game.frame % 977))
-	m.set_shader_parameter("degrade", clampf(degrade + Game.drift, 0.0, 1.0))
+	m.set_shader_parameter("degrade", clampf(degrade + Game.drift + _burst * 3.0, 0.0, 1.0))
+	m.set_shader_parameter("burst", _burst / 0.28)

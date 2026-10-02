@@ -19,9 +19,8 @@ Right now the critic's safety guard also blocks the button it uses to send its r
    `if (tool === "SubagentHandback") allow();`
 5. Save (Ctrl+S) and close Notepad. Done. Nothing else changes: the critic still cannot read anything outside the review folder.
 
-## 3. (Before session 4, the monster) Top up Meshy credits
-The Meshy account (3D model generator) has only 3 credits left, so it could not make anything this session. Props were built in Blender instead, which is fine for now. The monster in session 4 needs Meshy for its base body and animation.
-1. Open https://www.meshy.ai and sign in.
-2. Click your profile picture (top right), then "Subscription" or "Credits".
-3. Add credits so the balance is at least 1,000 (or upgrade the plan if it offers a monthly credit bundle). About 1,000 credits covers the monster plus a handful of props.
-4. Nothing else to do: Claude checks the balance automatically next time.
+## 3. (Before session 4, the monster) Get the free Meshy credits
+The Meshy account (3D model generator) had only 3 credits this session, so props were built in Blender and fetched from Sketchfab instead. That is fine for props. The monster (session 4) is our own original design, and Meshy is the right tool for it because it can generate it on-theme and also rig and animate it.
+1. Finish Meshy's onboarding (Stewart found it gives 300 free credits).
+2. That is enough for the monster: about 150 to 250 credits for a few design attempts, rigging, and roughly 8 animations (Claude's estimate; exact prices get checked before spending).
+3. Optional, only if you want headroom for later levels: about 1,000 credits in total covers the monster, a second creature (session 6), and extra props. Not needed now.

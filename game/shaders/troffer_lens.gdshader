@@ -14,10 +14,15 @@ uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap_anisotropic, re
 
 void fragment() {
 	vec3 e = use_tex ? texture(emission_tex, UV).rgb : vec3(1.0);
-	// Two tubes behind the lens: brighter bands along the length.
+	// Two tubes behind the diffuser: soft brighter bands along the length, darker between and
+	// at the edges, fading near the tube ends.
 	float across = UV.x;
-	float tubes = 0.72 + 0.28 * (exp(-pow((across - 0.3) / 0.12, 2.0)) + exp(-pow((across - 0.7) / 0.12, 2.0)));
+	float tubes = 0.42 + 0.78 * (exp(-pow((across - 0.3) / 0.1, 2.0)) + exp(-pow((across - 0.7) / 0.1, 2.0)));
 	float along = UV.y;
+	tubes *= mix(0.78, 1.0, smoothstep(0.0, 0.12, along) * smoothstep(1.0, 0.88, along));
+	// The prism grid catches the light: a fine sparkle that keeps it from looking like a sticker.
+	float prism = use_tex ? texture(normal_tex, UV).r : 0.5;
+	tubes *= mix(0.86, 1.14, prism);
 	float ends = smoothstep(0.1, 0.0, along) + smoothstep(0.9, 1.0, along);
 	vec3 col = e * tint * tubes * light_level * emission_energy;
 	col += vec3(1.0, 0.35, 0.08) * cathode * ends * 0.6;

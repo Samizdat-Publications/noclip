@@ -124,6 +124,8 @@ func _physics_process(delta: float) -> void:
 	camcorder.set_active(input.camcorder)
 	if space and space.has_method("set_listener"):
 		space.set_listener(global_position)
+	if space and space.has_method("set_view"):
+		space.set_view(global_position, Basis(Vector3.UP, yaw) * Vector3.FORWARD)
 
 
 func _footstep() -> void:

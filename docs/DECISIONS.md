@@ -27,3 +27,10 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 ## D006 (2026-10-01, S01) Fluorescent panels are shadowed spot lights, not AreaLight3D (for now)
 - AreaLight3D (new in 4.7) gives correct rectangular lighting, but its shadows draw large curved projection artifacts on floors and walls (progress/0007). Without shadows, light leaks through walls and kills the dark rooms. Choice: SpotLight3D per panel (82 degree cone, soft PCSS via light_size), and the rectangular lens reflections come from SSR of the real emissive lens mesh.
 - Revert: run with `--arealights`, or flip the default in level0_hero.gd once Godot fixes area-light shadows.
+
+## D007 (2026-10-01, S01) Lighting budget: 7 m light reach, medium soft shadows, 32-bit shadow atlas
+- Profiling (tools/perfprobe.sh) showed overlapping shadowed lights were the cost: 13 m reach = 36 fps, 7 m reach + shadow filter quality 2 = 66 fps avg / 50 fps 1% low at 1440p. Shorter reach also gives real pools of light and darker gaps, which the critic asked for. The 16-bit shadow atlas caused stepped bands on walls at grazing angles, so the atlas is 32-bit (shadow bias 0.06, normal bias 2.6). OmniLight3D cube shadows were tried for shadow quality and rejected (31 fps).
+- Revert: game args `--spot_range=13 --shadowq=3 --atlas16`.
+
+## D008 (2026-10-01, S01) Props come from Sketchfab (CC0/CC-BY only) and procedural Blender; Meshy is saved for the monster
+- Meshy had 3 credits. Everyday props are better as real-world-style models: Sketchfab CC0/CC-BY downloads via `pipeline/meshes/sketchfab_fetch.py` (credited in docs/CREDITS.md; NC/ND/SA/store licenses rejected), plus procedural Blender models where Sketchfab has nothing good. Meshy (300 free onboarding credits per Stewart) is reserved for the original monster in M4, where on-theme generation, rigging and animation matter.

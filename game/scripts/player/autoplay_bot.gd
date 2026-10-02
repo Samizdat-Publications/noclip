@@ -140,6 +140,19 @@ func update_move(player: Node, delta: float) -> void:
 		_cam_left = rng.randf_range(4.0, 9.0)
 	camcorder = _cam_left > 0.0 and not Game.opts.has("nocam")
 
+	# Something happened (lights dying): stop and stare at it, like anyone would.
+	if space.attention_until > Game.clock and mode != Mode.HIDE:
+		var to := space.attention_point - pl.global_position
+		_want_yaw = yaw_of(Vector3(to.x, 0.0, to.z))
+		_want_pitch = clampf(atan2(to.y - 1.6, Vector2(to.x, to.z).length()) * 0.5, -0.1, 0.2)
+		_sprint_left = 0.0
+		if _cam_cool <= 0.0 and _cam_left <= 0.0:
+			_cam_left = rng.randf_range(3.0, 5.0)
+		camcorder = _cam_left > 0.0 and not Game.opts.has("nocam")
+		mode = Mode.WALK
+		path = PackedVector3Array()
+		return
+
 	if mode == Mode.PAUSE or mode == Mode.HIDE:
 		crouch = mode == Mode.HIDE
 		_plan_left -= delta

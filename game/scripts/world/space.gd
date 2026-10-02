@@ -12,6 +12,9 @@ extends Node3D
 @export var space_id: StringName = &""
 var space_seed: int = 0
 var thresholds: Array[Threshold] = []
+## Something worth looking at (a light dying, a sound): bots and later the AI react to it.
+var attention_point := Vector3.ZERO
+var attention_until := -1.0
 
 
 ## Build all geometry, lights and audio for this seed. Must be deterministic.

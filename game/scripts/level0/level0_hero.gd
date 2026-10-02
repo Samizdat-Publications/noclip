@@ -24,6 +24,7 @@ var fixtures: Array[Fixture] = []
 var seed_offset := Vector2.ZERO
 var solids: Array[Rect2] = []
 var leaks: Array[Vector2] = []
+var flood := Rect2(-100, -100, 1, 1)
 var astar: AStarGrid2D
 var _grid_n := Vector2i.ZERO
 var _audio_timer := 0.0
@@ -31,7 +32,14 @@ var _thud_timer := 0.0
 var _rng_amb: RandomNumberGenerator
 var _thud_player: AudioStreamPlayer3D
 var _listener_pos := Vector3.ZERO
+var _view_fwd := Vector3.FORWARD
+var _rng_evt: RandomNumberGenerator
+var _event_t := 1e9
+var _event_phase := 0
+var _event_restore_t := 0.0
+var _event_killed: Array[Fixture] = []
 var _fallen_tile := Vector2i(-1, -1)
+var _fixture_pairs := {}
 var _dump := {"missing_tiles": [], "special_tiles": [], "decals": []}
 
 
@@ -46,6 +54,11 @@ func build(p_seed: int) -> void:
 	var r := Game.rng("level0:look")
 	seed_offset = Vector2(r.randf_range(0.0, 50.0), r.randf_range(0.0, 50.0))
 	mats = Level0Look.make_materials(seed_offset)
+	var fc: Array = L.get("flood_candidates", [])
+	if fc.size() > 0:
+		var f: Array = fc[r.randi() % fc.size()]
+		flood = Rect2(f[0], f[1], f[2] - f[0], f[3] - f[1])
+		(mats["carpet"] as ShaderMaterial).set_shader_parameter("flood_rect", Vector4(f[0], f[1], f[2], f[3]))
 	_collect_solids()
 	_pick_leaks()
 	var kit := MeshKit.new()
@@ -195,11 +208,47 @@ func _build_walls(kit: MeshKit) -> void:
 		else:
 			g = Rect2(r.position.x - bb, r.position.y - (0.0 if ends[0] else bb), r.size.x + 2.0 * bb, r.size.y + (0.0 if ends[0] else bb) + (0.0 if ends[1] else bb))
 		kit.box("baseboard", Vector3(g.position.x, 0.0, g.position.y), Vector3(g.end.x, bh, g.end.y), faces | MeshKit.PY, bh)
+		# Wall angle: the L-shaped ceiling trim where the drop ceiling meets the wall.
+		var wa := 0.022
+		var ga := r
+		if horiz:
+			ga = Rect2(r.position.x - (0.0 if ends[0] else wa), r.position.y - wa, r.size.x + (0.0 if ends[0] else wa) + (0.0 if ends[1] else wa), r.size.y + 2.0 * wa)
+		else:
+			ga = Rect2(r.position.x - wa, r.position.y - (0.0 if ends[0] else wa), r.size.x + 2.0 * wa, r.size.y + (0.0 if ends[0] else wa) + (0.0 if ends[1] else wa))
+		kit.box("tbar", Vector3(ga.position.x, H - wa, ga.position.y), Vector3(ga.end.x, H, ga.end.y), faces | MeshKit.NY, H)
+	_build_outlets(kit)
 	for p in L["pillars"]:
 		var s: float = p[2]
 		kit.box("wall", Vector3(p[0] - s * 0.5, 0.0, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, H, p[1] + s * 0.5), MeshKit.SIDES, H)
 		var q := s * 0.5 + bb
 		kit.box("baseboard", Vector3(p[0] - q, 0.0, p[1] - q), Vector3(p[0] + q, bh, p[1] + q), MeshKit.SIDES | MeshKit.PY, bh)
+
+
+## Wall outlets every so often near the floor. Nothing is ever plugged into them.
+func _build_outlets(kit: MeshKit) -> void:
+	var r := Game.rng("level0:outlets")
+	var walls: Array = L["walls"]
+	for k in 26:
+		var w: Array = walls[r.randi() % walls.size()]
+		var length: float = absf(w[2] - w[0]) + absf(w[3] - w[1])
+		if length < 1.5:
+			continue
+		var horiz := _is_horizontal(w)
+		var t := r.randf_range(0.15, 0.85)
+		var c := Vector2(lerpf(w[0], w[2], t), lerpf(w[1], w[3], t))
+		var side := 1.0 if r.randf() < 0.5 else -1.0
+		var n := Vector2(0, side) if horiz else Vector2(side, 0)
+		var tan := Vector2(-n.y, n.x)
+		var face := c + n * (T * 0.5)
+		var y := 0.3 if r.randf() < 0.8 else 1.1
+		var plate := [[-0.035, 0.035, y - 0.058, y + 0.058, 0.0, 0.006, "plate"]]
+		for dy in [-0.02, 0.02]:
+			plate.append([-0.012, -0.008, y + dy - 0.007, y + dy + 0.007, 0.006, 0.0065, "slot"])
+			plate.append([0.008, 0.012, y + dy - 0.008, y + dy + 0.008, 0.006, 0.0065, "slot"])
+		for b in plate:
+			var c0: Vector2 = face + tan * float(b[0]) + n * float(b[4])
+			var c1: Vector2 = face + tan * float(b[1]) + n * float(b[5])
+			kit.box(b[6], Vector3(minf(c0.x, c1.x), b[2], minf(c0.y, c1.y)), Vector3(maxf(c0.x, c1.x), b[3], maxf(c0.y, c1.y)), MeshKit.ALL, H)
 
 
 func _build_doors(kit: MeshKit) -> void:
@@ -327,6 +376,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 			var iz := int(floor((c.y - fl * 0.5) / TILE + 0.01))
 			cells[Vector2i(ix, iz)] = true
 			cells[Vector2i(ix, iz + 1)] = true
+			_fixture_pairs[Vector2i(ix, iz)] = Vector2i(ix, iz + 1)
 			# Recessed housing reveal around the lens.
 			var y0 := H
 			var y1 := H + 0.03
@@ -373,6 +423,9 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 				tint = Color(0.93, 1.0, 0.86)    # greenish cool-white tube
 			elif tint_roll < 0.3:
 				tint = Color(1.0, 0.93, 0.84)    # warmer, slightly pink aged tube
+			for tz in L.get("tint_zones", []):
+				if Rect2(tz[0], tz[1], tz[2] - tz[0], tz[3] - tz[1]).has_point(c):
+					tint = Color(tz[4], tz[5], tz[6])   # a stretch where every tube is a cold replacement
 			var energy := r.randf_range(0.82, 1.04)
 
 			var fx := Fixture.new()
@@ -393,22 +446,30 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 				light.set("area_range", 14.0)
 				light.set("area_attenuation", 1.6)
 				light.set("area_normalize_energy", true)
+			elif Game.opts.get("lights", "spot") == "omni":
+				var ol := OmniLight3D.new()
+				ol.omni_range = float(Game.opts.get("spot_range", "7"))
+				ol.omni_attenuation = float(Game.opts.get("spot_atten", "1.4"))
+				ol.omni_shadow_mode = OmniLight3D.SHADOW_CUBE
+				ol.light_size = float(Game.opts.get("light_size", "0.8"))
+				light = ol
 			else:
 				var sl := SpotLight3D.new()
 				sl.spot_range = float(Game.opts.get("spot_range", "7"))
 				sl.spot_angle = float(Game.opts.get("spot_angle", "82"))
-				sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "0.7"))
+				sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "1.8"))
 				sl.spot_attenuation = float(Game.opts.get("spot_atten", "1.4"))
-				sl.light_size = float(Game.opts.get("light_size", "0.8"))
+				sl.light_size = float(Game.opts.get("light_size", "1.2"))
 				light = sl
 			light.position = Vector3(0, H - 0.004, 0)
 			light.rotation = Vector3(-PI * 0.5, 0, 0)
 			light.light_color = tint
 			light.shadow_enabled = not Game.opts.has("noshadow")
-			light.shadow_bias = 0.04
-			light.shadow_normal_bias = 1.2
+			light.shadow_bias = float(Game.opts.get("sbias", "0.06"))
+			light.shadow_blur = float(Game.opts.get("shadow_blur", "2.5"))
+			light.shadow_normal_bias = float(Game.opts.get("nbias", "2.6"))
 			light.light_specular = 0.85
-			light.light_volumetric_fog_energy = 0.7
+			light.light_volumetric_fog_energy = float(Game.opts.get("fog_light", "1.3"))
 			light.distance_fade_enabled = true
 			light.distance_fade_begin = 22.0
 			light.distance_fade_length = 6.0
@@ -505,15 +566,27 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 			var y := H
 			var pts := [Vector3(x0, y, z0), Vector3(x0 + TILE, y, z0), Vector3(x0 + TILE, y - drop, z0 + TILE), Vector3(x0, y - drop * 0.4, z0 + TILE)]
 			kit.quad("ceiling", pts, Vector3.DOWN, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)], col)
-	# T-bar grid.
+	# T-bar grid, edge by edge, so no bar runs across the middle of a 2x4 light fixture.
 	var hw := 0.012
 	var hd := 0.014
 	for k in nz + 1:
 		var z := k * TILE
-		kit.box("tbar", Vector3(0, H - hd, z - hw), Vector3(extent.x, H, z + hw), MeshKit.NY | MeshKit.PZ | MeshKit.NZ, H)
+		var run_start := -1
+		for i in nx + 1:
+			var skip := i >= nx or (fixture_cells.has(Vector2i(i, k - 1)) and fixture_cells.has(Vector2i(i, k)) and _same_fixture(Vector2i(i, k - 1), Vector2i(i, k)))
+			if not skip and run_start == -1:
+				run_start = i
+			if skip and run_start != -1:
+				kit.box("tbar", Vector3(run_start * TILE, H - hd, z - hw), Vector3(i * TILE, H, z + hw), MeshKit.NY | MeshKit.PZ | MeshKit.NZ, H)
+				run_start = -1
 	for k in nx + 1:
 		var x := k * TILE
 		kit.box("tbar", Vector3(x - hw, H - hd, 0), Vector3(x + hw, H, extent.y), MeshKit.NY | MeshKit.PX | MeshKit.NX, H)
+
+
+## True if two ceiling cells belong to the same fixture (its two halves).
+func _same_fixture(a: Vector2i, b: Vector2i) -> bool:
+	return _fixture_pairs.has(a) and _fixture_pairs[a] == b or _fixture_pairs.has(b) and _fixture_pairs[b] == a
 
 
 ## One ceiling tile has come down and lies on the carpet below its hole.
@@ -717,22 +790,30 @@ func _build_traces() -> void:
 			Vector3(0.13, 0.25, 0.3), Color(1, 1, 1, lerpf(0.25, 0.9, age)))
 
 
-## Props from pipeline/blender (if built): an office chair, an old monitor, boxes.
+## Props (procedural Blender set plus Sketchfab CC-BY models, credited in docs/CREDITS.md):
+## a few abandoned office things, placed at seeded picks from hand-chosen spots.
+const PROPS := {
+	"prop_office_chair": {"n": 1, "half": 0.3, "spots": [[24.3, 6.6], [20.2, 3.1], [27.4, 10.6]]},
+	"prop_office_chair_alt_sf": {"n": 1, "half": 0.3, "spots": [[8.0, 11.8], [16.6, 27.8], [28.2, 17.0]]},
+	"prop_folding_chair_sf": {"n": 2, "half": 0.25, "spots": [[2.0, 1.2], [9.9, 1.0], [22.6, 19.6], [4.5, 27.5], [27.8, 28.6]]},
+	"prop_crt_monitor_sf": {"n": 1, "half": 0.22, "spots": [[9.6, 0.45], [5.6, 12.6], [16.4, 20.6]], "tint": [0.95, 0.88, 0.72]},
+	"prop_cardboard_box_sf": {"n": 2, "half": 0.3, "spots": [[0.5, 6.0], [28.6, 20.5], [12.4, 21.2], [7.0, 0.5]]},
+	"prop_cardboard_box": {"n": 1, "half": 0.24, "spots": [[13.6, 29.5], [0.5, 12.5], [29.5, 14.0]]},
+}
+
+
 func _build_props() -> void:
 	var r := Game.rng("level0:props")
-	var spots := {
-		"prop_office_chair": [[24.3, 6.6], [20.2, 3.1], [27.4, 10.6]],
-		"prop_crt_monitor": [[9.6, 0.45], [5.6, 12.6], [16.4, 20.6]],
-		"prop_cardboard_box": [[0.45, 6.0], [28.6, 20.5], [12.4, 21.2], [7.0, 0.45]],
-	}
-	var counts := {"prop_office_chair": 1, "prop_crt_monitor": 1, "prop_cardboard_box": 2}
-	for name in spots.keys():
+	var names := PROPS.keys()
+	names.sort()
+	for name in names:
+		var spec: Dictionary = PROPS[name]
 		var path := "res://assets/props/level0/%s.glb" % name
 		if not ResourceLoader.exists(path):
 			continue
 		var scene: PackedScene = load(path)
-		var cands: Array = spots[name].duplicate()
-		for k in int(counts[name]):
+		var cands: Array = spec["spots"].duplicate()
+		for k in int(spec["n"]):
 			if cands.is_empty():
 				break
 			var spot: Array = cands.pop_at(r.randi() % cands.size())
@@ -740,8 +821,24 @@ func _build_props() -> void:
 			inst.position = Vector3(spot[0], 0.0, spot[1])
 			inst.rotation.y = r.randf() * TAU
 			add_child(inst)
-			var half := 0.28 if name == "prop_office_chair" else 0.22
+			if spec.has("tint"):
+				_tint(inst, Color(spec["tint"][0], spec["tint"][1], spec["tint"][2]))
+			var half: float = spec["half"]
 			solids.append(Rect2(spot[0] - half, spot[1] - half, half * 2.0, half * 2.0))
+
+
+## Ages a model's color (for example, white plastic yellowed by years of fluorescent light).
+func _tint(n: Node, c: Color) -> void:
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		for i in mi.get_surface_override_material_count():
+			var m := mi.mesh.surface_get_material(i)
+			if m is BaseMaterial3D:
+				var d := (m as BaseMaterial3D).duplicate() as BaseMaterial3D
+				d.albedo_color = d.albedo_color * c
+				mi.set_surface_override_material(i, d)
+	for ch in n.get_children():
+		_tint(ch, c)
 
 
 # ---------------------------------------------------------------- collision and navigation
@@ -891,6 +988,8 @@ func floor_wetness(p: Vector3) -> float:
 	var w := smoothstep(WET_LO, WET_HI, f)
 	for lk in leaks:
 		w = maxf(w, 1.0 - smoothstep(0.6, 1.3, v.distance_to(lk)))
+	if flood.grow(-0.2).has_point(v):
+		w = 1.0
 	return w
 
 
@@ -928,6 +1027,48 @@ func _build_ambience() -> void:
 	_thud_player.volume_db = -4.0
 	add_child(_thud_player)
 	_thud_timer = _rng_amb.randf_range(18.0, 40.0)
+	_rng_evt = Game.rng("level0:events")
+	_event_t = _rng_evt.randf_range(26.0, 46.0) if not Game.opts.has("no-events") else 1e9
+
+
+func set_view(p: Vector3, fwd: Vector3) -> void:
+	_view_fwd = fwd
+
+
+## One dread beat per run: at a seeded moment the lights ahead die one by one, coming toward
+## you, and their hum dies with them. Later they stutter back on.
+func _run_events() -> void:
+	if _event_phase == 0 and Game.clock >= _event_t:
+		var cand := []
+		for fx in fixtures:
+			if fx.state != Fixture.State.ON and fx.state != Fixture.State.PULSE and fx.state != Fixture.State.DROPOUT:
+				continue
+			var to := Vector3(fx.global_position.x - _listener_pos.x, 0.0, fx.global_position.z - _listener_pos.z)
+			var d := to.length()
+			if d < 3.0 or d > 17.0:
+				continue
+			if to.normalized().dot(_view_fwd) < 0.82:
+				continue
+			cand.append([d, fx])
+		if cand.size() < 3:
+			_event_t += 3.0   # nothing good in view yet; try again shortly
+			return
+		cand.sort_custom(func(a, b): return a[0] > b[0])
+		var k := 0
+		for c in cand:
+			(c[1] as Fixture).kill(0.15 + k * _rng_evt.randf_range(0.32, 0.5))
+			_event_killed.append(c[1])
+			k += 1
+		attention_point = (cand[0][1] as Fixture).global_position
+		attention_until = Game.clock + 4.0 + k * 0.4
+		_event_phase = 1
+		_event_restore_t = Game.clock + _rng_evt.randf_range(12.0, 18.0)
+	elif _event_phase == 1 and Game.clock >= _event_restore_t:
+		var k := 0
+		for fx in _event_killed:
+			fx.restore(k * _rng_evt.randf_range(0.2, 0.6) + _rng_evt.randf_range(0.0, 0.3))
+			k += 1
+		_event_phase = 2
 
 
 func set_listener(p: Vector3) -> void:
@@ -935,6 +1076,7 @@ func set_listener(p: Vector3) -> void:
 
 
 func _process(delta: float) -> void:
+	_run_events()
 	_audio_timer -= delta
 	if _audio_timer <= 0.0:
 		_audio_timer = 0.25

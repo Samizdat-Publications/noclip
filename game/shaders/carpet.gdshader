@@ -20,6 +20,8 @@ uniform float wet_amount = 1.0;
 uniform float wet_scale = 0.13;
 uniform float wet_lo = 0.56;
 uniform float wet_hi = 0.70;
+// Standing water: one flooded stretch per level (x0, z0, x1, z1), ragged edges.
+uniform vec4 flood_rect = vec4(-100.0, -100.0, -99.0, -99.0);
 
 varying vec3 wpos;
 
@@ -70,11 +72,22 @@ void fragment() {
 	rough = mix(rough, rough * 0.86, mottle);
 	nrm = mix(nrm, vec3(0.5, 0.5, 1.0), wet * 0.55);
 
+	// Flood: a few millimeters of still water over drowned carpet; mirrors the lights.
+	vec2 fc = (flood_rect.xy + flood_rect.zw) * 0.5;
+	vec2 fh = (flood_rect.zw - flood_rect.xy) * 0.5;
+	vec2 fd = abs(p - fc) - fh;
+	float box = length(max(fd, 0.0)) + min(max(fd.x, fd.y), 0.0);
+	float edge = box + (n_fbm(p * 0.9 + 11.0) - 0.5) * 1.6;
+	float flood = smoothstep(0.25, -0.35, edge);
+	alb = mix(alb, alb * vec3(0.32, 0.3, 0.26), smoothstep(0.6, -0.6, edge));
+	rough = mix(rough, 0.04 + 0.05 * n_value(p * 3.0), flood);
+	nrm = mix(nrm, vec3(0.5 + 0.015 * sin(p.x * 9.0 + p.y * 4.0), 0.5, 1.0), flood);
+
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.25;
-	SPECULAR = mix(0.2, 0.42, wet);
+	SPECULAR = mix(mix(0.2, 0.42, wet), 0.6, flood);
 	NORMAL_MAP = nrm;
 	NORMAL_MAP_DEPTH = normal_strength;
 }
