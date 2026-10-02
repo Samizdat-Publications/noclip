@@ -31,7 +31,9 @@ Stewart asked for rooms that are small outside, giant inside, and loop back para
 - Portal doorways: render the destination through the doorway, cross seamlessly (no visible jump, no GI or fog pop), audio and the bot pass through.
 - A room bigger inside than outside: a small office you can walk all the way around whose door opens onto a giant hall; the hall's far exit leads back somewhere impossible (into the hall you came from, facing the small room's door from behind, or into a copy of the start).
 - Then: overlapping rooms (two rooms in one space, which one you are in depends on the door), impossible stairs, the corridor that grows each time you run it.
+- Crawl and climb (Stewart, S04): crawl automatically into openings too low to crouch through (or hold Ctrl), climb ladders by walking into them; low crawl holes between rooms, square openings high on walls with ladders, ladders up through a missing ceiling tile into the plenum (crawl over the rooms, drop out elsewhere).
 - Exit: both critics Surreal 7 or higher on two loops, no visible seam at a portal on video, perf targets held, Stewart's notes.
+- Status S04: storeroom portals into a hall under the level, far door back out of the storeroom (D036), crossing filmed seamless (progress/0134 to 0137).
 
 ## M3.5: Look pass (effort: xhigh) (added S03)
 The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6), Shadows and depth (Gemini 4 to 5) and Materials (4 to 7); the ship gate needs 8. One focused session before the Entity:
@@ -41,11 +43,19 @@ The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6)
 - The held camcorder out of frame until late in the lift (L092), door slabs with hinges and kick plates, better partitions, tall-room upper walls (L094).
 - Exit: Gemini and Claude Lighting and Shadows 7+ on two consecutive loops.
 
-## M4: The Entity (effort: xhigh)
+## M3.6: Remembered wrong, batch 1 (Stewart, S04; see VISION "Remembered wrong")
+- Look toward the reference stills: cleaner, more saturated mono-yellow, brighter panel rows, plain walls with grime concentrated, huge plain blocks and columns.
+- Generator rules for the first tricks: handle-less doors, freestanding door frames, mirrored or almost-right signs, category objects (solid filing cabinet, bottle-less water cooler), chairs facing walls, the floor opening that looks down onto the level below's lit ceiling.
+
+## M4: The Entity and the watchers (effort: xhigh)
+- Abstract and plural (Stewart, S04): the Occupant as a strip-cut outline of wallpaper driven by the Meshy C_4 rig; the Dropout, a hole in the recording that slides along walls; the watchers layer (the high door that opens a crack, peripheral figures, things drawing back from wall openings).
 - Design per VISION, Meshy to Blender pipeline, animation set, shader distortion, VHS face smear.
 - AI: senses, stalking, investigation, chase, using portals and loops, readable tells.
 - Death and the VHS death replay.
 - Exit: critic Monster and Atmosphere at 7 or higher on both critics.
+
+## M4.5: Halden field teams (Stewart, S04)
+- Teams of two to four in white clean-room suits documenting rooms (filming, measuring, chalking codes), who stop and turn to you when you come in, then ignore you, back away, warn you off, leave a crate, or kill the lights and lock the door. Meshy characters with the same rig and animation pipeline as the Entity.
 
 ## M5: The run loop and progression (effort: high)
 - The Store hub (VISION "The Store"): the taped-wall Threshold into a Level 0 Space built behind it, one continuous step.

@@ -21,10 +21,35 @@ The Backrooms are made of recordings, the way a VHS tape is dubbed from a dub. E
 - **You become part of it:** your recovered death tapes are copied into later runs (your chalk, your footprints, your dropped camera).
 - Reference and what not to copy: docs/reference/film_2026_research.md.
 
+## Remembered wrong (Stewart, S04: "like explaining a dog to someone who has never seen one and then them drawing it")
+Level 0 is a place rebuilt from a description, not from a photograph. Whoever made it knew the words (office, carpet, door, light, chair) but not what they are for, so every object has the right name and the wrong sense. This is the practical form of generation loss for Level 0, and the reference stills Stewart chose (clean mono-yellow rooms, harsh panel rows, huge plain blocks and columns, square holes high on walls, ladders, wall writing) show it. Rules: (1) right category, wrong instance; (2) one or two wrong things per view, never a pile of them; (3) errors repeat consistently, like a learned misunderstanding, never random noise; (4) it should read as almost right for a second, then not.
+The trick list (build in batches; each is a small generator rule plus a mesh or decal):
+- **Function missing:** doors with no handle or no hinges; a finished door frame standing in the open with no wall round it; a door that opens onto a wall; windows into the wall cavity or into the room you are standing in; light switches at ankle height or at 2 m; an outlet in the ceiling; a handrail along a flat wall at knee height; a fire extinguisher sign with nothing under it; a clock with no hands.
+- **Proportions slightly off:** doorways 10 percent too narrow; skirting boards too tall; one corridor that gets a little narrower each segment; ceiling heights that step by a few centimeters between rooms; outlets too big.
+- **Category objects:** the idea of a thing with the details missing: a filing cabinet that is a solid block with drawer lines painted on, a water cooler with no bottle, a chair that is a smooth chair-shaped lump, a desk with no legs flush to the floor.
+- **Wrong placement:** chairs facing the wall; a desk in the middle of a corridor; carpet running a little way up a wall; a ceiling tile lying on the carpet with a carpet tile missing above it in the ceiling grid.
+- **Holes (and the moves they need):** square openings high on a wall, some with a ladder (climb), some empty; low crawl holes at the foot of a wall (crawl); a missing ceiling tile with a ladder under it into the plenum above the rooms (crawl over the level and drop out somewhere else); a square opening in the floor that looks down onto another drop ceiling with its lights on, the level below seen from above.
+- **Light from a description:** a lit panel that casts no light; a pool of light with no fixture over it; one tube the wrong color; a shadow with nothing to cast it.
+- **Text from a description:** signs that almost read (EXlT, mirrored letters), room numbers that never increase, notices in confident nonsense office language, every clock a different time.
+- **Sound from a description:** a phone ringing behind a wall in a place with no phones; air handling with no vents; your footsteps answered a beat late.
+- **Spaces (the non-euclidean toolkit below):** rooms bigger inside (built S04), loops, rearrangement, impossible stairs.
+- **Image:** cleaner and more saturated than S01 to S03 (mono-yellow, bright panel rows, plain walls with the grime concentrated in a few places), soft wide lens, VHS grain. The look pass (M3.5) moves toward the reference stills without copying any shot.
+
+## Being watched (Stewart, S04: "always being watched but can barely make out the character")
+A layer of almost-sightings that runs all the time, separate from any monster attack:
+- The door hung halfway up the wall in a tall room opens a crack and something looks out, and it is shut the next time you look.
+- A shape at the end of a long hall that is only there on tape, or only there to the eye.
+- Something drawing back from a square opening high on a wall as you turn toward it.
+- A figure drawn only at the edge of the screen, gone when you look straight at it.
+- A silhouette in a far doorway for one frame while a light flickers.
+- Halden's tripod camcorders that have turned to follow you; chairs that face you (built S03).
+Rule: never a clear look, never twice the same way in a row, and it escalates with Drift.
+
 ## Halden Duplicating (placeholder name, DECISIONS D010)
 A 1990s tape-duplication company whose clean-room crews (white suits, hoods, lab coats) entered the Backrooms through their own mastering equipment. They treat it as a recording and want the "master" at the bottom. They are not your friends and not your enemies:
 - In the store hub between runs, their buyer trades your recovered tapes for gear (the progression shop, M5).
 - In levels (M6): tripod camcorders left recording empty halls, labeled tape crates, chalk survey codes, a field team crossing a far corridor. Sometimes they leave supplies. Sometimes they degauss a sector (lights and hum die, the Entity notices) or lock a door behind you.
+- Field teams, alive (Stewart, S04): teams of two to four in white clean-room suits with hoods and respirators, carrying hard cases and tripod camcorders, caught in the middle of documenting a room: one films, one measures, one chalks a survey code, one waits. When you come in they stop and all turn their heads to you; one lifts a camera at you. Then, by disposition: they go back to work and ignore you; they back out through a door; one holds up a hand to keep you back; they leave a crate behind (supplies); or they turn the lights off on their way out and lock the door (degauss). They never speak; you hear muffled radio fragments. Their disposition shifts with how you treat them (filming them or following too close makes them colder). Never the film's organization or suits.
 - Never reproduce the film's organization (a former MRI company); everything about Halden is ours.
 
 ## The Store (Stewart's fixed decision; built in M5)
@@ -74,9 +99,12 @@ Seed concept: **the Occupant.** A tall humanoid that is a misremembered person. 
 - **Escalation per depth:** more aggressive, new behaviors. Deeper levels add a second entity type of your own design (for example, something that only moves in total darkness). Never use named fan-wiki entities.
 - **Pipeline:** Meshy (image or text to 3D, auto-rig, animation and text-to-motion) for the base, Blender headless to distort proportions, add damage and wetness, and retarget. Mixamo is a fallback only (no API, unreliable): put it in NEEDS_STEWART if needed. Vertex-shader distortion and the VHS smear on its face sell the uncanny.
 
+S04 direction (Stewart): the monsters are abstract, and there can be several. Concept work so far (D035): the Occupant, the building's own copy of a person, papered in Level 0's wallpaper (Meshy 7.1 model C_4, progress/0123 to 0126). It is to be rendered abstractly: a tall outline made of loose wallpaper strips hanging in the air with gaps between them, so you see the wall through it, fluttering and stuttering as it moves (the Meshy body and animations drive it, a shader cuts it into strips). A second one, the Dropout: a door-sized hole in the recording (black, white dropout streaks, tracking tear) that slides along walls, seen only through the camcorder; to the eye the wallpaper pattern stutters where it is and the lights die as it passes. The watchers (above) are the third, the ones you never see clearly.
+
 ## Non-euclidean toolkit
 Build these as reusable systems. They must be seamless (no visible pops in the capture; the critic will catch them), performant, and understood by physics, audio, and AI.
-- **Portal doorways:** render-to-texture viewport with synced camera transform, oblique near-plane clipping, recursion depth 1 to 2, seamless teleport on crossing, and audio plus AI pathing through portals.
+- **Portal doorways:** render-to-texture viewport with synced camera transform, oblique near-plane clipping, recursion depth 1 to 2, seamless teleport on crossing, and audio plus AI pathing through portals. Built S04 (D036): storerooms bigger inside than outside, a hall under the level, its far door lets you out of the storeroom you went in by.
+- **Crawl and climb (S04):** crawl holes, ladders to openings high on walls and into the ceiling plenum (see Remembered wrong).
 - **Overlapping spaces:** two rooms occupying the same space. Which one is visible and collidable depends on which door you used (visibility and collision layer swaps).
 - **Loops:** the corridor that repeats until you turn around, and the corridor that gets a little longer every time you run it.
 - **Unobserved rearrangement:** rooms change only when outside the frustum and occluded (double-check with raycasts). The player sees the result, never the change.
