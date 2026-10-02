@@ -35,3 +35,4 @@ Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques 
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 010_gemini.md | 1 | $0.08 (24556 in / 2880 out tokens) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 011_gemini.md | 1 | $0.08 (24600 in / 2319 out tokens) |
 | 2026-10-02 | S03 | ElevenLabs (eleven_text_to_sound_v2) | M3 sound: 6 breath takes (calm/heavy/fear x2), 6 distant one-shots, 6 soaked-carpet squish takes (build_m3.py); 1143 credits | 18 | ~$0.34 |
+| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 012_gemini.md | 1 | $0.08 (24599 in / 2849 out tokens) |

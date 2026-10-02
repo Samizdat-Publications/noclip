@@ -53,7 +53,11 @@ def gen():
         for attempt in range(2):
             r = c.models.generate_content(model=pro, contents=prompt, config=cfg)
             ok = False
-            for part in (r.candidates[0].content.parts if r.candidates else []):
+            cand = r.candidates[0] if r.candidates else None
+            parts = (cand.content.parts if cand is not None and cand.content is not None and cand.content.parts else [])
+            if not parts:
+                print("cand", i, "finish_reason", getattr(cand, "finish_reason", None), getattr(r, "prompt_feedback", None), flush=True)
+            for part in parts:
                 if getattr(part, "inline_data", None) and part.inline_data.data:
                     img = Image.open(io.BytesIO(part.inline_data.data)).convert("RGB")
                     img.save(fn)

@@ -16,5 +16,23 @@
    2048
   ],
   "cost_usd": 0.134
+ },
+ "3": {
+  "model": "gemini-3-pro-image",
+  "prompt": "Straight-on flat scan-like photograph of a piece of 1990s commercial office vinyl wallpaper, pale mustard-cream colour, filling the whole frame edge to edge, camera exactly perpendicular to the wall, no perspective, no vignette, perfectly even soft diffuse lighting, no shadows, no light gradient. The frame covers about 60 cm of wall. The design is a subtle, slightly irregular vertical pattern: thin broken vertical pinstripes in a slightly darker ochre, running perfectly vertically and spaced about 7 cm apart (so about eight stripes across the frame), with a small repeating motif in each gap between stripes (small dashes and tiny diamonds alternating, about 4 mm, spaced every 2.5 cm), printed very slightly off-register so the ink sits a little crooked and uneven. Low contrast, pattern only a few percent darker than the paper. Real paper and vinyl grain visible, faint yellowing, very slight sheen variation, tiny flecks. No wall edges, no seams, no corners, no baseboard, no objects, no text, no borders. A real photograph, not an illustration or a 3D render.",
+  "size": [
+   2048,
+   2048
+  ],
+  "cost_usd": 0.134
+ },
+ "4": {
+  "model": "gemini-3-pro-image",
+  "prompt": "Straight-on flat scan-like photograph of a piece of 1990s commercial office vinyl wallpaper, pale mustard-cream colour, filling the whole frame edge to edge, camera exactly perpendicular to the wall, no perspective, no vignette, perfectly even soft diffuse lighting, no shadows, no light gradient. The frame covers about 60 cm of wall. The design is a subtle, slightly irregular vertical pattern: thin broken vertical pinstripes in a slightly darker ochre, running perfectly vertically and spaced about 7 cm apart (so about eight stripes across the frame), with a small repeating motif in each gap between stripes (a column of tiny chevrons, about 4 mm across, stacked every 1.5 cm), with the pinstripes thinner and more broken up, printed very slightly off-register so the ink sits a little crooked and uneven. Low contrast, pattern only a few percent darker than the paper. Real paper and vinyl grain visible, faint yellowing, very slight sheen variation, tiny flecks. No wall edges, no seams, no corners, no baseboard, no objects, no text, no borders. A real photograph, not an illustration or a 3D render.",
+  "size": [
+   2048,
+   2048
+  ],
+  "cost_usd": 0.134
  }
 }

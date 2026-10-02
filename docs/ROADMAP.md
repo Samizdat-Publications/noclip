@@ -12,6 +12,7 @@ Status after S02: CLOSED WITHOUT PASSING THE GATE (two honest attempts, D019). E
 - Exit: harness runs end to end with one command; at least three critic loops on the hero slice; critic Lighting and Atmosphere at 7 or higher.
 
 ## M2: Infinite Level 0 and the non-euclidean toolkit (effort: xhigh)
+Status after S03: CLOSED WITHOUT PASSING THE GATE (two attempts, D028). Built in S03: loop jump verified invisible (horizon fade D020), tape-only seams into survey pockets (D022), scale-error tall rooms (D023), unobserved rearrangement (D025), tape figure v4 (D021), streaming steps under 7 ms, perf 87 to 102 fps at 1440p (D024), 10-minute walk clean. Gate: Opus Surreal 6 both times (Gemini 8, then 6). Open: portal doorways, overlapping spaces, impossible stairs, four-turn loop; halls too evenly lit; corridor sameness.
 Status after S02 (started): infinite chunk-streamed Level 0 (Level0Gen BSP rooms, shared-edge connectivity, highways = long vanishing-point halls, pillar halls, dark rooms, splice errors incl. a troffer set into the floor), stepped deterministic streaming with a light pool, the loop corridor (identical sealed copies, silent repeat until you turn around), the tape-only figure (render layer 11), graffiti from earlier lost people (Gemini decals) with fair hints. Still to do: portal doorways / tape-only Seams (exits), overlapping spaces, unobserved rearrangement, impossible stairs, the four-right-turns loop, scale-error rooms, Stewart's layout language (plus-shaped columns, T/L partitions, wall fins, stepped walls), verify the loop jump on video, perf pass with streaming.
 - Seeded, chunk-streamed generator (room grammar, WFC, or graph-based; your call). S01 built Level 0 from code (MeshKit + shaders) rather than a Blender kit; keep that unless a kit clearly looks better.
 - Generation loss as a system (VISION, D009): a per-level `fidelity` dial driving splice errors (props clipped into walls and floors, looped-frame repeats, tracking-shear bands), detail loss and color bleed. Level 0 is generation 1.
@@ -20,6 +21,7 @@ Status after S02 (started): infinite chunk-streamed Level 0 (Level0Gen BSP rooms
 - Exit: a 10 minute bot walk with no seams, hitches, or pops; critic "Surreal / non-euclidean wow" at 7 or higher; perf targets held.
 
 ## M3: Sound (effort: high)
+Status after S03: STARTED (D026): room reverb zones, positional footsteps, occlusion, breathing (stamina, fear), world duck and drone with the tape figure, distant one-shots, PCM decode bug fixed (every generated sound had been an octave low). Gemini Sound 7 to 8 in S03 gate builds.
 - Audio architecture: spatial HRTF, reverb zones from room size, occlusion, per-fixture hum and buzz, footsteps by surface and wetness, breathing, ambience director with silence.
 - ElevenLabs asset pass with loudness normalization.
 - Exit: Gemini critic Sound at 7 or higher.
