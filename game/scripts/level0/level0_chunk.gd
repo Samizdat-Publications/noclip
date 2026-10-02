@@ -57,6 +57,14 @@ func origin2() -> Vector2:
 	return Vector2(position.x, position.z)
 
 
+## True if a wall rect borders a tall room (its ceiling trim would cross the tall walls).
+func _touches_tall(r: Rect2) -> bool:
+	for tr in L.get("tall_rooms", []):
+		if r.intersects(Rect2(tr[0], tr[1], tr[2] - tr[0], tr[3] - tr[1]).grow(0.15)):
+			return true
+	return false
+
+
 ## Ceiling height at a point (a tall room's ceiling is three times too high, D023).
 func _ceil_at(p: Vector2) -> float:
 	for tr in L.get("tall_rooms", []):
@@ -136,7 +144,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	return [
 		func() -> void:
 			_build_shell(kit)
-			_build_walls(kit)
+			_build_walls(kit),
+		func() -> void:
 			_build_doors(kit)
 			_build_fake_doors(kit)
 			_build_exit_signs(kit)
@@ -146,7 +155,9 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 		func() -> void:
 			cells.merge(_build_fixtures(kit)),
 		func() -> void:
-			_build_ceiling(kit, cells)
+			_build_ceiling(kit, cells),
+		func() -> void:
+			_build_tbars(kit, cells)
 			_build_tall_grid(kit, cells),
 		func() -> void:
 			var parts := kit.commit(self, mats, ["tbar", "housing"])
@@ -155,6 +166,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 					(parts[key] as GeometryInstance3D).layers = TapeEvents.LAYER_EYE,
 		func() -> void:
 			_build_decals(),
+		func() -> void:
+			_build_decals_b(),
 		func() -> void:
 			_build_props(),
 		func() -> void:
@@ -338,7 +351,8 @@ func _build_walls(kit: MeshKit) -> void:
 			ga = Rect2(r.position.x - (0.0 if ends[0] else wa), r.position.y - wa, r.size.x + (0.0 if ends[0] else wa) + (0.0 if ends[1] else wa), r.size.y + 2.0 * wa)
 		else:
 			ga = Rect2(r.position.x - wa, r.position.y - (0.0 if ends[0] else wa), r.size.x + 2.0 * wa, r.size.y + (0.0 if ends[0] else wa) + (0.0 if ends[1] else wa))
-		kit.box("tbar", Vector3(ga.position.x, H - wa, ga.position.y), Vector3(ga.end.x, H, ga.end.y), faces | MeshKit.NY, H)
+		if not _touches_tall(r):
+			kit.box("tbar", Vector3(ga.position.x, H - wa, ga.position.y), Vector3(ga.end.x, H, ga.end.y), faces | MeshKit.NY, H)
 	_build_outlets(kit)
 	for p in L["pillars"]:
 		var s: float = p[2]
@@ -853,6 +867,12 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 		for key in runs.keys():
 			if not open_runs.has(key):
 				open_runs[key] = j
+	pass
+
+
+func _build_tbars(kit: MeshKit, fixture_cells: Dictionary) -> void:
+	var nx := int(round(extent.x / TILE))
+	var nz := int(round(extent.y / TILE))
 	# T-bar grid, edge by edge, so no bar runs across the middle of a 2x4 light fixture.
 	var hw := 0.012
 	var hd := 0.014
@@ -1027,10 +1047,13 @@ func _build_graffiti() -> void:
 
 
 func _build_decals() -> void:
-	var r := _rng("level0:decals")
 	_build_graffiti()
 	for pc in _pending_contacts:
 		_contact_shadow(pc[0], pc[1])
+
+
+func _build_decals_b() -> void:
+	var r := _rng("level0:decals")
 	for lk in leaks:
 		var spin := r.randf() * TAU
 		var fs := r.randf_range(1.8, 3.2)
@@ -1416,6 +1439,17 @@ func _build_seams(kit: MeshKit) -> void:
 
 
 var seam_fx: Array[MeshInstance3D] = []
+static var _rec_mat: StandardMaterial3D
+
+
+static func rec_material() -> StandardMaterial3D:
+	if _rec_mat == null:
+		_rec_mat = StandardMaterial3D.new()
+		_rec_mat.albedo_color = Color(0.2, 0.0, 0.0)
+		_rec_mat.emission_enabled = true
+		_rec_mat.emission = Color(1.0, 0.08, 0.04)
+		_rec_mat.emission_energy_multiplier = 6.0
+	return _rec_mat
 static var _tear_mat: ShaderMaterial
 
 
@@ -1444,6 +1478,20 @@ func _build_seam_fx() -> void:
 			q.transform = Transform3D(Basis(Vector3.UP.cross(nn), Vector3.UP, nn), c + nn * (T * 0.5 + 0.004))
 			add_child(q)
 			seam_fx.append(q)
+	# The red REC lamp on a crew camcorder left recording a hall (blinks; Level0World drives it).
+	for rl in L.get("rec_lights", []):
+		var yaw := deg_to_rad(float(rl[2]))
+		var fwd := Vector3(sin(yaw), 0.0, cos(yaw))
+		var right := Vector3(fwd.z, 0.0, -fwd.x)
+		var dot := MeshInstance3D.new()
+		var sm := SphereMesh.new()
+		sm.radius = 0.006
+		sm.height = 0.012
+		dot.mesh = sm
+		dot.material_override = Level0Chunk.rec_material()
+		dot.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		dot.position = Vector3(rl[0], 1.70, rl[1]) + fwd * 0.08 + right * 0.03
+		add_child(dot)
 	for wl in L.get("worklights", []):
 		var pos := Vector3(wl[0], 0.0, wl[1])
 		var yaw := deg_to_rad(float(wl[2]))

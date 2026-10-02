@@ -41,10 +41,11 @@ void fragment() {
 	if (n > 0.985) {
 		discard;
 	}
-	vec3 col = vec3(0.026, 0.024, 0.022) * (0.55 + 0.9 * n);
+	// Dark, but with mass: the panel above catches its head and shoulders (critique 010).
+	vec3 col = vec3(0.075, 0.068, 0.06) * (0.6 + 0.8 * n);
 	ALBEDO = col;
-	ROUGHNESS = 0.92;
-	SPECULAR = 0.2;
+	ROUGHNESS = 0.78;
+	SPECULAR = 0.3;
 	// Drop-out streaks: short white horizontal lines, a few per frame, as on old tape.
 	float row = floor(FRAGCOORD.y / 2.0);
 	float seg = floor(FRAGCOORD.x / 90.0);

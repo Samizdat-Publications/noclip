@@ -32,3 +32,4 @@ Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques 
 | 2026-10-02 | S03 | ElevenLabs (eleven_text_to_sound_v2) | soggy carpet steps (6 walk takes, 4 run takes) + 2 breath takes for reversed figure breath (build_s03.py); 538 credits | 12 | ~$0.16 |
 | 2026-10-02 | S03 | Gemini (gemini-3-pro-image 2K x3 + gemini-3.1-flash-image 2K x1) | carpet v2 photographic candidates (build_carpet_v2.py) | 4 | ~$0.60 (3 x $0.134 + $0.067 list estimate; 2K may bill higher) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 009_gemini.md | 1 | $0.09 (24555 in / 3388 out tokens) |
+| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 010_gemini.md | 1 | $0.08 (24556 in / 2880 out tokens) |

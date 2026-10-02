@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bwrwqnokk5bn8"
+uid="uid://duihyyrdtv5lb"
 path="res://.godot/imported/tape_dropout_01.wav-998d19042d2d9d0cbaa0266255929fd4.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bqekyu7t5otli"
+uid="uid://m165x0fyqgxt"
 path="res://.godot/imported/light_die_02.wav-7b4023c5af86221be5e7a4b29138bcc8.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

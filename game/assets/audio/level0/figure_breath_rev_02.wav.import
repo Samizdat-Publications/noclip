@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://l1ywt0k1ngw3"
+uid="uid://dikjjjur5r1ta"
 path="res://.godot/imported/figure_breath_rev_02.wav-e43dfebe167b631e7f35710493c81f12.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

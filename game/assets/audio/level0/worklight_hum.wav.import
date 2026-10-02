@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dxy52p6dqxrpg"
+uid="uid://dp8b4jtfe4qt1"
 path="res://.godot/imported/worklight_hum.wav-17c219f44088168a939f86a82568a602.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

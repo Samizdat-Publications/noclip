@@ -42,6 +42,7 @@ var _tear := 0.0
 var _skel: Skeleton3D
 var _bones := {}          # stem -> bone index
 var _base := {}           # bone index -> base local rotation (Quaternion)
+var _point := {}          # bone index -> local rotation with one long arm raised, pointing
 var _side := 1.0
 var _light_fx: Fixture
 var _drop: AudioStreamPlayer
@@ -169,10 +170,19 @@ func _pose_body() -> void:
 	var sh := _bone("shoulder_r" if left_x > 0.0 else "shoulder_l")
 	if sh >= 0:
 		_skel.set_bone_pose_rotation(sh, _skel.get_bone_pose_rotation(sh) * Quaternion(Vector3(0, 0, 1), 0.07))
-	for stem in ["head", "neck", "spine_03", "spine_02", "upperarm_l", "upperarm_r"]:
+	for stem in ["head", "neck", "spine_03", "spine_02", "upperarm_l", "upperarm_r", "lowerarm_r", "lowerarm_l"]:
 		var i := _bone(stem)
 		if i >= 0:
 			_base[i] = _skel.get_bone_pose_rotation(i)
+	# One arm raised straight at you, too long, the hand hanging (a pose for the stutter).
+	var arm := "r" if left_x > 0.0 else "l"
+	_aim("upperarm_" + arm, "lowerarm_" + arm, Vector3(-0.12 * left_x, 0.12, 1.0))
+	_aim("lowerarm_" + arm, "hand_" + arm, Vector3(-0.05 * left_x, 0.02, 1.0))
+	for stem in ["upperarm_" + arm, "lowerarm_" + arm]:
+		var i := _bone(stem)
+		if i >= 0:
+			_point[i] = _skel.get_bone_pose_rotation(i)
+			_skel.set_bone_pose_rotation(i, _base[i])
 
 
 ## Four held poses; the figure jumps between them with no motion in between (a frame skip).
@@ -181,6 +191,10 @@ const POSES := [
 	{"head": Vector3(0.0, 0.28, -0.12), "neck": Vector3(0.0, 0.1, -0.04), "spine_03": Vector3(0.03, 0.04, 0.03)},
 	{"head": Vector3(0.32, 0.0, 0.05), "neck": Vector3(0.12, 0.0, 0.0), "spine_03": Vector3(0.08, 0.0, 0.0)},
 	{"head": Vector3(-0.05, -0.1, 0.42), "neck": Vector3(0.0, 0.0, 0.14), "spine_03": Vector3(0.0, -0.05, -0.04)},
+	# Turned away, the head twisted all the way round to keep facing you.
+	{"turn": PI, "head": Vector3(0.0, PI * 0.92, 0.1), "neck": Vector3(0.0, 0.25, 0.0)},
+	# One arm raised, pointing at you.
+	{"point": true, "head": Vector3(0.18, 0.0, -0.1), "spine_03": Vector3(-0.04, 0.0, 0.0)},
 ]
 
 
@@ -188,7 +202,17 @@ func _apply_pose(k: int, breath: float) -> void:
 	if _skel == null:
 		return
 	var p: Dictionary = POSES[k]
+	for i in _base:
+		_skel.set_bone_pose_rotation(i, _base[i])
+	if p.get("point", false):
+		for i in _point:
+			_skel.set_bone_pose_rotation(i, _point[i])
+	var body: Node3D = figure.get_child(0) as Node3D if figure and figure.get_child_count() > 0 else null
+	if body:
+		body.rotation.y = float(p.get("turn", 0.0))
 	for stem in p:
+		if stem == "point" or stem == "turn":
+			continue
 		var i := _bone(stem)
 		if i < 0 or not _base.has(i):
 			continue
@@ -245,6 +269,13 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 		player.camcorder.glitch_small()
 		if (_drop.stream as AudioStreamRandomizer).streams_count > 0:
 			_drop.play()
+		# Sometimes the skipped frames carried it closer.
+		var to_pl := player.global_position - figure.global_position
+		to_pl.y = 0.0
+		if _rng.randf() < 0.4 and to_pl.length() > 10.0:
+			var step := figure.global_position + to_pl.normalized() * _rng.randf_range(0.5, 0.9)
+			if space.is_walkable(step):
+				figure.global_position = step
 		# Sometimes the jump also turns it to face you squarely again.
 		_face_player()
 	_apply_pose(_pose, sin(Game.clock * 1.3) * 0.015)

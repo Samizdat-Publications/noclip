@@ -53,7 +53,10 @@ func setup(p_dir: String, p_duration: float, p_player: Player) -> void:
 func _process(_delta: float) -> void:
 	if _event_sheet >= 0 and Game.clock > 3.0:
 		var sp: Space = player.space
-		var fire := (sp != null and sp.attention_until > Game.clock) or Game.clock >= duration - 5.0
+		# Prefer the moment something shows on tape; any other event will do later in the run.
+		var on_tape := sp != null and sp.attention_until > Game.clock and sp.attention_kind == &"tape"
+		var any_ev := sp != null and sp.attention_until > Game.clock and Game.clock > duration * 0.6
+		var fire := on_tape or any_ev or Game.clock >= duration - 5.0
 		if fire:
 			for f in 9:
 				shots.append({"t": Game.clock + 0.3 + f * 0.4, "path": "%s/sheets/k%02d_f%d.png" % [dir, _event_sheet, f]})
@@ -79,6 +82,8 @@ func _run_focus(delta: float) -> void:
 		hold.camcorder = bool(f.get("camcorder", false))
 		player.input = hold
 		var p: Array = f["pos"]
+		if player.space.has_method("prepare_view"):
+			player.space.prepare_view(Vector3(p[0], 0.0, p[1]))
 		player.spawn(Transform3D(Basis(Vector3.UP, -deg_to_rad(float(f.get("yaw", 0.0)))), Vector3(p[0], 0.0, p[1])))
 		player.pitch = deg_to_rad(float(f.get("pitch", 0.0)))
 		_focus_wait = float(f.get("settle", 2.0))

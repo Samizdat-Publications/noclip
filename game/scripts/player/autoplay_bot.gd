@@ -79,7 +79,9 @@ func _pick_target(player: Player) -> void:
 				score *= 2.4
 			# A long hall running the way you are going is hard to resist.
 			if String(p["name"]).contains("hall_") and to.dot(_heading) > 0.8:
-				score *= 2.2
+				score *= 1.4
+			if String(p["name"]).contains("_room_"):
+				score *= 1.4
 			# Something that only shows on tape: a person who has learned that would go and look.
 			if p.has("seam") and not _seams_done.has(p["name"]) and d < 22.0:
 				score *= 25.0

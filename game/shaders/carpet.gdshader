@@ -34,7 +34,7 @@ uniform vec2 field_origin = vec2(0.0);
 uniform float field_cell = 0.6;
 uniform vec2 field_size = vec2(1.0);
 uniform float ceiling_h = 2.6;
-uniform float reflect_strength = 0.9;
+uniform float reflect_strength = 0.55;
 
 uniform vec3 world_shift = vec3(0.0);   // a loop copy samples its template's patterns
 
@@ -121,7 +121,7 @@ void fragment() {
 	AO_LIGHT_AFFECT = 0.25;
 	SPECULAR = mix(mix(0.2, 0.22, wet), 0.2, flood);
 	// Soft reflection of the lit panels above, in wet patches and the flooded room.
-	float sheen = max(wet * 0.75, flood) + mottle * 0.15;
+	float sheen = max(wet * 0.75, flood);
 	if (sheen > 0.01) {
 		vec3 V = normalize(CAMERA_POSITION_WORLD - wraw);
 		vec3 R = reflect(-V, vec3(0.0, 1.0, 0.0));

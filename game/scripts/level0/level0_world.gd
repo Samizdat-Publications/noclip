@@ -123,6 +123,29 @@ func _finish(c: Vector2i, ch: Level0Chunk) -> void:
 			pool.fixtures.append(fx)
 
 
+## Builds everything around p at once (a loading moment): review focus shots teleport across
+## the level and must not photograph chunks that are still streaming in.
+func prepare_view(p: Vector3) -> void:
+	_player = p
+	if _building_chunk:
+		for st in _steps:
+			(st as Callable).call()
+		_steps.clear()
+		_finish(_building_coord, _building_chunk)
+		_building_chunk = null
+		_building_coord = Vector2i(1 << 20, 0)
+	var p2 := Vector2(p.x, p.z)
+	for c in chunks.keys():
+		if _rect_dist(chunk_rect(c), p2) > UNLOAD_R:
+			_unload(c)
+	for c in _wanted(p):
+		if not chunks.has(c):
+			_build_now(c)
+	_queue.clear()
+	pool.listener = p
+	director.listener = p
+
+
 func _unload(c: Vector2i) -> void:
 	var ch: Level0Chunk = chunks[c]
 	for fx in ch.fixtures:
@@ -152,6 +175,8 @@ var _pos_log_t := 0.0
 func _process(delta: float) -> void:
 	if Level0Chunk._tear_mat:
 		Level0Chunk._tear_mat.set_shader_parameter("time", Game.clock)
+	if Level0Chunk._rec_mat:
+		Level0Chunk._rec_mat.emission_energy_multiplier = 6.0 if fmod(Game.clock, 1.0) < 0.55 else 0.0
 	if _temporal_reset > 0:
 		_temporal_reset -= 1
 		if _temporal_reset == 0:

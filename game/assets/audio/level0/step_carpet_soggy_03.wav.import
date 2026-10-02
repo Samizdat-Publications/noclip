@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://mda716jd2dda"
+uid="uid://cj2qplsdnm6sl"
 path="res://.godot/imported/step_carpet_soggy_03.wav-377b82d6e8e86b706c013eaa8b85f3ec.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

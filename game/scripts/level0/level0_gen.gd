@@ -263,6 +263,20 @@ func generate(cx: int, cz: int) -> Dictionary:
 		fixed.append(["turn_around", 5.0, hr0, 1.0, 1.45, 1.1])
 	if spawn_chunk and hr0 >= 0:
 		fixed.append(["look_through", 8.5, hr0, 1.0, 1.5, 1.0])
+	# The survey crew (D010, D022) left a camcorder on a tripod recording an empty stretch of hall,
+	# its red light still blinking, and sprayed their marks on the hall walls here and there.
+	var cr := _rng("crew:%d:%d" % [cx, cz])
+	if hr0 >= 0 and loop_index(cx, cz) < 0 and not spawn_chunk:
+		if cr.randf() < 0.14:
+			var tx := cr.randf_range(5.0, 19.0)
+			var tz := (hr0 + 1) * MOD + cr.randf_range(-0.25, 0.25)
+			var yaw := 90.0 if cr.randf() < 0.5 else -90.0
+			L["props"].append(["prop_tripod_camcorder", tx, tz, yaw + cr.randf_range(-6, 6)])
+			L.get_or_add("rec_lights", []).append([tx, tz, yaw])
+		if cr.randf() < 0.22:
+			var sx := _wall_run_x(L, cr.randf_range(4.0, 20.0), hr0 * MOD, 0.8)
+			if sx > -50.0:
+				L["graffiti"].append(["hd_survey", sx, hr0 * MOD + T * 0.5, 0.0, 1.0, cr.randf_range(1.0, 1.4)])
 	# The line: on some stretches of a highway someone dragged a crayon along the wall as they
 	# walked, chunk after chunk (wall details, Level0Chunk._build_wall_details).
 	if hr0 >= 0 and _rng("trail:%d:%d" % [cz, floori(cx / 5.0)]).randf() < 0.35:
@@ -692,7 +706,7 @@ const POCKET := 3
 
 func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> void:
 	var pr := _rng("pocket:%d:%d" % [cx, cz])
-	if not spawn_chunk and pr.randf() > 0.34:
+	if not spawn_chunk and pr.randf() > 0.45:
 		return
 	var best: Dictionary = {}
 	var best_score := -1e9
@@ -719,7 +733,7 @@ func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> vo
 ## height, over doors that are now far too small. Never the spawn chunk, never a pocket room.
 func _pick_tall_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> void:
 	var tr := _rng("tall:%d:%d" % [cx, cz])
-	if spawn_chunk or tr.randf() > 0.2:
+	if spawn_chunk or tr.randf() > 0.28:
 		return
 	var cands := []
 	for lf in leaves:

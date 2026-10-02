@@ -85,8 +85,9 @@ void fragment() {
 	alb = mix(alb, alb * vec3(0.72, 0.62, 0.45), leak * from_top * smoothstep(0.35, 0.6, streak));
 
 	// Contact grime: darker in the last few centimeters at the floor and the ceiling.
-	alb *= mix(0.82, 1.0, smoothstep(0.0, 0.22, y));
-	alb *= mix(0.9, 1.0, smoothstep(ceiling_h, ceiling_h - 0.12, y));
+	// (critique 008/009, L049: corners where walls meet floor and ceiling looked like paper)
+	alb *= mix(0.68, 1.0, smoothstep(0.0, 0.34, y));
+	alb *= mix(0.78, 1.0, smoothstep(ceiling_h, ceiling_h - 0.32, y));
 
 	alb = mix(alb, alb * 1.12 + vec3(0.015), band_edge * 0.35);
 	alb *= 1.0 - 0.35 * seam_dark;
