@@ -100,6 +100,12 @@ void fragment() {
 	// Damp sheen (critique 006, L027): wet fibers lie flat and catch the panels as a soft smear.
 	// SSR stays off (D012), so this is only the lights' own highlight, never a mirror blob.
 	rough = mix(rough, 0.52, wet);
+	// Beads of standing water in the wet patches: sparse, tiny, sharp glints that move with you.
+	vec2 gp = p * 140.0;
+	float bead = n_hash12(floor(gp));
+	float in_cell = 1.0 - smoothstep(0.18, 0.32, length(fract(gp) - 0.5));
+	float glint = step(0.955, bead) * in_cell * smoothstep(0.35, 0.8, wet);
+	rough = mix(rough, 0.12, glint);
 	rough = mix(rough, rough * 0.86, mottle);
 	nrm = mix(nrm, vec3(0.5, 0.5, 1.0), wet * 0.55);
 
@@ -119,7 +125,7 @@ void fragment() {
 	ROUGHNESS = rough;
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.25;
-	SPECULAR = mix(mix(0.2, 0.22, wet), 0.2, flood);
+	SPECULAR = mix(mix(0.2, 0.22, wet), 0.2, flood) + glint * 0.5;
 	// Soft reflection of the lit panels above, in wet patches and the flooded room.
 	float sheen = max(wet * 0.75, flood);
 	if (sheen > 0.01) {

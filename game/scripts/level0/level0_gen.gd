@@ -877,20 +877,20 @@ func _room_mood(L: Dictionary, rr: Rect2, first: int) -> void:
 	var n := fx.size() - first
 	var roll := mr.randf()
 	var c := rr.get_center()
-	if n >= 3 and roll < 0.26:
+	if n >= 3 and roll < 0.32:
 		var best := first
 		for i in range(first, fx.size()):
 			if Vector2(fx[i][0], fx[i][1]).distance_to(c) < Vector2(fx[best][0], fx[best][1]).distance_to(c):
 				best = i
 		for i in range(first, fx.size()):
 			fx[i].append("on" if i == best else "dead")
-	elif n >= 4 and roll < 0.44:
+	elif n >= 4 and roll < 0.54:
 		var along_x := rr.size.x >= rr.size.y
 		var keep_low := mr.randf() < 0.5
 		for i in range(first, fx.size()):
 			var lowside: bool = (fx[i][0] < c.x) if along_x else (fx[i][1] < c.y)
 			fx[i].append("dead" if lowside == keep_low else "on")
-	elif roll < 0.56:
+	elif roll < 0.68:
 		for i in range(first, fx.size()):
 			fx[i].append("dim")
 	var tint_roll := mr.randf()
@@ -1156,6 +1156,37 @@ func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_ch
 		if _near_door(L, pp, 1.1):
 			continue
 		L["props"].append([props[r.randi() % props.size()], pp.x, pp.y, r.randf_range(0, 360)])
+	# Office leftovers standing against a wall, facing the room (critique 012: the same corridor
+	# over and over). Own stream, so the rest of the chunk keeps its sequence.
+	var lr := _rng("leftover:%d:%d" % [L["chunk"][0], L["chunk"][1]])
+	var wallside := ["prop_water_cooler_sf", "prop_filing_cabinet_sf", "prop_office_desk_sf", "prop_stack_chairs_sf", "prop_filing_cabinet_sf"]
+	for k in lr.randi_range(1, 3):
+		var spl: Array = take_spot.call(2.0)
+		if spl.size() == 0:
+			break
+		var sl: Array = spl[1]
+		var nm: String = wallside[lr.randi() % wallside.size()]
+		var depth := 0.42 if nm == "prop_office_desk_sf" else 0.34
+		var pl: Vector2 = (sl[0] as Vector2).lerp(sl[1], lr.randf_range(0.25, 0.75)) + sl[2] * (T * 0.5 + depth)
+		if _near_door(L, pl, 1.2):
+			continue
+		var nn: Vector2 = sl[2]
+		L["props"].append([nm, pl.x, pl.y, rad_to_deg(atan2(nn.x, nn.y)) + lr.randf_range(-4, 4)])
+		if nm == "prop_office_desk_sf" and lr.randf() < 0.7:
+			# its chair, pushed back from the desk
+			var cp: Vector2 = pl + nn * lr.randf_range(0.75, 1.1) + Vector2(-nn.y, nn.x) * lr.randf_range(-0.3, 0.3)
+			L["props"].append(["prop_office_chair_alt_sf", cp.x, cp.y, rad_to_deg(atan2(-nn.x, -nn.y)) + lr.randf_range(-40, 40)])
+	# A leftover row of cubicle partitions in a big room: the ghost of an open-plan office.
+	for lf in rooms:
+		var rrc: Rect2 = lf["rect"]
+		if rrc.size.x >= 7.2 and rrc.size.y >= 7.2 and lr.randf() < 0.18:
+			var along := rrc.size.x >= rrc.size.y
+			var cc := rrc.get_center() + Vector2(lr.randf_range(-0.6, 0.6), lr.randf_range(-0.6, 0.6))
+			for k in 3:
+				var off := (k - 1) * 1.45
+				var pc := cc + (Vector2(off, 0) if along else Vector2(0, off))
+				L["props"].append(["prop_cubicle_panel_sf", pc.x, pc.y, 0.0 if along else 90.0])
+			break
 
 
 static func _seeded_shuffle(r: RandomNumberGenerator, a: Array) -> void:

@@ -904,8 +904,8 @@ func _build_tbars(kit: MeshKit, fixture_cells: Dictionary) -> void:
 	var nx := int(round(extent.x / TILE))
 	var nz := int(round(extent.y / TILE))
 	# T-bar grid, edge by edge, so no bar runs across the middle of a 2x4 light fixture.
-	var hw := 0.012
-	var hd := 0.014
+	var hw := 0.015
+	var hd := 0.028
 	for k in (nz + 1 if own_far_edges else nz):
 		var z := k * TILE
 		var run_start := -1
@@ -938,8 +938,8 @@ func _in_tall(i: int, j: int) -> bool:
 
 ## The T-bar grid of a tall room, at its own height, skipping the middle of each light fixture.
 func _build_tall_grid(kit: MeshKit, fixture_cells: Dictionary) -> void:
-	var hw := 0.012
-	var hd := 0.014
+	var hw := 0.015
+	var hd := 0.028
 	for tr in L.get("tall_rooms", []) + L.get("ceil_zones", []):
 		var ht: float = tr[4]
 		var i0 := int(roundf(float(tr[0]) / TILE))
@@ -974,6 +974,17 @@ func _build_fallen_tile(kit: MeshKit) -> void:
 		if c.distance_to(spawn) < 5.0 or _hits_solid(Rect2(c - Vector2(0.7, 0.7), Vector2(1.4, 1.4))):
 			continue
 		_fallen_tile = Vector2i(i, j)
+		# Somebody came to fix it: a step ladder stands under the hole (a story, L074).
+		var lp := "res://assets/props/level0/prop_step_ladder_sf.glb"
+		if ResourceLoader.exists(lp) and _rng("level0:ladder").randf() < 0.45:
+			var lad := PropCache.make(lp)
+			var lo := Vector2(0.55, 0.0).rotated(_rng("level0:ladder2").randf() * TAU)
+			if not _hits_solid(Rect2(c + lo - Vector2(0.35, 0.35), Vector2(0.7, 0.7))):
+				lad.position = Vector3(c.x + lo.x, 0.0, c.y + lo.y)
+				lad.rotation.y = _rng("level0:ladder3").randf() * TAU
+				add_child(lad)
+				_pending_contacts.append([lad.position, 0.3])
+				solids.append(Rect2(c + lo - Vector2(0.3, 0.3), Vector2(0.6, 0.6)))
 		var ang := r.randf_range(-0.6, 0.6)
 		var off := Vector2(r.randf_range(-0.25, 0.25), r.randf_range(-0.25, 0.25))
 		var b := Basis(Vector3.UP, ang)
@@ -1084,6 +1095,18 @@ func _build_decals() -> void:
 
 func _build_decals_b() -> void:
 	var r := _rng("level0:decals")
+	# A mop bucket left by one of the leaks (nobody finished).
+	var mb := "res://assets/props/level0/prop_mop_bucket_sf.glb"
+	var mr := _rng("level0:mop")
+	if ResourceLoader.exists(mb) and leaks.size() > 0 and mr.randf() < 0.35:
+		var lk0: Vector2 = leaks[mr.randi() % leaks.size()]
+		var bp := lk0 + Vector2(0.7, 0.0).rotated(mr.randf() * TAU)
+		if not _hits_solid(Rect2(bp - Vector2(0.3, 0.3), Vector2(0.6, 0.6))):
+			var bucket := PropCache.make(mb)
+			bucket.position = Vector3(bp.x, 0.0, bp.y)
+			bucket.rotation.y = mr.randf() * TAU
+			add_child(bucket)
+			_contact_shadow(bucket.position, 0.22)
 	for lk in leaks:
 		var spin := r.randf() * TAU
 		var fs := r.randf_range(1.8, 3.2)
@@ -1348,6 +1371,16 @@ const PROPS := {
 	"prop_crt_monitor_sf": {"n": 1, "half": 0.22, "spots": [[12.5, 0.5], [5.6, 12.6], [16.4, 20.6]], "tint": [0.95, 0.88, 0.72]},
 	"prop_cardboard_box_sf": {"n": 2, "half": 0.3, "spots": [[0.5, 6.0], [28.6, 20.5], [12.4, 21.2], [2.0, 3.4]]},
 	"prop_cardboard_box": {"n": 1, "half": 0.24, "spots": [[13.6, 29.5], [0.5, 12.5], [29.5, 14.0]]},
+	"prop_water_cooler_sf": {"half": 0.2},
+	"prop_filing_cabinet_sf": {"half": 0.3},
+	"prop_office_desk_sf": {"half": 0.45},
+	"prop_stack_chairs_sf": {"half": 0.3},
+	"prop_cubicle_panel_sf": {"half": 0.12},
+	"prop_step_ladder_sf": {"half": 0.3},
+	"prop_mop_bucket_sf": {"half": 0.22},
+	"prop_tripod_camcorder": {"half": 0.3},
+	"prop_tape_crate": {"half": 0.2},
+	"prop_vhs_tape_sf": {"half": 0.06},
 }
 
 
@@ -1375,6 +1408,8 @@ func _build_props() -> void:
 	names.sort()
 	for name in names:
 		var spec: Dictionary = PROPS[name]
+		if not spec.has("spots"):
+			continue
 		var path := "res://assets/props/level0/%s.glb" % name
 		if not ResourceLoader.exists(path):
 			continue
@@ -1563,10 +1598,10 @@ func _build_seam_fx() -> void:
 			_contact_shadow(pos, 0.22)
 		var fwd := Vector3(sin(yaw), 0.0, cos(yaw))
 		var sl := SpotLight3D.new()
-		sl.light_color = Color(1.0, 0.71, 0.42)   # a halogen lamp: the one warm, hard light in the Yellow
+		sl.light_color = Color(1.0, 0.76, 0.52)   # a halogen lamp: the one warm, hard light in the Yellow
 		sl.light_energy = 1.05
 		sl.spot_range = 6.5
-		sl.spot_angle = 52.0
+		sl.spot_angle = 38.0
 		sl.spot_attenuation = 1.1
 		sl.spot_angle_attenuation = 1.6
 		sl.shadow_enabled = true
@@ -1583,7 +1618,7 @@ func _build_seam_fx() -> void:
 		# A little of it bounces off the floor and walls of the pocket.
 		var fill := OmniLight3D.new()
 		fill.light_color = Color(1.0, 0.76, 0.5)
-		fill.light_energy = 0.14
+		fill.light_energy = 0.07
 		fill.omni_range = 2.6
 		fill.position = pos + fwd * 1.2 + Vector3(0, 0.9, 0)
 		add_child(fill)

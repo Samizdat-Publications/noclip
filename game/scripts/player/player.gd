@@ -78,13 +78,21 @@ func _prep_viewmodel(n: Node) -> void:
 		g.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 		g.extra_cull_margin = 1.0
 	if n is MeshInstance3D:
-		# Dark charcoal plastic: the baked atlas reads too pale under the panels.
+		# Worn charcoal plastic (critiques 009/012: the held camera looked like a shiny toy).
 		var mi := n as MeshInstance3D
 		for i in mi.mesh.get_surface_count():
 			var m := mi.mesh.surface_get_material(i)
-			if m is BaseMaterial3D and m.resource_name == "camcorder_body":
+			if m is BaseMaterial3D:
 				var d := (m as BaseMaterial3D).duplicate() as BaseMaterial3D
-				d.albedo_color = d.albedo_color * Color(0.32, 0.32, 0.33)
+				if m.resource_name == "camcorder_body":
+					d.albedo_color = d.albedo_color * Color(0.32, 0.32, 0.33)
+				elif m.resource_name.to_lower().contains("glass"):
+					d.metallic = 0.0
+					d.roughness = 0.08
+				else:
+					d.metallic = minf(d.metallic, 0.15)
+					d.roughness = maxf(d.roughness, 0.62)
+					d.albedo_color = d.albedo_color * Color(1.25, 1.25, 1.25)
 				mi.set_surface_override_material(i, d)
 	for c in n.get_children():
 		_prep_viewmodel(c)

@@ -433,7 +433,7 @@ func _check_seam(p: Vector3) -> void:
 			if r.has_point(Vector2(lp.x, lp.z)):
 				inside = true
 	if inside and not _in_seam and player_ref:
-		player_ref.camcorder.glitch()
+		player_ref.camcorder.glitch_small()
 		tape.seam_cross()
 	_in_seam = inside
 

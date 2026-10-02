@@ -1,0 +1,404 @@
+{
+ "prop_water_cooler_sf": {
+  "glb": "game/assets/props/level0/prop_water_cooler_sf.glb",
+  "tris": 1447,
+  "dims_m_xyz_yup": [
+   0.316,
+   1.38,
+   0.304
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_10",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_11",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_12",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_13",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_5",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_6",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_7",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_8",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_9",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "yaw_deg": -3.8,
+  "scale": 0.69,
+  "uid": "52946497074c4c669d620ce5f431a3da"
+ },
+ "prop_filing_cabinet_sf": {
+  "glb": "game/assets/props/level0/prop_filing_cabinet_sf.glb",
+  "tris": 676,
+  "dims_m_xyz_yup": [
+   0.38,
+   1.32,
+   0.736
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_5",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "scale": 0.006163,
+  "yaw_deg": 0.0,
+  "uid": "619484b78fbe449ea5c0cdb68e8f2bd6",
+  "origin": "center of the cabinet body, bottom; bbox is deeper because drawers are left open"
+ },
+ "prop_step_ladder_sf": {
+  "glb": "game/assets/props/level0/prop_step_ladder_sf.glb",
+  "tris": 1616,
+  "dims_m_xyz_yup": [
+   0.359,
+   1.55,
+   0.844
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "scale": 0.007629,
+  "yaw_deg": 90.0,
+  "uid": "670ef4373d544ea5ab577ef00161ffc3"
+ },
+ "prop_mop_bucket_sf": {
+  "glb": "game/assets/props/level0/prop_mop_bucket_sf.glb",
+  "tris": 3908,
+  "dims_m_xyz_yup": [
+   0.496,
+   1.326,
+   0.725
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_0.001",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     512
+    ]
+   ],
+   [
+    "Image_1.001",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2.001",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_5",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "bucket_scale": 0.8,
+  "mop_scale": 0.003417,
+  "yaw_deg": 0.0,
+  "uid_bucket": "54a8250e1de8426e9cf2bf35fd099a10",
+  "uid_mop": "420bddb8730c4e3aa7653e5f7c5a5a7c",
+  "origin": "bottom center of the bucket body; mop handle leans out the back"
+ },
+ "prop_cubicle_panel_sf": {
+  "glb": "game/assets/props/level0/prop_cubicle_panel_sf.glb",
+  "tris": 132,
+  "dims_m_xyz_yup": [
+   1.493,
+   1.5,
+   0.52
+  ],
+  "textures": [
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_5",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "scale": 0.565983,
+  "uid": "18abda12d33b4231aa13f92a291c717e",
+  "note": "two adjacent back-wall panel units cut out of the cubicle set (faces by bbox), plus two T feet built here"
+ },
+ "prop_office_desk_sf": {
+  "glb": "game/assets/props/level0/prop_office_desk_sf.glb",
+  "tris": 2998,
+  "dims_m_xyz_yup": [
+   1.6,
+   0.75,
+   0.8
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "scale_xyz": [
+   0.7038,
+   0.7499,
+   0.9293
+  ],
+  "yaw_deg": 0.0,
+  "uid": "2039a113435b47d585b2c51e4f3a096d"
+ },
+ "prop_stack_chairs_sf": {
+  "glb": "game/assets/props/level0/prop_stack_chairs_sf.glb",
+  "tris": 10300,
+  "dims_m_xyz_yup": [
+   0.61,
+   1.551,
+   0.6
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "yaw_deg": -1.5,
+  "chairs": 5,
+  "pitch_up_m": 0.18,
+  "pitch_back_m": 0.0,
+  "uid": "4a92b3b9964c446cb5ec9eff053d830c"
+ }
+}

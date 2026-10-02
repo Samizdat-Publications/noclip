@@ -22,3 +22,11 @@
 - Gate-2 capture 20261002-032422-1cbee1b is INVALID: its import step ran while the M3 sound job was still writing WAVs; breath_calm_loop.wav was a full-scale square wave at import time, so the clip measured +0.7 LUFS / +12.9 dBFS, and the job's CPU work dragged the perf run to 61.9/50.5. Rule from now on: no asset job may write into game/ while a capture runs.
 - Fixes: gdcheck and capture.py refuse square-wave/DC audio files. l0_lib._decode read ElevenLabs stereo PCM as mono (every generated sound an octave low, twice as long) -> fixed, S01 and S03 sounds rebuilt from cache (0c9a040).
 - Clean recapture 20261002-034413-bc73bfd: perf 98.2/68.8, -18.6 LUFS. Gate attempt 2 critiques 012 running.
+
+## After the M2 gate (04:00 onward)
+- Gate attempt 2 (012, build 20261002-034413-bc73bfd, perf 98.2/68.8): Opus 6/6/6/6/6/7/6/5/NA/5/8/6; Gemini 5/4/3/5/8/8/6/7/7/7/9/7. M2 closed after two attempts (D028, de1e535). Stewart (mid-session message): keep going until he wakes (~6 h), compact once if needed and continue.
+- 8ad5a82 D027 haze scatter/bloom/tighter cones. 905da09 D029: wallpaper v2 (original print), hall dead runs, low-ceiling stretches (ceil_zones), SSAO 4.2/0.68, ambient 0.017, plain.gdshader for trims (no dither glitter), steady dim tube in dark rooms, figure close final beat, lighter glitches.
+- Loop 6 capture 20261002-040513-905da09 (seed 73214): frames valid; perf.json CONTAMINATED (props job's Blender preview render at 96% GPU) -> re-measure with the same seed on an idle GPU, replace review/inbox/perf.json and the archive copy, then run critics 013.
+- Pending patch (not applied): scratchpad patch_m3c.py = carpet water-bead glints (L081) + camcorder viewmodel materials (L073). Apply AFTER the perf re-measure.
+- Props job running: water cooler, filing cabinet, step ladder, mop bucket, cubicle panel, desk, stacked chairs -> place them in rooms/halls to break sameness (L074).
+- RULE: never run a capture or perf probe while an asset job renders or writes into game/.

@@ -14,7 +14,7 @@ uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap_anisotropic, re
 uniform sampler2D rough_tex : hint_default_white, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D ao_tex : hint_default_white, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec2 tile = vec2(0.6, 0.6);
-uniform float normal_strength = 0.8;
+uniform float normal_strength = 1.35;
 uniform float ceiling_h = 2.6;
 uniform float damage = 1.0;
 uniform vec2 seed_offset = vec2(0.0);

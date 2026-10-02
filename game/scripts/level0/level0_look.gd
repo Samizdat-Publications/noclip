@@ -143,6 +143,9 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 			horizon(m[key])
 	for key in ["tbar", "baseboard", "trim", "door", "knob", "plate", "slot", "plenum"]:
 		m[key] = to_plain(m[key])
+	(m["trim"] as ShaderMaterial).set_shader_parameter("grime", 1.0)
+	(m["door"] as ShaderMaterial).set_shader_parameter("grime", 0.8)
+	(m["baseboard"] as ShaderMaterial).set_shader_parameter("grime", 0.6)
 	return m
 
 
@@ -234,7 +237,7 @@ static func make_environment(preset: String) -> Environment:
 	e.set_glow_level(5, 0.0)
 
 	e.volumetric_fog_enabled = true
-	e.volumetric_fog_density = float(Game.opts.get("fog", "0.021"))
+	e.volumetric_fog_density = float(Game.opts.get("fog", "0.019"))
 	e.volumetric_fog_albedo = Color(0.95, 0.92, 0.82)
 	e.volumetric_fog_emission = Color(0, 0, 0)
 	e.volumetric_fog_anisotropy = float(Game.opts.get("fog_aniso", "0.62"))

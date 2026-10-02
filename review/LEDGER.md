@@ -93,6 +93,21 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L069 | 010 | gemini | hurts | No visual identity of its own; "looks like every Backrooms video" | FIX (ongoing) | Our own: the survey crew (tripods, stencils, work lights, cables), generation-loss copy errors, the tape figure, graffiti v2 |
 | L070 | 010 | gemini | hurts | Footsteps sound like stomping on dry plywood | FIX | M3 sound set: squish steps on soaked carpet, positional so the room colors them (D026); 011 Gemini: "wet, heavy footsteps are perfect" |
 | L071 | 011 | opus gate | hurts | Dark rooms crush to pure black (a 4 s black sheet) | FIX | Gate-2 fixes: every dark room keeps one dim tube, ambient 0.015 to 0.022; focus shots wait for streaming (the black frame in 010 was an unloaded chunk) |
+| L072 | 012 | opus gate | hurts | Halls lit flat and too bright; the dark gaps between lights were lost | FIX | D029: dead-panel runs in about half the halls, ambient 0.017, haze scatter (D027) |
+| L073 | 012 | opus gate | hurts | The held camcorder still looks like a shiny untextured toy mid-raise (repeat of L050) | FIX | Next: rougher, slightly lighter charcoal plastic, less mirror-like glass; already smaller in frame |
+| L074 | 012 | opus gate | hurts | Too much of the same corridor between set pieces; wants alcoves, low ceilings, too-wide halls, leftovers | FIX (ongoing) | D029: low-ceiling stretches; survey camcorders in halls; more to come (alcoves, furniture leftovers) |
+| L075 | 012 | opus gate | hurts | The figure never gets close enough to feel | FIX | D029: the last look shows it at 5.8 m, lit, twisted, for 1.6 s, then it is gone and its light dies |
+| L076 | 012 | opus gate | nitpick | Glittery dotted band where distant ceiling lights meet the haze; a blotchy light patch on a far wall | FIX (partial) | D029: trims and grid on plain.gdshader with a smooth fade (the dither glittered); blotch not identified yet |
+| L077 | 012 | opus gate | nitpick | The door hung high in the tall room looks like a sticker | FIX (partial) | D029: a narrow sill under it; needs more depth (frame recess) |
+| L078 | 012 | opus gate | nitpick | Full-screen static twice in a short run wipes the image | FIX | D029: glitch burst 0.28 to 0.15, power-on 0.28 to 0.2 |
+| L079 | 012 | gemini | hurts | Shadows 3: baseboards and the ceiling grid look painted flat; no shadow where walls meet floor and ceiling | FIX | D029: SSAO 4.2 with light affect 0.68; wall-foot and ceiling-line darkening (L049) |
+| L080 | 012 | gemini | ruins it | Fluorescents look like glowing stickers, light spreads evenly | FIX | D027 haze scatter and bloom, D029 dark gaps |
+| L081 | 012 | gemini | hurts | The carpet still reads dry and matte | FIX | Next: tiny specular glints of water in wet patches (sparkle as you move), not just darker stains |
+| L082 | 013 | claude | ruins it | Nothing threatening in the capture: the figure did not appear (third capture in a row without it) | FIX | The first encounter is guaranteed once a 15 m view with a lit panel exists while filming; the bot films long views |
+| L083 | 013 | claude | hurts | Door frames read as clean plastic cutouts; rooms flat with nothing to look at | FIX | Worn paint (grime, kick marks, hand grime) on frames, doors and baseboards; office leftovers (desks with chairs, cabinets, coolers, stacked chairs, cubicle rows, ladder under a fallen tile, mop bucket by a leak) |
+| L084 | 013 | claude | hurts | The survey pocket is a flat orange wash | FIX | Narrower, paler halogen pool (38 degrees), half the fill: hot center, dark corners |
+| L085 | 013 | claude | nitpick | Some lit rooms wash out in haze; glitches still too frequent | FIX | Haze 0.021 to 0.019; seam crossing now a one-frame hiccup |
+| L086 | 013 | gemini | hurts | Ceiling grid and wallpaper look like flat images; want relief | FIX | T-bars 1.4 to 2.8 cm deep and wider; wallpaper normal strength 0.8 to 1.35 |
 
 ## Closed
 
