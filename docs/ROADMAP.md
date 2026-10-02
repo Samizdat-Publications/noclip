@@ -3,6 +3,7 @@
 One milestone per session is the norm; big milestones may take two. Reorder or split freely, and log why in DECISIONS.md. Effort is the recommended Opus 5.5 effort for the session.
 
 ## M1: Foundation and look-dev (effort: xhigh)
+Status after S01: everything is built (engine chosen by blind bake-off, harness, both critics, hero slice). The exit criterion "Lighting and Atmosphere 7+" is not met yet: best was Lighting 7 / Atmosphere 6 in loop 3, and the gate gave 6/6 (Opus) and 3/4 (Gemini). S02 starts with the gate fixes listed in HANDOFF.
 - Environment check and installs (git, git LFS, Node, Python, ffmpeg, Blender, Godot 4.7.x, gh). Confirm GPU rendering works for captures.
 - Repo, LFS, .gitignore, layout from CLAUDE.md, private GitHub repo via gh.
 - Look-dev spike: the same hero slice of Level 0 (about 30 m x 30 m: corridors, one large open room, a doorway, fluorescent grid with dead and failing tubes, damp carpet, stained walls) in Godot Forward+ at final quality, and a time-boxed three.js WebGPU version (no more than a quarter of the session). Blind A/B by player-critic. Pick the engine; Godot wins ties.

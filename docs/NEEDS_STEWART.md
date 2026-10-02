@@ -2,13 +2,7 @@
 
 Claude keeps this list short and gives exact click-by-click steps. Nothing here blocks Claude from working.
 
-## 1. (Important, 3 minutes) Add your Gemini API key
-The second critic, the one that watches the gameplay video and HEARS the sound, needs a Gemini key. The line for it in your keys file is empty, so that critic could not run this session. (Your ElevenLabs key works because it is set elsewhere on your PC. The OpenAI line is also empty, but nothing needs it yet.)
-1. Open https://aistudio.google.com/apikey in your browser and sign in with your Google account.
-2. Click "Create API key" (pick any project it offers), then click the copy icon next to the new key.
-3. Open File Explorer and go to `C:\Users\stewa\ClaudeProjects\Noclip\`. Right-click the file named `.env`, choose "Open with", then "Notepad". (If you do not see `.env`, click View, then Show, then "Hidden items".)
-4. Find the line `GEMINI_API_KEY=` and paste the key right after the `=` sign, with no spaces. It should look like `GEMINI_API_KEY=AIza...`.
-5. Save (Ctrl+S) and close Notepad. That is all. Next session the video critic runs automatically.
+## Done: Gemini API key (added by Stewart on 2026-10-01; the video critic now runs)
 
 ## 2. (Optional, 2 minutes) Let the blind critic hand its review back directly
 Right now the critic's safety guard also blocks the button it uses to send its review back, so Claude digs the review out of the critic's log instead. It works, but this small fix makes it cleaner. Claude is not allowed to edit this file itself, on purpose.

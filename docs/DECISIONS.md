@@ -52,3 +52,6 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 - Godot wins all three look categories that decide this milestone (Lighting, Shadows, Materials). Perf at the time: A 39 fps, B 38 fps (idle GPU); Godot is now 66 fps after D007. Practical factors also favor Godot: real-time GI (SDFGI) and real shadow maps on procedural geometry (B needed a baked 2D irradiance map and 2D wall masks, which cannot handle stairs, portals, props or a monster's shadow), volumetric fog, Movie Maker deterministic capture with audio, native build.
 - Cost: no play-in-browser URL; the shareable link is an itch.io download page (M7). The spike stays in spike/threejs/ for reference.
 - Revert: only if a later three.js release gets real GI and shadows that beat Godot in a new blind test.
+
+## D012 (2026-10-01, S01) Screen-space reflections off by default
+- SSR reflected the very bright troffer lenses as milky white blobs on wet and flooded carpet (critique 005, progress/0031) and cost about 2 fps. Wet carpet is rendered as darker and only slightly less rough instead. Re-enable with `--ssr` when a reflection setup that clamps emissive brightness exists (needed for The Pools in M6).
