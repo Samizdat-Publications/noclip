@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/horizon.gdshaderinc"
 // Drop-ceiling tiles. Plain tiles come merged into big rectangles (COLOR.a = 1): each tile's
 // UV and random variation are derived from its world tile index, so the look continues across
 // chunks. Special tiles (stained, sagging, fallen) are their own quads with COLOR.a = 0 and
@@ -87,4 +88,8 @@ void fragment() {
 		NORMAL_MAP = textureGrad(normal_tex, uv, gx, gy).rgb;
 		NORMAL_MAP_DEPTH = normal_strength;
 	}
+	float hz = horizon_fade(VERTEX);
+	ALBEDO *= hz;
+	SPECULAR *= hz;
+	EMISSION *= hz;
 }

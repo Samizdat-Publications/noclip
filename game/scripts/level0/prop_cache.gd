@@ -20,6 +20,10 @@ static func make(path: String) -> Node3D:
 		var mi := MeshInstance3D.new()
 		mi.mesh = p[0]
 		mi.transform = p[1]
+		# Fade into the haze with the rest of the level (D020).
+		mi.visibility_range_end = 38.0
+		mi.visibility_range_end_margin = 8.0
+		mi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		for i in (p[2] as Array).size():
 			if p[2][i] != null:
 				mi.set_surface_override_material(i, p[2][i])

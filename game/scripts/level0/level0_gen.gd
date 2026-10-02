@@ -256,6 +256,10 @@ func generate(cx: int, cz: int) -> Dictionary:
 		fixed.append(["turn_around", 5.0, hr0, 1.0, 1.45, 1.1])
 	if spawn_chunk and hr0 >= 0:
 		fixed.append(["look_through", 8.5, hr0, 1.0, 1.5, 1.0])
+	# The line: on some stretches of a highway someone dragged a crayon along the wall as they
+	# walked, chunk after chunk (wall details, Level0Chunk._build_wall_details).
+	if hr0 >= 0 and _rng("trail:%d:%d" % [cz, floori(cx / 5.0)]).randf() < 0.35:
+		L["trails"] = [[hr0 * MOD, 1.0]]
 	for fg in fixed:
 		var x := _wall_run_x(L, fg[1], int(fg[2]) * MOD, fg[5])
 		if x > -50.0:

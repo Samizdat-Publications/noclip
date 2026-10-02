@@ -39,7 +39,9 @@ func _ready() -> void:
 	player.spawn(space.get_spawn_transform())
 	if space.has_method("attach_player"):
 		space.attach_player(player)
-	if Game.autoplay:
+	if Game.opts.has("route"):
+		player.input = RouteInput.new()
+	elif Game.autoplay:
 		var bot := AutoplayBot.new()
 		bot.space = space
 		player.input = bot

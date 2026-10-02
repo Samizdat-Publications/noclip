@@ -1,44 +1,57 @@
 {
  "generated": "2026-10-02",
- "tool": "pipeline/textures/build_graffiti.py",
- "notes": "alpha from stroke strength (soft threshold 0.10-0.55), RGB = ink colour, crop +6% padding, longest side 1024",
+ "tool": "pipeline/textures/build_graffiti_v2.py",
+ "version": 2,
+ "prices_usd_per_image": {
+  "pro": 0.134,
+  "flash": 0.067
+ },
+ "notes": "v2 photographic prompts; ink/chalk/paint keyed by luminance with continuous alpha plus fiber breakup; opaque pieces (tape, flyer, calendar) keyed against black, largest component, holes filled. Default choice = latest attempt; override with --pick.",
  "decals": [
   {
    "file": "game/assets/textures/level0/graffiti/graffiti_01_turn_around.png",
    "slug": "turn_around",
    "text": "TURN AROUND",
-   "medium": "black permanent marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black permanent marker, on a PURE SOLID WHITE background. The words \"TURN AROUND\" in large, hurried, slanted block capital letters in black permanent marker, with a bent arrow below pointing back and around. Rough, fast, panicked handwriting. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
-   "attempt_models": [
-    "gemini-2.5-flash-image"
-   ],
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"TURN AROUND\" written large and fast, slanted, letters of very different heights, the second word climbing uphill, with a rough bent arrow below pointing back and around. Panicked. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
    "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/turn_around__a1.jpg",
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/turn_around__v2a1.jpg",
    "size_px": [
     1024,
-    611
+    803
    ],
    "wall_width_m": 1.0
   },
   {
    "file": "game/assets/textures/level0/graffiti/graffiti_02_only_on_tape.png",
    "slug": "only_on_tape",
-   "text": "IT'S ONLY ON THE TAPE",
-   "medium": "white chalk",
-   "background": "black",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: white chalk, on a PURE SOLID BLACK background. The words \"IT'S ONLY ON THE TAPE\" in rough white chalk capital letters at the top, and below them a crude chalk drawing of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs. Chalk on black, dusty and smudged. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
+   "text": "ITS ONLY ON THE TAPE",
+   "mode": "chalk",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. Chalk handwriting \"ITS ONLY ON THE TAPE\" in two lines, letters uneven and cramped, and under it a rough chalk sketch of a tall, thin, faceless humanoid figure with a blank head, arms hanging far past its knees, the lines doubled and smudged. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/only_on_tape__a1.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/only_on_tape__v2a2.jpg",
    "size_px": [
-    699,
+    753,
     1024
    ],
    "wall_width_m": 1.0
@@ -47,20 +60,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_03_tally_copy.png",
    "slug": "tally_copy",
    "text": "COPY 31",
-   "medium": "black marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. Dozens of tally marks in groups of five (four vertical strokes crossed by a diagonal) in black marker, arranged in rows, and under them the words \"COPY 31\" in black marker capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-3.1-flash-image",
-   "retries": 1,
-   "attempt_models": [
-    "gemini-2.5-flash-image",
-    "gemini-3.1-flash-image"
-   ],
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Many tally marks in uneven groups of five, ink pooling at stroke starts, one group miscounted and crossed over, and below, the words \"COPY 31\" in rough capitals with a dry-marker streak through the 3. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
    "chosen_attempt": 2,
-   "raw_cache": "pipeline/textures/cache/graffiti/tally_copy__a2.jpg",
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/tally_copy__v2a2.jpg",
    "size_px": [
     1024,
-    765
+    741
    ],
    "wall_width_m": 0.8
   },
@@ -68,21 +84,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_04_lights.png",
    "slug": "lights",
    "text": "DONT TRUST THE LIGHTS",
-   "medium": "key scratches",
-   "background": "black",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: key scratches, on a PURE SOLID BLACK background. The words \"DONT TRUST THE LIGHTS\" scratched with a key: thin, pale, jagged gouged lines forming rough capital letters, uneven, shaky. Pale scratch lines on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-3.1-flash-image",
-   "retries": 2,
+   "mode": "chalk",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. \"DONT TRUST THE LIGHTS\" written in white chalk, pressed hard, letters leaning, broken strokes, T and S overwritten, three stacked uneven lines. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image",
-    "gemini-2.5-flash-image",
-    "gemini-3.1-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 3,
-   "raw_cache": "pipeline/textures/cache/graffiti/lights__a3.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/lights__v2a2.jpg",
    "size_px": [
     1024,
-    544
+    752
    ],
    "wall_width_m": 0.9
   },
@@ -90,19 +108,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_05_map_loop.png",
    "slug": "map_loop",
    "text": "SAME HALL",
-   "medium": "blue ballpoint pen",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: blue ballpoint pen, on a PURE SOLID WHITE background. A hand-drawn sketch map in blue ballpoint pen: boxy rectangular corridors and rooms seen from above, and one corridor drawn as a loop with circling arrows going round and round, labelled \"SAME HALL\" in small blue pen capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is blue ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A quick biro floor-plan doodle, uneven lines that overshoot at corners, corridors and rooms from above, one long loop of corridor traced over and over with arrowheads, the label \"SAME HALL\" small and cramped beside it. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/map_loop__a1.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/map_loop__v2a2.jpg",
    "size_px": [
     1024,
-    727
+    1024
    ],
    "wall_width_m": 0.7
   },
@@ -110,19 +132,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_06_sigil.png",
    "slug": "sigil",
    "text": "",
-   "medium": "black marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. A small simple hand drawing in black marker of a VHS video cassette with an open eye drawn in its window: a rectangle cassette with two reels and a window in which a single open eye is drawn. No text at all. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
-   "attempt_models": [
-    "gemini-2.5-flash-image"
-   ],
+   "mode": "ink",
+   "model": "gemini-3.1-flash-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small hand drawing in black marker of a small VHS video cassette with an open eye drawn in its window: a wobbly rectangle with two reels and a window with one open eye in it, quick felt-tip lines, uneven. No text at all.  There is absolutely no writing, no letters and no words anywhere in the image.",
+   "attempts": 2,
    "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/sigil__a1.jpg",
+   "attempt_models": [
+    "gemini-3.1-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "attempt_cost_usd": [
+    0.067,
+    0.067
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/sigil__v2a1.jpg",
    "size_px": [
     1024,
-    497
+    642
    ],
    "wall_width_m": 0.25
   },
@@ -130,21 +156,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_07_exits.png",
    "slug": "exits",
    "text": "EXITS DONT LINE UP",
-   "medium": "black marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The words \"EXITS DONT LINE UP\" in black marker capital letters, hurried, with a bold arrow beneath them pointing to the right. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-3.1-flash-image",
-   "retries": 2,
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"EXITS DONT LINE UP\" in two lines of hurried marker capitals, letters of uneven size, the second line drifting downhill, with a thick rough arrow beneath pointing right, the marker running dry along the arrow. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
    "attempt_models": [
-    "gemini-2.5-flash-image",
-    "gemini-2.5-flash-image",
-    "gemini-3.1-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 3,
-   "raw_cache": "pipeline/textures/cache/graffiti/exits__a3.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/exits__v2a1.jpg",
    "size_px": [
     1024,
-    589
+    728
    ],
    "wall_width_m": 1.0
   },
@@ -152,19 +180,22 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_08_gaps_child.png",
    "slug": "gaps_child",
    "text": "IT STANDS IN THE GAPS",
-   "medium": "reddish-brown wax crayon",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: reddish-brown wax crayon, on a PURE SOLID WHITE background. A child-like frantic drawing in reddish-brown wax crayon of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs, scribbled over and over many times, messy crayon strokes, and the words \"IT STANDS IN THE GAPS\" written in shaky crayon capitals. Crayon only, no blood. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-3.1-flash-image",
-   "retries": 1,
-   "attempt_models": [
-    "gemini-2.5-flash-image",
-    "gemini-3.1-flash-image"
-   ],
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is reddish-brown wax crayon, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Layers of rough crayon scribbles forming a tall, thin, faceless humanoid figure with a blank head, arms hanging far past its knees, pressed hard, waxy grain, flakes of crayon, and underneath the words \"IT STANDS IN THE GAPS\" written wobbly in crayon capitals. No blood. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
    "chosen_attempt": 2,
-   "raw_cache": "pipeline/textures/cache/graffiti/gaps_child__a2.jpg",
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/gaps_child__v2a2.jpg",
    "size_px": [
-    765,
+    609,
     1024
    ],
    "wall_width_m": 0.9
@@ -173,18 +204,22 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_09_days.png",
    "slug": "days",
    "text": "DAY 9 / 10? / 11? / ?",
-   "medium": "black marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. A column of four lines written in black marker, each line crossed out with a strike: \"DAY 9\", \"10?\", \"11?\", \"?\". The later lines are shakier and more crooked. Handwritten, one under the other. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Four lines one under the other in marker: \"DAY 9\" then \"10?\" then \"11?\" then \"?\", all struck through, the handwriting degrading line by line, the last question mark trembling. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/days__a1.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/days__v2a2.jpg",
    "size_px": [
-    557,
+    737,
     1024
    ],
    "wall_width_m": 0.6
@@ -193,19 +228,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_10_we_are_copy.png",
    "slug": "we_are_copy",
    "text": "WE ARE THE COPY",
-   "medium": "black marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. The words \"WE ARE THE COPY\" written three times in a column in black marker capitals. Each repeated line is slightly more degraded, smeared and fuzzy than the one above, like a copy of a copy of a copy; the third line is barely legible but still the same words. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. \"WE ARE THE COPY\" repeated three times, three separate handwritten lines, letters wobbling, the middle one smeared sideways by a finger, the last one fading to ghost strokes. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/we_are_copy__a1.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/we_are_copy__v2a2.jpg",
    "size_px": [
     1024,
-    401
+    689
    ],
    "wall_width_m": 1.1
   },
@@ -213,19 +252,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_11_handprints.png",
    "slug": "handprints",
    "text": "",
-   "medium": "dirty water",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: dirty water, on a PURE SOLID WHITE background. Two or three smeared human hand prints in dark grey-brown dirty water, palm and fingers visible, smudged and dragged as if someone slid along a wall. Murky grey-brown, not red. No text. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
+   "mode": "ink",
+   "model": "gemini-3.1-flash-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is dirty grey-brown water, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Handprints in muddy grey-brown water, one clear, one smeared into streaks, fingertips dripping, damp edges feathering into the paper. No text.  There is absolutely no writing, no letters and no words anywhere in the image.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image"
+    "gemini-3.1-flash-image",
+    "gemini-3.1-flash-image"
    ],
-   "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/handprints__a1.jpg",
+   "attempt_cost_usd": [
+    0.067,
+    0.067
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/handprints__v2a2.jpg",
    "size_px": [
     1024,
-    598
+    781
    ],
    "wall_width_m": 0.7
   },
@@ -233,19 +276,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_12_look_through.png",
    "slug": "look_through",
    "text": "LOOK THROUGH IT",
-   "medium": "white chalk",
-   "background": "black",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: white chalk, on a PURE SOLID BLACK background. A simple white chalk outline drawing of a camcorder (boxy body, lens, viewfinder, handgrip), with a chalk arrow pointing to it, and the words \"LOOK THROUGH IT\" in rough chalk capitals. Chalk on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
+   "mode": "chalk",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. Chalk sketch of a camcorder with a wobbly lens circle, lines drawn twice, an arrow below pointing up at it, and the words \"LOOK THROUGH IT\" written below in thick dusty chalk letters. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
    "attempt_models": [
-    "gemini-2.5-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/look_through__a1.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/look_through__v2a2.jpg",
    "size_px": [
     1024,
-    816
+    731
    ],
    "wall_width_m": 0.9
   },
@@ -253,20 +300,23 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_13_same.png",
    "slug": "same",
    "text": "SAME",
-   "medium": "black marker",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The word \"SAME\" written six times in black marker capitals, arranged in a spiral that winds inward, each repetition smaller than the last, getting tiny at the centre. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-3.1-flash-image",
-   "retries": 1,
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The word \"SAME\" written six times in marker capitals, spiralling inward, each repetition smaller and shakier than the last, letters at different angles, the handwriting getting cramped at the centre. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
    "attempt_models": [
-    "gemini-2.5-flash-image",
-    "gemini-3.1-flash-image"
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
    ],
-   "chosen_attempt": 2,
-   "raw_cache": "pipeline/textures/cache/graffiti/same__a2.jpg",
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/same__v2a1.jpg",
    "size_px": [
     1024,
-    1024
+    1018
    ],
    "wall_width_m": 0.8
   },
@@ -274,21 +324,265 @@
    "file": "game/assets/textures/level0/graffiti/graffiti_14_was_here.png",
    "slug": "was_here",
    "text": "R. WAS HERE 10/14/96",
-   "medium": "black ballpoint pen",
-   "background": "white",
-   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black ballpoint pen, on a PURE SOLID WHITE background. Small, neat handwriting in black ballpoint pen: \"R. WAS HERE 10/14/96\", and right next to it a tiny neat sketch of a VHS video cassette with an open eye drawn in its window. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
-   "model": "gemini-2.5-flash-image",
-   "retries": 0,
-   "attempt_models": [
-    "gemini-2.5-flash-image"
-   ],
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Small, quick handwriting in ballpoint pen: \"R. WAS HERE 10/14/96\" (with the period after the R) and next to it a tiny rough sketch of a small VHS video cassette with an open eye drawn in its window. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
    "chosen_attempt": 1,
-   "raw_cache": "pipeline/textures/cache/graffiti/was_here__a1.jpg",
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/was_here__v2a1.jpg",
    "size_px": [
     1024,
-    123
+    711
    ],
    "wall_width_m": 0.3
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_15_chalk_door.png",
+   "slug": "chalk_door",
+   "text": "HERE?",
+   "mode": "chalk",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. A crooked hand-traced white chalk outline of a doorway, a tall rectangle about 0.9 wide by 2.0 tall in proportion, the lines wobbly and doubled, corners overshooting, with a small chalk \"HERE?\" written beside it at shoulder height and a chalk arrow pointing into the outline. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/chalk_door__v2a1.jpg",
+   "size_px": [
+    1533,
+    2048
+   ],
+   "wall_width_m": 1.3
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_16_film_walls.png",
+   "slug": "film_walls",
+   "text": "FILM THE WALLS",
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"FILM THE WALLS\" in hurried marker capitals, slanted, letters uneven, underlined twice with two fast rough strokes. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/film_walls__v2a1.jpg",
+   "size_px": [
+    1024,
+    342
+   ],
+   "wall_width_m": 0.9
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_17_hd_survey.png",
+   "slug": "hd_survey",
+   "text": "HD  G1  S-14",
+   "mode": "paint",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of a spray-paint stencil mark on a plain pure black matte surface, shot perfectly flat, flat even lighting, sharp focus. The black surface fills the entire frame. The paint is fluorescent safety orange-red, with soft overspray mist around every edge, a few runs and drips, slightly uneven coverage where the stencil lifted. A neat professional spray-paint stencil survey mark: the code \"HD  G1  S-14\" in stencil capitals (letters with small bridge gaps), a stenciled arrow beside it, and a circled cross benchmark survey symbol, with overspray mist and a few drips. Genuine photograph, NOT a font, NOT vector art. Spell any quoted text exactly. No apostrophes.",
+   "attempts": 2,
+   "chosen_attempt": 1,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/hd_survey__v2a1.jpg",
+   "size_px": [
+    1024,
+    569
+   ],
+   "wall_width_m": 0.7
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_18_hd_tape_label.png",
+   "slug": "hd_tape_label",
+   "text": "HD-4  REC  DO NOT REMOVE",
+   "mode": "opaque",
+   "model": "gemini-3-pro-image",
+   "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A single strip of yellowed old masking tape, about four times as long as it is wide, torn ragged ends, a few wrinkles, hand-lettered in black marker on it: \"HD-4  REC  DO NOT REMOVE\" in cramped capitals, the lettering uneven. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/hd_tape_label__v2a1.jpg",
+   "size_px": [
+    1024,
+    243
+   ],
+   "wall_width_m": 0.45
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_19_missing_flyer.png",
+   "slug": "missing_flyer",
+   "text": "MISSING",
+   "mode": "opaque",
+   "model": "gemini-3-pro-image",
+   "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A faded, yellowed photocopied letter-size paper flyer, taped at its corners with clear tape, a curling corner, a faint coffee ring. At the top the big bold word \"MISSING\", in the middle a heavily photocopied, blown-out, smeared black-and-white photo of a person whose face is unrecognizable with crushed black photocopy shadows, and below short lines of text: \"RAY M.\" and \"LAST SEEN OCT 14 1996\" and \"IF YOU FIND THIS TAPE\". Not a real or identifiable person. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/missing_flyer__v2a1.jpg",
+   "size_px": [
+    1634,
+    2048
+   ],
+   "wall_width_m": 0.216
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_20_calendar_oct96.png",
+   "slug": "calendar_oct96",
+   "text": "OCTOBER 1996",
+   "mode": "opaque",
+   "model": "gemini-3-pro-image",
+   "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A yellowed wall calendar sheet \"OCTOBER 1996\", the month starting on a Tuesday, red pen crosses through the first thirteen days, the 14 circled over and over until the paper is nearly cut, the remaining days furiously scribbled out in red pen, a pin hole at the top, rough torn top edge. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/calendar_oct96__v2a2.jpg",
+   "size_px": [
+    818,
+    1024
+   ],
+   "wall_width_m": 0.3
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_21_scrawl_small_1.png",
+   "slug": "scrawl_small_1",
+   "text": "555-0143",
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is blue ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A phone number \"555-0143\" written small in blue ballpoint pen and crossed out with a firm scribble, one small neat line. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 1,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/scrawl_small_1__v2a1.jpg",
+   "size_px": [
+    1024,
+    342
+   ],
+   "wall_width_m": 0.2
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_22_scrawl_small_2.png",
+   "slug": "scrawl_small_2",
+   "text": "NO",
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small hasty \"NO\" in pen, circled hard several times by a nervous hand. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+   "attempts": 2,
+   "chosen_attempt": 2,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/scrawl_small_2__v2a2.jpg",
+   "size_px": [
+    1024,
+    958
+   ],
+   "wall_width_m": 0.15
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_23_scrawl_small_3.png",
+   "slug": "scrawl_small_3",
+   "text": "",
+   "mode": "ink",
+   "model": "gemini-3.1-flash-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is pencil, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small pencil tally: seven or eight short vertical strokes with one diagonal across a group of five, faint and scratchy.  There is absolutely no writing, no letters and no words anywhere in the image.",
+   "attempts": 2,
+   "chosen_attempt": 2,
+   "attempt_models": [
+    "gemini-3.1-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "attempt_cost_usd": [
+    0.067,
+    0.067
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/scrawl_small_3__v2a2.jpg",
+   "size_px": [
+    1024,
+    878
+   ],
+   "wall_width_m": 0.18
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_24_scrawl_small_4.png",
+   "slug": "scrawl_small_4",
+   "text": "?",
+   "mode": "ink",
+   "model": "gemini-3-pro-image",
+   "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A scratchy pen arrow with a single question mark beside its head, line doubled over, the pen digging into the paper.  Apart from the arrow and one question mark there is no other writing at all.",
+   "attempts": 2,
+   "chosen_attempt": 2,
+   "attempt_models": [
+    "gemini-3-pro-image",
+    "gemini-3-pro-image"
+   ],
+   "attempt_cost_usd": [
+    0.134,
+    0.134
+   ],
+   "raw_cache": "pipeline/textures/cache/graffiti/scrawl_small_4__v2a2.jpg",
+   "size_px": [
+    1024,
+    391
+   ],
+   "wall_width_m": 0.25
   }
  ]
 }

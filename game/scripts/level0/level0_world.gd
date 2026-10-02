@@ -314,7 +314,10 @@ func _update_loop(p: Vector3, delta: float) -> bool:
 		return false
 	var trap := _loop_start + 2 if _loop_dir > 0 else _loop_start + 1
 	var lx := float(c.x)
-	if (_loop_dir > 0 and c.x >= trap) or (_loop_dir < 0 and c.x <= trap):
+	# Only while facing on down the hall: the copies ahead are identical out to the horizon
+	# (D020), the view behind is not.
+	var facing := director.view_fwd.x * _loop_dir > 0.3
+	if facing and ((_loop_dir > 0 and c.x >= trap) or (_loop_dir < 0 and c.x <= trap)):
 		teleport(Vector3(-CHUNK * _loop_dir, 0.0, 0.0))
 		loops_done += 1
 		loops_done_here += 1

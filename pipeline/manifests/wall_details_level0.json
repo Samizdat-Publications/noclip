@@ -1,0 +1,237 @@
+{
+ "script": "pipeline/textures/build_wall_details.py",
+ "normal_convention": "OpenGL (Y up)",
+ "assets": {
+  "poster_ghost_a": {
+   "seed": 3001,
+   "size_m": [
+    0.9,
+    1.2
+   ],
+   "paper_m": [
+    0.6,
+    0.9
+   ],
+   "px": [
+    768,
+    1024
+   ],
+   "pins": 1,
+   "board": false
+  },
+  "poster_ghost_b": {
+   "seed": 3002,
+   "size_m": [
+    0.75,
+    0.9
+   ],
+   "paper_m": [
+    0.45,
+    0.6
+   ],
+   "px": [
+    853,
+    1024
+   ],
+   "pins": 2,
+   "board": false
+  },
+  "poster_ghost_c": {
+   "seed": 3003,
+   "size_m": [
+    1.5,
+    1.1
+   ],
+   "paper_m": [
+    1.2,
+    0.8
+   ],
+   "px": [
+    1024,
+    751
+   ],
+   "pins": 4,
+   "board": true,
+   "fragment": true
+  },
+  "tape_scraps_1": {
+   "seed": 3101,
+   "size_m": [
+    0.14,
+    0.14
+   ],
+   "pieces": 1,
+   "px": [
+    1024,
+    1024
+   ]
+  },
+  "tape_scraps_2": {
+   "seed": 3101,
+   "size_m": [
+    0.15,
+    0.15
+   ],
+   "pieces": 2,
+   "px": [
+    1024,
+    1024
+   ]
+  },
+  "tape_scraps_3": {
+   "seed": 3101,
+   "size_m": [
+    0.095,
+    0.095
+   ],
+   "pieces": 1,
+   "px": [
+    1024,
+    1024
+   ]
+  },
+  "scuffs_1": {
+   "seed": 3201,
+   "size_m": [
+    1.2,
+    0.15
+   ],
+   "px": [
+    1024,
+    128
+   ],
+   "strokes": 5,
+   "strength": 0.62
+  },
+  "scuffs_2": {
+   "seed": 3202,
+   "size_m": [
+    0.8,
+    0.18
+   ],
+   "px": [
+    1024,
+    230
+   ],
+   "strokes": 3,
+   "strength": 0.75
+  },
+  "scuffs_3": {
+   "seed": 3203,
+   "size_m": [
+    0.5,
+    0.15
+   ],
+   "px": [
+    1024,
+    307
+   ],
+   "strokes": 2,
+   "strength": 0.75
+  },
+  "scuffs_4": {
+   "seed": 3204,
+   "size_m": [
+    1.0,
+    0.2
+   ],
+   "px": [
+    1024,
+    205
+   ],
+   "strokes": 4,
+   "strength": 0.68
+  },
+  "hole_knob": {
+   "seed": 3301,
+   "size_m": [
+    0.18,
+    0.18
+   ],
+   "px": [
+    1024,
+    1024
+   ],
+   "hole_radius_m": 0.034
+  },
+  "hole_punch": {
+   "seed": 3302,
+   "size_m": [
+    0.12,
+    0.12
+   ],
+   "px": [
+    1024,
+    1024
+   ],
+   "hole_radius_m": 0.017
+  },
+  "desk_ghost": {
+   "seed": 3401,
+   "size_m": [
+    1.6,
+    0.8
+   ],
+   "px": [
+    1024,
+    512
+   ],
+   "desk_line_from_top_m": 0.24,
+   "note": "at the default center y=0.55 the line sits near 0.71 m above floor"
+  },
+  "water_line": {
+   "seed": 3501,
+   "size_m": [
+    2.4,
+    0.5
+   ],
+   "px": [
+    2048,
+    427
+   ],
+   "tileable_x": true,
+   "tide_line_from_top_m": 0.15,
+   "note": "2048 px wide"
+  },
+  "crayon_trail": {
+   "seed": 3601,
+   "size_m": [
+    2.4,
+    0.06
+   ],
+   "px": [
+    4096,
+    102
+   ],
+   "tileable_x": true,
+   "colour_srgb": [
+    138,
+    62,
+    46
+   ],
+   "note": "4096 px wide so the 8 mm line is ~14 px"
+  },
+  "outlet_grime": {
+   "seed": 3701,
+   "size_m": [
+    0.2,
+    0.2
+   ],
+   "px": [
+    1024,
+    1024
+   ]
+  },
+  "damp_bloom": {
+   "seed": 3801,
+   "size_m": [
+    1.2,
+    1.0
+   ],
+   "px": [
+    1024,
+    853
+   ]
+  }
+ }
+}

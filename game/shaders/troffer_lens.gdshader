@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx, shadows_disabled;
+#include "res://shaders/horizon.gdshaderinc"
 // Prismatic diffuser of a fluorescent troffer. Brightness and tint are per instance so one
 // material serves every fixture; the fixture script drives light_level for flicker.
 // cathode = faint orange glow at the tube ends of a dead or struggling tube.
@@ -34,4 +35,8 @@ void fragment() {
 		NORMAL_MAP = texture(normal_tex, UV).rgb;
 		NORMAL_MAP_DEPTH = 0.5;
 	}
+	float hz = horizon_fade(VERTEX);
+	ALBEDO *= hz;
+	EMISSION *= hz;
+	SPECULAR *= hz;
 }

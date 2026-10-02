@@ -1,0 +1,206 @@
+{
+ "poster_ghost_a": {
+  "tex": "walldetail/poster_ghost_a",
+  "w": 0.9,
+  "h": 1.2,
+  "y": [
+   1.3,
+   1.6
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "ghost"
+ },
+ "poster_ghost_b": {
+  "tex": "walldetail/poster_ghost_b",
+  "w": 0.75,
+  "h": 0.9,
+  "y": [
+   1.3,
+   1.6
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "ghost"
+ },
+ "poster_ghost_c": {
+  "tex": "walldetail/poster_ghost_c",
+  "w": 1.5,
+  "h": 1.1,
+  "y": [
+   1.3,
+   1.6
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "ghost"
+ },
+ "tape_scraps_1": {
+  "tex": "walldetail/tape_scraps_1",
+  "w": 0.14,
+  "h": 0.14,
+  "y": [
+   1.2,
+   1.9
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "tape"
+ },
+ "tape_scraps_2": {
+  "tex": "walldetail/tape_scraps_2",
+  "w": 0.15,
+  "h": 0.15,
+  "y": [
+   1.2,
+   1.9
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "tape"
+ },
+ "tape_scraps_3": {
+  "tex": "walldetail/tape_scraps_3",
+  "w": 0.095,
+  "h": 0.095,
+  "y": [
+   1.2,
+   1.9
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "tape"
+ },
+ "scuffs_1": {
+  "tex": "walldetail/scuffs_1",
+  "w": 1.2,
+  "h": 0.15,
+  "y": [
+   0.1,
+   0.5
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "scuff"
+ },
+ "scuffs_2": {
+  "tex": "walldetail/scuffs_2",
+  "w": 0.8,
+  "h": 0.18,
+  "y": [
+   0.1,
+   0.5
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "scuff"
+ },
+ "scuffs_3": {
+  "tex": "walldetail/scuffs_3",
+  "w": 0.5,
+  "h": 0.15,
+  "y": [
+   0.1,
+   0.5
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "scuff"
+ },
+ "scuffs_4": {
+  "tex": "walldetail/scuffs_4",
+  "w": 1.0,
+  "h": 0.2,
+  "y": [
+   0.1,
+   0.5
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "scuff"
+ },
+ "hole_knob": {
+  "tex": "walldetail/hole_knob",
+  "w": 0.18,
+  "h": 0.18,
+  "y": [
+   0.9,
+   1.05
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "damage"
+ },
+ "hole_punch": {
+  "tex": "walldetail/hole_punch",
+  "w": 0.12,
+  "h": 0.12,
+  "y": [
+   0.6,
+   1.4
+  ],
+  "normal": true,
+  "tile": false,
+  "kind": "damage"
+ },
+ "desk_ghost": {
+  "tex": "walldetail/desk_ghost",
+  "w": 1.6,
+  "h": 0.8,
+  "y": [
+   0.55,
+   0.55
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "ghost"
+ },
+ "water_line": {
+  "tex": "walldetail/water_line",
+  "w": 2.4,
+  "h": 0.5,
+  "y": [
+   0.3,
+   0.3
+  ],
+  "normal": false,
+  "tile": true,
+  "kind": "stain"
+ },
+ "crayon_trail": {
+  "tex": "walldetail/crayon_trail",
+  "w": 2.4,
+  "h": 0.06,
+  "y": [
+   1.0,
+   1.2
+  ],
+  "normal": false,
+  "tile": true,
+  "kind": "trail"
+ },
+ "outlet_grime": {
+  "tex": "walldetail/outlet_grime",
+  "w": 0.2,
+  "h": 0.2,
+  "y": [
+   0.3,
+   1.4
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "stain"
+ },
+ "damp_bloom": {
+  "tex": "walldetail/damp_bloom",
+  "w": 1.2,
+  "h": 1.0,
+  "y": [
+   1.8,
+   2.1
+  ],
+  "normal": false,
+  "tile": false,
+  "kind": "stain"
+ }
+}

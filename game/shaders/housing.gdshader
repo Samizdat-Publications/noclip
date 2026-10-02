@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/horizon.gdshaderinc"
 // White-painted sheet metal of a recessed troffer and the exit-sign box. The reveal around
 // a lit lens catches its light (live level from scripts/level0/fixture_field.gd), so the
 // panel has a lit frame instead of a hard edge against the dark ceiling.
@@ -35,4 +36,7 @@ void fragment() {
 	ROUGHNESS = 0.35;
 	METALLIC = 0.2;
 	EMISSION = base_color * lit * reveal_glow;
+	float hz = horizon_fade(VERTEX);
+	ALBEDO *= hz;
+	EMISSION *= hz;
 }

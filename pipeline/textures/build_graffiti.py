@@ -5,10 +5,11 @@ Usage (from repo root):
   python pipeline/textures/build_graffiti.py --gen slug,slug [--model M]   # add one NEW attempt for those slugs
   python pipeline/textures/build_graffiti.py --pick slug=N         # choose which cached attempt is final (default: latest)
   python pipeline/textures/build_graffiti.py --process-only        # rebuild PNGs, manifest, contact sheet; NO API calls
+  python pipeline/textures/build_graffiti.py --v2 [...]            # photographic v2 set (see build_graffiti_v2.py)
 Key: GEMINI_API_KEY from .env via python-dotenv (never printed).
 Cache: pipeline/textures/cache/graffiti/<slug>__aN.jpg (raw, JPEG q90) + attempts.json (model, prompt per attempt, choice).
 """
-import argparse, io, json, os, datetime
+import argparse, io, json, os, sys, datetime
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -194,6 +195,10 @@ def process():
 
 
 def main():
+    if "--v2" in sys.argv:
+        import build_graffiti_v2
+        build_graffiti_v2.main()
+        return
     ap = argparse.ArgumentParser()
     ap.add_argument("--process-only", action="store_true")
     ap.add_argument("--gen", default="")

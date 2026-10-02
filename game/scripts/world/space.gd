@@ -15,6 +15,8 @@ var thresholds: Array[Threshold] = []
 ## Something worth looking at (a light dying, a sound): bots and later the AI react to it.
 var attention_point := Vector3.ZERO
 var attention_until := -1.0
+## What it is: &"light", &"tape" (the figure on tape), &"seam"... bots react differently.
+var attention_kind: StringName = &""
 
 
 ## Build all geometry, lights and audio for this seed. Must be deterministic.

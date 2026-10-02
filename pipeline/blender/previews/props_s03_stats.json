@@ -1,0 +1,241 @@
+{
+ "prop_tripod_sf": {
+  "glb": "game/assets/props/level0/prop_tripod_sf.glb",
+  "tris": 4908,
+  "dims_m_xyz_yup": [
+   0.875,
+   1.5,
+   0.781
+  ],
+  "textures": [],
+  "yaw_deg": 56.1,
+  "scale": 0.67824,
+  "uid": "cc324baf6dc548de965c3a47b87f1e27"
+ },
+ "prop_tripod_camcorder": {
+  "glb": "game/assets/props/level0/prop_tripod_camcorder.glb",
+  "tris": 9212,
+  "dims_m_xyz_yup": [
+   0.875,
+   1.643,
+   0.781
+  ],
+  "textures": [
+   [
+    "camcorder_basecolor",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "camcorder_normal",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "camcorder_orm",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "camcorder_bottom_on_tripod_top_m": 1.5
+ },
+ "prop_vhs_tape_sf": {
+  "glb": "game/assets/props/level0/prop_vhs_tape_sf.glb",
+  "tris": 76,
+  "dims_m_xyz_yup": [
+   0.187,
+   0.025,
+   0.104
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "scale": 0.0377,
+  "uid": "92de31c367ca4f5794f8fb12dce68111"
+ },
+ "prop_tape_crate": {
+  "glb": "game/assets/props/level0/prop_tape_crate.glb",
+  "tris": 1288,
+  "dims_m_xyz_yup": [
+   0.37,
+   0.37,
+   0.316
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     512,
+     512
+    ]
+   ],
+   [
+    "Image_0.001",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "crate_scale": 0.00881,
+  "crate_uid": "7b9426222f0c4838bfbc13850095bb3f",
+  "cassette_uid": "92de31c367ca4f5794f8fb12dce68111",
+  "cassettes": 10,
+  "cassette_height_m": 0.187
+ },
+ "prop_worklight_sf": {
+  "glb": "game/assets/props/level0/prop_worklight_sf.glb",
+  "tris": 18984,
+  "dims_m_xyz_yup": [
+   1.246,
+   1.75,
+   2.625
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "yaw_deg": 23.0,
+  "scale": 0.01583,
+  "uid": "ff0abe17dc64498191bb41c905d00ab0",
+  "lamp_face_centers_m_xyz_yup": [
+   [
+    -0.2487,
+    1.6556,
+    0.1034
+   ],
+   [
+    0.295,
+    1.6584,
+    0.1003
+   ]
+  ],
+  "lamp_normal_xyz_yup": [
+   -0.0,
+   -0.18,
+   0.984
+  ],
+  "origin": "bottom center of the stand/body, lamps face +Z"
+ },
+ "prop_worklight_box_sf": {
+  "glb": "game/assets/props/level0/prop_worklight_box_sf.glb",
+  "tris": 8746,
+  "dims_m_xyz_yup": [
+   0.37,
+   0.4,
+   0.315
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     512,
+     512
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     512,
+     512
+    ]
+   ],
+   [
+    "Image_5",
+    [
+     512,
+     512
+    ]
+   ]
+  ],
+  "yaw_deg": 0.0,
+  "scale": 1.18868,
+  "uid": "278dd26f90d544a8941d347bef0ebf40",
+  "lamp_face_centers_m_xyz_yup": [
+   [
+    0.0,
+    0.2004,
+    -0.0627
+   ]
+  ],
+  "lamp_normal_xyz_yup": [
+   -0.0,
+   -0.0,
+   1.0
+  ],
+  "origin": "bottom center of the stand/body, lamps face +Z"
+ }
+}

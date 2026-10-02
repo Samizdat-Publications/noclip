@@ -100,6 +100,11 @@ func glitch() -> void:
 	_burst = 0.28
 
 
+## A one-frame hiccup (a frame skip on the tape).
+func glitch_small() -> void:
+	_burst = maxf(_burst, 0.07)
+
+
 func _switch(on: bool) -> void:
 	if on == active:
 		return

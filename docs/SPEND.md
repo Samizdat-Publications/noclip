@@ -22,3 +22,10 @@ Session 01 total: about $0.17 of a $40 cap.
 | 2026-10-02 | S02 | Gemini (gemini-3.1-pro-preview) | video critic -> 008_gemini.md | 1 | $0.09 (24555 in / 3173 out tokens) |
 
 Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques $0.18).
+
+## Session 03
+| Date | Session | Service | Purpose | Calls | Est. cost |
+|---|---|---|---|---|---|
+| 2026-10-02 | S03 | Gemini (gemini-3-pro-image, 1K/2K) | graffiti v2 photographic set, text pieces, 2 attempts each (build_graffiti_v2.py) | 42 | ~$5.63 ($0.134 each, list price estimate) |
+| 2026-10-02 | S03 | Gemini (gemini-3.1-flash-image) | graffiti v2, no-text pieces (sigil, handprints, scrawl_small_3), 2 attempts each | 6 | ~$0.40 ($0.067 each) |
+| 2026-10-02 | S03 | Gemini (gemini-3-pro-image + 3.1-flash-image) | wasted calls: sigil a1 (flash wrote a paragraph), scrawl_small_4 x2 (prompt text leaked into image); redone | 3 | ~$0.34 |

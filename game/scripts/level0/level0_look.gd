@@ -129,7 +129,18 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	plenum.albedo_color = Color(0.08, 0.075, 0.07)
 	plenum.roughness = 0.95
 	m["plenum"] = plenum
+	for key in m:
+		if m[key] is BaseMaterial3D:
+			horizon(m[key])
 	return m
+
+
+## The plain materials fade into the haze at the same distance as the level shaders
+## (shaders/horizon.gdshaderinc, D020), dithered so they stay opaque.
+static func horizon(mat: BaseMaterial3D) -> void:
+	mat.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+	mat.distance_fade_min_distance = 46.0
+	mat.distance_fade_max_distance = 34.0
 
 
 static func make_environment(preset: String) -> Environment:

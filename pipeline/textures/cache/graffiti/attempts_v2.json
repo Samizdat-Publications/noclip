@@ -1,0 +1,698 @@
+{
+ "turn_around": {
+  "attempts": [
+   {
+    "file": "turn_around__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"TURN AROUND\" written large and fast, slanted, letters of very different heights, the second word climbing uphill, with a rough bent arrow below pointing back and around. Panicked. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "turn_around__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A hurried scrawl: \"TURN AROUND\" in tall uneven capitals, the R and N overwritten twice, a streaky dry-marker D, and a sloppy curved arrow underneath looping back. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "sigil": {
+  "attempts": [
+   {
+    "file": "sigil__v2a1.jpg",
+    "model": "gemini-3.1-flash-image",
+    "kind": "flash",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small hand drawing in black marker of a small VHS video cassette with an open eye drawn in its window: a wobbly rectangle with two reels and a window with one open eye in it, quick felt-tip lines, uneven. No text at all.  There is absolutely no writing, no letters and no words anywhere in the image.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": null,
+    "cost_usd": 0.067
+   },
+   {
+    "file": "sigil__v2a2.jpg",
+    "model": "gemini-3.1-flash-image",
+    "kind": "flash",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A doodle of a small VHS video cassette with an open eye drawn in its window drawn quickly in black marker, lopsided, lines overshooting, ink blotted at the corners, eye in the window. No text at all.  There is absolutely no writing, no letters and no words anywhere in the image.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": null,
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 1
+ },
+ "only_on_tape": {
+  "attempts": [
+   {
+    "file": "only_on_tape__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. The words \"ITS ONLY ON THE TAPE\" in small wobbly chalk capitals along the top, and below them a crude chalk drawing of a tall, thin, faceless humanoid figure with a blank head, arms hanging far past its knees, drawn in a few shaky scratchy strokes. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "only_on_tape__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. Chalk handwriting \"ITS ONLY ON THE TAPE\" in two lines, letters uneven and cramped, and under it a rough chalk sketch of a tall, thin, faceless humanoid figure with a blank head, arms hanging far past its knees, the lines doubled and smudged. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "tally_copy": {
+  "attempts": [
+   {
+    "file": "tally_copy__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Rows of hand-drawn tally marks in groups of five (four vertical strokes struck through by a diagonal), each stroke a slightly different length and slant, the rows sagging and not aligned, and under them \"COPY 31\" scribbled in marker capitals. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "tally_copy__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Many tally marks in uneven groups of five, ink pooling at stroke starts, one group miscounted and crossed over, and below, the words \"COPY 31\" in rough capitals with a dry-marker streak through the 3. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "lights": {
+  "attempts": [
+   {
+    "file": "lights__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. The words \"DONT TRUST THE LIGHTS\" scratched and scrawled in thin pale chalk-like lines, two lines of ragged capitals, shaky, the strokes thin and jagged, the baseline sagging. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "lights__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. \"DONT TRUST THE LIGHTS\" written in white chalk, pressed hard, letters leaning, broken strokes, T and S overwritten, three stacked uneven lines. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "map_loop": {
+  "attempts": [
+   {
+    "file": "map_loop__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is blue ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A hand-drawn sketch map in blue ballpoint pen: boxy rectangular corridors and rooms seen from above, wobbly ruled-by-hand lines, one corridor drawn as a loop with several circling arrows going round and round, scribbled over, labelled \"SAME HALL\" in small pen capitals. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "map_loop__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is blue ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A quick biro floor-plan doodle, uneven lines that overshoot at corners, corridors and rooms from above, one long loop of corridor traced over and over with arrowheads, the label \"SAME HALL\" small and cramped beside it. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "exits": {
+  "attempts": [
+   {
+    "file": "exits__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"EXITS DONT LINE UP\" in two lines of hurried marker capitals, letters of uneven size, the second line drifting downhill, with a thick rough arrow beneath pointing right, the marker running dry along the arrow. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "exits__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. \"EXITS DONT LINE UP\" scrawled fast, the letters leaning, a dried-out streaky stroke on the X, and a long sloppy arrow below pointing right. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "gaps_child": {
+  "attempts": [
+   {
+    "file": "gaps_child__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is reddish-brown wax crayon, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A frantic, child-like crayon drawing of a tall, thin, faceless humanoid figure with a blank head, arms hanging far past its knees, scribbled over and over many times, waxy broken strokes with the paper tooth showing through, and below it \"IT STANDS IN THE GAPS\" in shaky crayon capitals. No blood. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "gaps_child__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is reddish-brown wax crayon, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Layers of rough crayon scribbles forming a tall, thin, faceless humanoid figure with a blank head, arms hanging far past its knees, pressed hard, waxy grain, flakes of crayon, and underneath the words \"IT STANDS IN THE GAPS\" written wobbly in crayon capitals. No blood. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "days": {
+  "attempts": [
+   {
+    "file": "days__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A column of four handwritten lines in marker, each crossed out with a hard strike: \"DAY 9\", \"10?\", \"11?\", \"?\". Each line is shakier, smaller and more crooked than the last, the strike-throughs hurried. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "days__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Four lines one under the other in marker: \"DAY 9\" then \"10?\" then \"11?\" then \"?\", all struck through, the handwriting degrading line by line, the last question mark trembling. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "we_are_copy": {
+  "attempts": [
+   {
+    "file": "we_are_copy__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"WE ARE THE COPY\" written three times in a column in marker capitals. Each repetition is more degraded than the one above: the second is smudged by a dragged hand, the third is faint, blotted and barely legible but the same words. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "we_are_copy__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. \"WE ARE THE COPY\" repeated three times, three separate handwritten lines, letters wobbling, the middle one smeared sideways by a finger, the last one fading to ghost strokes. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "handprints": {
+  "attempts": [
+   {
+    "file": "handprints__v2a1.jpg",
+    "model": "gemini-3.1-flash-image",
+    "kind": "flash",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is dirty grey-brown water, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Two or three smeared human hand prints made with dirty water, palm and fingers partly visible, dragged and smudged as if someone slid along a wall, dribbles running downwards, murky grey-brown. No text.  There is absolutely no writing, no letters and no words anywhere in the image.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": null,
+    "cost_usd": 0.067
+   },
+   {
+    "file": "handprints__v2a2.jpg",
+    "model": "gemini-3.1-flash-image",
+    "kind": "flash",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is dirty grey-brown water, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Handprints in muddy grey-brown water, one clear, one smeared into streaks, fingertips dripping, damp edges feathering into the paper. No text.  There is absolutely no writing, no letters and no words anywhere in the image.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": null,
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 2
+ },
+ "look_through": {
+  "attempts": [
+   {
+    "file": "look_through__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. A simple, rough chalk outline drawing of a camcorder (boxy body, lens, viewfinder, handgrip), with a hand-drawn chalk arrow pointing to it, and the words \"LOOK THROUGH IT\" in uneven chalk capitals. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "look_through__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. Chalk sketch of a camcorder with a wobbly lens circle, lines drawn twice, an arrow below pointing up at it, and the words \"LOOK THROUGH IT\" written below in thick dusty chalk letters. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "same": {
+  "attempts": [
+   {
+    "file": "same__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The word \"SAME\" written six times in marker capitals, spiralling inward, each repetition smaller and shakier than the last, letters at different angles, the handwriting getting cramped at the centre. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "same__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. \"SAME\" written over and over in a hand-drawn inward spiral, six times, inconsistent letter shapes, ink skipping, the last few tiny and crowded. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "was_here": {
+  "attempts": [
+   {
+    "file": "was_here__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Small, quick handwriting in ballpoint pen: \"R. WAS HERE 10/14/96\" (with the period after the R) and next to it a tiny rough sketch of a small VHS video cassette with an open eye drawn in its window. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "was_here__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A line of cramped biro handwriting reading \"R. WAS HERE 10/14/96\", the pen pressed hard on some letters and skipping on others, and a small scratchy cassette doodle beside it. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "chalk_door": {
+  "attempts": [
+   {
+    "file": "chalk_door__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. A crooked hand-traced white chalk outline of a doorway, a tall rectangle about 0.9 wide by 2.0 tall in proportion, the lines wobbly and doubled, corners overshooting, with a small chalk \"HERE?\" written beside it at shoulder height and a chalk arrow pointing into the outline. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1792,
+     2400
+    ],
+    "image_size_req": "2K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "chalk_door__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of white chalk marks on a flat matte black slate chalkboard surface, shot perfectly flat, flat even diffuse lighting, no glare, sharp focus. The black slate fills the entire frame edge to edge. The chalk is dry and dusty, catching the grain of the surface so strokes break up and skip, uneven pressure, loose chalk dust around the lines, a few finger smudges, a faint ghost of an older rubbed-out stroke, hand-drawn and imperfect. It must look like genuine chalk photographed, NOT a font, NOT vector art, NOT a clean illustration. A rough chalk doorway outline (tall rectangle, roughly 9 to 20 proportion) drawn by hand along a wall, slightly lopsided, strokes broken and dusty, a small \"HERE?\" scrawled beside it at about shoulder height, and a short chalk arrow pointing into the outline. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1792,
+     2400
+    ],
+    "image_size_req": "2K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "film_walls": {
+  "attempts": [
+   {
+    "file": "film_walls__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. The words \"FILM THE WALLS\" in hurried marker capitals, slanted, letters uneven, underlined twice with two fast rough strokes. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "film_walls__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black permanent marker, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. \"FILM THE WALLS\" scrawled quickly in two lines of marker, the pen running dry on WALLS, with a double underline of two sloppy wavy lines. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "hd_survey": {
+  "attempts": [
+   {
+    "file": "hd_survey__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of a spray-paint stencil mark on a plain pure black matte surface, shot perfectly flat, flat even lighting, sharp focus. The black surface fills the entire frame. The paint is fluorescent safety orange-red, with soft overspray mist around every edge, a few runs and drips, slightly uneven coverage where the stencil lifted. A neat professional spray-paint stencil survey mark: the code \"HD  G1  S-14\" in stencil capitals (letters with small bridge gaps), a stenciled arrow beside it, and a circled cross benchmark survey symbol, with overspray mist and a few drips. Genuine photograph, NOT a font, NOT vector art. Spell any quoted text exactly. No apostrophes.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "hd_survey__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of a spray-paint stencil mark on a plain pure black matte surface, shot perfectly flat, flat even lighting, sharp focus. The black surface fills the entire frame. The paint is fluorescent safety orange-red, with soft overspray mist around every edge, a few runs and drips, slightly uneven coverage where the stencil lifted. Stencil spray-paint survey marking in fluorescent orange-red: the line \"HD  G1  S-14\" in stencil lettering, a stencil arrow pointing left, and a circle with a cross inside it, soft overspray around the edges, two small drips. Genuine photograph, NOT a font, NOT vector art. Spell any quoted text exactly. No apostrophes.",
+    "size": [
+     1200,
+     896
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "hd_tape_label": {
+  "attempts": [
+   {
+    "file": "hd_tape_label__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A single strip of yellowed old masking tape, about four times as long as it is wide, torn ragged ends, a few wrinkles, hand-lettered in black marker on it: \"HD-4  REC  DO NOT REMOVE\" in cramped capitals, the lettering uneven. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1584,
+     672
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "hd_tape_label__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A strip of aged beige-yellow masking tape with torn uneven ends and slight curl, a hurried marker label written across it: \"HD-4  REC  DO NOT REMOVE\", the letters squeezed toward the right end. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1584,
+     672
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "missing_flyer": {
+  "attempts": [
+   {
+    "file": "missing_flyer__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A faded, yellowed photocopied letter-size paper flyer, taped at its corners with clear tape, a curling corner, a faint coffee ring. At the top the big bold word \"MISSING\", in the middle a heavily photocopied, blown-out, smeared black-and-white photo of a person whose face is unrecognizable with crushed black photocopy shadows, and below short lines of text: \"RAY M.\" and \"LAST SEEN OCT 14 1996\" and \"IF YOU FIND THIS TAPE\". Not a real or identifiable person. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1792,
+     2400
+    ],
+    "image_size_req": "2K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "missing_flyer__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A worn photocopied missing-person style sheet of letter-size paper, yellowed, bits of clear tape at the corners, one corner curled, a coffee ring stain: huge bold \"MISSING\" heading, a degraded high-contrast photocopy of a faceless person, then the lines \"RAY M.\" and \"LAST SEEN OCT 14 1996\" and \"IF YOU FIND THIS TAPE\", toner streaks. Not a real person. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1792,
+     2400
+    ],
+    "image_size_req": "2K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "calendar_oct96": {
+  "attempts": [
+   {
+    "file": "calendar_oct96__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A torn-off wall calendar page headed \"OCTOBER 1996\", a printed grid of days where the 1st falls on a Tuesday, days 1 to 13 each crossed out with a red pen X, day 14 circled hard many times with red pen, the rest of the month scribbled over in red pen. One pushpin hole at the top center, slightly ragged torn edge. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "calendar_oct96__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Straight-on photograph of a real physical object lying flat on a plain pure black background, shot perfectly from directly above, flat even diffuse lighting, no cast shadows, sharp focus, the whole object fully visible with a wide black margin around it. A yellowed wall calendar sheet \"OCTOBER 1996\", the month starting on a Tuesday, red pen crosses through the first thirteen days, the 14 circled over and over until the paper is nearly cut, the remaining days furiously scribbled out in red pen, a pin hole at the top, rough torn top edge. Looks like a genuine photographed object, not an illustration, not a mockup. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     896,
+     1200
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "scrawl_small_1": {
+  "attempts": [
+   {
+    "file": "scrawl_small_1__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is blue ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A phone number \"555-0143\" written small in blue ballpoint pen and crossed out with a firm scribble, one small neat line. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "scrawl_small_1__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is blue ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. Hasty handwriting in blue biro: \"555-0143\", struck through with two hard lines. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 1
+ },
+ "scrawl_small_2": {
+  "attempts": [
+   {
+    "file": "scrawl_small_2__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small word \"NO\" in black ballpoint pen with a rough circle drawn around it, the circle gone round twice and not quite closing. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "scrawl_small_2__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small hasty \"NO\" in pen, circled hard several times by a nervous hand. Spell any quoted text exactly, in English capitals. No apostrophes anywhere.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ },
+ "scrawl_small_3": {
+  "attempts": [
+   {
+    "file": "scrawl_small_3__v2a1.jpg",
+    "model": "gemini-3.1-flash-image",
+    "kind": "flash",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is pencil, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A short column of tally marks scratched in soft grey pencil, a few single strokes and one group of five, uneven, pressed lightly.  There is absolutely no writing, no letters and no words anywhere in the image.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": null,
+    "cost_usd": 0.067
+   },
+   {
+    "file": "scrawl_small_3__v2a2.jpg",
+    "model": "gemini-3.1-flash-image",
+    "kind": "flash",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is pencil, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A small pencil tally: seven or eight short vertical strokes with one diagonal across a group of five, faint and scratchy.  There is absolutely no writing, no letters and no words anywhere in the image.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": null,
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 2
+ },
+ "scrawl_small_4": {
+  "attempts": [
+   {
+    "file": "scrawl_small_4__v2a1.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A rough arrow drawn in black ballpoint pen pointing to the right with a single question mark written at its tip, small and quick.  Apart from the arrow and one question mark there is no other writing at all.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   },
+   {
+    "file": "scrawl_small_4__v2a2.jpg",
+    "model": "gemini-3-pro-image",
+    "kind": "pro",
+    "prompt": "Close-up straight-on photograph of real handwriting on plain white paper, shot perfectly flat from directly above, flat even diffuse lighting, no shadows, no perspective, sharp focus. The white paper fills the entire frame edge to edge, no paper edges, no desk. The ink is black ballpoint pen, soaked into the paper fibers: uneven pressure, thick and thin strokes, letters of uneven size, a drifting baseline, ink feathering slightly at the edges, dry-pen streaks where it ran out, small hesitations, a few rough corrections. It must look like genuine human handwriting in a photograph, NOT a font, NOT vector art, NOT a clean illustration, NOT digitally drawn. A scratchy pen arrow with a single question mark beside its head, line doubled over, the pen digging into the paper.  Apart from the arrow and one question mark there is no other writing at all.",
+    "size": [
+     1024,
+     1024
+    ],
+    "image_size_req": "1K",
+    "cost_usd": 0.134
+   }
+  ],
+  "choice": 2
+ }
+}

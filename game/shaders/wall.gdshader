@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/horizon.gdshaderinc"
 // Wallpaper walls and pillars. UV is world-scale meters: x along the wall, y down from
 // the ceiling. Macro variation (tint drift, water damage at the floor, staining from the
 // ceiling) is world-space so it never repeats with the texture tile.
@@ -99,4 +100,7 @@ void fragment() {
 		NORMAL_MAP = texture(normal_tex, uv).rgb;
 		NORMAL_MAP_DEPTH = normal_strength;
 	}
+	float hz = horizon_fade(VERTEX);
+	ALBEDO *= hz;
+	SPECULAR *= hz;
 }

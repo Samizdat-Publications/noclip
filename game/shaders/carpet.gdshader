@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/horizon.gdshaderinc"
 // Damp commercial loop carpet. Two texture samples (one rotated and rescaled) are blended
 // by low-frequency noise to kill tiling. World-space wet patches darken the fibers and
 // drop roughness so the fluorescent panels glint in them.
@@ -139,4 +140,8 @@ void fragment() {
 	}
 	NORMAL_MAP = nrm;
 	NORMAL_MAP_DEPTH = normal_strength;
+	float hz = horizon_fade(VERTEX);
+	ALBEDO *= hz;
+	SPECULAR *= hz;
+	EMISSION *= hz;
 }

@@ -139,6 +139,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_nav(),
 		func() -> void:
 			_build_traces(),
+		func() -> void:
+			_build_wall_details(),
 	]
 
 
@@ -300,6 +302,9 @@ func _build_walls(kit: MeshKit) -> void:
 		kit.box("baseboard", Vector3(p[0] - q, 0.0, p[1] - q), Vector3(p[0] + q, bh, p[1] + q), MeshKit.SIDES | MeshKit.PY, bh)
 
 
+var _outlet_spots: Array = []
+
+
 ## Wall outlets every so often near the floor. Nothing is ever plugged into them.
 func _build_outlets(kit: MeshKit) -> void:
 	var r := _rng("level0:outlets")
@@ -319,6 +324,7 @@ func _build_outlets(kit: MeshKit) -> void:
 		var tan := Vector2(-n.y, n.x)
 		var face := c + n * (T * 0.5)
 		var y := 0.3 if r.randf() < 0.8 else 1.1
+		_outlet_spots.append([face, n, y])
 		var plate := [[-0.035, 0.035, y - 0.058, y + 0.058, 0.0, 0.006, "plate"]]
 		for dy in [-0.02, 0.02]:
 			plate.append([-0.012, -0.008, y + dy - 0.007, y + dy + 0.007, 0.006, 0.0065, "slot"])
@@ -1005,6 +1011,113 @@ func _build_traces() -> void:
 		var age := float(k) / maxf(total - 1, 1)
 		_decal("decal_footprint_l" if left else "decal_footprint_r", here + side_v + Vector3(0, 0.01, 0), b,
 			Vector3(0.13, 0.25, 0.3), Color(1, 1, 1, lerpf(0.5, 1.0, age)))
+
+
+static var _detail_table := {}
+
+
+## Wear on the walls where the eye lands (critique 008, L041): the pale ghosts of posters and
+## desks that stood there for years, tape scraps, chair scuffs, a hole or two, grime around the
+## outlets, an old flood line, and on some long halls a crayon line that someone dragged along
+## the wall as they walked (data/wall_details.json, pipeline/textures/build_wall_details.py).
+func _build_wall_details() -> void:
+	if _detail_table.is_empty():
+		_detail_table = JSON.parse_string(FileAccess.get_file_as_string("res://data/wall_details.json"))
+	var r := _rng("level0:walldetail")
+	var walls: Array = L["walls"]
+	if walls.is_empty():
+		return
+	var used := {}
+	var place := func(slug: String, alpha: float, wall_i: int = -1, at: float = -1.0, side_in: float = 0.0) -> bool:
+		var info: Dictionary = _detail_table.get(slug, {})
+		if info.is_empty():
+			return false
+		var tiled: bool = info.get("tile", false)
+		var w: float = float(info["w"]) * (1.0 if tiled else r.randf_range(0.9, 1.1))
+		var h: float = float(info["h"]) * w / float(info["w"])
+		for attempt in (1 if wall_i >= 0 else 14):
+			var i := wall_i if wall_i >= 0 else r.randi() % walls.size()
+			var wl: Array = walls[i]
+			var horiz := _is_horizontal(wl)
+			var a: float = minf(wl[0], wl[2]) if horiz else minf(wl[1], wl[3])
+			var b: float = maxf(wl[0], wl[2]) if horiz else maxf(wl[1], wl[3])
+			var margin := 0.0 if tiled else 0.16
+			if b - a < w + 2.0 * margin:
+				continue
+			var side := side_in if side_in != 0.0 else (1.0 if r.randf() < 0.5 else -1.0)
+			var t := at if at >= 0.0 else r.randf_range(a + w * 0.5 + margin, b - w * 0.5 - margin)
+			var key := i * 2 + (0 if side > 0.0 else 1)
+			var clash := false
+			for iv in used.get(key, []):
+				if t - w * 0.5 < iv[1] and t + w * 0.5 > iv[0]:
+					clash = true
+			if clash:
+				continue
+			var c := Vector2(t, wl[1]) if horiz else Vector2(wl[0], t)
+			var n := Vector2(0, side) if horiz else Vector2(side, 0)
+			var probe := Vector3(c.x + n.x * 0.6, 0.0, c.y + n.y * 0.6)
+			if probe.x < 0.3 or probe.z < 0.3 or probe.x > extent.x - 0.3 or probe.z > extent.y - 0.3 or not is_walkable(probe):
+				continue
+			var y := r.randf_range(float(info["y"][0]), float(info["y"][1]))
+			var n3 := Vector3(n.x, 0.0, n.y)
+			var spin := 0.0 if tiled else r.randf_range(-0.03, 0.03)
+			_decal(String(info["tex"]), Vector3(c.x, y, c.y) + n3 * T * 0.5, _basis_facing(n3).rotated(n3, spin), Vector3(w, 0.3, h), Color(1, 1, 1, alpha))
+			if not used.has(key):
+				used[key] = []
+			used[key].append([t - w * 0.5, t + w * 0.5])
+			return true
+		return false
+	for k in r.randi_range(6, 10):
+		place.call("scuffs_%d" % r.randi_range(1, 4), r.randf_range(0.55, 0.9))
+	for k in r.randi_range(1, 3):
+		place.call(["poster_ghost_a", "poster_ghost_b", "poster_ghost_c"][r.randi() % 3], r.randf_range(0.3, 0.5))
+	for k in r.randi_range(0, 2):
+		place.call("desk_ghost", r.randf_range(0.35, 0.55))
+	for k in r.randi_range(2, 4):
+		place.call("tape_scraps_%d" % r.randi_range(1, 3), r.randf_range(0.8, 1.0))
+	if r.randf() < 0.3:
+		place.call("hole_punch" if r.randf() < 0.6 else "hole_knob", 1.0)
+	if r.randf() < 0.35:
+		place.call("damp_bloom", r.randf_range(0.45, 0.7))
+	for o in _outlet_spots:
+		if r.randf() < 0.45:
+			var on: Vector2 = o[1]
+			var op: Vector2 = o[0]
+			var n4 := Vector3(on.x, 0.0, on.y)
+			_decal("walldetail/outlet_grime", Vector3(op.x, float(o[2]) + 0.03, op.y), _basis_facing(n4), Vector3(0.22, 0.3, 0.22), Color(1, 1, 1, r.randf_range(0.5, 0.8)))
+	# An old flood line along one long wall.
+	if r.randf() < 0.16:
+		var best := -1
+		var best_len := 4.0
+		for i in walls.size():
+			var wl2: Array = walls[i]
+			var ln: float = absf(wl2[2] - wl2[0]) + absf(wl2[3] - wl2[1])
+			if ln > best_len:
+				best_len = ln
+				best = i
+		if best >= 0:
+			_tile_along(place, best, "water_line", r.randf_range(0.65, 0.9), 1.0 if r.randf() < 0.5 else -1.0)
+	# The line: someone walked this hall dragging a crayon along the wall (Level0Gen "trails").
+	for tr in L.get("trails", []):
+		for i in walls.size():
+			var wl3: Array = walls[i]
+			if _is_horizontal(wl3) and absf(wl3[1] - float(tr[0])) < 0.01:
+				_tile_along(place, i, "crayon_trail", 0.9, float(tr[1]))
+
+
+## Lays a horizontally tileable wall detail end to end along wall i, on one side.
+func _tile_along(place: Callable, i: int, slug: String, alpha: float, side: float) -> void:
+	var wl: Array = L["walls"][i]
+	var horiz := _is_horizontal(wl)
+	var a: float = minf(wl[0], wl[2]) if horiz else minf(wl[1], wl[3])
+	var b: float = maxf(wl[0], wl[2]) if horiz else maxf(wl[1], wl[3])
+	var w: float = float(_detail_table[slug]["w"])
+	# Start on the world 2.4 m grid so a line carries on seamlessly into the next chunk.
+	var o := origin2().x if horiz else origin2().y
+	var t := (ceilf((a + o) / w) * w - o) + w * 0.5
+	while t + w * 0.5 <= b + 0.001:
+		place.call(slug, alpha, i, t, side)
+		t += w
 
 
 ## Props (procedural Blender set plus Sketchfab CC-BY models, credited in docs/CREDITS.md):
