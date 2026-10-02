@@ -197,6 +197,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"seams": [],
 		"worklights": [],
 		"graffiti": [],
+		"pocket_zones": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -617,6 +618,7 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			var q := Vector2(rr.position.x + t, rr.get_center().y) if long_x else Vector2(rr.get_center().x, rr.position.y + t)
 			L["interest"].append({"name": "hall_%d_%d" % [int(q.x * 10), int(q.y * 10)], "p": [q.x, q.y]})
 			t += 6.0
+	var first_fixture: int = L["fixtures"].size()
 	# Ceiling grid for this room. Fixture = 1 x 2 tiles; long axis along corridors.
 	var along_x := corridor and rr.size.x > rr.size.y
 	var fw := 0.6
@@ -660,6 +662,8 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			if blocked:
 				continue
 			L["fixtures"].append([px, pz, 1 if along_x else 0])
+	if kind != "corridor":
+		_room_mood(L, rr, first_fixture)
 
 
 ## Seams (VISION "Exits", D022): about one chunk in three has a solid block standing in one of
@@ -732,7 +736,7 @@ func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
 		var m0 := a + MOD
 		L["seams"].append({"wall": [m0, line, m0 + MOD, line] if horiz else [line, m0, line, m0 + MOD], "n": [n.x, n.y],
 			"pocket": [x0, z0, x1, z1]})
-	L["dark_zones"].append([x0, z0, x1, z1])
+	L["pocket_zones"].append([x0, z0, x1, z1])
 	var c := Vector2((x0 + x1) * 0.5, (z0 + z1) * 0.5)
 	var seam_c := c + n * ps * 0.5
 	# Inside: the camera on its tripod filming the wall, a crate of tapes, a work light on the floor
@@ -762,6 +766,44 @@ func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
 	var look := seam_c + n * minf(2.2, room_in_front * 0.6)
 	L["interest"].append({"name": "seam_%d_%d" % [int(look.x * 10), int(look.y * 10)], "p": [look.x, look.y], "seam": [seam_c.x, seam_c.y], "pocket": [c.x, c.y]})
 	return look
+
+
+## How a room is lit (critique 008, L042: lit rooms were evenly filled; L039: one yellow
+## everywhere). Most rooms are fully lit, but some keep only the panel nearest the middle (one
+## pool of light and the rest falling away), some have one side dead, some have tired, warm tubes,
+## and a few were refitted with tubes of the wrong color. Some rooms are papered in a color that
+## bled in from somewhere else (generation loss). Draws from its own stream.
+func _room_mood(L: Dictionary, rr: Rect2, first: int) -> void:
+	var mr := _rng("mood:%d:%d:%d:%d" % [L["chunk"][0], L["chunk"][1], int(rr.position.x * 10), int(rr.position.y * 10)])
+	var fx: Array = L["fixtures"]
+	var n := fx.size() - first
+	var roll := mr.randf()
+	var c := rr.get_center()
+	if n >= 3 and roll < 0.26:
+		var best := first
+		for i in range(first, fx.size()):
+			if Vector2(fx[i][0], fx[i][1]).distance_to(c) < Vector2(fx[best][0], fx[best][1]).distance_to(c):
+				best = i
+		for i in range(first, fx.size()):
+			fx[i].append("on" if i == best else "dead")
+	elif n >= 4 and roll < 0.44:
+		var along_x := rr.size.x >= rr.size.y
+		var keep_low := mr.randf() < 0.5
+		for i in range(first, fx.size()):
+			var lowside: bool = (fx[i][0] < c.x) if along_x else (fx[i][1] < c.y)
+			fx[i].append("dead" if lowside == keep_low else "on")
+	elif roll < 0.56:
+		for i in range(first, fx.size()):
+			fx[i].append("dim")
+	var tint_roll := mr.randf()
+	if tint_roll < 0.1:
+		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.64, 0.83, 1.0])    # cold blue-white
+	elif tint_roll < 0.16:
+		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.78, 1.0, 0.66])    # sick green
+	if not L.has("recolor") and mr.randf() < 0.09:
+		var cols := [[0.80, 0.98, 0.86], [1.0, 0.82, 0.78], [0.80, 0.86, 1.0]]
+		var col: Array = cols[mr.randi() % cols.size()]
+		L["recolor"] = [rr.position.x + 0.05, rr.position.y + 0.05, rr.end.x - 0.05, rr.end.y - 0.05, col[0], col[1], col[2]]
 
 
 ## The x nearest `want` where a horizontal wall on line z has a solid run wide enough for a
@@ -889,7 +931,7 @@ func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_ch
 		var cr: Rect2 = corridors[0]["rect"]
 		L["tint_zones"].append([cr.position.x, cr.position.y, cr.end.x, cr.end.y, 0.74, 0.92, 1.0])
 	# Exit sign over a door, a door set into a solid wall.
-	if L["doors"].size() > 0 and r.randf() < 0.3:
+	if L["doors"].size() > 0 and r.randf() < 0.55:
 		var d: Array = L["doors"][r.randi() % L["doors"].size()]
 		var horiz: bool = absf(d[1] - d[3]) < 0.001
 		var c := Vector2((d[0] + d[2]) * 0.5, (d[1] + d[3]) * 0.5)

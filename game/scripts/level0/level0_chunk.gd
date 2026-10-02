@@ -84,11 +84,16 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	field.bind(mats["ceiling"])
 	field.bind(mats["housing"])
 	var sb: Array = L.get("shear_bands", [])
+	if sb.size() > 0 or L.has("recolor"):
+		mats["wall"] = (shared_mats["wall"] as ShaderMaterial).duplicate()
 	if sb.size() > 0:
 		var b: Array = sb[0]
-		mats["wall"] = (shared_mats["wall"] as ShaderMaterial).duplicate()
 		(mats["wall"] as ShaderMaterial).set_shader_parameter("shear_rect", Vector4(b[0] + o.x, b[1] + o.y, b[2] + o.x, b[3] + o.y))
 		(mats["wall"] as ShaderMaterial).set_shader_parameter("shear_band", Vector3(b[4], b[5], b[6]))
+	if L.has("recolor"):
+		var rc: Array = L["recolor"]
+		(mats["wall"] as ShaderMaterial).set_shader_parameter("recolor_rect", Vector4(rc[0] + o.x, rc[1] + o.y, rc[2] + o.x, rc[3] + o.y))
+		(mats["wall"] as ShaderMaterial).set_shader_parameter("recolor", Vector3(rc[4], rc[5], rc[6]))
 	var fc: Array = L.get("flood_candidates", [])
 	if fc.size() > 0:
 		var f: Array = fc[r.randi() % fc.size()]
@@ -446,6 +451,10 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 	for z in L["dark_zones"]:
 		dark_zones.append(Rect2(z[0], z[1], z[2] - z[0], z[3] - z[1]))
 	ctx["dark_zones"] = dark_zones
+	var pockets := []
+	for z in L.get("pocket_zones", []):
+		pockets.append(Rect2(z[0], z[1], z[2] - z[0], z[3] - z[1]))
+	ctx["pockets"] = pockets
 	# Clusters of dead panels give the level its pools of darkness (four per 30 x 30 m).
 	ctx["spawn"] = Vector2(L["spawn"][0], L["spawn"][1]) if L.has("spawn") else Vector2(-100, -100)
 	var clusters := []
@@ -473,6 +482,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 		# Generated chunks: the ceiling grid was laid out per room by Level0Gen.
 		for k in L["fixtures"].size():
 			var f: Array = L["fixtures"][k]
+			ctx["hint"] = String(f[3]) if f.size() > 3 else ""
 			_make_fixture(kit, r, cells, Vector2(f[0], f[1]), int(f[2]) == 1, "%d" % k, ctx)
 	else:
 		var fg: Dictionary = L["fixture_grid"]
@@ -525,8 +535,8 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	if in_dark:
 		# A dead room keeps one weak, breathing tube so you can still read its shape (VISION:
 		# blacks deep, silhouettes readable).
-		st = Fixture.State.STARTER if roll < 0.12 else Fixture.State.DEAD
-		if roll >= 0.12 and roll < 0.34:
+		st = Fixture.State.STARTER if roll < 0.14 else Fixture.State.DEAD
+		if roll >= 0.14 and roll < 0.62:
 			st = Fixture.State.PULSE
 			dim = true
 	elif near_cluster and roll < 0.6:
@@ -542,12 +552,21 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	for h in ctx["hints"]:
 		if c.distance_to(h) < 1.3:
 			st = Fixture.State.PULSE
+	# The room's mood (Level0Gen._room_mood).
+	var hint: String = ctx.get("hint", "")
+	if hint == "dead" and not in_dark:
+		st = Fixture.State.DEAD
+	elif hint == "on" and not in_dark:
+		st = Fixture.State.ON
 	if L.get("steady_lights", false):
 		# Loop copies must look identical at every moment: no flicker, only on or dead.
 		st = Fixture.State.DEAD if in_dark else Fixture.State.ON
 		dim = false
 	if c.distance_to(ctx["spawn"]) < 3.2 and st != Fixture.State.PULSE:
 		st = Fixture.State.ON
+	for pz in ctx["pockets"]:
+		if (pz as Rect2).has_point(c):
+			st = Fixture.State.DEAD   # the survey pocket is lit by its work light alone
 	for lz in L.get("lit_zones", []):
 		if Rect2(lz[0], lz[1], lz[2] - lz[0], lz[3] - lz[1]).has_point(c):
 			st = Fixture.State.ON
@@ -565,6 +584,9 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	var energy := r.randf_range(0.82, 1.04)
 	if dim:
 		energy *= 0.32
+	if hint == "dim":
+		energy *= 0.55
+		tint = tint * Color(1.0, 0.88, 0.74)   # tired, warm, nearly spent tubes
 	var variant := r.randi()
 	var offset := r.randf_range(0.0, 7.9)
 
@@ -1327,7 +1349,7 @@ func _build_seam_fx() -> void:
 		var fwd := Vector3(sin(yaw), 0.0, cos(yaw))
 		var sl := SpotLight3D.new()
 		sl.light_color = Color(1.0, 0.71, 0.42)   # a halogen lamp: the one warm, hard light in the Yellow
-		sl.light_energy = 1.7
+		sl.light_energy = 1.05
 		sl.spot_range = 6.5
 		sl.spot_angle = 52.0
 		sl.spot_attenuation = 1.1
@@ -1345,7 +1367,7 @@ func _build_seam_fx() -> void:
 		# A little of it bounces off the floor and walls of the pocket.
 		var fill := OmniLight3D.new()
 		fill.light_color = Color(1.0, 0.76, 0.5)
-		fill.light_energy = 0.25
+		fill.light_energy = 0.14
 		fill.omni_range = 2.6
 		fill.position = pos + fwd * 1.2 + Vector3(0, 0.9, 0)
 		add_child(fill)

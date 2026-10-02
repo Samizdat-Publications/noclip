@@ -6,8 +6,8 @@ extends CanvasLayer
 ## and lowering reverses it (critique 006, L025). Later: infrared and showing things the
 ## naked eye cannot see.
 
-const RAISE_T := 0.3
-const LOWER_T := 0.34
+const RAISE_T := 0.52   # 0.3 s read as an instant toggle on video (critique 008, L048)
+const LOWER_T := 0.42
 
 var active := false
 var want := false

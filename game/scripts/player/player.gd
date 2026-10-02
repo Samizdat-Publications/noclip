@@ -159,11 +159,11 @@ func _footstep() -> void:
 	if _step_player == null:
 		return
 	var wet := space.floor_wetness(global_position) if space else 0.0
-	var bank := _steps_wet if wet > 0.45 and _steps_wet.streams_count > 0 else _steps_damp
+	var bank := _steps_wet if wet > 0.3 and _steps_wet.streams_count > 0 else _steps_damp
 	if bank.streams_count == 0:
 		return
 	_step_player.stream = bank
-	_step_player.volume_db = -3.0 if _sprinting else (-15.0 if _crouching else -9.0)
+	_step_player.volume_db = (-3.0 if _sprinting else (-15.0 if _crouching else -9.0)) + (2.5 if bank == _steps_wet else 0.0)
 	_step_player.play()
 
 

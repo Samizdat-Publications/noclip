@@ -20,6 +20,9 @@ uniform float damage = 1.0;
 uniform vec2 seed_offset = vec2(0.0);
 // A seam's eye-only patch has its paper slipped a few centimeters (a splice, D022).
 uniform vec2 uv_slip = vec2(0.0);
+// Generation loss: a room papered in a color that bled in from somewhere else.
+uniform vec4 recolor_rect = vec4(-100.0, -100.0, -99.0, -99.0);
+uniform vec3 recolor = vec3(1.0);
 // Pushes the printed pattern away from the paper color so it reads at a few meters.
 uniform float pattern_contrast = 2.4;
 uniform vec3 tex_mean = vec3(0.584, 0.474, 0.162);
@@ -93,6 +96,9 @@ void fragment() {
 	alb *= 1.0 - 0.12 * hands * damage;
 	float scuff = smoothstep(0.7, 0.86, n_value(vec2(s * 9.0, y * 3.0) + 13.0)) * smoothstep(0.55, 0.18, y);
 	alb *= 1.0 - 0.18 * scuff * damage;
+	if (wpos.x > recolor_rect.x && wpos.x < recolor_rect.z && wpos.z > recolor_rect.y && wpos.z < recolor_rect.w) {
+		alb *= recolor;
+	}
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;
