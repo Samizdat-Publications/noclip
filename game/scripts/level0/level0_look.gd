@@ -33,7 +33,9 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	var m := {}
 
 	var wall := _shader("res://shaders/wall.gdshader")
-	_bind(wall, "wallpaper", {"albedo_tex": "albedo", "normal_tex": "normal", "rough_tex": "roughness", "ao_tex": "ao"})
+	# Photographic, original pattern (S03, pipeline/textures/build_wallpaper_v2.py), v1 as fallback.
+	var wprefix := "wallpaper_v2" if tex("wallpaper_v2_albedo") != null and not Game.opts.has("wallpaper_v1") else "wallpaper"
+	_bind(wall, wprefix, {"albedo_tex": "albedo", "normal_tex": "normal", "rough_tex": "roughness", "ao_tex": "ao"})
 	wall.set_shader_parameter("seed_offset", seed_offset)
 	m["wall"] = wall
 
@@ -139,6 +141,28 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	for key in m:
 		if m[key] is BaseMaterial3D:
 			horizon(m[key])
+	for key in ["tbar", "baseboard", "trim", "door", "knob", "plate", "slot", "plenum"]:
+		m[key] = to_plain(m[key])
+	return m
+
+
+## A standard material as plain.gdshader (smooth horizon fade instead of dither glitter).
+static func to_plain(sm: BaseMaterial3D) -> ShaderMaterial:
+	var m := _shader("res://shaders/plain.gdshader")
+	m.set_shader_parameter("albedo_color", Vector3(sm.albedo_color.r, sm.albedo_color.g, sm.albedo_color.b))
+	m.set_shader_parameter("roughness", sm.roughness)
+	m.set_shader_parameter("metallic", sm.metallic)
+	m.set_shader_parameter("uv_scale", Vector2(sm.uv1_scale.x, sm.uv1_scale.y))
+	if sm.albedo_texture:
+		m.set_shader_parameter("use_albedo_tex", true)
+		m.set_shader_parameter("albedo_tex", sm.albedo_texture)
+	if sm.normal_enabled and sm.normal_texture:
+		m.set_shader_parameter("use_normal_tex", true)
+		m.set_shader_parameter("normal_tex", sm.normal_texture)
+		m.set_shader_parameter("normal_scale", sm.normal_scale)
+	if sm.roughness_texture:
+		m.set_shader_parameter("use_rough_tex", true)
+		m.set_shader_parameter("rough_tex", sm.roughness_texture)
 	return m
 
 
@@ -156,7 +180,7 @@ static func make_environment(preset: String) -> Environment:
 	e.background_color = Color(0, 0, 0)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.42, 0.38, 0.24)
-	e.ambient_light_energy = float(Game.opts.get("ambient", "0.022"))   # dark rooms readable, not void (L045)
+	e.ambient_light_energy = float(Game.opts.get("ambient", "0.017"))   # dark rooms readable, not void (L045)
 	e.reflected_light_source = Environment.REFLECTION_SOURCE_BG
 
 	e.tonemap_mode = Environment.TONE_MAPPER_AGX
@@ -175,11 +199,11 @@ static func make_environment(preset: String) -> Environment:
 	e.sdfgi_probe_bias = 1.1
 
 	e.ssao_enabled = true
-	e.ssao_radius = 1.0
-	e.ssao_intensity = float(Game.opts.get("ssao", "3.0"))
+	e.ssao_radius = 0.9
+	e.ssao_intensity = float(Game.opts.get("ssao", "4.2"))
 	e.ssao_power = 1.6
 	e.ssao_detail = 0.6
-	e.ssao_light_affect = float(Game.opts.get("ssao_la", "0.45"))   # corners darken under direct light too (L032)
+	e.ssao_light_affect = float(Game.opts.get("ssao_la", "0.68"))   # corners darken under direct light too (L032)
 
 	# SSIL off: SDFGI already carries the bounce; SSIL cost 4 to 8 fps and flattened rooms (D024).
 	e.ssil_enabled = preset == "high" and Game.opts.has("ssil")

@@ -67,7 +67,7 @@ func _touches_tall(r: Rect2) -> bool:
 
 ## Ceiling height at a point (a tall room's ceiling is three times too high, D023).
 func _ceil_at(p: Vector2) -> float:
-	for tr in L.get("tall_rooms", []):
+	for tr in L.get("tall_rooms", []) + L.get("ceil_zones", []):
 		if p.x > tr[0] and p.x < tr[2] and p.y > tr[1] and p.y < tr[3]:
 			return float(tr[4])
 	return H
@@ -303,6 +303,11 @@ func _build_shell(kit: MeshKit) -> void:
 		rects = next
 	for rc in rects:
 		kit.face("plenum", [Vector3(rc.position.x, ph, rc.position.y), Vector3(rc.end.x, ph, rc.position.y), Vector3(rc.end.x, ph, rc.end.y), Vector3(rc.position.x, ph, rc.end.y)], Vector3.DOWN, 0.0)
+	# Where a ceiling comes down low, a painted bulkhead closes the step up to the normal ceiling.
+	for cz in L.get("ceil_zones", []):
+		var hl: float = cz[4]
+		for xe in [float(cz[0]), float(cz[2])]:
+			kit.box("wall", Vector3(xe - 0.05, hl, float(cz[1])), Vector3(xe + 0.05, H, float(cz[3])), MeshKit.PX | MeshKit.NX | MeshKit.NY, H)
 	# A tall room's walls go on up past the normal ceiling to its own, with the trim at the top.
 	for tr in L.get("tall_rooms", []):
 		var ht: float = tr[4]
@@ -467,6 +472,9 @@ func _build_fake_doors(kit: MeshKit) -> void:
 		bx.append(["trim", -w * 0.5 - cw, w * 0.5 + cw, DH, DH + cw, 0.0, 0.018])
 		bx.append(["door", -w * 0.5 + 0.004, w * 0.5 - 0.004, 0.006, DH - 0.004, 0.0, 0.012])
 		bx.append(["knob", w * 0.5 - 0.11, w * 0.5 - 0.06, 0.96, 1.01, 0.012, 0.07])
+		if y0 > 0.0:
+			# A door copied up the wall still has its threshold: a narrow sill to nothing.
+			bx.append(["trim", -w * 0.5 - 0.1, w * 0.5 + 0.1, -0.06, 0.0, 0.0, 0.16])
 		for b in bx:
 			var a0: float = b[1]
 			var a1: float = b[2]
@@ -581,7 +589,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 					bd = dd
 					best = fx
 			if not alive and best:
-				best.setup(Fixture.State.PULSE, _rng("fixture:dz:%d" % fixtures.find(best)), 0.3, best.tint)
+				best.setup(Fixture.State.ON, _rng("fixture:dz:%d" % fixtures.find(best)), 0.26, best.tint * Color(1.0, 0.92, 0.8))
 				best.apply()
 	return cells
 
@@ -844,7 +852,7 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 				_dump["missing_tiles"].append([i, j])
 				continue
 			var th := _ceil_at(center)
-			if th > H + 0.01:
+			if absf(th - H) > 0.01:
 				tall_cells[Vector2i(i, j)] = th
 				kit.quad("ceiling", [Vector3(x0, th, z0), Vector3(x0 + TILE, th, z0), Vector3(x0 + TILE, th, z0 + TILE), Vector3(x0, th, z0 + TILE)],
 					Vector3.DOWN, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)], Color(rnd, stained, 0.0, 0.0))
@@ -925,14 +933,14 @@ func _build_tbars(kit: MeshKit, fixture_cells: Dictionary) -> void:
 
 ## True if tile (i, j) lies inside a tall room.
 func _in_tall(i: int, j: int) -> bool:
-	return _ceil_at(Vector2((i + 0.5) * TILE, (j + 0.5) * TILE)) > H + 0.01
+	return absf(_ceil_at(Vector2((i + 0.5) * TILE, (j + 0.5) * TILE)) - H) > 0.01
 
 
 ## The T-bar grid of a tall room, at its own height, skipping the middle of each light fixture.
 func _build_tall_grid(kit: MeshKit, fixture_cells: Dictionary) -> void:
 	var hw := 0.012
 	var hd := 0.014
-	for tr in L.get("tall_rooms", []):
+	for tr in L.get("tall_rooms", []) + L.get("ceil_zones", []):
 		var ht: float = tr[4]
 		var i0 := int(roundf(float(tr[0]) / TILE))
 		var i1 := int(roundf(float(tr[2]) / TILE))

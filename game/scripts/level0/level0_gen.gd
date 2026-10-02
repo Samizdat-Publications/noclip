@@ -263,6 +263,25 @@ func generate(cx: int, cz: int) -> Dictionary:
 		fixed.append(["turn_around", 5.0, hr0, 1.0, 1.45, 1.1])
 	if spawn_chunk and hr0 >= 0:
 		fixed.append(["look_through", 8.5, hr0, 1.0, 1.5, 1.0])
+	# Highways: a run of dead panels here and there, so a long hall has dark gaps to cross
+	# (critique 012: "bring the dark gaps back"), and sometimes a stretch whose ceiling comes
+	# down low over you, a copy squashed out of scale (D029).
+	var hw := _rng("hwylight:%d:%d" % [cx, cz])
+	if hr0 >= 0 and loop_index(cx, cz) < 0 and not spawn_chunk:
+		var hall_fx := []
+		for i in L["fixtures"].size():
+			var f: Array = L["fixtures"][i]
+			if f[1] > hr0 * MOD and f[1] < (hr0 + 2) * MOD and f.size() <= 3:
+				hall_fx.append(i)
+		if hall_fx.size() >= 4 and hw.randf() < 0.55:
+			var start := hw.randi_range(0, hall_fx.size() - 3)
+			var run := hw.randi_range(2, 3)
+			for k in range(start, mini(start + run, hall_fx.size())):
+				L["fixtures"][hall_fx[k]].append("dead")
+		if hw.randf() < 0.22:
+			var lx0 := snappedf(hw.randf_range(3.0, 13.0), MOD)
+			var ln := MOD * hw.randi_range(4, 6)
+			L["ceil_zones"] = [[lx0, hr0 * MOD, lx0 + ln, (hr0 + 2) * MOD, 2.15]]
 	# The survey crew (D010, D022) left a camcorder on a tripod recording an empty stretch of hall,
 	# its red light still blinking, and sprayed their marks on the hall walls here and there.
 	var cr := _rng("crew:%d:%d" % [cx, cz])

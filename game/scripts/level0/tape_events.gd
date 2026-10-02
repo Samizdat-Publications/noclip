@@ -45,6 +45,8 @@ var _base := {}           # bone index -> base local rotation (Quaternion)
 var _point := {}          # bone index -> local rotation with one long arm raised, pointing
 var _side := 1.0
 var _light_fx: Fixture
+var _final := false
+var _final_t := 0.0
 var _drop: AudioStreamPlayer
 var _breath: AudioStreamPlayer
 var _drone: AudioStreamPlayer
@@ -275,7 +277,15 @@ func _process(delta: float) -> void:
 
 func _update_shown(delta: float, cam_on: bool) -> void:
 	var d := _flat_dist(figure.global_position, player.global_position)
-	if d < 8.0:
+	if _final:
+		_final_t -= delta
+		if _final_t <= 0.0 or d < 3.5:
+			_final = false
+			_vanish(true)
+			if _light_fx and is_instance_valid(_light_fx):
+				_light_fx.kill(0.0)
+			return
+	elif d < 8.0:
 		_vanish(true)
 		return
 	if not cam_on:
@@ -335,12 +345,17 @@ func _update_hidden(cam_on: bool) -> void:
 		return
 	_approaches += 1
 	var d := to.length() - STEP_CLOSER
+	if _final:
+		_end_encounter(true)
+		return
 	if Game.opts.has("log-tape"):
 		print("[tape] looked again at t=%.1f approach=%d new dist=%.1f" % [Game.clock, _approaches, d])
 	if _approaches >= 3 or d < 9.0:
-		# Too close: this time the tape shows nothing, and the light it stood under dies.
-		_end_encounter(true)
-		return
+		# The last look: it is close, under the light, twisted wrong; a moment later it is gone
+		# and the light it stood under dies (critique 012: "one shot where it's close, lit, wrong").
+		d = 5.8
+		_final = true
+		_final_t = 1.6
 	var p := _stand_point(player.global_position + to.normalized() * d, -to.normalized(), true)
 	if p.x > 1e8:
 		p = _stand_point(player.global_position + to.normalized() * d, -to.normalized(), true, false)
@@ -410,8 +425,8 @@ func _stand_point(q: Vector3, back: Vector3, keep_side: bool, need_light: bool =
 func _show_at(p: Vector3) -> void:
 	figure.global_position = p
 	_face_player()
-	_pose = _rng.randi() % POSES.size()
-	_pose_t = _rng.randf_range(0.6, 1.4)
+	_pose = _rng.randi() % POSES.size() if not _final else 4
+	_pose_t = _rng.randf_range(0.6, 1.4) if not _final else 99.0
 	_apply_pose(_pose, 0.0)
 	_tear = 1.0
 	figure.visible = true
@@ -436,6 +451,7 @@ func _vanish(glitch: bool) -> void:
 
 
 func _end_encounter(kill_light: bool) -> void:
+	_final = false
 	if Game.opts.has("log-tape"):
 		print("[tape] encounter over at t=%.1f kill_light=%s" % [Game.clock, kill_light])
 	figure.visible = false

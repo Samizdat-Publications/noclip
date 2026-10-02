@@ -97,7 +97,7 @@ func settled() -> bool:
 
 ## A short burst of roll and snow (something just left the frame).
 func glitch() -> void:
-	_burst = 0.28
+	_burst = 0.15
 
 
 ## A one-frame hiccup (a frame skip on the tape).
@@ -113,7 +113,7 @@ func _switch(on: bool) -> void:
 		_active_since = Game.clock
 	if Game.opts.has("log-cam"):
 		print("[cam] %s frame=%d" % ["on" if on else "off", Game.frame])
-	_burst = 0.28   # the picture rolls and snows for a moment when the camera comes up or goes down
+	_burst = 0.2   # the picture rolls and snows for a moment when the camera comes up or goes down
 	if on:
 		visible = true
 		_hide_in = -1.0
