@@ -113,6 +113,11 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L089 | 014 | claude | hurts | Everything lands in one narrow warm band | FIX | Cold rooms 10 to 15 percent, sick-green 6 to 10 percent |
 | L090 | 014 | claude | hurts | Big open rooms murky under the haze; carpet turns to sandy mush | FIX | Haze 0.019 to 0.017 (scatter per light kept) |
 | L091 | 014 | claude + gemini | hurts | The figure reads as a placeholder man whose feet hover; crossing a seam is still a hard cut | FIX | Figure 10 percent taller and narrower, a tape-only contact shadow under it; seam crossing adds a short chromatic warp through the lens (drift spike) |
+| L092 | 015 | claude | ruins it | The held camcorder mid-raise reads as a lumpy black blob (worn bake did not fix it) | FIX next session | Keep it out of frame until the last part of the lift (start lower and further right), or a cleaner, smaller model; judge on video, not stills |
+| L093 | 015 | gemini + claude | ruins it | Lighting flat with no bounce; surfaces near the panels are not lit; weak AO (Gemini Lighting 4, Shadows 4) | FIX next session | A dedicated look pass: corner occlusion strips along every wall base, ceiling line and vertical corner; more warm GI bounce while keeping darkness through fewer lit panels; check auto-exposure compression |
+| L094 | 015 | claude | hurts | Tall rooms read as a scale bug: blank blurry upper walls, a thin white line on the wall | FIX next session | Water stains and streaks down the upper walls, a second row of fixtures, find the white line |
+| L095 | 015 | claude | nitpick | Doors and the cubicle panels read as plain slabs | FIX next session | Door slabs with hinges, kick plates and a handle; better partition fabric |
+| L096 | 015 | gemini | note | Gemini twice said the clip had no audio (repeat of L038) | DONE | tools/critic_gemini/critic.py now also sends the soundtrack as a separate audio file; 015 re-run heard it (Sound 8) |
 
 ## Closed
 

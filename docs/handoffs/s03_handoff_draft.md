@@ -10,8 +10,19 @@ Level 0 is now a place with its own tricks. Through the camcorder, some walls ha
 - Review capture: `python tools/capture/capture.py` (about 12 to 15 minutes; perf runs wait for an idle GPU and keep the best of 2).
 - Fast checks: `python tools/gdcheck.py` (scripts plus an audio sanity check), `godot_console --headless --path game --script res://scripts/tests_gen_determinism.gd`.
 
-## Done this session
-(fill from docs/handoffs/s03_running_notes.md and git log; each with commit and evidence)
+## Done this session (commit, evidence)
+- Loop corridor verified on Movie Maker frames and made invisible: 34-46 m horizon fade (D020, 5e03bbf; progress/0063 frame pair and x6 diff).
+- Tape figure rebuilt (D021): rigged CC-BY scan posed wrong, held poses with frame-skip tears, closer on each re-look, lit body, twisted-head and pointing poses, lurches while watched, close final beat, tape-only contact shadow (5e03bbf, 977b111, 905da09, bd91a57; progress/0062, 0081).
+- Tape-only seams into survey pockets (D022, a8c7894; progress/0068-0070 eye vs tape vs inside, bot visit sheet).
+- Scale-error tall rooms with a door up the wall and stairs into the air (D023, b56860c, 1cbee1b); low-ceiling hall stretches and dark-panel runs (D029, 905da09).
+- Unobserved rearrangement: chairs and crew camcorders turn to face you unseen (D025, b56860c, fdfcabd).
+- Perf: PCSS off, SSIL off (D024): 60-65 to 78 fps on the probe seed; captures 87-98 fps avg, 64-72 fps 1% low at 2560x1440; 10-minute walk 102.2 / 66.4, p99 14.1 ms (seed 9001).
+- Streaming steps split: max 7.1 ms, p95 4.6 ms (was 16-24 ms) (977b111).
+- Materials: graffiti v2 (24 pieces, gemini-3-pro-image), carpet v2, wallpaper v2 (original print), wall wear decals, office leftovers as stories, worn trims, camcorder v3 baked wear (5e03bbf, b56860c, 905da09, c146ab4, f77d0b5; progress/0064, 0067, 0071-0099).
+- Lighting: room moods, palette (cold, green, recolor, halogen pockets, survey stencils), haze scatter (D027), corner shading, readable dark rooms (c66447f, 8ad5a82, 905da09, bd91a57).
+- Sound (M3 start, D026): room reverb zones, positional squelch steps, hum occlusion, breathing, duck and drone, distant one-shots; PCM decode fix (every generated sound had been an octave low) (4a165d9, 0c9a040). Gemini Sound 7-8 in builds 011-014.
+- Tools: tools/film.py (filmed checks), RouteInput debug walker, audio sanity checks in gdcheck and capture, capture perf waits for an idle GPU (best of 2), perf hitch counters, focus shots load their surroundings.
+- Critic loops tonight: 009, 010, 011 (gate 1), 012 (gate 2), 013, 014, 015 (final).
 
 ## Not done / known broken (be blunt)
 (fill)

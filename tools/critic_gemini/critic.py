@@ -81,6 +81,26 @@ def main():
     perf = open(os.path.join(INBOX, "perf.json"), encoding="utf-8").read() if os.path.exists(os.path.join(INBOX, "perf.json")) else "{}"
 
     f = client.files.upload(file=clip)
+    # The video's own sound again as a separate audio file: Gemini has several times reported
+    # that the clip had no audio although it does (LEDGER L038), so it gets both.
+    audio_part = None
+    try:
+        sys.path.insert(0, os.path.join(ROOT, "tools"))
+        import subprocess
+        import paths as _paths
+        mp3 = os.path.join(INBOX, "clip_audio.mp3")
+        subprocess.run([_paths.ffmpeg(), "-y", "-loglevel", "error", "-i", clip, "-vn", "-ac", "2", "-b:a", "128k", mp3], check=True)
+        fa = client.files.upload(file=mp3)
+        t1 = time.time()
+        while not fa.state or fa.state.name != "ACTIVE":
+            if (fa.state and fa.state.name == "FAILED") or time.time() - t1 > 300:
+                raise RuntimeError("audio processing failed")
+            time.sleep(3)
+            fa = client.files.get(name=fa.name)
+        audio_part = types.Part(file_data=types.FileData(file_uri=fa.uri, mime_type=fa.mime_type))
+        os.remove(mp3)
+    except Exception as e:
+        print("[gemini] separate audio not sent:", type(e).__name__, e)
     t0 = time.time()
     while not f.state or f.state.name != "ACTIVE":
         if f.state and f.state.name == "FAILED":
@@ -96,6 +116,7 @@ def main():
         "3. clip.mp4: a gameplay video of someone playing the build, WITH the game's own sound. "
         "You can hear it and see real motion, so judge Sound and motion from the video.\n"
         "4. Four still frames from the same session (images after the video).\n"
+        "5. clip_audio.mp3: the same session's sound as a separate audio file (identical to the video's own sound track); listen to it to judge Sound.\n"
         "There is no previous build to compare to this time unless the video says so.\n\n"
         f"--- store_page.md ---\n{store}\n--- perf.json ---\n{perf}\n"
     )
@@ -105,6 +126,8 @@ def main():
     ]
     for p in pick:
         contents.append(types.Part.from_bytes(data=open(p, "rb").read(), mime_type="image/png"))
+    if audio_part is not None:
+        contents.append(audio_part)
     contents.append(intro)
     cfg = types.GenerateContentConfig(system_instruction=persona(), max_output_tokens=16384, temperature=0.7)
     resp = None
