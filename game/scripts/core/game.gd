@@ -107,6 +107,14 @@ func _keys(action: String, keys: Array) -> void:
 func _setup_audio_buses() -> void:
 	if AudioServer.get_bus_index("World") != -1:
 		return
+	# Loudness: the S01 mix measured about -26.5 LUFS (critique 006, L030). Make up gain on the
+	# master with a limiter on top lands near -18 LUFS without clipping the camcorder beeps.
+	var amp := AudioEffectAmplify.new()
+	amp.volume_db = float(opts.get("master_gain", "7.5"))
+	AudioServer.add_bus_effect(0, amp)
+	var lim := AudioEffectHardLimiter.new()
+	lim.ceiling_db = -1.0
+	AudioServer.add_bus_effect(0, lim)
 	AudioServer.add_bus()
 	var w := AudioServer.bus_count - 1
 	AudioServer.set_bus_name(w, "World")
