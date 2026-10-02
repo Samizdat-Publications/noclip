@@ -118,6 +118,8 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L094 | 015 | claude | hurts | Tall rooms read as a scale bug: blank blurry upper walls, a thin white line on the wall | FIX next session | Water stains and streaks down the upper walls, a second row of fixtures, find the white line |
 | L095 | 015 | claude | nitpick | Doors and the cubicle panels read as plain slabs | FIX next session | Door slabs with hinges, kick plates and a handle; better partition fabric |
 | L096 | 015 | gemini | note | Gemini twice said the clip had no audio (repeat of L038) | DONE | tools/critic_gemini/critic.py now also sends the soundtrack as a separate audio file; 015 re-run heard it (Sound 8) |
+| L097 | QA S03 | qa-auditor | hurts | Long 94 s perf runs showed a 1% low near 33 fps | DONE (not a game problem) | Re-measured 100 s on an idle GPU with per-process logging: 107.1 avg, 70.2 1% low, max frame 20.3 ms, 0 frames over 25 ms; the QA runs overlapped another project's Blender renders. capture.py now waits for an idle GPU and keeps the best of 2 |
+| L098 | QA S03 | qa-auditor | hurts | Chunk build steps peak at 14 to 19 ms at 1440p (claim was 7 ms) | FIX next session | Measured by QA (p95 9 to 12 ms). Split the walls and decal steps further; spread prop instancing |
 
 ## Closed
 

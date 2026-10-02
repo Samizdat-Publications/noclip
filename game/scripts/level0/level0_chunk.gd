@@ -57,6 +57,105 @@ func origin2() -> Vector2:
 	return Vector2(position.x, position.z)
 
 
+static var _ao_mat: ShaderMaterial
+
+
+static func ao_material() -> ShaderMaterial:
+	if _ao_mat == null:
+		_ao_mat = ShaderMaterial.new()
+		_ao_mat.shader = load("res://shaders/corner_ao.gdshader")
+		_ao_mat.set_shader_parameter("strength", float(Game.opts.get("corner_ao", "0.5")))
+	return _ao_mat
+
+
+## Corner occlusion (critiques 008 to 015: "corners look like paper", L049/L079/L093, D031):
+## gradient strips that multiply the image darker toward every crease: wall and floor, wall and
+## ceiling, and inner wall corners (on both faces), plus the foot of each column.
+func _build_corner_ao(kit: MeshKit) -> void:
+	if Game.opts.has("no_corner_ao"):
+		return
+	var e := 0.003      # lifted off the surface
+	var wf := 0.32      # reach on the wall
+	var ff := 0.36      # reach on the floor
+	var cf := 0.24      # reach at the ceiling
+	var vc := 0.28      # reach out of a vertical corner
+	var strip := func(a: Vector3, b: Vector3, out: Vector3) -> void:
+		# a..b along the crease, `out` points away from it (its length is the reach)
+		kit.quad("ao", [a, b, b + out, a + out], Vector3.UP, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)])
+	for i in L["walls"].size():
+		var w: Array = L["walls"][i]
+		var ends := _wall_ends(i)
+		var r := _wall_rect(w, T * 0.5 if ends[0] else 0.0, T * 0.5 if ends[1] else 0.0)
+		var horiz := _is_horizontal(w)
+		var ceil_ok := not _touches_tall(r) and absf(_ceil_at(r.get_center()) - H) < 0.01
+		for s in [-1.0, 1.0]:
+			if horiz:
+				var fz: float = (r.position.y if s < 0.0 else r.end.y) + s * e
+				var x0 := r.position.x
+				var x1 := r.end.x
+				strip.call(Vector3(x0, e, fz), Vector3(x1, e, fz), Vector3(0, wf, 0))
+				strip.call(Vector3(x0, e, fz), Vector3(x1, e, fz), Vector3(0, 0, s * ff))
+				if ceil_ok:
+					strip.call(Vector3(x0, H - e, fz), Vector3(x1, H - e, fz), Vector3(0, -cf, 0))
+					strip.call(Vector3(x0, H - e, fz), Vector3(x1, H - e, fz), Vector3(0, 0, s * cf))
+			else:
+				var fx: float = (r.position.x if s < 0.0 else r.end.x) + s * e
+				var z0 := r.position.y
+				var z1 := r.end.y
+				strip.call(Vector3(fx, e, z0), Vector3(fx, e, z1), Vector3(0, wf, 0))
+				strip.call(Vector3(fx, e, z0), Vector3(fx, e, z1), Vector3(s * ff, 0, 0))
+				if ceil_ok:
+					strip.call(Vector3(fx, H - e, z0), Vector3(fx, H - e, z1), Vector3(0, -cf, 0))
+					strip.call(Vector3(fx, H - e, z0), Vector3(fx, H - e, z1), Vector3(s * cf, 0, 0))
+		# Inner vertical corners where this wall's end meets a perpendicular wall.
+		for k in 2:
+			if not ends[k]:
+				continue
+			var p := Vector2(minf(w[0], w[2]), minf(w[1], w[3])) if k == 0 else Vector2(maxf(w[0], w[2]), maxf(w[1], w[3]))
+			var dir := -1.0 if k == 0 else 1.0     # from the wall toward this end
+			for j in L["walls"].size():
+				if j == i:
+					continue
+				var q: Array = L["walls"][j]
+				if _is_horizontal(q) == horiz:
+					continue
+				if horiz:
+					if absf(q[0] - p.x) > 0.001 or p.y < minf(q[1], q[3]) - 0.001 or p.y > maxf(q[1], q[3]) + 0.001:
+						continue
+					for s in [-1.0, 1.0]:
+						var reach: float = (minf(q[1], q[3]) if s < 0.0 else maxf(q[1], q[3])) - p.y
+						if reach * s < T:
+							continue
+						var cx: float = p.x - dir * (T * 0.5 + e)
+						var cz: float = p.y + s * (T * 0.5 + e)
+						strip.call(Vector3(cx, 0, cz), Vector3(cx, H, cz), Vector3(-dir * vc, 0, 0))
+						strip.call(Vector3(cx, 0, cz), Vector3(cx, H, cz), Vector3(0, 0, s * vc))
+				else:
+					if absf(q[1] - p.y) > 0.001 or p.x < minf(q[0], q[2]) - 0.001 or p.x > maxf(q[0], q[2]) + 0.001:
+						continue
+					for s in [-1.0, 1.0]:
+						var reach2: float = (minf(q[0], q[2]) if s < 0.0 else maxf(q[0], q[2])) - p.x
+						if reach2 * s < T:
+							continue
+						var cz2: float = p.y - dir * (T * 0.5 + e)
+						var cx2: float = p.x + s * (T * 0.5 + e)
+						strip.call(Vector3(cx2, 0, cz2), Vector3(cx2, H, cz2), Vector3(0, 0, -dir * vc))
+						strip.call(Vector3(cx2, 0, cz2), Vector3(cx2, H, cz2), Vector3(s * vc, 0, 0))
+				break
+	# The foot of each column.
+	for pl in L["pillars"]:
+		var hs: float = float(pl[2]) * 0.5
+		if (pl.size() > 4 and pl[4] == "hang") or (pl.size() > 3 and pl[3] == "plus"):
+			continue
+		var c := Vector3(pl[0], e, pl[1])
+		for d in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
+			var t := Vector3(d.z, 0, -d.x)
+			var a2: Vector3 = c + d * (hs + e) - t * hs
+			var b2: Vector3 = c + d * (hs + e) + t * hs
+			strip.call(a2, b2, d * ff)
+			strip.call(a2, b2, Vector3(0, wf, 0))
+
+
 ## True if a wall rect borders a tall room (its ceiling trim would cross the tall walls).
 func _touches_tall(r: Rect2) -> bool:
 	for tr in L.get("tall_rooms", []):
@@ -123,6 +222,7 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	field.bind(mats["carpet"])
 	# Seams: the patch of wall that only the eye sees uses the wallpaper slipped a few centimeters,
 	# a splice you can spot if you look for it (D022).
+	mats["ao"] = Level0Chunk.ao_material()
 	if L.get("seams", []).size() > 0:
 		mats["seam_wall"] = (mats["wall"] as ShaderMaterial).duplicate()
 		(mats["seam_wall"] as ShaderMaterial).set_shader_parameter("uv_slip", Vector2(0.0, 0.034))
@@ -144,7 +244,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	return [
 		func() -> void:
 			_build_shell(kit)
-			_build_walls(kit),
+			_build_walls(kit)
+			_build_corner_ao(kit),
 		func() -> void:
 			_build_doors(kit)
 			_build_fake_doors(kit)
@@ -160,7 +261,9 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_tbars(kit, cells)
 			_build_tall_grid(kit, cells),
 		func() -> void:
-			var parts := kit.commit(self, mats, ["tbar", "housing"])
+			var parts := kit.commit(self, mats, ["tbar", "housing", "ao"])
+			if parts.has("ao"):
+				(parts["ao"] as GeometryInstance3D).gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 			for key in ["seam_wall", "seam_base"]:
 				if parts.has(key):
 					(parts[key] as GeometryInstance3D).layers = TapeEvents.LAYER_EYE,

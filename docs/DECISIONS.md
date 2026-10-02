@@ -135,3 +135,7 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 ## D030 (2026-10-02, S03) A look pass (M3.5) before the Entity
 - After nine critic loops tonight the mechanics score well (Surreal 6 to 8, Camera 7 to 8, Sound 7 to 8, Performance 8 to 9) but Lighting, Shadows and Materials sit at 4 to 7 and the ship gate needs 8. The Entity (M4) would be judged inside the same flat-looking rooms, and it needs Meshy credits from Stewart first. Choice: one session on the look (corner occlusion, GI bounce, exposure, props and the held camcorder) before M4.
 - Revert: drop M3.5 from the roadmap and go straight to M4.
+
+## D031 (2026-10-02, S03) Corner occlusion strips (the first piece of the look pass)
+- Every critic since 008 says creases look flat ("walls look like paper meeting the floor", Gemini Shadows 2 to 5); SSAO alone does not survive the video. Choice: each chunk lays thin multiply-blended gradient strips (shaders/corner_ao.gdshader, strength 0.5) along every wall base (wall and floor sides), every wall-ceiling line (not in tall rooms or low zones), both faces of every inner wall corner, and the foot of each square column. They fade with the horizon. A/B lookdev (progress corner-ao-off vs corner-ao-v1): grounded rooms and halls, no cost worth measuring.
+- Revert: --no_corner_ao, or --corner_ao=<strength>.
