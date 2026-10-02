@@ -505,6 +505,14 @@ func _check_seam(p: Vector3) -> void:
 	_in_seam = inside
 
 
+## The ladder whose climbing space holds p (world), or {} (S04).
+func ladder_at(p: Vector3) -> Dictionary:
+	if current_room:
+		return {}
+	var ch := _chunk_at(p)
+	return ch.ladder_at(_local(ch, p)) if ch else {}
+
+
 ## The figure on tape never follows you into a hall.
 func tape_allowed() -> bool:
 	return current_room == null

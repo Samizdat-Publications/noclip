@@ -98,5 +98,239 @@
     }
   },
   "balance_before": 1968,
-  "balance_after": 1908
+  "balance_after": 1908,
+  "phase2_balance_before": 1698,
+  "rig": {
+    "request_body": {
+      "input_task_id": "01a0fdbc-cb93-75eb-8d9d-b0886ed92af3",
+      "height_meters": 2.35
+    },
+    "task_id": "01a0fe2b-f973-7386-8b51-f774d156ea3b",
+    "status": "SUCCEEDED",
+    "task_error": null,
+    "result": {
+      "rigged_character_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Character_output.fbx",
+      "rigged_character_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Character_output.glb",
+      "basic_animations": {
+        "walking_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Animation_Walking_withSkin.glb",
+        "walking_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Animation_Walking_withSkin.fbx",
+        "walking_armature_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Animation_Walking_withSkin_armature.glb",
+        "running_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Animation_Running_withSkin.glb",
+        "running_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Animation_Running_withSkin.fbx",
+        "running_armature_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2b-f973-7386-8b51-f774d156ea3b/output/Animation_Running_withSkin_armature.glb"
+      }
+    },
+    "consumed_credits": 5,
+    "files": {
+      "rigged_character_fbx_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/rigged_character_fbx_url.fbx",
+      "rigged_character_glb_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/rigged_character_glb_url.glb",
+      "basic_walking_glb_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/basic_walking_glb_url.glb",
+      "basic_walking_fbx_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/basic_walking_fbx_url.fbx",
+      "basic_walking_armature_glb_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/basic_walking_armature_glb_url.glb",
+      "basic_running_glb_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/basic_running_glb_url.glb",
+      "basic_running_fbx_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/basic_running_fbx_url.fbx",
+      "basic_running_armature_glb_url": "pipeline/meshes/cache/entity/meshy/C_4/rig/basic_running_armature_glb_url.glb"
+    },
+    "bones": 24,
+    "origin_check": "rigged GLB bbox z 0.0..2.35, x/y centered: origin is at the feet"
+  },
+  "anims": {
+    "chosen": {
+      "idle": {
+        "action_id": 0,
+        "why": "Idle: plain standing idle, least motion"
+      },
+      "walk": {
+        "action_id": 111,
+        "why": "Injured Walk: slow, wrong, dragging stalk"
+      },
+      "run": {
+        "action_id": 16,
+        "why": "Run Fast: chase"
+      },
+      "lunge": {
+        "action_id": 86,
+        "why": "Jump Attack: forward lunge, no fists"
+      },
+      "look": {
+        "action_id": 336,
+        "why": "Long Breathe and Look Around: slow head searching"
+      },
+      "twitch": {
+        "action_id": 113,
+        "why": "Mummy Stagger: stiff unnatural lurch used as the twitch beat"
+      },
+      "crouch": {
+        "action_id": 524,
+        "why": "Cautious Crouch Walk Forward: crouched creep"
+      },
+      "crawl": {
+        "action_id": 340,
+        "why": "Crawl and Look Back: crawl forward on all fours"
+      },
+      "scream": {
+        "action_id": 386,
+        "why": "Zombie Scream: the one scream/death beat"
+      }
+    },
+    "request_body": {
+      "rig_task_id": "01a0fe2b-f973-7386-8b51-f774d156ea3b",
+      "action_ids": [
+        0,
+        111,
+        16,
+        86,
+        336,
+        113,
+        524,
+        340,
+        386
+      ]
+    },
+    "task_id": "01a0fe2c-6a1c-73a6-9489-4d2314180b90",
+    "status": "SUCCEEDED",
+    "task_error": null,
+    "result": {
+      "animation_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2c-6a1c-73a6-9489-4d2314180b90/output/merged_animations.glb",
+      "animation_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a0fe2c-6a1c-73a6-9489-4d2314180b90/output/merged_animations.fbx",
+      "processed_usdz_url": "",
+      "processed_armature_fbx_url": "",
+      "processed_animation_fps_fbx_url": ""
+    },
+    "consumed_credits": 27,
+    "files": {
+      "animation_glb_url": "pipeline/meshes/cache/entity/meshy/C_4/anims/merged_animations.glb",
+      "animation_fbx_url": "pipeline/meshes/cache/entity/meshy/C_4/anims/merged_animations.fbx"
+    },
+    "clips": {
+      "lunge": {
+        "action": "Basic_Jump",
+        "frames": [
+          0.0,
+          140.8000030517578
+        ],
+        "fps": 24,
+        "seconds": 5.87,
+        "hips_travel_m": [
+          -0.001,
+          -1.373,
+          0.0
+        ]
+      },
+      "crouch": {
+        "action": "Cautious_Crouch_Walk_Forward",
+        "frames": [
+          0.0,
+          27.200000762939453
+        ],
+        "fps": 24,
+        "seconds": 1.13,
+        "hips_travel_m": [
+          0.001,
+          -2.016,
+          0.001
+        ]
+      },
+      "crawl": {
+        "action": "Crawl_and_Look_Back",
+        "frames": [
+          0.0,
+          165.60000610351562
+        ],
+        "fps": 24,
+        "seconds": 6.9,
+        "hips_travel_m": [
+          0.043,
+          -3.981,
+          0.045
+        ]
+      },
+      "idle": {
+        "action": "Idle",
+        "frames": [
+          0.0,
+          96.0
+        ],
+        "fps": 24,
+        "seconds": 4.0,
+        "hips_travel_m": [
+          -0.0,
+          0.0,
+          -0.0
+        ]
+      },
+      "walk": {
+        "action": "Injured_Walk",
+        "frames": [
+          0.0,
+          208.0
+        ],
+        "fps": 24,
+        "seconds": 8.67,
+        "hips_travel_m": [
+          0.0,
+          0.0,
+          -0.0
+        ]
+      },
+      "look": {
+        "action": "Long_Breathe_and_Look_Around",
+        "frames": [
+          0.0,
+          270.3999938964844
+        ],
+        "fps": 24,
+        "seconds": 11.27,
+        "hips_travel_m": [
+          0.001,
+          -0.0,
+          0.0
+        ]
+      },
+      "twitch": {
+        "action": "Mummy_Stagger",
+        "frames": [
+          0.0,
+          116.0
+        ],
+        "fps": 24,
+        "seconds": 4.83,
+        "hips_travel_m": [
+          -0.0,
+          0.0,
+          -0.0
+        ]
+      },
+      "run": {
+        "action": "RunFast",
+        "frames": [
+          0.0,
+          11.199999809265137
+        ],
+        "fps": 24,
+        "seconds": 0.47,
+        "hips_travel_m": [
+          -0.001,
+          -0.002,
+          0.0
+        ]
+      },
+      "scream": {
+        "action": "Zombie_Scream",
+        "frames": [
+          0.0,
+          67.19999694824219
+        ],
+        "fps": 24,
+        "seconds": 2.8,
+        "hips_travel_m": [
+          -0.002,
+          -0.002,
+          -0.0
+        ]
+      }
+    },
+    "note": "action 86 (library 'Jump Attack') came back as clip Basic_Jump (5.9 s jump), not a lunge. merged GLB split per clip by pipeline/blender/split_entity_anims.py."
+  },
+  "phase2_balance_after": 1666
 }

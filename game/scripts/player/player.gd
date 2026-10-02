@@ -8,8 +8,12 @@ extends CharacterBody3D
 const WALK := 1.45
 const SPRINT := 3.8
 const CROUCH := 0.75
+const CRAWL := 0.55
+const CLIMB := 1.35
 const EYE := 1.62
 const EYE_CROUCH := 1.06
+const EYE_CRAWL := 0.36
+const STRIDE_CRAWL := 0.4
 const STRIDE_WALK := 0.66
 const STRIDE_SPRINT := 0.98
 const STRIDE_CROUCH := 0.5
@@ -35,6 +39,9 @@ var _kick := 0.0
 var _speed := 0.0
 var _sprinting := false
 var _crouching := false
+var _crawling := false
+var _climbing := false
+var _climb_acc := 0.0
 var _cap: CollisionShape3D
 var _steps_damp: AudioStreamRandomizer
 var _steps_wet: AudioStreamRandomizer
@@ -163,33 +170,67 @@ func _physics_process(delta: float) -> void:
 	if input == null:
 		return
 	input.update_move(self, delta)
-	_crouching = input.crouch
+	# Stance (S04): crawl when asked, when walking into an opening too low to crouch through,
+	# and for as long as there is no room above to get up; crouch likewise under ~1.8 m.
+	var room := _head_room()
+	var low_ahead := input.move.y > 0.2 and _low_opening_ahead()
+	_crawling = input.crawl or low_ahead or (_crawling and room < 1.3)
+	_crouching = not _crawling and (input.crouch or room < 1.85)
 	var want := WALK
-	if _crouching:
+	if _crawling:
+		want = CRAWL
+	elif _crouching:
 		want = CROUCH
 	elif input.sprint and _stamina > 0.1 and input.move.y > 0.3:
 		want = SPRINT
 	_sprinting = want == SPRINT
 	_stamina = clampf(_stamina + (-0.11 if _sprinting else 0.07) * delta, 0.0, 1.0)
-	var wish := Basis(Vector3.UP, yaw) * Vector3(input.move.x, 0.0, -input.move.y)
-	if wish.length() > 1.0:
-		wish = wish.normalized()
-	var hv := Vector3(velocity.x, 0.0, velocity.z)
-	var accel := 6.0 if wish.length() > 0.01 else 8.5
-	hv = hv.lerp(wish * want, 1.0 - exp(-accel * delta))
-	velocity.x = hv.x
-	velocity.z = hv.z
-	velocity.y = -0.5 if is_on_floor() else velocity.y - 9.8 * delta
+	# Ladders (S04): walk into one facing it and you climb; forward goes up (down if you look
+	# down), back goes down; at the top, keep pushing to step off onto the ledge.
+	var lad: Dictionary = space.ladder_at(global_position) if space and space.has_method("ladder_at") else {}
+	var fwd := Basis(Vector3.UP, yaw) * Vector3.FORWARD
+	if lad.is_empty():
+		_climbing = false
+	elif not _climbing and fwd.dot(-(lad["n"] as Vector3)) > 0.35 and input.move.y > 0.15 and not _crawling:
+		_climbing = true
+	if _climbing and global_position.y > float(lad["top"]) - 0.75:
+		_crawling = true     # pull yourself in through a hole too low to stand in
+		_crouching = false
+	if _climbing:
+		var nn: Vector3 = lad["n"]
+		var up := input.move.y * (-1.0 if pitch < -0.75 else 1.0)
+		velocity = Vector3(0.0, up * CLIMB, 0.0) - nn * 0.35 * clampf(input.move.y, 0.0, 1.0)
+		if global_position.y > float(lad["top"]) - 0.35 and input.move.y > 0.1:
+			velocity = -nn * 1.3 + Vector3(0.0, 1.2, 0.0)   # over the sill
+		if is_on_floor() and input.move.y < -0.1:
+			_climbing = false
+		_climb_acc += absf(velocity.y) * delta
+		if _climb_acc > 0.32:
+			_climb_acc = 0.0
+			_footstep()
+	else:
+		var wish := Basis(Vector3.UP, yaw) * Vector3(input.move.x, 0.0, -input.move.y)
+		if wish.length() > 1.0:
+			wish = wish.normalized()
+		var hv := Vector3(velocity.x, 0.0, velocity.z)
+		var accel := 6.0 if wish.length() > 0.01 else 8.5
+		hv = hv.lerp(wish * want, 1.0 - exp(-accel * delta))
+		velocity.x = hv.x
+		velocity.z = hv.z
+		velocity.y = -0.5 if is_on_floor() else velocity.y - 9.8 * delta
 	move_and_slide()
 	_speed = Vector3(velocity.x, 0.0, velocity.z).length()
-	_stride = STRIDE_SPRINT if _sprinting else (STRIDE_CROUCH if _crouching else STRIDE_WALK)
-	_step_acc += _speed * delta
-	if _step_acc >= _stride:
-		_step_acc -= _stride
-		_footstep()
-	_eye = lerpf(_eye, EYE_CROUCH if _crouching else EYE, 1.0 - exp(-7.0 * delta))
+	_stride = STRIDE_SPRINT if _sprinting else (STRIDE_CRAWL if _crawling else (STRIDE_CROUCH if _crouching else STRIDE_WALK))
+	if not _climbing:
+		_step_acc += _speed * delta
+		if _step_acc >= _stride:
+			_step_acc -= _stride
+			_footstep()
+	var eye_want := EYE_CRAWL if _crawling else (EYE_CROUCH if _crouching else EYE)
+	_eye = lerpf(_eye, eye_want, 1.0 - exp(-7.0 * delta))
 	var cap_shape := _cap.shape as CapsuleShape3D
-	cap_shape.height = lerpf(cap_shape.height, 1.2 if _crouching else 1.75, 1.0 - exp(-10.0 * delta))
+	var h_want := 0.62 if _crawling else (1.2 if _crouching else 1.75)
+	cap_shape.height = lerpf(cap_shape.height, h_want, 1.0 - exp(-10.0 * delta))
 	_cap.position.y = cap_shape.height * 0.5
 	camcorder.set_active(input.camcorder)
 	_update_breath(delta)
@@ -197,6 +238,31 @@ func _physics_process(delta: float) -> void:
 		space.set_listener(global_position)
 	if space and space.has_method("set_view"):
 		space.set_view(global_position, Basis(Vector3.UP, yaw) * Vector3.FORWARD)
+
+
+## Free height above the feet (up to 2.4 m).
+func _head_room() -> float:
+	var ss := get_world_3d().direct_space_state
+	var a := global_position + Vector3(0, 0.25, 0)
+	var q := PhysicsRayQueryParameters3D.create(a, a + Vector3(0, 2.15, 0))
+	q.exclude = [get_rid()]
+	var hit := ss.intersect_ray(q)
+	return 2.4 if hit.is_empty() else (hit["position"] as Vector3).y - global_position.y
+
+
+## A wall at chest height just ahead with a gap under it: an opening too low to walk into.
+func _low_opening_ahead() -> bool:
+	var ss := get_world_3d().direct_space_state
+	var fwd := Basis(Vector3.UP, yaw) * Vector3.FORWARD
+	var hi := global_position + Vector3(0, 1.0, 0)
+	var lo := global_position + Vector3(0, 0.32, 0)
+	var q1 := PhysicsRayQueryParameters3D.create(hi, hi + fwd * 0.75)
+	q1.exclude = [get_rid()]
+	if ss.intersect_ray(q1).is_empty():
+		return false
+	var q2 := PhysicsRayQueryParameters3D.create(lo, lo + fwd * 1.1)
+	q2.exclude = [get_rid()]
+	return ss.intersect_ray(q2).is_empty()
 
 
 ## Breathing you hear in your own head: calm, winded after a sprint, held and shaky when afraid.
@@ -228,7 +294,7 @@ func _footstep() -> void:
 	if bank.streams_count == 0:
 		return
 	_step_player.stream = bank
-	_step_player.volume_db = (-3.0 if _sprinting else (-15.0 if _crouching else -9.0)) + (2.5 if bank == _steps_wet else (1.5 if bank == _steps_soggy else 0.0))
+	_step_player.volume_db = (-3.0 if _sprinting else (-15.0 if _crouching else (-17.0 if _crawling else (-11.0 if _climbing else -9.0)))) + (2.5 if bank == _steps_wet else (1.5 if bank == _steps_soggy else 0.0))
 	_step_player.play()
 
 

@@ -1,0 +1,128 @@
+{
+ "lunge": {
+  "action": "Basic_Jump",
+  "frames": [
+   0.0,
+   140.8000030517578
+  ],
+  "fps": 24,
+  "seconds": 5.87,
+  "hips_travel_m": [
+   -0.001,
+   -1.373,
+   0.0
+  ]
+ },
+ "crouch": {
+  "action": "Cautious_Crouch_Walk_Forward",
+  "frames": [
+   0.0,
+   27.200000762939453
+  ],
+  "fps": 24,
+  "seconds": 1.13,
+  "hips_travel_m": [
+   0.001,
+   -2.016,
+   0.001
+  ]
+ },
+ "crawl": {
+  "action": "Crawl_and_Look_Back",
+  "frames": [
+   0.0,
+   165.60000610351562
+  ],
+  "fps": 24,
+  "seconds": 6.9,
+  "hips_travel_m": [
+   0.043,
+   -3.981,
+   0.045
+  ]
+ },
+ "idle": {
+  "action": "Idle",
+  "frames": [
+   0.0,
+   96.0
+  ],
+  "fps": 24,
+  "seconds": 4.0,
+  "hips_travel_m": [
+   -0.0,
+   0.0,
+   -0.0
+  ]
+ },
+ "walk": {
+  "action": "Injured_Walk",
+  "frames": [
+   0.0,
+   208.0
+  ],
+  "fps": 24,
+  "seconds": 8.67,
+  "hips_travel_m": [
+   0.0,
+   0.0,
+   -0.0
+  ]
+ },
+ "look": {
+  "action": "Long_Breathe_and_Look_Around",
+  "frames": [
+   0.0,
+   270.3999938964844
+  ],
+  "fps": 24,
+  "seconds": 11.27,
+  "hips_travel_m": [
+   0.001,
+   -0.0,
+   0.0
+  ]
+ },
+ "twitch": {
+  "action": "Mummy_Stagger",
+  "frames": [
+   0.0,
+   116.0
+  ],
+  "fps": 24,
+  "seconds": 4.83,
+  "hips_travel_m": [
+   -0.0,
+   0.0,
+   -0.0
+  ]
+ },
+ "run": {
+  "action": "RunFast",
+  "frames": [
+   0.0,
+   11.199999809265137
+  ],
+  "fps": 24,
+  "seconds": 0.47,
+  "hips_travel_m": [
+   -0.001,
+   -0.002,
+   0.0
+  ]
+ },
+ "scream": {
+  "action": "Zombie_Scream",
+  "frames": [
+   0.0,
+   67.19999694824219
+  ],
+  "fps": 24,
+  "seconds": 2.8,
+  "hips_travel_m": [
+   -0.002,
+   -0.002,
+   -0.0
+  ]
+ }
+}

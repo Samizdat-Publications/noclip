@@ -95,6 +95,7 @@ func _setup_input() -> void:
 	_keys("move_right", [KEY_D, KEY_RIGHT])
 	_keys("sprint", [KEY_SHIFT])
 	_keys("crouch", [KEY_CTRL, KEY_C])
+	_keys("crawl", [KEY_Z])
 	_keys("interact", [KEY_E])
 	_keys("toggle_perf", [KEY_F3])
 	_keys("pause", [KEY_ESCAPE])

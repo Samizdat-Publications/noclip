@@ -200,6 +200,8 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"pocket_zones": [],
 		"tall_rooms": [],
 		"closets": [],
+		"holes": [],
+		"ladders": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -257,6 +259,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 			dark_rooms += 1
 	# --- landmarks and splice errors
 	_landmarks(r, L, leaves, spawn_chunk)
+	_crawl_holes(cx, cz, L)
 	# Graffiti from earlier people (pipeline/manifests/graffiti_level0.json). Fair hints first:
 	# "TURN AROUND" just before a loop run, "LOOK THROUGH IT" near the start of the run.
 	var hr0 := hwy_row(cz)
@@ -815,6 +818,107 @@ func _pick_closet_room(cx: int, cz: int, leaves: Array) -> void:
 		best["closet"] = POCKET
 
 
+## Crawl holes (Stewart, S04; VISION "Remembered wrong"): about one chunk in three has a doorway
+## at the foot of a wall between two rooms, finished with a proper frame and casing but only 72 cm
+## tall. You crawl through it (the player drops to a crawl on its own at a low opening).
+const HOLE_H := 0.72
+
+
+func _crawl_holes(cx: int, cz: int, L: Dictionary) -> void:
+	var hr := _rng("holes:%d:%d" % [cx, cz])
+	if hr.randf() > 0.35 or loop_index(cx, cz) >= 0:
+		return
+	var avoid: Array[Rect2] = []
+	for z in L["pocket_zones"]:
+		avoid.append(Rect2(z[0], z[1], z[2] - z[0], z[3] - z[1]).grow(0.4))
+	for tr in L["tall_rooms"]:
+		avoid.append(Rect2(tr[0], tr[1], tr[2] - tr[0], tr[3] - tr[1]).grow(0.4))
+	var cands := []
+	for i in L["walls"].size():
+		var w: Array = L["walls"][i]
+		var horiz: bool = absf(w[1] - w[3]) < 0.001
+		var line: float = w[1] if horiz else w[0]
+		if line < 0.5 or line > CHUNK - 0.5:
+			continue   # chunk edge: shared with a neighbor
+		var a: float = minf(w[0], w[2]) if horiz else minf(w[1], w[3])
+		var b: float = maxf(w[0], w[2]) if horiz else maxf(w[1], w[3])
+		if b - a < 3.0 * MOD - 0.01:
+			continue
+		var bad := false
+		var mid := Vector2((a + b) * 0.5, line) if horiz else Vector2(line, (a + b) * 0.5)
+		for rc in avoid:
+			if rc.has_point(mid):
+				bad = true
+		if not bad:
+			cands.append(i)
+	if cands.is_empty():
+		return
+	_seeded_shuffle(hr, cands)
+	for i in cands:
+		var w2: Array = L["walls"][i]
+		var horiz2: bool = absf(w2[1] - w2[3]) < 0.001
+		var line2: float = w2[1] if horiz2 else w2[0]
+		var a2: float = minf(w2[0], w2[2]) if horiz2 else minf(w2[1], w2[3])
+		var b2: float = maxf(w2[0], w2[2]) if horiz2 else maxf(w2[1], w2[3])
+		var n_mod := int(round((b2 - a2) / MOD))
+		var k := hr.randi_range(1, n_mod - 2)
+		var s0 := snappedf(a2 + k * MOD, MOD)
+		var hc := Vector2(s0 + MOD * 0.5, line2) if horiz2 else Vector2(line2, s0 + MOD * 0.5)
+		if _near_door(L, hc, 1.8):
+			continue
+		var blocked := false
+		for pr in L["props"]:
+			if Vector2(pr[1], pr[2]).distance_to(hc) < 1.2:
+				blocked = true
+		if blocked:
+			continue
+		L["walls"].remove_at(i)
+		if s0 - a2 > 0.01:
+			L["walls"].append([a2, line2, s0, line2] if horiz2 else [line2, a2, line2, s0])
+		if b2 - (s0 + MOD) > 0.01:
+			L["walls"].append([s0 + MOD, line2, b2, line2] if horiz2 else [line2, s0 + MOD, line2, b2])
+		var d := [s0, line2, s0 + MOD, line2, HOLE_H] if horiz2 else [line2, s0, line2, s0 + MOD, HOLE_H]
+		L["doors"].append(d)
+		L["holes"].append(d)
+		return
+
+
+## A ladder up the end wall of a tall room to a square hole 3.9 m up, with a cramped space
+## behind it, 1.1 m high, over the next room's ceiling (Stewart's reference stills, S04). Something
+## the crew left is up there.
+const LADDER_TOP := 3.9
+const NOOK_H := 1.1
+
+
+func _tall_ladder(L: Dictionary, rr: Rect2) -> void:
+	var along_x := rr.size.x >= rr.size.y
+	var sides := [Vector2(-1, 0), Vector2(1, 0)] if along_x else [Vector2(0, -1), Vector2(0, 1)]
+	for o: Vector2 in sides:
+		var c := rr.get_center()
+		var line: float = (rr.position.x if o.x < 0 else rr.end.x) if along_x else (rr.position.y if o.y < 0 else rr.end.y)
+		var along: float = snappedf(c.y if along_x else c.x, MOD * 0.5)
+		var wall_pt := Vector2(line, along) if along_x else Vector2(along, line)
+		# The nook: 2.4 deep beyond the wall, 2.4 wide, inside this chunk.
+		var t := Vector2(-o.y, o.x)
+		var p0 := wall_pt + o * (T * 0.5) - t * 1.2
+		var p1 := wall_pt + o * (T * 0.5 + 2.4) + t * 1.2
+		var nook := Rect2(Vector2(minf(p0.x, p1.x), minf(p0.y, p1.y)), (p1 - p0).abs())
+		if nook.position.x < 0.4 or nook.position.y < 0.4 or nook.end.x > CHUNK - 0.4 or nook.end.y > CHUNK - 0.4:
+			continue
+		var clash := false
+		for tr in L["tall_rooms"]:
+			if Rect2(tr[0], tr[1], tr[2] - tr[0], tr[3] - tr[1]).intersects(nook):
+				clash = true
+		if clash or _near_door(L, wall_pt, 1.4):
+			continue
+		var base := wall_pt - o * (T * 0.5 + 0.08)
+		L["ladders"].append({"p": [base.x, base.y], "n": [-o.x, -o.y], "top": LADDER_TOP,
+			"hole": [wall_pt.x, wall_pt.y, t.x, t.y], "nook": [nook.position.x, nook.position.y, nook.end.x, nook.end.y]})
+		var back := wall_pt + o * (T * 0.5 + 2.3)
+		L["graffiti"].append(["hd_tape_label", back.x, back.y, -o.x, -o.y, LADDER_TOP + 0.6])
+		return
+
+
 ## Builds the storeroom block with its door and records it for the world (L["closets"]).
 ## Returns where a visitor would stand to look in.
 func _closet(L: Dictionary, rr: Rect2, size: int = POCKET) -> Vector2:
@@ -902,6 +1006,7 @@ func _pick_tall_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> void
 ## Scale cues for a tall room (gate critique 011: "giant blank boxes"): a door copied a second
 ## time halfway up one wall, and a flight of stairs that climbs along another and stops in the air.
 func _tall_cues(L: Dictionary, rr: Rect2) -> void:
+	_tall_ladder(L, rr)
 	var c := rr.get_center()
 	var along_x := rr.size.x >= rr.size.y
 	# The high door on a long wall, facing into the room.

@@ -248,6 +248,7 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_corner_ao(kit),
 		func() -> void:
 			_build_doors(kit)
+			_build_ladders(kit)
 			_build_fake_doors(kit)
 			_build_exit_signs(kit)
 			_build_fallen_tile(kit)
@@ -420,10 +421,82 @@ func _build_shell(kit: MeshKit) -> void:
 		var z1: float = tr[3]
 		var h := T * 0.5
 		for b in [[x0 - h, z0 - h, x1 + h, z0 + h], [x0 - h, z1 - h, x1 + h, z1 + h], [x0 - h, z0 - h, x0 + h, z1 + h], [x1 - h, z0 - h, x1 + h, z1 + h]]:
-			kit.box("wall", Vector3(b[0], H, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES, H)
+			for piece in _tall_wall_pieces(b, ht):
+				kit.box("wall", piece[0], piece[1], piece[2], H)
 		var wa := 0.022
 		for b in [[x0 + h, z0 + h, x1 - h, z0 + h + wa], [x0 + h, z1 - h - wa, x1 - h, z1 - h], [x0 + h, z0 + h, x0 + h + wa, z1 - h], [x1 - h - wa, z0 + h, x1 - h, z1 - h]]:
 			kit.box("tbar", Vector3(b[0], ht - wa, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES | MeshKit.NY, ht)
+
+
+## A tall room's wall above the normal ceiling, as boxes [min, max, faces], with the ladder hole
+## (if one is in this wall) cut out of it.
+func _tall_wall_pieces(b: Array, ht: float) -> Array:
+	var r := Rect2(b[0], b[1], b[2] - b[0], b[3] - b[1])
+	for ld in L.get("ladders", []):
+		var hp := Vector2(ld["hole"][0], ld["hole"][1])
+		if not r.grow(0.02).has_point(hp):
+			continue
+		var horiz := r.size.x > r.size.y
+		var lo: float = ld["top"]
+		var hi: float = lo + NOOK_H
+		var out := []
+		out.append([Vector3(b[0], H, b[1]), Vector3(b[2], lo, b[3]), MeshKit.SIDES | MeshKit.PY])
+		out.append([Vector3(b[0], hi, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES | MeshKit.NY])
+		if horiz:
+			out.append([Vector3(b[0], lo, b[1]), Vector3(hp.x - 0.6, hi, b[3]), MeshKit.SIDES])
+			out.append([Vector3(hp.x + 0.6, lo, b[1]), Vector3(b[2], hi, b[3]), MeshKit.SIDES])
+		else:
+			out.append([Vector3(b[0], lo, b[1]), Vector3(b[2], hi, hp.y - 0.6), MeshKit.SIDES])
+			out.append([Vector3(b[0], lo, hp.y + 0.6), Vector3(b[2], hi, b[3]), MeshKit.SIDES])
+		return out
+	return [[Vector3(b[0], H, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES]]
+
+
+const NOOK_H := 1.1
+
+
+## The ladder to a tall room's high hole, and the cramped nook behind the hole (S04).
+func _build_ladders(kit: MeshKit) -> void:
+	for ld in L.get("ladders", []):
+		var p := Vector2(ld["p"][0], ld["p"][1])
+		var n := Vector2(ld["n"][0], ld["n"][1])
+		var t := Vector2(-n.y, n.x)
+		var top: float = ld["top"]
+		var rail := 0.035
+		for s: float in [-0.22, 0.22]:
+			var c: Vector2 = p + t * s
+			kit.box("trim", Vector3(c.x - rail, 0.0, c.y - rail), Vector3(c.x + rail, top + 0.95, c.y + rail), MeshKit.ALL, H)
+		var y := 0.3
+		while y < top + 0.8:
+			var a := p - t * 0.22
+			var b := p + t * 0.22
+			kit.box("trim", Vector3(minf(a.x, b.x) - 0.015, y - 0.015, minf(a.y, b.y) - 0.015), Vector3(maxf(a.x, b.x) + 0.015, y + 0.015, maxf(a.y, b.y) + 0.015), MeshKit.ALL, H)
+			y += 0.3
+		var nk: Array = ld["nook"]
+		var x0: float = nk[0]
+		var z0: float = nk[1]
+		var x1: float = nk[2]
+		var z1: float = nk[3]
+		kit.face("carpet", [Vector3(x0, top, z0), Vector3(x1, top, z0), Vector3(x1, top, z1), Vector3(x0, top, z1)], Vector3.UP, 0.0)
+		kit.face("plenum", [Vector3(x0, top + NOOK_H, z0), Vector3(x1, top + NOOK_H, z0), Vector3(x1, top + NOOK_H, z1), Vector3(x0, top + NOOK_H, z1)], Vector3.DOWN, 0.0)
+		# Walls round the nook (the side facing the room is the tall wall with the hole in it).
+		var wt := 0.1
+		var o := -n
+		var hole_side := Vector2(ld["hole"][0], ld["hole"][1])
+		for side in [[x0 - wt, z0, x0, z1], [x1, z0, x1 + wt, z1], [x0, z0 - wt, x1, z0], [x0, z1, x1, z1 + wt]]:
+			var sr := Rect2(side[0], side[1], side[2] - side[0], side[3] - side[1])
+			if sr.grow(0.15).has_point(hole_side + o * 0.05):
+				continue
+			kit.box("wall", Vector3(side[0], top, side[1]), Vector3(side[2], top + NOOK_H, side[3]), MeshKit.ALL, top)
+		# A failing amber glow back there, enough to see that someone was here.
+		var glow := OmniLight3D.new()
+		glow.position = Vector3((x0 + x1) * 0.5, top + 0.35, (z0 + z1) * 0.5) - Vector3(n.x, 0.0, n.y) * 0.5
+		glow.light_color = Color(1.0, 0.72, 0.42)
+		glow.light_energy = 0.35
+		glow.omni_range = 2.6
+		glow.omni_attenuation = 1.6
+		glow.light_volumetric_fog_energy = 0.0
+		add_child(glow)
 
 
 func _build_walls(kit: MeshKit) -> void:
@@ -1839,11 +1912,58 @@ func _build_collision() -> void:
 		cs.position = center
 		body.add_child(cs)
 	add_box.call(Vector3(extent.x * 0.5, -0.25, extent.y * 0.5), Vector3(extent.x + 2, 0.5, extent.y + 2))
-	add_box.call(Vector3(extent.x * 0.5, H + 0.25, extent.y * 0.5), Vector3(extent.x + 2, 0.5, extent.y + 2))
+	# The ceiling: one slab, with the tall rooms cut out of it and capped at their own height
+	# (S04: a ladder in a tall room hit this slab at 2.6 m).
+	var ceil_rects: Array[Rect2] = [Rect2(Vector2(-1, -1), extent + Vector2(2, 2))]
+	for tr in L.get("tall_rooms", []):
+		var hole := Rect2(tr[0], tr[1], tr[2] - tr[0], tr[3] - tr[1])
+		var next: Array[Rect2] = []
+		for rc in ceil_rects:
+			if not rc.intersects(hole):
+				next.append(rc)
+				continue
+			var cut := rc.intersection(hole)
+			for piece in [Rect2(rc.position.x, rc.position.y, rc.size.x, cut.position.y - rc.position.y),
+					Rect2(rc.position.x, cut.end.y, rc.size.x, rc.end.y - cut.end.y),
+					Rect2(rc.position.x, cut.position.y, cut.position.x - rc.position.x, cut.size.y),
+					Rect2(cut.end.x, cut.position.y, rc.end.x - cut.end.x, cut.size.y)]:
+				if piece.size.x > 0.001 and piece.size.y > 0.001:
+					next.append(piece)
+		ceil_rects = next
+		add_box.call(Vector3(hole.get_center().x, float(tr[4]) + 0.25, hole.get_center().y), Vector3(hole.size.x, 0.5, hole.size.y))
+	for rc in ceil_rects:
+		add_box.call(Vector3(rc.get_center().x, H + 0.25, rc.get_center().y), Vector3(rc.size.x, 0.5, rc.size.y))
 	for s in solids:
 		if s.size.x * s.size.y <= 0.0 or s in _edge_solids:
 			continue
 		add_box.call(Vector3(s.get_center().x, H * 0.5, s.get_center().y), Vector3(s.size.x, H, s.size.y))
+	# Low doorways (crawl holes, doorways a little too small): the wall over them is solid.
+	for d in L["doors"]:
+		var dh: float = float(d[4]) if d.size() > 4 else DH
+		var dr := _wall_rect(d, 0.0, 0.0)
+		add_box.call(Vector3(dr.get_center().x, (dh + H) * 0.5, dr.get_center().y), Vector3(dr.size.x, H - dh, dr.size.y))
+	# Tall rooms: their walls above the normal ceiling (with the ladder hole), and the nook.
+	for tr in L.get("tall_rooms", []):
+		var h2 := T * 0.5
+		for b in [[tr[0] - h2, tr[1] - h2, tr[2] + h2, tr[1] + h2], [tr[0] - h2, tr[3] - h2, tr[2] + h2, tr[3] + h2], [tr[0] - h2, tr[1] - h2, tr[0] + h2, tr[3] + h2], [tr[2] - h2, tr[1] - h2, tr[2] + h2, tr[3] + h2]]:
+			for piece in _tall_wall_pieces(b, float(tr[4])):
+				var mn: Vector3 = piece[0]
+				var mx: Vector3 = piece[1]
+				add_box.call((mn + mx) * 0.5, mx - mn)
+	for ld in L.get("ladders", []):
+		var nk: Array = ld["nook"]
+		var top: float = ld["top"]
+		var nc := Vector3((nk[0] + nk[2]) * 0.5, 0.0, (nk[1] + nk[3]) * 0.5)
+		var ns := Vector3(nk[2] - nk[0], 0.0, nk[3] - nk[1])
+		add_box.call(nc + Vector3(0, top - 0.1, 0), ns + Vector3(0.2, 0.2, 0.2))
+		add_box.call(nc + Vector3(0, top + NOOK_H + 0.1, 0), ns + Vector3(0.2, 0.2, 0.2))
+		var nn := Vector3(ld["n"][0], 0.0, ld["n"][1])
+		for side in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
+			if side.dot(nn) > 0.5:
+				continue    # the open side, toward the room
+			var off := Vector3(side.x * (ns.x * 0.5 + 0.05), top + NOOK_H * 0.5, side.z * (ns.z * 0.5 + 0.05))
+			var sz := Vector3(0.1 if side.x != 0.0 else ns.x, NOOK_H, 0.1 if side.z != 0.0 else ns.z)
+			add_box.call(nc + off, sz)
 
 
 func _build_nav() -> void:
@@ -1947,6 +2067,19 @@ func find_path(from: Vector3, to: Vector3) -> PackedVector3Array:
 		out.append(Vector3(anchor.x, 0, anchor.y))
 		k = j + 1
 	return out
+
+
+## The ladder whose climbing space contains p (chunk-local), or {}: {"n": into the room, "top": y}.
+func ladder_at(p: Vector3) -> Dictionary:
+	for ld in L.get("ladders", []):
+		var base := Vector3(ld["p"][0], 0.0, ld["p"][1])
+		var n := Vector3(ld["n"][0], 0.0, ld["n"][1])
+		var t := Vector3(-n.z, 0.0, n.x)
+		var d := p - base
+		var out := d.dot(n)
+		if out > -0.35 and out < 0.85 and absf(d.dot(t)) < 0.5 and p.y > -0.2 and p.y < float(ld["top"]) + 1.2:
+			return {"n": n, "top": float(ld["top"])}
+	return {}
 
 
 func get_interest_points() -> Array:

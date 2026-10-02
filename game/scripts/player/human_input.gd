@@ -14,6 +14,8 @@ func update_move(_player: Node, _delta: float) -> void:
 	move = Input.get_vector("move_left", "move_right", "move_back", "move_forward")
 	sprint = Input.is_action_pressed("sprint")
 	crouch = Input.is_action_pressed("crouch")
+	if Input.is_action_just_pressed("crawl"):
+		crawl = not crawl
 	camcorder = Input.is_action_pressed("camcorder")
 
 

@@ -7,6 +7,7 @@ var move := Vector2.ZERO          # x = strafe right, y = forward, length <= 1
 var look_delta := Vector2.ZERO    # radians this render frame: x = yaw right, y = pitch up
 var sprint := false
 var crouch := false
+var crawl := false                # lie down and crawl (toggle); low openings also force it
 var camcorder := false
 
 
