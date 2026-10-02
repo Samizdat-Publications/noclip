@@ -1,0 +1,17 @@
+{
+ "tag": "breath_1",
+ "params": {
+  "text": "A single slow human breath, one long soft inhale through the nose and mouth then a slow exhale, close microphone, breathy, intimate, completely dry with no room echo, no speech, no words, no music, no other sounds.",
+  "duration_seconds": 3.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "breath_1_a67a52513eca.pcm",
+ "format": "pcm_48000",
+ "credits": 16.0,
+ "est_usd": 0.0048,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

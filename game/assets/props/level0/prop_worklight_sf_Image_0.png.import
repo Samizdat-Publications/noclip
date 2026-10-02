@@ -2,24 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccl1l6af8h0p8"
-path="res://.godot/imported/prop_worklight_sf_Image_0.png-ac7d8f94097cb75e20cd6f49d5268ef0.ctex"
+uid="uid://dyq3v8ofgxgby"
+path.bptc="res://.godot/imported/prop_worklight_sf_Image_0.png-ac7d8f94097cb75e20cd6f49d5268ef0.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "d1117c80d7a57b31eceb0a088b0c0279"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/level0/prop_worklight_sf_Image_0.png"
-dest_files=["res://.godot/imported/prop_worklight_sf_Image_0.png-ac7d8f94097cb75e20cd6f49d5268ef0.ctex"]
+dest_files=["res://.godot/imported/prop_worklight_sf_Image_0.png-ac7d8f94097cb75e20cd6f49d5268ef0.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

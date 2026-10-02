@@ -43,6 +43,7 @@ var _seam_step := 0
 var _seam_t := 0.0
 var _heading_t := 0.0
 var _relook_t := 0.0
+var _seam_looked_up := {}
 
 
 func _init() -> void:
@@ -82,6 +83,8 @@ func _pick_target(player: Player) -> void:
 			# Something that only shows on tape: a person who has learned that would go and look.
 			if p.has("seam") and not _seams_done.has(p["name"]) and d < 22.0:
 				score *= 25.0
+			if String(p["name"]).contains("_tall_") and not _seam_looked_up.has(p["name"]) and d < 24.0:
+				score *= 8.0
 			# Inside a corridor that keeps repeating, a person keeps walking on for a while.
 			if space.has_method("loop_dir") and space.loop_dir() != 0:
 				if absf(p["pos"].z - player.global_position.z) > 3.0:
@@ -259,6 +262,13 @@ func update_move(player: Node, delta: float) -> void:
 			_seam_t = 0.0
 			return
 		var r := rng.randf()
+		if target_name.contains("_tall_") and not _seam_looked_up.has(target_name):
+			# A room far too tall: stop and look up at it, and film it.
+			_seam_looked_up[target_name] = true
+			_start_pause(pl)
+			_plan = [[pl.yaw, 0.5, 2.6], [pl.yaw + 1.1, 0.42, 2.0], [pl.yaw - 0.9, 0.55, 2.2], [pl.yaw, 0.0, 1.0]]
+			_cam_left = maxf(_cam_left, 4.0)
+			return
 		if r < 0.16:
 			_start_pause(pl)
 			return
@@ -330,8 +340,8 @@ func _update_seam(pl: Player, delta: float) -> void:
 			var to := seam - pl.global_position
 			_want_yaw = yaw_of(Vector3(to.x, 0.0, to.z))
 			_want_pitch = 0.02
-			camcorder = _seam_t > 1.4 and not Game.opts.has("nocam")
-			if _seam_t > 4.2:
+			camcorder = _seam_t > 0.9 and not Game.opts.has("nocam")
+			if _seam_t > 3.0:
 				path = space.find_path(pl.global_position, pocket)
 				path_i = 1 if path.size() > 1 else 0
 				_seam_step = 1

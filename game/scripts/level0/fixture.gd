@@ -54,7 +54,9 @@ static func make_ceiling_light() -> SpotLight3D:
 	sl.spot_angle = float(Game.opts.get("spot_angle", "82"))
 	sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "1.5"))
 	sl.spot_attenuation = float(Game.opts.get("spot_atten", "1.7"))
-	sl.light_size = float(Game.opts.get("light_size", "0.7"))   # firmer shadows from pillars (L032)
+	# 0: plain filtered shadows. 0.7 (contact-hardening PCSS) cost about 8 fps and looked the same
+	# under these soft, high panels (D024).
+	sl.light_size = float(Game.opts.get("light_size", "0.0"))
 	sl.rotation = Vector3(-PI * 0.5, 0, 0)
 	sl.shadow_enabled = not Game.opts.has("noshadow")
 	sl.shadow_bias = float(Game.opts.get("sbias", "0.06"))
@@ -92,7 +94,8 @@ func apply() -> void:
 	if field:
 		field.mark(field_index)
 	if light:
-		light.light_energy = LIGHT_ENERGY * base_energy * level
+		# A panel three times too high still has to reach the floor (a tall room, D023).
+		light.light_energy = LIGHT_ENERGY * base_energy * level * pow(ceiling_h / 2.6, 1.25)
 		light.visible = level > 0.002
 	if lens:
 		lens.set_instance_shader_parameter("light_level", level * base_energy)
@@ -150,12 +153,30 @@ func stutter() -> void:
 
 ## Scripted event: the tube gives a last stutter and goes out (after `delay` seconds).
 func kill(delay: float) -> void:
+	_die_sound(delay)
 	if _orig_state == -1:
 		_orig_state = state
 	state = State.EVENT
 	_queue = [[delay, level, 0], [0.05, 0.12, 0], [0.04, 0.95, 0], [0.09, 0.0, 0], [0.03, 0.55, 0], [0.05, 0.0, 0], [100000.0, 0.0, 0]]
 	_seg_left = 0.0
 	set_process(true)
+
+
+func _die_sound(delay: float) -> void:
+	var path := "res://assets/audio/level0/light_die_%02d.wav" % (1 + variant % 2)
+	if not ResourceLoader.exists(path) or not is_inside_tree():
+		return
+	var p := AudioStreamPlayer3D.new()
+	p.stream = load(path)
+	p.bus = &"World"
+	p.unit_size = 1.6
+	p.max_distance = 22.0
+	p.position = Vector3(0, ceiling_h - 0.05, 0)
+	add_child(p)
+	get_tree().create_timer(delay + 0.05).timeout.connect(func() -> void:
+		if is_instance_valid(p):
+			p.play()
+			p.finished.connect(p.queue_free))
 
 
 ## Scripted event: the tube struggles back on, then returns to its normal behavior.

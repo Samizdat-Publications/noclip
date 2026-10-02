@@ -65,6 +65,7 @@ Each level needs its own lighting signature, material set, sound signature, a no
 
 ## The Entity (original design; refine freely)
 S01 note: the 2026 film's threats are degraded human copies, so the M4 design must move clearly away from "a worse copy of a person". Strong direction that fits generation loss: something that exists properly only on tape, a dropout in the recording. To the naked eye it is an absence (light bends wrong, the hum dies, a gap in the wallpaper pattern); through the camcorder it is fully there. Decide in M4 and log it.
+S03 note (D021): the tape-only figure in Level 0 is a placeholder presence, not the Entity: a scanned ordinary office worker posed slightly wrong (arms too long), rendered as a dark shape made of bad tape (fizzing outline, smeared head, drop-out streaks), jumping between held poses like frame skips, and standing a little closer each time you lower the camcorder and look again. M4 decides whether the Entity grows out of it.
 Seed concept: **the Occupant.** A tall humanoid that is a misremembered person. The proportions are slightly wrong (forearms too long, neck a little too long), the face is smeared like a paused VHS frame, and it wears the clothes of nobody in particular.
 - **On camera** it moves in stutters, frame-skipping like bad tape. **Off camera** it moves smoothly and quietly.
 - **Senses:** hearing first (sprinting, dropped items, the camcorder's beep), then sight. The camcorder's IR light attracts it.
@@ -81,6 +82,9 @@ Build these as reusable systems. They must be seamless (no visible pops in the c
 - **Unobserved rearrangement:** rooms change only when outside the frustum and occluded (double-check with raycasts). The player sees the result, never the change.
 - **Impossible stairs:** going down five flights puts you back on the floor you started from, but the lights are now off.
 - **Scale shifts:** a room where the doors are slightly too small, or the ceiling slowly lowers.
+- **Tape-only seams (built S03, D022):** a door-sized patch of wall that exists only for the naked eye. Through the camcorder it is a torn doorway; walk through it. Level 0's tell: the wallpaper on the patch is slipped a few centimeters, and earlier people often traced it in chalk.
+- **Scale errors (S03, D023):** a room copied at the wrong scale, its walls and ceiling grid going on up to three times the height over doors that are now far too small.
+- **The horizon (S03, D020):** everything fades into the haze between 34 and 46 m, so streaming never pops and loop copies stay identical out to the edge of sight.
 - **Rule:** disorientation is the goal, frustration is not. Every space has a way forward.
 
 ## Look bible

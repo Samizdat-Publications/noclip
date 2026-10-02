@@ -1,0 +1,483 @@
+{
+ "asset": "audio_s03",
+ "sample_rate": 48000,
+ "bit_depth": 16,
+ "elevenlabs": {
+  "model_id": "eleven_text_to_sound_v2",
+  "endpoint": "POST /v1/sound-generation"
+ },
+ "files": {
+  "step_carpet_soggy_01.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 1,
+   "src_start_s": 4.603,
+   "pitch_ratio": 0.973,
+   "length_s": 0.3
+  },
+  "step_carpet_soggy_02.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 1,
+   "src_start_s": 7.892,
+   "pitch_ratio": 0.976,
+   "length_s": 0.495
+  },
+  "step_carpet_soggy_03.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 1,
+   "src_start_s": 15.615,
+   "pitch_ratio": 1.006,
+   "length_s": 0.337
+  },
+  "step_carpet_soggy_04.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 2,
+   "src_start_s": 11.929,
+   "pitch_ratio": 0.998,
+   "length_s": 0.27
+  },
+  "step_carpet_soggy_05.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 3,
+   "src_start_s": 4.717,
+   "pitch_ratio": 1.022,
+   "length_s": 0.264
+  },
+  "step_carpet_soggy_06.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 3,
+   "src_start_s": 9.429,
+   "pitch_ratio": 1.028,
+   "length_s": 0.263
+  },
+  "step_carpet_soggy_07.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 5,
+   "src_start_s": 3.007,
+   "pitch_ratio": 0.989,
+   "length_s": 0.421
+  },
+  "step_carpet_soggy_08.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 5,
+   "src_start_s": 6.56,
+   "pitch_ratio": 1.013,
+   "length_s": 0.34
+  },
+  "step_carpet_soggy_run_01.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 1,
+   "src_start_s": 11.75,
+   "pitch_ratio": 1.037,
+   "length_s": 0.26
+  },
+  "step_carpet_soggy_run_02.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 1,
+   "src_start_s": 12.129,
+   "pitch_ratio": 0.953,
+   "length_s": 0.283
+  },
+  "step_carpet_soggy_run_03.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 4,
+   "src_start_s": 4.348,
+   "pitch_ratio": 1.004,
+   "length_s": 0.269
+  },
+  "step_carpet_soggy_run_04.wav": {
+   "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
+   "channels": 1,
+   "take": 4,
+   "src_start_s": 12.727,
+   "pitch_ratio": 1.043,
+   "length_s": 0.251
+  },
+  "worklight_hum.wav": {
+   "method": "procedural: integer-cycle 120/240/360/480 Hz sines, slow level drift, 2.8 kHz filament whine (-32 dB), FFT-periodic warm noise, 3.5 kHz lowpass",
+   "seed": 4404,
+   "duration_s": 8.0,
+   "channels": 1,
+   "target_lufs": -29,
+   "note": "hum_fixture_a is -23 LUFS, so this is 6 dB quieter"
+  },
+  "seam_draft.wav": {
+   "method": "procedural: FFT-periodic breath noise 0.5-3.5 kHz with 0.1/0.3 Hz swells, 80-400 Hz air, tape hiss 4.5-12 kHz at -20 dB; no tonal components",
+   "seed": 6606,
+   "duration_s": 10.0,
+   "channels": 1,
+   "target_lufs": -40
+  },
+  "tape_dropout_01.wav": {
+   "method": "procedural: 3 noise clicks, ragged HF hiss burst, downward chirp, 500 Hz-7 kHz camcorder speaker band, soft clip",
+   "seed": 7701,
+   "duration_s": 0.12,
+   "channels": 1,
+   "peak_dbfs": -6
+  },
+  "tape_dropout_02.wav": {
+   "method": "procedural: 3 noise clicks, ragged HF hiss burst, downward chirp, 500 Hz-7 kHz camcorder speaker band, soft clip",
+   "seed": 7702,
+   "duration_s": 0.2,
+   "channels": 1,
+   "peak_dbfs": -6
+  },
+  "tape_dropout_03.wav": {
+   "method": "procedural: 3 noise clicks, ragged HF hiss burst, downward chirp, 500 Hz-7 kHz camcorder speaker band, soft clip",
+   "seed": 7703,
+   "duration_s": 0.09,
+   "channels": 1,
+   "peak_dbfs": -6
+  },
+  "figure_breath_rev_01.wav": {
+   "method": "ElevenLabs breath, 1.9 s window around the loudest part, reversed, 450 ms in / 300 ms out, pitch down 3 semitones by resample, tape wow ~0.8 Hz / 1.6 ms, faint HF hiss, 70 Hz-7.5 kHz",
+   "channels": 1,
+   "peak_dbfs": -12,
+   "length_s": 1.9,
+   "prompt": "A single slow human breath, one long soft inhale through the nose and mouth then a slow exhale, close microphone, breathy, intimate, completely dry with no room echo, no speech, no words, no music, no other sounds."
+  },
+  "figure_breath_rev_02.wav": {
+   "method": "ElevenLabs breath, 1.9 s window around the loudest part, reversed, 450 ms in / 300 ms out, pitch down 4 semitones by resample, tape wow ~0.8 Hz / 1.6 ms, faint HF hiss, 70 Hz-7.5 kHz",
+   "channels": 1,
+   "peak_dbfs": -12,
+   "length_s": 1.9,
+   "prompt": "A single slow human breath, one long soft inhale through the nose and mouth then a slow exhale, close microphone, breathy, intimate, completely dry with no room echo, no speech, no words, no music, no other sounds. Deeper."
+  },
+  "light_die_01.wav": {
+   "method": "procedural: ballast tink (inharmonic damped partials), struggling 120 Hz hum that cuts off, Poisson crackle, HF sizzle",
+   "seed": 8801,
+   "duration_s": 1.0,
+   "channels": 1,
+   "peak_dbfs": -4
+  },
+  "light_die_02.wav": {
+   "method": "procedural: ballast tink (inharmonic damped partials), struggling 120 Hz hum that cuts off, Poisson crackle, HF sizzle",
+   "seed": 8802,
+   "duration_s": 1.3,
+   "channels": 1,
+   "peak_dbfs": -4
+  }
+ },
+ "paid_calls": [
+  {
+   "tag": "step_carpet_soggy_take1",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_take1_a7266eaac36a.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_take2",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Varied gait.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_take2_9ecffd9362e7.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_take3",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Heavier steps.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_take3_14021a7ea7d7.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_take4",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Lighter steps.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_take4_320685133211.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_take5",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. More squelch.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_take5_50bb7f963cb2.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_take6",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Longer squelch.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_take6_bea88bd187c9.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_run_take1",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking at a fast run on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_run_take1_146d5942357d.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_run_take2",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking at a fast run on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Varied gait.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_run_take2_55d66df53c29.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_run_take3",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking at a fast run on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Heavier steps.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_run_take3_06d6f197ddff.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "step_carpet_soggy_run_take4",
+   "params": {
+    "text": "Single person in soft-soled sneakers walking at a fast run on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Lighter steps.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "step_carpet_soggy_run_take4_500097f254dd.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "breath_1",
+   "params": {
+    "text": "A single slow human breath, one long soft inhale through the nose and mouth then a slow exhale, close microphone, breathy, intimate, completely dry with no room echo, no speech, no words, no music, no other sounds.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "breath_1_a67a52513eca.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  },
+  {
+   "tag": "breath_2",
+   "params": {
+    "text": "A single slow human breath, one long soft inhale through the nose and mouth then a slow exhale, close microphone, breathy, intimate, completely dry with no room echo, no speech, no words, no music, no other sounds. Deeper.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "breath_2_72cb08651133.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-02"
+  }
+ ],
+ "step_pool": {
+  "walk": 13,
+  "run": 7
+ },
+ "verification": {
+  "figure_breath_rev_01.wav": {
+   "seconds": 1.9,
+   "lufs": -23.58,
+   "peak_dbfs": -12.0
+  },
+  "figure_breath_rev_02.wav": {
+   "seconds": 1.9,
+   "lufs": -22.29,
+   "peak_dbfs": -12.0
+  },
+  "light_die_01.wav": {
+   "seconds": 0.814,
+   "lufs": -20.85,
+   "peak_dbfs": -4.0
+  },
+  "light_die_02.wav": {
+   "seconds": 0.972,
+   "lufs": -22.5,
+   "peak_dbfs": -4.0
+  },
+  "seam_draft.wav": {
+   "seconds": 10.0,
+   "lufs": -40.0,
+   "peak_dbfs": -25.61,
+   "seam_step_over_rms_step": 0.57
+  },
+  "step_carpet_soggy_01.wav": {
+   "seconds": 0.3,
+   "lufs": -22.02,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_02.wav": {
+   "seconds": 0.495,
+   "lufs": -23.23,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_03.wav": {
+   "seconds": 0.337,
+   "lufs": -24.54,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_04.wav": {
+   "seconds": 0.27,
+   "lufs": -25.88,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_05.wav": {
+   "seconds": 0.264,
+   "lufs": -24.32,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_06.wav": {
+   "seconds": 0.263,
+   "lufs": -24.28,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_07.wav": {
+   "seconds": 0.421,
+   "lufs": -23.59,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_08.wav": {
+   "seconds": 0.34,
+   "lufs": -26.68,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_run_01.wav": {
+   "seconds": 0.26,
+   "lufs": -26.26,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_run_02.wav": {
+   "seconds": 0.283,
+   "lufs": -27.85,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_run_03.wav": {
+   "seconds": 0.269,
+   "lufs": -24.41,
+   "peak_dbfs": -3.2
+  },
+  "step_carpet_soggy_run_04.wav": {
+   "seconds": 0.251,
+   "lufs": -24.62,
+   "peak_dbfs": -3.2
+  },
+  "tape_dropout_01.wav": {
+   "seconds": 0.12,
+   "lufs": -22.62,
+   "peak_dbfs": -6.0
+  },
+  "tape_dropout_02.wav": {
+   "seconds": 0.2,
+   "lufs": -25.45,
+   "peak_dbfs": -6.0
+  },
+  "tape_dropout_03.wav": {
+   "seconds": 0.09,
+   "lufs": -25.32,
+   "peak_dbfs": -6.0
+  },
+  "worklight_hum.wav": {
+   "seconds": 8.0,
+   "lufs": -29.0,
+   "peak_dbfs": -19.76,
+   "seam_step_over_rms_step": 0.21
+  }
+ },
+ "cost": {
+  "paid_calls": 12,
+  "est_total_usd": 0.1614,
+  "credits": 538.0
+ }
+}

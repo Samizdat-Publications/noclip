@@ -75,6 +75,13 @@ func _apply_render_settings() -> void:
 	RenderingServer.positional_soft_shadow_filter_set_quality(int(Game.opts.get("shadowq", "2")))
 	# Haze froxel grid: 96 x 64 keeps the look and saves ~4 fps over 128 x 128.
 	RenderingServer.environment_set_volumetric_fog_volume_size(int(Game.opts.get("fog_size", "96")), int(Game.opts.get("fog_depth", "64")))
+	# SDFGI: how many frames light updates and convergence are spread over (profiling switches).
+	if Game.opts.has("sdfgi_light"):
+		RenderingServer.environment_set_sdfgi_frames_to_update_light(int(Game.opts["sdfgi_light"]))
+	if Game.opts.has("sdfgi_conv"):
+		RenderingServer.environment_set_sdfgi_frames_to_converge(int(Game.opts["sdfgi_conv"]))
+	if Game.opts.has("sdfgi_rays"):
+		RenderingServer.environment_set_sdfgi_ray_count(int(Game.opts["sdfgi_rays"]))
 
 
 func _make_post() -> void:

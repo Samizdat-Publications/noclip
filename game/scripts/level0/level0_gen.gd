@@ -198,6 +198,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"worklights": [],
 		"graffiti": [],
 		"pocket_zones": [],
+		"tall_rooms": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -237,6 +238,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		_split(r, L, part[0], part[1], 0, max_depth, leaves)
 	# --- a seam (tape-only exit) into a sealed pocket, in about a third of the chunks
 	_pick_pocket_room(cx, cz, leaves, spawn_chunk)
+	_pick_tall_room(cx, cz, leaves, spawn_chunk)
 	# --- rooms, fixtures, pillars
 	for lf in leaves:
 		_furnish_room(r, L, lf, spawn_chunk)
@@ -246,7 +248,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		var rr: Rect2 = lf["rect"]
 		if spawn_chunk and rr.has_point(Vector2(12, 12)):
 			continue
-		if r.randf() < 0.22 and dark_rooms < 3:
+		if r.randf() < 0.22 and dark_rooms < 3 and not lf.get("pocket", false):
 			L["dark_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y])
 			dark_rooms += 1
 	# --- landmarks and splice errors
@@ -592,13 +594,27 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 		var shape := "plus" if r.randf() < 0.4 else "square"
 		var size := 0.9 if shape == "plus" else 0.6
 		var x := rr.position.x + step
+		var first_pillar: int = L["pillars"].size()
 		while x < rr.end.x - 1.6:
 			var z := rr.position.y + step
 			while z < rr.end.y - 1.6:
 				L["pillars"].append([snappedf(x, MOD), snappedf(z, MOD), size, shape])
 				z += step
 			x += step
+		var wr := _rng("wrongpillar:%d:%d:%d:%d" % [L["chunk"][0], L["chunk"][1], int(rr.position.x * 10), int(rr.position.y * 10)])
+		var n_p: int = L["pillars"].size() - first_pillar
+		if n_p >= 4 and wr.randf() < 0.45:
+			var pk: Array = L["pillars"][first_pillar + wr.randi() % n_p]
+			if pk[3] == "square":
+				pk.append("hang" if wr.randf() < 0.5 else "short")
 	var focus := rr.get_center()
+	if lf.get("tall", false) and kind == "hall":
+		kind = "room"
+		while L["pillars"].size() > 0 and rr.has_point(Vector2(L["pillars"][-1][0], L["pillars"][-1][1])):
+			L["pillars"].pop_back()
+	if lf.get("tall", false):
+		L["tall_rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, H * 3.0])
+		kind = "tall"
 	if lf.get("pocket", false):
 		# The random draws above still happen so the rest of the chunk keeps its sequence.
 		if kind == "hall":
@@ -662,7 +678,7 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			if blocked:
 				continue
 			L["fixtures"].append([px, pz, 1 if along_x else 0])
-	if kind != "corridor":
+	if kind != "corridor" and not lf.get("pocket", false):
 		_room_mood(L, rr, first_fixture)
 
 
@@ -696,6 +712,24 @@ func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> vo
 			best = lf
 	if not best.is_empty():
 		best["pocket"] = true
+
+
+## Scale error (art direction #3, D023): about one chunk in five has a room copied at the wrong
+## scale: an ordinary office room whose walls and ceiling grid go on up to three times the
+## height, over doors that are now far too small. Never the spawn chunk, never a pocket room.
+func _pick_tall_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> void:
+	var tr := _rng("tall:%d:%d" % [cx, cz])
+	if spawn_chunk or tr.randf() > 0.2:
+		return
+	var cands := []
+	for lf in leaves:
+		if lf.get("corridor", false) or lf.get("pocket", false):
+			continue
+		var rm: Rect2i = lf["m"]
+		if rm.size.x >= 4 and rm.size.y >= 4 and rm.size.x <= 11 and rm.size.y <= 11:
+			cands.append(lf)
+	if not cands.is_empty():
+		cands[tr.randi() % cands.size()]["tall"] = true
 
 
 ## Builds the block, its seam and what is inside. Returns where a visitor would stand to look at
@@ -749,8 +783,8 @@ func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
 	var crate := back + t * side_s * (ps * 0.5 - 0.5)
 	L["props"].append(["prop_tape_crate", crate.x, crate.y, pr.randf_range(0, 360)])
 	L["props"].append(["prop_vhs_tape_sf", crate.x + n.x * 0.5 - t.x * side_s * 0.25, crate.y + n.y * 0.5 - t.y * side_s * 0.25, pr.randf_range(0, 360)])
-	var wl := back - t * side_s * (ps * 0.5 - 0.45) + n * 0.1
-	var aim := (seam_c + t * side_s * 0.4) - wl
+	var wl := c + n * (ps * 0.5 - T * 0.5 - 0.42) - t * side_s * (ps * 0.5 - 0.5)
+	var aim := (back + t * side_s * 0.3) - wl
 	L["worklights"].append([wl.x, wl.y, rad_to_deg(atan2(aim.x, aim.y))])
 	var back_wall := c - n * ps * 0.5 + n * T * 0.5
 	L["graffiti"].append(["hd_tape_label", back_wall.x + t.x * 0.6, back_wall.y + t.y * 0.6, n.x, n.y, 1.55])

@@ -44,6 +44,8 @@ var _bones := {}          # stem -> bone index
 var _base := {}           # bone index -> base local rotation (Quaternion)
 var _side := 1.0
 var _light_fx: Fixture
+var _drop: AudioStreamPlayer
+var _breath: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -55,6 +57,24 @@ func _ready() -> void:
 	figure = _make_figure()
 	figure.visible = false
 	add_child(figure)
+	# Heard through the camcorder's own speaker (only while it records).
+	_drop = _ui_player("tape_dropout_%02d", 3, -14.0)
+	_breath = _ui_player("figure_breath_rev_%02d", 2, -16.0)
+
+
+func _ui_player(pattern: String, n: int, db: float) -> AudioStreamPlayer:
+	var rz := AudioStreamRandomizer.new()
+	rz.random_pitch = 1.04
+	for i in n:
+		var p := "res://assets/audio/level0/" + (pattern % (i + 1)) + ".wav"
+		if ResourceLoader.exists(p):
+			rz.add_stream(-1, load(p))
+	var pl := AudioStreamPlayer.new()
+	pl.stream = rz
+	pl.bus = &"UI"
+	pl.volume_db = db
+	add_child(pl)
+	return pl
 
 
 # ------------------------------------------------------------------ the body
@@ -223,6 +243,8 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 		_pose_t = _rng.randf_range(0.5, 1.8)
 		_tear = 1.0
 		player.camcorder.glitch_small()
+		if (_drop.stream as AudioStreamRandomizer).streams_count > 0:
+			_drop.play()
 		# Sometimes the jump also turns it to face you squarely again.
 		_face_player()
 	_apply_pose(_pose, sin(Game.clock * 1.3) * 0.015)
@@ -262,6 +284,8 @@ func _update_hidden(cam_on: bool) -> void:
 		_end_encounter(false)
 		return
 	_show_at(p)
+	if (_breath.stream as AudioStreamRandomizer).streams_count > 0:
+		_breath.play()
 
 
 func _try_start(cam_on: bool) -> void:

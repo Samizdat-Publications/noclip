@@ -38,7 +38,10 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	m["wall"] = wall
 
 	var carpet := _shader("res://shaders/carpet.gdshader")
-	_bind(carpet, "carpet", {"albedo_tex": "albedo", "normal_tex": "normal", "rough_tex": "roughness", "ao_tex": "ao"})
+	# Photographic berber (S03, pipeline/textures/build_carpet_v2.py; L054), procedural v1 as fallback.
+	var cprefix := "carpet_v2" if tex("carpet_v2_albedo") != null and not Game.opts.has("carpet_v1") else "carpet"
+	_bind(carpet, cprefix, {"albedo_tex": "albedo", "normal_tex": "normal", "rough_tex": "roughness", "ao_tex": "ao"})
+	carpet.set_shader_parameter("proc_detail", 0.3 if cprefix == "carpet_v2" else 1.0)
 	carpet.set_shader_parameter("seed_offset", seed_offset)
 	m["carpet"] = carpet
 
@@ -87,8 +90,15 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	m["housing"].set_shader_parameter("reveal_glow", float(Game.opts.get("reveal", "0.9")))
 
 	var trim := StandardMaterial3D.new()
-	trim.albedo_color = Color(0.6, 0.55, 0.43)
-	trim.roughness = 0.42
+	# Painted door frames, chipped and grimy (critique 009, L058: the plain lining read as a broken mesh).
+	trim.albedo_color = Color(0.62, 0.57, 0.46)
+	trim.roughness = 0.62
+	if tex("baseboard_albedo"):
+		trim.albedo_texture = tex("baseboard_albedo")
+		trim.uv1_scale = Vector3(1.6, 1.6, 1.6)
+		trim.normal_enabled = tex("baseboard_normal") != null
+		trim.normal_texture = tex("baseboard_normal")
+		trim.normal_scale = 0.5
 	m["trim"] = trim
 
 	var door := StandardMaterial3D.new()
@@ -174,7 +184,8 @@ static func make_environment(preset: String) -> Environment:
 	e.ssao_detail = 0.6
 	e.ssao_light_affect = float(Game.opts.get("ssao_la", "0.45"))   # corners darken under direct light too (L032)
 
-	e.ssil_enabled = preset == "high"
+	# SSIL off: SDFGI already carries the bounce; SSIL cost 4 to 8 fps and flattened rooms (D024).
+	e.ssil_enabled = preset == "high" and Game.opts.has("ssil")
 	e.ssil_radius = 4.0
 	e.ssil_intensity = 0.9
 	e.ssil_sharpness = 0.98

@@ -1,0 +1,38 @@
+{
+ "1": {
+  "model": "gemini-3-pro-image",
+  "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render.",
+  "size": [
+   2048,
+   2048
+  ],
+  "cost_usd": 0.134
+ },
+ "2": {
+  "model": "gemini-3-pro-image",
+  "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render. Slightly more worn and darker olive-brown in the flecks, tighter berber weave.",
+  "size": [
+   2048,
+   2048
+  ],
+  "cost_usd": 0.134
+ },
+ "3": {
+  "model": "gemini-3-pro-image",
+  "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render. Warmer yellow-tan overall, a coarser looped weave with visible lengthwise rows.",
+  "size": [
+   2048,
+   2048
+  ],
+  "cost_usd": 0.134
+ },
+ "4": {
+  "model": "gemini-3.1-flash-image",
+  "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render.",
+  "size": [
+   2048,
+   2048
+  ],
+  "cost_usd": 0.067
+ }
+}

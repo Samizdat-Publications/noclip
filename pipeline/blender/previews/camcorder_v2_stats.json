@@ -1,0 +1,240 @@
+{
+ "camcorder_v2_cand1": {
+  "glb": "game/assets/props/player/camcorder_v2_cand1.glb",
+  "source_uid": "802d634fb1f745f2b528109661acd2c9",
+  "title": "Panasonic NV-G120 VHS-C CAMERA",
+  "author": "PetyaPetr",
+  "tris_before": 33416,
+  "tris": 33404,
+  "scale": 0.03176,
+  "gltf_min": [
+   -0.015,
+   -0.061,
+   -0.215
+  ],
+  "gltf_max": [
+   0.06,
+   0.024,
+   -0.0
+  ],
+  "dims_m": [
+   0.075,
+   0.085,
+   0.215
+  ],
+  "materials": [
+   "Material.006",
+   "Material.013",
+   "Material.008",
+   "Material.012",
+   "Glass",
+   "Material.009",
+   "Material.019",
+   "Material.023",
+   "Material.021"
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     256,
+     64
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     128,
+     32
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     512,
+     512
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     512,
+     64
+    ]
+   ]
+  ],
+  "yaw": 180,
+  "eye_spec": {
+   "xz_obj": "Cylinder.035_Glass_0",
+   "y_obj": "Cylinder.035_Material.008_0",
+   "y_pick": "max"
+  },
+  "nudge": [
+   0,
+   0,
+   0
+  ],
+  "dropped": [
+   "G120_LOGO",
+   "LOGO1",
+   "WIDE"
+  ],
+  "painted": {}
+ },
+ "camcorder_v2_cand2": {
+  "glb": "game/assets/props/player/camcorder_v2_cand2.glb",
+  "source_uid": "b45dcfaa8dc0433ea3cac820d7f55edc",
+  "title": "Sony Handycam Photoscan Low Poly",
+  "author": "EFX",
+  "tris_before": 4742,
+  "tris": 4742,
+  "scale": 0.1387,
+  "gltf_min": [
+   -0.052,
+   -0.086,
+   -0.195
+  ],
+  "gltf_max": [
+   0.128,
+   0.024,
+   0.005
+  ],
+  "dims_m": [
+   0.18,
+   0.109,
+   0.2
+  ],
+  "materials": [
+   "HandyCamLOW_Baked"
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "yaw": 0,
+  "eye_spec": {
+   "uv": [
+    0.6494140625,
+    0.4287109375
+   ],
+   "radius": 0.06,
+   "y_pick": "min"
+  },
+  "nudge": [
+   0,
+   0,
+   0
+  ],
+  "dropped": [],
+  "painted": {
+   "Image_0": 14
+  }
+ },
+ "camcorder_v2_cand3": {
+  "glb": "game/assets/props/player/camcorder_v2_cand3.glb",
+  "source_uid": "c26aa02a870c411a92628e624372d017",
+  "title": "Panasonic NV-M50 VHS Video Camera",
+  "author": "EmmyAngulo",
+  "tris_before": 12133,
+  "tris": 12133,
+  "scale": 0.06467,
+  "gltf_min": [
+   -0.02,
+   -0.107,
+   -0.146
+  ],
+  "gltf_max": [
+   0.108,
+   0.041,
+   0.134
+  ],
+  "dims_m": [
+   0.127,
+   0.148,
+   0.28
+  ],
+  "materials": [
+   "1002",
+   "1001"
+  ],
+  "textures": [
+   [
+    "Image_0",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_1",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_2",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_3",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_4",
+    [
+     1024,
+     1024
+    ]
+   ],
+   [
+    "Image_5",
+    [
+     1024,
+     1024
+    ]
+   ]
+  ],
+  "yaw": 180,
+  "eye_spec": {
+   "xz_obj": "Visor_Low_1002_0",
+   "y_obj": "Visor_Low_1002_0",
+   "y_pick": "max"
+  },
+  "nudge": [
+   0,
+   0,
+   0
+  ],
+  "dropped": [],
+  "painted": {
+   "Image_3": 4,
+   "Image_0": 2
+  }
+ }
+}

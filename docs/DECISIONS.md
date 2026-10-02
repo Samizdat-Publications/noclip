@@ -102,3 +102,15 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 - Alternatives: render-to-texture portals (no oblique near plane in 4.7, double fog/tonemap), sealing an existing BSP room (can disconnect the maze), a seam in a highway wall (needs the pocket to fit the room behind it).
 - The pockets are not exits to another level yet (M5/M6 put the way down behind some of them). The bot visits seams like a player who knows the trick.
 - Revert: Level0Gen._pick_pocket_room returns without marking a room.
+
+## D023 (2026-10-02, S03) Scale errors: rooms copied three times too tall
+- Art direction #3 (scale incongruity) and critique 008's ask for "one unmistakable that-is-wrong frame" (L043). About one chunk in five (never the spawn chunk) has an ordinary room whose walls and ceiling grid go on up to 7.8 m over normal doors; the plenum is cut open above it, its panels hang at 7.8 m with longer, stronger lights (range and energy scale with height), and the wall's ceiling-grime band stays at 2.6 m like a tide line where the ceiling should be. Where the room is open plan, the neighbor's ceiling shows as a ledge. The bot stops and looks up.
+- Revert: Level0Gen._pick_tall_room returns early.
+
+## D024 (2026-10-02, S03) Performance: plain filtered panel shadows, no SSIL
+- Gemini scored performance 3 at 73.7 fps; a probe on seed 4242 measured 60 to 65 fps average and 47.6 to 51.7 fps 1% low at 2560x1440 (below the 50 target). Cost by switch: shadows about 19 to 24 fps, SDFGI 9 to 14, SSIL 4 to 8, fog 2 to 6, SSAO 0 to 4; SDFGI light-update and convergence settings changed nothing. Choice: panel light_size 0.7 to 0 (PCSS blocker search off: +8 fps) and SSIL off (+5): 78.2 avg / 60.7 1% low on the same seed. A/B lookdev (progress, ab-base vs ab-fast) shows the same shadows and slightly less flat fill, which the critics asked for anyway (L059).
+- Revert: game args --light_size=0.7 --ssil.
+
+## D025 (2026-10-02, S03) Unobserved rearrangement: chairs turn to face you while unseen
+- VISION toolkit ("rooms change only when outside the frustum and occluded, double-checked with raycasts") and critique 009's ask for small wrongness ("a chair that has moved", L052). A Rearranger tracks the chairs in loaded chunks; one you have clearly seen (in the camera frustum with a clear ray from the eye) that has then been out of sight for 6 s, while you are 3.5 to 14 m away, turns to face where you are now, re-checked at that moment. At most one change per 25 s, six per run, each chair once. Loop copies and splices never change.
+- Revert: remove the Rearranger node in Level0World.build.

@@ -1,0 +1,17 @@
+{
+ "tag": "step_carpet_soggy_take6",
+ "params": {
+  "text": "Single person in soft-soled sneakers walking slowly and steadily on thick, waterlogged commercial office carpet, close microphone, completely dry room with no echo, no other sounds, no voices, no music. Each footstep is a muffled low thud followed by a wet squelch as water is pressed out of the sodden carpet, and a small squish as the foot lifts. No hard heel click. Clean separate footsteps with silence between them. Longer squelch.",
+  "duration_seconds": 10.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "step_carpet_soggy_take6_bea88bd187c9.pcm",
+ "format": "pcm_48000",
+ "credits": 55.0,
+ "est_usd": 0.0165,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

@@ -1,0 +1,104 @@
+{
+ "asset": "carpet_v2",
+ "script": "pipeline/textures/build_carpet_v2.py",
+ "pick": 2,
+ "target_mean_srgb": [
+  138.0,
+  116.0,
+  68.0
+ ],
+ "generation": {
+  "1": {
+   "model": "gemini-3-pro-image",
+   "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render.",
+   "size": [
+    2048,
+    2048
+   ],
+   "cost_usd": 0.134
+  },
+  "2": {
+   "model": "gemini-3-pro-image",
+   "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render. Slightly more worn and darker olive-brown in the flecks, tighter berber weave.",
+   "size": [
+    2048,
+    2048
+   ],
+   "cost_usd": 0.134
+  },
+  "3": {
+   "model": "gemini-3-pro-image",
+   "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render. Warmer yellow-tan overall, a coarser looped weave with visible lengthwise rows.",
+   "size": [
+    2048,
+    2048
+   ],
+   "cost_usd": 0.134
+  },
+  "4": {
+   "model": "gemini-3.1-flash-image",
+   "prompt": "Photograph of old commercial office carpet, a wide flat view looking perfectly straight down from directly above, covering about one square metre of floor, so each individual loop is tiny (about 3 to 4 mm) and hundreds of loops are visible across the frame. Short dense loop-pile berber, dirty mustard-ochre and tan from decades of use in a 1990s office, fine multi-tone flecks of brown, cream and olive yarn, faint rows in the loop structure, lightly matted and flattened in places, a couple of very faint old stains. Perfectly even soft flat lighting, no shadows, no gradient, no vignette, no perspective, sharp focus over the entire frame. The carpet fills the whole frame edge to edge. No objects, no seams, no borders, no text. A real photograph, not an illustration or a 3D render.",
+   "size": [
+    2048,
+    2048
+   ],
+   "cost_usd": 0.067
+  }
+ },
+ "processing": {
+  "flatten_gaussian_sigma_px": 40,
+  "local_contrast": "log-domain +35% over 7px",
+  "working_tile": 2048,
+  "note": "loop pitch ~15px = ~7mm per 1m tile; uv scale 2 gives ~3.5mm",
+  "final_layout": "single unique seamless 2048 tile + 5% periodic tone",
+  "seamless": "half-offset, min-cut patch of 576px band (overlap 224) vertical then horizontal",
+  "normal": "OpenGL (+Y up), strength 6.0 on high-passed luminance",
+  "seeds": "7000+candidate"
+ },
+ "candidates": {
+  "1": {
+   "mean_srgb": [
+    138.0,
+    116.0,
+    68.0
+   ],
+   "rough_p5_p95": [
+    0.896729166019089,
+    0.9419832406420717
+   ]
+  },
+  "2": {
+   "mean_srgb": [
+    138.0,
+    116.0,
+    68.0
+   ],
+   "rough_p5_p95": [
+    0.8911083347902038,
+    0.9443432646491262
+   ]
+  },
+  "3": {
+   "mean_srgb": [
+    138.0,
+    116.0,
+    68.0
+   ],
+   "rough_p5_p95": [
+    0.8873311539661393,
+    0.944180862176155
+   ]
+  },
+  "4": {
+   "mean_srgb": [
+    138.0,
+    116.0,
+    68.0
+   ],
+   "rough_p5_p95": [
+    0.8895802600706982,
+    0.9435536860104391
+   ]
+  }
+ }
+}

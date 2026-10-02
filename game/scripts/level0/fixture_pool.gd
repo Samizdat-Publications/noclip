@@ -27,6 +27,7 @@ var _hum_streams: Array = []
 var _buzz_stream: AudioStream
 var _tick_streams: Array = []
 var _t := 0.0
+var _base_range := float(Game.opts.get("spot_range", "7"))
 
 
 func _ready() -> void:
@@ -200,6 +201,7 @@ func _give(fx: Fixture, slot: String, obj) -> void:
 		"light":
 			var l: SpotLight3D = obj
 			l.global_transform = Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0, 0)), top - Vector3(0, 0.004, 0))
+			l.spot_range = _base_range * fx.ceiling_h / 2.6
 			l.light_color = fx.tint
 			fx.light = l
 		"hum":

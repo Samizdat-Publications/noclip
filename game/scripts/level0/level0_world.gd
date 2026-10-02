@@ -27,6 +27,7 @@ var _steps: Array = []
 var pool: FixturePool
 var director: Level0Director
 var tape: TapeEvents
+var rearranger: Rearranger
 var _player := Vector3.ZERO
 var _stream_t := 0.0
 var build_log: Array = []     # [frame, coord, step, msec] for profiling
@@ -49,6 +50,10 @@ func build(p_seed: int) -> void:
 	tape.name = "tape_events"
 	tape.space = self
 	add_child(tape)
+	rearranger = Rearranger.new()
+	rearranger.name = "rearranger"
+	rearranger.space = self
+	add_child(rearranger)
 	# The first ring is built at once (this is the loading moment); the rest streams.
 	var start := Vector3(12, 0, 12)
 	_player = start
@@ -401,6 +406,7 @@ func set_listener(p: Vector3) -> void:
 
 func attach_player(p: Player) -> void:
 	tape.player = p
+	rearranger.player = p
 	player_ref = p
 
 
@@ -545,6 +551,16 @@ func get_focus_shots(n: int = 8) -> Array:
 					break
 		if done:
 			break
+	# The nearest room copied at the wrong scale (D023), looking up at its ceiling.
+	for c in keys:
+		var trs: Array = (chunks[c] as Level0Chunk).L.get("tall_rooms", [])
+		if trs.size() > 0:
+			var tr: Array = trs[0]
+			var tc := Vector3((tr[0] + tr[2]) * 0.5, 0.0, (tr[1] + tr[3]) * 0.5) + (chunks[c] as Level0Chunk).position
+			var tp := _pose_toward(tc, 24.0)
+			if not tp.is_empty():
+				out.append(tp)
+				break
 	for c in keys:
 		var ch: Level0Chunk = chunks[c]
 		var L: Dictionary = ch.L

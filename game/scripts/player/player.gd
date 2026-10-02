@@ -34,6 +34,8 @@ var _crouching := false
 var _cap: CollisionShape3D
 var _steps_damp: AudioStreamRandomizer
 var _steps_wet: AudioStreamRandomizer
+var _steps_soggy: AudioStreamRandomizer
+var _steps_run: AudioStreamRandomizer
 var _step_player: AudioStreamPlayer
 
 
@@ -56,7 +58,7 @@ func _ready() -> void:
 	cam.current = true
 	camcorder = Camcorder.new()
 	add_child(camcorder)
-	var vm_path := "res://assets/props/player/camcorder.glb"
+	var vm_path := "res://assets/props/player/camcorder_v2.glb" if ResourceLoader.exists("res://assets/props/player/camcorder_v2.glb") else "res://assets/props/player/camcorder.glb"
 	if ResourceLoader.exists(vm_path):
 		var vm := (load(vm_path) as PackedScene).instantiate() as Node3D
 		cam.add_child(vm)
@@ -97,6 +99,8 @@ func spawn(t: Transform3D) -> void:
 func _setup_steps() -> void:
 	_steps_damp = _randomizer("step_carpet_damp_%02d", 8)
 	_steps_wet = _randomizer("step_carpet_wet_%02d", 6)
+	_steps_soggy = _randomizer("step_carpet_soggy_%02d", 8)
+	_steps_run = _randomizer("step_carpet_soggy_run_%02d", 4)
 	_step_player = AudioStreamPlayer.new()
 	_step_player.bus = &"World"
 	_step_player.max_polyphony = 2
@@ -159,11 +163,16 @@ func _footstep() -> void:
 	if _step_player == null:
 		return
 	var wet := space.floor_wetness(global_position) if space else 0.0
-	var bank := _steps_wet if wet > 0.3 and _steps_wet.streams_count > 0 else _steps_damp
+	# The carpet never dries (critiques 006 to 008: steps sounded like shoes on dry concrete).
+	var bank := _steps_soggy if _steps_soggy.streams_count > 0 else _steps_damp
+	if wet > 0.3 and _steps_wet.streams_count > 0 and Game.frame % 3 != 0:
+		bank = _steps_wet
+	if _sprinting and _steps_run.streams_count > 0:
+		bank = _steps_run
 	if bank.streams_count == 0:
 		return
 	_step_player.stream = bank
-	_step_player.volume_db = (-3.0 if _sprinting else (-15.0 if _crouching else -9.0)) + (2.5 if bank == _steps_wet else 0.0)
+	_step_player.volume_db = (-3.0 if _sprinting else (-15.0 if _crouching else -9.0)) + (2.5 if bank == _steps_wet else (1.5 if bank == _steps_soggy else 0.0))
 	_step_player.play()
 
 

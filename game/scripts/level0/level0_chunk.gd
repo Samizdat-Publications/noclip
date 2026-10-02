@@ -14,8 +14,8 @@ const CELL := 0.2
 const AGENT_R := 0.34
 const TILE := 0.6
 const WET_SCALE := 0.13
-const WET_LO := 0.56
-const WET_HI := 0.70
+const WET_LO := 0.52
+const WET_HI := 0.67
 
 var L: Dictionary
 var salt := ""                 # prefixes every random stream, so chunks differ
@@ -27,6 +27,7 @@ var DH: float = 2.1
 var extent := Vector2(30, 30)
 var mats: Dictionary
 var fixtures: Array[Fixture] = []
+var movables: Array[Node3D] = []   # chairs the Rearranger may turn while unseen (D025)
 var field: FixtureField
 var seed_offset := Vector2.ZERO
 var solids: Array[Rect2] = []
@@ -54,6 +55,14 @@ func _spawn2() -> Vector2:
 
 func origin2() -> Vector2:
 	return Vector2(position.x, position.z)
+
+
+## Ceiling height at a point (a tall room's ceiling is three times too high, D023).
+func _ceil_at(p: Vector2) -> float:
+	for tr in L.get("tall_rooms", []):
+		if p.x > tr[0] and p.x < tr[2] and p.y > tr[1] and p.y < tr[3]:
+			return float(tr[4])
+	return H
 
 
 ## shared_mats: the level's materials (Level0Look.make_materials); this chunk duplicates the
@@ -137,7 +146,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 		func() -> void:
 			cells.merge(_build_fixtures(kit)),
 		func() -> void:
-			_build_ceiling(kit, cells),
+			_build_ceiling(kit, cells)
+			_build_tall_grid(kit, cells),
 		func() -> void:
 			var parts := kit.commit(self, mats, ["tbar", "housing"])
 			for key in ["seam_wall", "seam_base"]:
@@ -261,7 +271,37 @@ func _pick_leaks() -> void:
 func _build_shell(kit: MeshKit) -> void:
 	kit.face("carpet", [Vector3(0, 0, 0), Vector3(extent.x, 0, 0), Vector3(extent.x, 0, extent.y), Vector3(0, 0, extent.y)], Vector3.UP, 0.0)
 	var ph := float(L["plenum_height"])
-	kit.face("plenum", [Vector3(0, ph, 0), Vector3(extent.x, ph, 0), Vector3(extent.x, ph, extent.y), Vector3(0, ph, extent.y)], Vector3.DOWN, 0.0)
+	var rects: Array[Rect2] = [Rect2(Vector2.ZERO, extent)]
+	for tr in L.get("tall_rooms", []):
+		var hole := Rect2(tr[0], tr[1], tr[2] - tr[0], tr[3] - tr[1])
+		var next: Array[Rect2] = []
+		for rc in rects:
+			if not rc.intersects(hole):
+				next.append(rc)
+				continue
+			var cut := rc.intersection(hole)
+			for piece in [Rect2(rc.position.x, rc.position.y, rc.size.x, cut.position.y - rc.position.y),
+					Rect2(rc.position.x, cut.end.y, rc.size.x, rc.end.y - cut.end.y),
+					Rect2(rc.position.x, cut.position.y, cut.position.x - rc.position.x, cut.size.y),
+					Rect2(cut.end.x, cut.position.y, rc.end.x - cut.end.x, cut.size.y)]:
+				if piece.size.x > 0.001 and piece.size.y > 0.001:
+					next.append(piece)
+		rects = next
+	for rc in rects:
+		kit.face("plenum", [Vector3(rc.position.x, ph, rc.position.y), Vector3(rc.end.x, ph, rc.position.y), Vector3(rc.end.x, ph, rc.end.y), Vector3(rc.position.x, ph, rc.end.y)], Vector3.DOWN, 0.0)
+	# A tall room's walls go on up past the normal ceiling to its own, with the trim at the top.
+	for tr in L.get("tall_rooms", []):
+		var ht: float = tr[4]
+		var x0: float = tr[0]
+		var z0: float = tr[1]
+		var x1: float = tr[2]
+		var z1: float = tr[3]
+		var h := T * 0.5
+		for b in [[x0 - h, z0 - h, x1 + h, z0 + h], [x0 - h, z1 - h, x1 + h, z1 + h], [x0 - h, z0 - h, x0 + h, z1 + h], [x1 - h, z0 - h, x1 + h, z1 + h]]:
+			kit.box("wall", Vector3(b[0], H, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES, H)
+		var wa := 0.022
+		for b in [[x0 + h, z0 + h, x1 - h, z0 + h + wa], [x0 + h, z1 - h - wa, x1 - h, z1 - h], [x0 + h, z0 + h, x0 + h + wa, z1 - h], [x1 - h - wa, z0 + h, x1 - h, z1 - h]]:
+			kit.box("tbar", Vector3(b[0], ht - wa, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES | MeshKit.NY, ht)
 
 
 func _build_walls(kit: MeshKit) -> void:
@@ -302,6 +342,19 @@ func _build_walls(kit: MeshKit) -> void:
 	_build_outlets(kit)
 	for p in L["pillars"]:
 		var s: float = p[2]
+		var mode: String = p[4] if p.size() > 4 else ""
+		if mode != "":
+			# A copy error (L053): the column hangs a hand's width off the carpet, or stops short
+			# of the ceiling with its raw top showing.
+			var y0p := 0.22 if mode == "hang" else 0.0
+			var y1p := 1.92 if mode == "short" else H
+			var faces_p := MeshKit.SIDES | (MeshKit.NY if mode == "hang" else MeshKit.PY)
+			kit.box("wall", Vector3(p[0] - s * 0.5, y0p, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, y1p, p[1] + s * 0.5), faces_p, H)
+			if mode == "short":
+				_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.62])
+				var qs := s * 0.5 + bb
+				kit.box("baseboard", Vector3(p[0] - qs, 0.0, p[1] - qs), Vector3(p[0] + qs, bh, p[1] + qs), MeshKit.SIDES | MeshKit.PY, bh)
+			continue
 		if p.size() > 3 and p[3] == "plus":
 			# A cross-shaped column: two slabs crossing, each a third as thick as it is wide.
 			var th := s / 3.0
@@ -510,8 +563,9 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	cells[c2] = true
 	_fixture_pairs[Vector2i(ix, iz)] = c2
 	# Recessed housing reveal around the lens.
-	var y0 := H
-	var y1 := H + 0.03
+	var fh := _ceil_at(c)
+	var y0 := fh
+	var y1 := fh + 0.03
 	var a := Vector3(rect.position.x, y0, rect.position.y)
 	var b := Vector3(rect.end.x, y1, rect.end.y)
 	kit.face("housing", [Vector3(a.x, y0, a.z), Vector3(b.x, y0, a.z), Vector3(b.x, y1, a.z), Vector3(a.x, y1, a.z)], Vector3.BACK, 0.0)
@@ -593,21 +647,21 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	var fx := Fixture.new()
 	fx.name = "fixture_" + id.replace(":", "_")
 	fx.position = Vector3(c.x, 0.0, c.y)
-	fx.ceiling_h = H
+	fx.ceiling_h = fh
 	fx.variant = variant
 	fx.audio_offset = offset
 	add_child(fx)
 	var lens := MeshInstance3D.new()
 	lens.mesh = ctx["lens_x"] if along_x else ctx["lens_z"]
 	lens.material_override = mats["lens"]
-	lens.position = Vector3(0, H + 0.03, 0)
+	lens.position = Vector3(0, fh + 0.03, 0)
 	lens.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	lens.visibility_range_end = 48.0
 	fx.add_child(lens)
 	fx.lens = lens
 	if not pooled:
 		var light := Fixture.make_ceiling_light()
-		light.position = Vector3(0, H - 0.004, 0)
+		light.position = Vector3(0, fh - 0.004, 0)
 		light.light_color = tint
 		fx.add_child(light)
 		fx.light = light
@@ -732,6 +786,7 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 	var nx := int(round(extent.x / TILE))
 	var nz := int(round(extent.y / TILE))
 	var plain := {}
+	var tall_cells := {}
 	var spawn := _spawn2()
 	for i in nx:
 		for j in nz:
@@ -751,6 +806,12 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 			var missing := (r.randf() < 0.006 and center.distance_to(spawn) > 4.0) or Vector2i(i, j) == _fallen_tile or _ceiling_holes.has(Vector2i(i, j))
 			if missing:
 				_dump["missing_tiles"].append([i, j])
+				continue
+			var th := _ceil_at(center)
+			if th > H + 0.01:
+				tall_cells[Vector2i(i, j)] = th
+				kit.quad("ceiling", [Vector3(x0, th, z0), Vector3(x0 + TILE, th, z0), Vector3(x0 + TILE, th, z0 + TILE), Vector3(x0, th, z0 + TILE)],
+					Vector3.DOWN, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)], Color(rnd, stained, 0.0, 0.0))
 				continue
 			var sag := 0.0
 			var drop := 0.0
@@ -799,7 +860,8 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 		var z := k * TILE
 		var run_start := -1
 		for i in nx + 1:
-			var skip := i >= nx or (fixture_cells.has(Vector2i(i, k - 1)) and fixture_cells.has(Vector2i(i, k)) and _same_fixture(Vector2i(i, k - 1), Vector2i(i, k))) 					or (_ceiling_holes.has(Vector2i(i, k - 1)) and _ceiling_holes.has(Vector2i(i, k)))
+			var skip := i >= nx or (fixture_cells.has(Vector2i(i, k - 1)) and fixture_cells.has(Vector2i(i, k)) and _same_fixture(Vector2i(i, k - 1), Vector2i(i, k))) 					or (_ceiling_holes.has(Vector2i(i, k - 1)) and _ceiling_holes.has(Vector2i(i, k))) \
+					or (_in_tall(i, k - 1) and _in_tall(i, k))
 			if not skip and run_start == -1:
 				run_start = i
 			if skip and run_start != -1:
@@ -810,12 +872,40 @@ func _build_ceiling(kit: MeshKit, fixture_cells: Dictionary) -> void:
 		var run_start := -1
 		for j in nz + 1:
 			var skip := j >= nz or (_ceiling_holes.has(Vector2i(k - 1, j)) and _ceiling_holes.has(Vector2i(k, j))) \
-					or (fixture_cells.has(Vector2i(k - 1, j)) and fixture_cells.has(Vector2i(k, j)) and _same_fixture(Vector2i(k - 1, j), Vector2i(k, j)))
+					or (fixture_cells.has(Vector2i(k - 1, j)) and fixture_cells.has(Vector2i(k, j)) and _same_fixture(Vector2i(k - 1, j), Vector2i(k, j))) \
+					or (_in_tall(k - 1, j) and _in_tall(k, j))
 			if not skip and run_start == -1:
 				run_start = j
 			if skip and run_start != -1:
 				kit.box("tbar", Vector3(x - hw, H - hd, run_start * TILE), Vector3(x + hw, H, j * TILE), MeshKit.NY | MeshKit.PX | MeshKit.NX, H)
 				run_start = -1
+
+
+## True if tile (i, j) lies inside a tall room.
+func _in_tall(i: int, j: int) -> bool:
+	return _ceil_at(Vector2((i + 0.5) * TILE, (j + 0.5) * TILE)) > H + 0.01
+
+
+## The T-bar grid of a tall room, at its own height, skipping the middle of each light fixture.
+func _build_tall_grid(kit: MeshKit, fixture_cells: Dictionary) -> void:
+	var hw := 0.012
+	var hd := 0.014
+	for tr in L.get("tall_rooms", []):
+		var ht: float = tr[4]
+		var i0 := int(roundf(float(tr[0]) / TILE))
+		var i1 := int(roundf(float(tr[2]) / TILE))
+		var j0 := int(roundf(float(tr[1]) / TILE))
+		var j1 := int(roundf(float(tr[3]) / TILE))
+		for k in range(j0 + 1, j1):
+			for i in range(i0, i1):
+				if fixture_cells.has(Vector2i(i, k - 1)) and fixture_cells.has(Vector2i(i, k)) and _same_fixture(Vector2i(i, k - 1), Vector2i(i, k)):
+					continue
+				kit.box("tbar", Vector3(i * TILE, ht - hd, k * TILE - hw), Vector3((i + 1) * TILE, ht, k * TILE + hw), MeshKit.NY | MeshKit.PZ | MeshKit.NZ, ht)
+		for k in range(i0 + 1, i1):
+			for j in range(j0, j1):
+				if fixture_cells.has(Vector2i(k - 1, j)) and fixture_cells.has(Vector2i(k, j)) and _same_fixture(Vector2i(k - 1, j), Vector2i(k, j)):
+					continue
+				kit.box("tbar", Vector3(k * TILE - hw, ht - hd, j * TILE), Vector3(k * TILE + hw, ht, (j + 1) * TILE), MeshKit.NY | MeshKit.PX | MeshKit.NX, ht)
 
 
 ## True if two ceiling cells belong to the same fixture (its two halves).
@@ -946,7 +1036,7 @@ func _build_decals() -> void:
 		var fs := r.randf_range(1.8, 3.2)
 		_decal("decal_floor_wetpatch", Vector3(lk.x, 0.0, lk.y), _basis_facing(Vector3.UP).rotated(Vector3.UP, spin), Vector3(fs, 0.6, fs * r.randf_range(0.7, 1.1)))
 		var cs := r.randf_range(0.9, 1.6)
-		_decal("decal_ceiling_stain", Vector3(lk.x, H, lk.y), _basis_facing(Vector3.DOWN).rotated(Vector3.UP, spin), Vector3(cs, 0.3, cs))
+		_decal("decal_ceiling_stain", Vector3(lk.x, _ceil_at(lk), lk.y), _basis_facing(Vector3.DOWN).rotated(Vector3.UP, spin), Vector3(cs, 0.3, cs))
 		var wf := _nearest_wall_face(lk, 1.8)
 		if wf.size() > 0:
 			var q: Vector2 = wf[0]
@@ -1103,15 +1193,29 @@ func _build_wall_details() -> void:
 	for k in r.randi_range(6, 10):
 		place.call("scuffs_%d" % r.randi_range(1, 4), r.randf_range(0.55, 0.9))
 	for k in r.randi_range(1, 3):
-		place.call(["poster_ghost_a", "poster_ghost_b", "poster_ghost_c"][r.randi() % 3], r.randf_range(0.3, 0.5))
+		place.call(["poster_ghost_a", "poster_ghost_b", "poster_ghost_c"][r.randi() % 3], r.randf_range(0.16, 0.3))
 	for k in r.randi_range(0, 2):
-		place.call("desk_ghost", r.randf_range(0.35, 0.55))
+		place.call("desk_ghost", r.randf_range(0.22, 0.38))
 	for k in r.randi_range(2, 4):
 		place.call("tape_scraps_%d" % r.randi_range(1, 3), r.randf_range(0.8, 1.0))
 	if r.randf() < 0.3:
 		place.call("hole_punch" if r.randf() < 0.6 else "hole_knob", 1.0)
 	if r.randf() < 0.35:
 		place.call("damp_bloom", r.randf_range(0.45, 0.7))
+	# Pillars get knocked about too: scuffs at the base, a strip of tape, a chalk mark.
+	for p in L["pillars"]:
+		if r.randf() > 0.45 or (p.size() > 4 and p[4] == "hang"):
+			continue
+		var hs: float = float(p[2]) * 0.5 if not (p.size() > 3 and p[3] == "plus") else float(p[2]) / 6.0
+		var face: Vector3 = [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)][r.randi() % 4]
+		var at: Vector3 = Vector3(p[0], 0.0, p[1]) + face * hs
+		var slug: String = ["scuffs_3", "tape_scraps_1", "tape_scraps_3", "scuffs_2"][r.randi() % 4]
+		var info: Dictionary = _detail_table.get(slug, {})
+		if info.is_empty():
+			continue
+		var dw := minf(float(info["w"]), hs * 1.7)
+		var dy := r.randf_range(float(info["y"][0]), float(info["y"][1]))
+		_decal(String(info["tex"]), at + Vector3(0, dy, 0), _basis_facing(face), Vector3(dw, 0.2, dw * float(info["h"]) / float(info["w"])), Color(1, 1, 1, r.randf_range(0.6, 0.9)))
 	for o in _outlet_spots:
 		if r.randf() < 0.45:
 			var on: Vector2 = o[1]
@@ -1176,6 +1280,8 @@ func _build_props() -> void:
 			inst0.position = Vector3(pr[1], 0.0, pr[2])
 			inst0.rotation.y = deg_to_rad(float(pr[3]))
 			add_child(inst0)
+			if String(pr[0]).contains("chair"):
+				movables.append(inst0)
 			var half0: float = PROPS.get(pr[0], {}).get("half", 0.3)
 			if PROPS.get(pr[0], {}).has("tint"):
 				var tt: Array = PROPS[pr[0]]["tint"]
@@ -1222,7 +1328,7 @@ func _build_splices() -> void:
 			var z: float = float(sp["pos"][1]) + float(step[1]) * k
 			var flip := bool(sp.get("flip", false))
 			# A flipped copy stands on the ceiling, upside down, as if the frame was inverted.
-			inst.position = Vector3(x, H if flip else float(sp.get("y", 0.0)), z)
+			inst.position = Vector3(x, _ceil_at(Vector2(x, z)) if flip else float(sp.get("y", 0.0)), z)
 			inst.rotation = Vector3(PI if flip else 0.0, deg_to_rad(float(sp["yaw"])), 0.0)
 			add_child(inst)
 			var half: float = sp.get("half", 0.25)
@@ -1245,7 +1351,9 @@ var _pending_contacts: Array = []
 
 func _contact_shadow(p: Vector3, half: float) -> void:
 	var sz := half * 2.6
-	_decal("decal_contact", p, _basis_facing(Vector3.UP), Vector3(sz, 0.4, sz), Color(1, 1, 1, 0.75))
+	_decal("decal_contact", p, _basis_facing(Vector3.UP), Vector3(sz, 0.4, sz), Color(1, 1, 1, 0.85))
+	# and a tighter, darker core right under it, so nothing seems to hover (L015, L057)
+	_decal("decal_contact", p, _basis_facing(Vector3.UP), Vector3(sz * 0.55, 0.3, sz * 0.55), Color(1, 1, 1, 0.75))
 
 
 ## Copy errors that read as deliberate: a ceiling troffer installed sideways on a wall, still
@@ -1361,7 +1469,7 @@ func _build_seam_fx() -> void:
 		sl.distance_fade_begin = 22.0
 		sl.distance_fade_length = 6.0
 		var lp := pos + Vector3(0, 0.22, 0) + fwd * 0.2
-		var target := pos + fwd * 2.4 + Vector3(0, 1.45, 0)
+		var target := pos + fwd * 2.4 + Vector3(0, 1.25, 0)
 		sl.transform = Transform3D(Basis.looking_at(target - lp, Vector3.UP), lp)
 		add_child(sl)
 		# A little of it bounces off the floor and walls of the pocket.
@@ -1371,6 +1479,21 @@ func _build_seam_fx() -> void:
 		fill.omni_range = 2.6
 		fill.position = pos + fwd * 1.2 + Vector3(0, 0.9, 0)
 		add_child(fill)
+		var hum := _audio(0.6, 0.6, 7.0)
+		hum.stream = _snd("worklight_hum")
+		hum.position = pos + Vector3(0, 0.25, 0)
+		hum.autoplay = true
+		hum.volume_db = -4.0
+		add_child(hum)
+	# Air moves through a seam: a faint draft you can hear before you see anything (D022).
+	for sm in L.get("seams", []):
+		var w2: Array = sm["wall"]
+		var dr := _audio(1.1, 0.8, 6.0)
+		dr.stream = _snd("seam_draft")
+		dr.position = Vector3((w2[0] + w2[2]) * 0.5, 1.1, (w2[1] + w2[3]) * 0.5) + Vector3(sm["n"][0], 0.0, sm["n"][1]) * 0.2
+		dr.autoplay = true
+		dr.volume_db = 2.0
+		add_child(dr)
 
 
 ## A flight of carpeted stairs that the building grew by mistake (critique 006, L022): the same

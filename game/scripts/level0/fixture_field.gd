@@ -65,6 +65,9 @@ func update() -> void:
 		var fx := _fixtures[i]
 		var v := clampf(fx.level * fx.base_energy, 0.0, 1.0)
 		var c := Color(fx.tint.r * v, fx.tint.g * v, fx.tint.b * v, 1.0)
+		# A dead tube's glowing cathodes tint the tiles next to it orange (critique 008, L044).
+		var k := fx.cathode_glow * (1.0 - v) * 0.22
+		c += Color(1.0, 0.36, 0.08, 0.0) * k
 		var o := _last[i]
 		if absf(c.r - o.r) + absf(c.g - o.g) + absf(c.b - o.b) < 0.004:
 			continue
