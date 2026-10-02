@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://d7s7pa3or7f"
+uid="uid://bknaamop8a5qk"
 path="res://.godot/imported/distant_chair_01.wav-6c90dcd20c0087838c115fb9ae28c1ce.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

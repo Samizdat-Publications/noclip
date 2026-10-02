@@ -418,7 +418,28 @@ func _twin(fx: Fixture, offset: Vector3) -> Fixture:
 	return other.fixtures[i] if i >= 0 and i < other.fixtures.size() else null
 
 
+var _in_seam := false
+
+
+## Passing through a seam is felt (critique 011, L068): the tape drops out and rolls as you cross.
+func _check_seam(p: Vector3) -> void:
+	var ch := _chunk_at(p)
+	var inside := false
+	if ch:
+		var lp := _local(ch, p)
+		for sm in ch.L.get("seams", []):
+			var w: Array = sm["wall"]
+			var r := Rect2(minf(w[0], w[2]), minf(w[1], w[3]), absf(w[2] - w[0]), absf(w[3] - w[1])).grow(0.22)
+			if r.has_point(Vector2(lp.x, lp.z)):
+				inside = true
+	if inside and not _in_seam and player_ref:
+		player_ref.camcorder.glitch()
+		tape.seam_cross()
+	_in_seam = inside
+
+
 func set_listener(p: Vector3) -> void:
+	_check_seam(p)
 	if _update_loop(p, get_physics_process_delta_time()):
 		p = player_ref.global_position
 	if Game.opts.has("log-stream") and chunk_of(p) != _last_chunk:

@@ -13,9 +13,9 @@
    "prompt": "A person breathing very slowly and quietly at rest through the nose, soft gentle inhale then slow soft exhale with a calm pause between, steady and even, relaxed. Close microphone, intimate, completely dry with no room echo, no speech, no words, no voice, no music, no other sounds. Different rhythm.",
    "channels": 1,
    "target_lufs": -32.0,
-   "duration_s": 14.531,
-   "start_s": 6.288,
-   "end_s": 20.819,
+   "duration_s": 13.604,
+   "start_s": 3.828,
+   "end_s": 17.432,
    "crossfade_s": 0.3
   },
   "breath_heavy_loop.wav": {
@@ -24,20 +24,20 @@
    "prompt": "A person winded and out of breath after sprinting, heavy fast mouth breathing, open-mouth panting with loud rasping inhales and exhales, no coughing. Close microphone, intimate, completely dry with no room echo, no speech, no words, no voice, no music, no other sounds.",
    "channels": 1,
    "target_lufs": -26.0,
-   "duration_s": 9.943,
+   "duration_s": 9.196,
    "start_s": 5.409,
-   "end_s": 15.352,
+   "end_s": 14.605,
    "crossfade_s": 0.3
   },
   "breath_fear_loop.wav": {
    "method": "ElevenLabs take, high-pass/low-pass, loop cut between two breath-gap minima, 0.3 s equal-power crossfade",
-   "take": 1,
-   "prompt": "A frightened person hiding and trying to stay silent, shaky trembling breathing, short shuddering inhales, breath held then released in unsteady quiet exhales, no whimpering, no crying. Close microphone, intimate, completely dry with no room echo, no speech, no words, no voice, no music, no other sounds.",
+   "take": 2,
+   "prompt": "A frightened person hiding and trying to stay silent, shaky trembling breathing, short shuddering inhales, breath held then released in unsteady quiet exhales, no whimpering, no crying. Close microphone, intimate, completely dry with no room echo, no speech, no words, no voice, no music, no other sounds. Different rhythm.",
    "channels": 1,
    "target_lufs": -28.0,
-   "duration_s": 12.079,
-   "start_s": 9.13,
-   "end_s": 21.209,
+   "duration_s": 10.964,
+   "start_s": 4.333,
+   "end_s": 15.297,
    "crossfade_s": 0.3
   },
   "drone_dread_loop.wav": {
@@ -460,32 +460,36 @@
    "date": "2026-10-02"
   }
  ],
+ "notes": [
+  "ElevenLabs pcm_48000 responses are interleaved stereo; l0_lib._decode reads them as mono (2x length, pitch down an octave). build_m3 patches L._decode at runtime. step_carpet_soggy_* / figure_breath_rev_* from build_s03 were decoded the old way.",
+  "breath_calm_loop uses a slow AGC (source take is very quiet); the noise floor is lifted with it."
+ ],
  "verification": {
   "breath_calm_loop.wav": {
-   "seconds": 14.531,
+   "seconds": 13.604,
    "lufs": -32.0,
-   "peak_dbfs": -8.0,
+   "peak_dbfs": -14.48,
    "seam": {
-    "step_ratio": 0.37,
-    "env_at_seam_vs_rms": 0.14
+    "step_ratio": 0.0,
+    "env_at_seam_vs_rms": 0.45
    }
   },
   "breath_fear_loop.wav": {
-   "seconds": 12.079,
+   "seconds": 10.964,
    "lufs": -28.0,
-   "peak_dbfs": -6.14,
+   "peak_dbfs": -7.69,
    "seam": {
-    "step_ratio": 0.0,
-    "env_at_seam_vs_rms": 0.0
+    "step_ratio": 0.04,
+    "env_at_seam_vs_rms": 0.07
    }
   },
   "breath_heavy_loop.wav": {
-   "seconds": 9.943,
+   "seconds": 9.196,
    "lufs": -26.0,
-   "peak_dbfs": -5.44,
+   "peak_dbfs": -5.11,
    "seam": {
-    "step_ratio": 0.0,
-    "env_at_seam_vs_rms": 0.01
+    "step_ratio": 0.01,
+    "env_at_seam_vs_rms": 0.0
    }
   },
   "distant_ballast_01.wav": {

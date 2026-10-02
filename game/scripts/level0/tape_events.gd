@@ -75,6 +75,15 @@ func _ready() -> void:
 	add_child(_drone)
 
 
+## The player just walked through a seam.
+func seam_cross() -> void:
+	if (_drop.stream as AudioStreamRandomizer).streams_count > 0:
+		_drop.volume_db = -8.0
+		_drop.play()
+		get_tree().create_timer(0.3).timeout.connect(func() -> void: _drop.volume_db = -14.0)
+	Game.fear = maxf(Game.fear, 0.3)
+
+
 func _ui_player(pattern: String, n: int, db: float) -> AudioStreamPlayer:
 	var rz := AudioStreamRandomizer.new()
 	rz.random_pitch = 1.04

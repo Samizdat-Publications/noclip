@@ -1,0 +1,19 @@
+# S03 running notes (builder scratch; folded into HANDOFF.md at session end)
+
+## Done so far (commit: what, evidence)
+- 5e03bbf: loop jump verified on Movie Maker frames (tools/film.py, progress/0063) and made invisible with the horizon fade 34-46 m (D020); tape figure rework (D021, progress/0062); wall wear decals (progress/0064); graffiti v2 with gemini-3-pro-image, 24 pieces, picks recorded (progress/0067); field props; figure candidates (0065) and props (0066).
+- a8c7894: tape-only seams into survey pockets (D022, progress/0068-0070); bot explores (7 chunk changes in 120 s vs 3 in 500 s), visits seams, re-looks at the figure, keeps walking in loops.
+- c66447f: room moods, tints, recolor, exit signs, dead rooms keep a tube, camcorder lift 0.52 s, wet steps.
+- Critic loop 1 (009, build 20261002-015916-c66447f): Claude 7/7/7/6/6/8/7/NA/NA/5/7/6, Gemini 6/5/4/4/7/8/8/6/7/6/3/7.
+- b56860c: tall rooms (D023), PCSS off + SSIL off (+13 fps, D024), rearrangement (D025), carpet v2, camcorder v2, door trim, contact shadows, wrong pillars, seam rooms lit, cathode spill, S03 sound set.
+- Critic loop 2 (010, build 20261002-024249-b56860c, perf 93.2/72.3): Claude 6/6/6/6/6/7/6/5/NA/5/8/6, Gemini 6/5/5/5/7/8/5/4/6/7/9/7.
+- 977b111: figure v4 (lit, poses, lurch), streaming steps split (max 7.1 ms, p95 4.6 ms, was 16 ms), focus shots load surroundings, survey camcorders in halls, denser seams/tall rooms.
+- 10-minute bot walk (seed 9001, 2560x1440, realtime): 102.2 fps avg, 66.4 fps 1% low, p99 14.1 ms, 61,320 frames, 19 chunk changes, ~60 chunks streamed, loop repeated 8 times (released once), no script errors. Log: scratchpad walk10.log (not kept).
+- M2 gate attempt 1 (011, build 20261002-030447-977b111, perf 87.0/63.7): Opus 6/6/6/5/6/7/6/NA/NA/5/8/6; Gemini 7/6/5/6/8/8/8/NA/8/7/8/8. Not passed (Opus Surreal 6).
+- 4a165d9: M3 start (D026): reverb zones, positional steps, occlusion, breathing, duck + drone.
+- Gate-2 fixes commit (after 4a165d9): trim paint, dark rooms tube + ambient, tall room cues, tints, seam tear, worklight shadow, camcorder smaller, bot films long views.
+
+## Open / next
+- Gate attempt 2 capture running (s03-m2-gate2). Then apply patch_seamcross (L068).
+- M3 assets job (breath loops, drone, distant one-shots, squish steps) was running; check files exist before relying on them (code tolerates missing files).
+- Spend so far: graffiti v2 ~$6.37, carpet v2 ~$0.60, sound ~$0.16 + M3 job, Gemini critic calls ~$0.09 each.

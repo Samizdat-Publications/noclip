@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://c1088gk12sa0m"
+uid="uid://bwpxxchg76bhc"
 path="res://.godot/imported/distant_ballast_01.wav-edb8d9850d03e6f374af9596ba730d53.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

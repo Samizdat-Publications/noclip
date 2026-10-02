@@ -108,6 +108,16 @@ def main():
     # 1. Import.
     subprocess.run([sys.executable, os.path.join(ROOT, "tools", "import_presets.py")], check=True)
     run([paths.godot(), "--headless", "--path", paths.GAME, "--import"], 600, "import")
+    # Refuse to capture with a broken sound file (S03: a half-written loop played as a square wave).
+    try:
+        import numpy as np
+        import soundfile as sf
+        for f in sorted(glob.glob(os.path.join(paths.GAME, "assets", "audio", "**", "*.wav"), recursive=True)):
+            d, _sr = sf.read(f, always_2d=True)
+            if d.size and (float(np.sqrt((d ** 2).mean())) > 0.35 or abs(float(d.mean())) > 0.05):
+                sys.exit(f"capture refused: suspect audio file {f}")
+    except ImportError:
+        pass
 
     # 2. Movie Maker run (deterministic, with audio).
     focus_path = a.focus

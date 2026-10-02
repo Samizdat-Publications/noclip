@@ -50,6 +50,7 @@ def paid(meta):
 
 def norm_iter(x, target, iters=6):
     """Integrated LUFS gating depends on level (absolute gate), so converge by iteration."""
+    x = L.norm_peak(x, -12.0)          # very quiet sources fall under the -70 LUFS absolute gate; start from a sane level
     for _ in range(iters):
         x = L.norm_lufs(x, target)
         if abs(L.lufs(x) - target) < 0.05:
@@ -59,16 +60,16 @@ def norm_iter(x, target, iters=6):
 
 def envelope(x, ms=6):
     n = max(1, int(ms * SR / 1000))
-    return np.convolve(np.abs(x), np.ones(n) / n, mode="same")
+    return np.maximum(signal.fftconvolve(np.abs(x), np.ones(n) / n, mode="same"), 0)
 
 
 # ============================================================ breathing loops
 def agc(x, ms=900, power=0.6):
     """Slow leveler: pulls loud breaths down and quiet ones up so no single gasp dominates a quiet loop."""
-    env = envelope(x, ms) + 1e-5
+    env = np.maximum(envelope(x, ms), 0) + 1e-5
     ref = np.percentile(env, 75)
     g = np.clip((env / ref) ** (-power), 0.25, 4.0)
-    g = np.convolve(g, np.ones(int(0.2 * SR)) / int(0.2 * SR), mode="same")
+    g = signal.fftconvolve(g, np.ones(int(0.2 * SR)) / int(0.2 * SR), mode="same")
     return x * g
 
 
@@ -368,6 +369,9 @@ for g, names in groups.items():
     plt.savefig(PREVIEWS / f"m3_{g}.png", dpi=70)
     plt.close()
 
+manifest["notes"] = ["ElevenLabs pcm_48000 responses are interleaved stereo; l0_lib._decode reads them as mono (2x length, pitch down an octave). "
+                     "build_m3 patches L._decode at runtime. step_carpet_soggy_* / figure_breath_rev_* from build_s03 were decoded the old way.",
+                     "breath_calm_loop uses a slow AGC (source take is very quiet); the noise floor is lifted with it."]
 manifest["verification"] = verif
 manifest["cost"] = {"paid_calls": len(manifest["paid_calls"]),
                     "est_total_usd": round(sum(c["est_usd"] for c in manifest["paid_calls"]), 4),

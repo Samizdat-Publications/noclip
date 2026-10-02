@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cj83ntwghbpdv"
+uid="uid://ds2odqcftd05p"
 path="res://.godot/imported/drone_dread_loop.wav-44312accecfa45e25aa4e489e7abfd28.sample"
 
 [deps]
@@ -18,7 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop_mode=0
+edit/loop_mode=2
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

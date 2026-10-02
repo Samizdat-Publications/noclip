@@ -11,39 +11,39 @@
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 1,
-   "src_start_s": 4.603,
+   "src_start_s": 3.931,
    "pitch_ratio": 0.973,
-   "length_s": 0.3
+   "length_s": 0.284
   },
   "step_carpet_soggy_02.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 1,
-   "src_start_s": 7.892,
+   "src_start_s": 5.361,
    "pitch_ratio": 0.976,
-   "length_s": 0.495
+   "length_s": 0.277
   },
   "step_carpet_soggy_03.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 1,
-   "src_start_s": 15.615,
+   "src_start_s": 7.769,
    "pitch_ratio": 1.006,
-   "length_s": 0.337
+   "length_s": 0.269
   },
   "step_carpet_soggy_04.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 2,
-   "src_start_s": 11.929,
+   "src_start_s": 1.186,
    "pitch_ratio": 0.998,
-   "length_s": 0.27
+   "length_s": 0.345
   },
   "step_carpet_soggy_05.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 3,
-   "src_start_s": 4.717,
+   "src_start_s": 1.127,
    "pitch_ratio": 1.022,
    "length_s": 0.264
   },
@@ -51,57 +51,57 @@
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 3,
-   "src_start_s": 9.429,
+   "src_start_s": 4.606,
    "pitch_ratio": 1.028,
    "length_s": 0.263
   },
   "step_carpet_soggy_07.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
-   "take": 5,
-   "src_start_s": 3.007,
+   "take": 3,
+   "src_start_s": 5.774,
    "pitch_ratio": 0.989,
-   "length_s": 0.421
+   "length_s": 0.273
   },
   "step_carpet_soggy_08.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
-   "take": 5,
-   "src_start_s": 6.56,
+   "take": 3,
+   "src_start_s": 8.04,
    "pitch_ratio": 1.013,
-   "length_s": 0.34
+   "length_s": 0.267
   },
   "step_carpet_soggy_run_01.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
    "take": 1,
-   "src_start_s": 11.75,
+   "src_start_s": 4.998,
    "pitch_ratio": 1.037,
    "length_s": 0.26
   },
   "step_carpet_soggy_run_02.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
-   "take": 1,
-   "src_start_s": 12.129,
+   "take": 2,
+   "src_start_s": 5.232,
    "pitch_ratio": 0.953,
    "length_s": 0.283
   },
   "step_carpet_soggy_run_03.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
-   "take": 4,
-   "src_start_s": 4.348,
+   "take": 3,
+   "src_start_s": 2.898,
    "pitch_ratio": 1.004,
    "length_s": 0.269
   },
   "step_carpet_soggy_run_04.wav": {
    "method": "ElevenLabs sound effects take(s), onset-sliced, +/-5% pitch resample, +4 dB body at 280 Hz, 9 kHz lowpass, 10 ms fades, peak -3.2 dBFS",
    "channels": 1,
-   "take": 4,
-   "src_start_s": 12.727,
+   "take": 3,
+   "src_start_s": 5.001,
    "pitch_ratio": 1.043,
-   "length_s": 0.251
+   "length_s": 0.259
   },
   "worklight_hum.wav": {
    "method": "procedural: integer-cycle 120/240/360/480 Hz sines, slow level drift, 2.8 kHz filament whine (-32 dB), FFT-periodic warm noise, 3.5 kHz lowpass",
@@ -363,13 +363,13 @@
   }
  ],
  "step_pool": {
-  "walk": 13,
-  "run": 7
+  "walk": 12,
+  "run": 17
  },
  "verification": {
   "figure_breath_rev_01.wav": {
    "seconds": 1.9,
-   "lufs": -23.58,
+   "lufs": -23.53,
    "peak_dbfs": -12.0
   },
   "figure_breath_rev_02.wav": {
@@ -394,63 +394,63 @@
    "seam_step_over_rms_step": 0.57
   },
   "step_carpet_soggy_01.wav": {
-   "seconds": 0.3,
-   "lufs": -22.02,
+   "seconds": 0.284,
+   "lufs": -25.72,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_02.wav": {
-   "seconds": 0.495,
-   "lufs": -23.23,
+   "seconds": 0.277,
+   "lufs": -24.19,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_03.wav": {
-   "seconds": 0.337,
-   "lufs": -24.54,
+   "seconds": 0.269,
+   "lufs": -26.44,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_04.wav": {
-   "seconds": 0.27,
-   "lufs": -25.88,
+   "seconds": 0.345,
+   "lufs": -27.17,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_05.wav": {
    "seconds": 0.264,
-   "lufs": -24.32,
+   "lufs": -24.86,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_06.wav": {
    "seconds": 0.263,
-   "lufs": -24.28,
+   "lufs": -24.26,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_07.wav": {
-   "seconds": 0.421,
-   "lufs": -23.59,
+   "seconds": 0.273,
+   "lufs": -24.64,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_08.wav": {
-   "seconds": 0.34,
-   "lufs": -26.68,
+   "seconds": 0.267,
+   "lufs": -25.44,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_run_01.wav": {
    "seconds": 0.26,
-   "lufs": -26.26,
+   "lufs": -23.14,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_run_02.wav": {
    "seconds": 0.283,
-   "lufs": -27.85,
+   "lufs": -23.62,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_run_03.wav": {
    "seconds": 0.269,
-   "lufs": -24.41,
+   "lufs": -25.81,
    "peak_dbfs": -3.2
   },
   "step_carpet_soggy_run_04.wav": {
-   "seconds": 0.251,
-   "lufs": -24.62,
+   "seconds": 0.259,
+   "lufs": -25.54,
    "peak_dbfs": -3.2
   },
   "tape_dropout_01.wav": {

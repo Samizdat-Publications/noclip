@@ -119,147 +119,147 @@
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 4.434,
+   "src_start_s": 2.213,
    "pitch_ratio": 0.971,
-   "length_s": 0.141
+   "length_s": 0.125
   },
   "step_carpet_damp_02.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 5.578,
+   "src_start_s": 2.785,
    "pitch_ratio": 0.969,
-   "length_s": 0.223
+   "length_s": 0.172
   },
   "step_carpet_damp_03.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 11.563,
+   "src_start_s": 3.975,
    "pitch_ratio": 1.029,
-   "length_s": 0.176
+   "length_s": 0.228
   },
   "step_carpet_damp_04.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 12.703,
+   "src_start_s": 5.777,
    "pitch_ratio": 0.971,
-   "length_s": 0.17
+   "length_s": 0.124
   },
   "step_carpet_damp_05.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
-   "take": 2,
-   "src_start_s": 5.945,
+   "take": 1,
+   "src_start_s": 7.559,
    "pitch_ratio": 0.954,
-   "length_s": 0.221
+   "length_s": 0.129
   },
   "step_carpet_damp_06.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
-   "take": 2,
-   "src_start_s": 8.18,
+   "take": 1,
+   "src_start_s": 8.838,
    "pitch_ratio": 0.994,
-   "length_s": 0.197
+   "length_s": 0.228
   },
   "step_carpet_damp_07.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 2,
-   "src_start_s": 14.544,
+   "src_start_s": 7.268,
    "pitch_ratio": 1.014,
-   "length_s": 0.132
+   "length_s": 0.121
   },
   "step_carpet_damp_08.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 2,
-   "src_start_s": 18.67,
+   "src_start_s": 9.331,
    "pitch_ratio": 0.961,
-   "length_s": 0.191
+   "length_s": 0.147
   },
   "step_carpet_wet_01.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 6.609,
+   "src_start_s": 1.954,
    "pitch_ratio": 0.981,
-   "length_s": 0.148
+   "length_s": 0.125
   },
   "step_carpet_wet_02.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 10.122,
+   "src_start_s": 3.3,
    "pitch_ratio": 1.05,
-   "length_s": 0.253
+   "length_s": 0.141
   },
   "step_carpet_wet_03.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 13.24,
+   "src_start_s": 5.057,
    "pitch_ratio": 1.022,
-   "length_s": 0.232
+   "length_s": 0.162
   },
   "step_carpet_wet_04.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
    "take": 1,
-   "src_start_s": 16.095,
+   "src_start_s": 6.616,
    "pitch_ratio": 1.032,
-   "length_s": 0.189
+   "length_s": 0.136
   },
   "step_carpet_wet_05.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
-   "take": 2,
-   "src_start_s": 2.137,
+   "take": 1,
+   "src_start_s": 8.044,
    "pitch_ratio": 1.047,
-   "length_s": 0.142
+   "length_s": 0.13
   },
   "step_carpet_wet_06.wav": {
    "method": "ElevenLabs sound effects walking take, onset-sliced, +/-5% pitch resample, fades 6/35 ms",
    "channels": 1,
    "peak_dbfs": -3,
-   "take": 2,
-   "src_start_s": 16.973,
+   "take": 1,
+   "src_start_s": 9.229,
    "pitch_ratio": 1.012,
-   "length_s": 0.147
+   "length_s": 0.134
   },
   "distant_thud_01.wav": {
    "method": "ElevenLabs sound effects 4 s, then 4th-order lowpass 520 Hz + highpass 25 Hz (wall muffling), trimmed, 25 ms fade in / 350 ms out",
    "prompt": "A single heavy object shifting and thudding on a concrete floor far away inside a large building, heard through several thick walls, extremely muffled, deep and low, a short faint rumble afterwards, no voices, no music, very quiet.",
    "channels": 1,
    "peak_dbfs": -3,
-   "length_s": 2.811
+   "length_s": 1.792
   },
   "distant_thud_02.wav": {
    "method": "ElevenLabs sound effects 4 s, then 4th-order lowpass 520 Hz + highpass 25 Hz (wall muffling), trimmed, 25 ms fade in / 350 ms out",
    "prompt": "Something very heavy being dragged a short distance then dropped, far away in an enormous empty building, heard through concrete walls, muffled and hollow, low frequency only, no voices, no music.",
    "channels": 1,
    "peak_dbfs": -3,
-   "length_s": 3.2
+   "length_s": 2.168
   },
   "distant_thud_03.wav": {
    "method": "ElevenLabs sound effects 4 s, then 4th-order lowpass 520 Hz + highpass 25 Hz (wall muffling), trimmed, 25 ms fade in / 350 ms out",
    "prompt": "A deep slow dull boom of a large heavy mass settling, distant, inside the walls of an abandoned office building, heavily muffled low thump with a faint creak, no voices, no music.",
    "channels": 1,
    "peak_dbfs": -3,
-   "length_s": 3.2
+   "length_s": 3.109
   }
  },
  "paid_calls": [
@@ -377,10 +377,10 @@
   }
  ],
  "family_target_lufs": {
-  "step_carpet_damp": -24.65,
-  "step_carpet_wet": -22.13,
+  "step_carpet_damp": -26.95,
+  "step_carpet_wet": -21.76,
   "tube_tick": -25.99,
-  "distant_thud": -25.11
+  "distant_thud": -21.98
  },
  "verification": {
   "loops": {
@@ -429,102 +429,102 @@
    "step_carpet_damp": [
     {
      "file": "step_carpet_damp_01.wav",
-     "ms": 141,
-     "lufs": -24.7,
+     "ms": 125,
+     "lufs": -27.1,
      "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_02.wav",
-     "ms": 223,
-     "lufs": -24.6,
+     "ms": 172,
+     "lufs": -27.0,
      "peak": -3.9,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_03.wav",
-     "ms": 176,
-     "lufs": -24.6,
+     "ms": 228,
+     "lufs": -27.2,
      "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_04.wav",
-     "ms": 170,
-     "lufs": -25.4,
-     "peak": -3.0,
+     "ms": 124,
+     "lufs": -27.0,
+     "peak": -3.1,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_05.wav",
-     "ms": 221,
-     "lufs": -24.6,
-     "peak": -3.8,
+     "ms": 129,
+     "lufs": -27.6,
+     "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_06.wav",
-     "ms": 197,
-     "lufs": -24.9,
+     "ms": 228,
+     "lufs": -27.6,
      "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_07.wav",
-     "ms": 132,
-     "lufs": -24.6,
-     "peak": -6.0,
+     "ms": 121,
+     "lufs": -27.0,
+     "peak": -6.2,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_damp_08.wav",
-     "ms": 191,
-     "lufs": -25.0,
-     "peak": -3.0,
+     "ms": 147,
+     "lufs": -27.0,
+     "peak": -5.4,
      "first_sample": 0.0
     }
    ],
    "step_carpet_wet": [
     {
      "file": "step_carpet_wet_01.wav",
-     "ms": 148,
+     "ms": 125,
      "lufs": -22.1,
-     "peak": -3.2,
+     "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_wet_02.wav",
-     "ms": 253,
-     "lufs": -23.0,
+     "ms": 141,
+     "lufs": -23.2,
      "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_wet_03.wav",
-     "ms": 232,
+     "ms": 162,
      "lufs": -22.3,
      "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_wet_04.wav",
-     "ms": 189,
-     "lufs": -22.1,
-     "peak": -3.5,
+     "ms": 136,
+     "lufs": -21.8,
+     "peak": -3.4,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_wet_05.wav",
-     "ms": 142,
-     "lufs": -25.3,
-     "peak": -3.0,
+     "ms": 130,
+     "lufs": -21.8,
+     "peak": -4.1,
      "first_sample": 0.0
     },
     {
      "file": "step_carpet_wet_06.wav",
-     "ms": 147,
-     "lufs": -22.1,
-     "peak": -4.2,
+     "ms": 134,
+     "lufs": -21.8,
+     "peak": -4.3,
      "first_sample": 0.0
     }
    ],
@@ -561,30 +561,30 @@
    "distant_thud": [
     {
      "file": "distant_thud_01.wav",
-     "ms": 2811,
-     "lufs": -25.1,
+     "ms": 1792,
+     "lufs": -22.0,
      "peak": -3.0,
      "first_sample": 0.0
     },
     {
      "file": "distant_thud_02.wav",
-     "ms": 3200,
-     "lufs": -25.1,
-     "peak": -9.9,
+     "ms": 2168,
+     "lufs": -22.0,
+     "peak": -6.9,
      "first_sample": 0.0
     },
     {
      "file": "distant_thud_03.wav",
-     "ms": 3200,
-     "lufs": -26.1,
+     "ms": 3109,
+     "lufs": -24.7,
      "peak": -3.0,
      "first_sample": 0.0
     }
    ]
   },
   "step_pool": {
-   "damp": 12,
-   "wet": 8
+   "damp": 14,
+   "wet": 7
   }
  },
  "cost": {

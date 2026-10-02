@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dsupux4syvf46"
+uid="uid://b7kibgbg6cixj"
 path="res://.godot/imported/step_carpet_squish_04.wav-32f49b080559aa0d446ec1530f122426.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

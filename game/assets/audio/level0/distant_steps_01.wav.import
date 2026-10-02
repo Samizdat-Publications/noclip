@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://j14yqi77q65g"
+uid="uid://dr4tnm0lms8oy"
 path="res://.godot/imported/distant_steps_01.wav-6a6b64fceeb13d0af22c8944aeeb4c29.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

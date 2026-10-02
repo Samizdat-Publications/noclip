@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://22q0y4y04t48"
+uid="uid://dbrej32f1kmy4"
 path="res://.godot/imported/breath_heavy_loop.wav-363f63ecd9b10877df42193e16f0f353.sample"
 
 [deps]
@@ -18,7 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop_mode=0
+edit/loop_mode=2
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

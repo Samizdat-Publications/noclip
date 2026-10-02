@@ -81,6 +81,18 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L057 | 009 | gemini | hurts | Props look like they hover (no contact shadows) | FIX in S03 | Repeat of L015: stronger, tighter contact decals and SSAO |
 | L058 | 009 | gemini | hurts | A flat grey vertical strip on a doorway looks like a broken mesh (the door lining) | FIX in S03 | Door lining and casing get a textured, worn paint material; poster ghosts fainter (one read as a blank sheet) |
 | L059 | 009 | gemini | nitpick | Normal-view lighting flat; panels read as white rectangles that do not cast directional light | FIX in S03 | A/B: less GI fill, more panel energy, a little more bloom and in-fog scatter |
+| L060 | 010 | claude | hurts | Almost every frame is the same hallway; wants zones told apart | FIX | 977b111: denser seams (45%) and tall rooms (28%), survey camcorders recording halls, bot prefers rooms over plain corridor |
+| L061 | 010 + 011 | claude + gemini + opus gate | ruins it | The figure is a static black cutout (010), or absent from the capture (011) | FIX | 977b111: lit body with mass, twisted-head and pointing poses, lurches closer on frame skips; gate-2 fixes: the bot lifts the camcorder down long views so the figure gets its chance |
+| L062 | 010 | claude | nitpick | Horizontal smeared bands on the carpet in the middle distance | FIX | 977b111: wet reflection 0.9 to 0.55, no reflection on mottling |
+| L063 | 011 | opus gate + gemini | hurts | The tripod's shadow is jagged and stair-stepped | FIX | Gate-2 fixes: work light shadow blur 3 and soft PCSS (light size 0.25) on that one light |
+| L064 | 011 | opus gate + gemini | hurts | Door frames look melted, like bark or chocolate (the L058 texture made it worse) | FIX | Gate-2 fixes: plain enamel paint, crisp edges, no texture |
+| L065 | 011 | opus gate | hurts | Tall rooms read as greybox; nothing shows the scale | FIX | Gate-2 fixes: a door copied halfway up the wall, stairs climbing into the air, darker top |
+| L066 | 011 | opus gate | hurts | The green room is highlighter-lime | FIX | Gate-2 fixes: pale sickly green (0.86, 0.97, 0.8), paler cold blue |
+| L067 | 011 | opus gate | nitpick | The seam on tape glows like a sci-fi force field (Gemini loves it) | FIX (partial) | Gate-2 fixes: edge half as bright and broken per scanline, faint halo; keep the light through the doorway |
+| L068 | 011 | gemini | nitpick | Walking through a seam feels abrupt; wants a cue as you cross | FIX | Tape dropout and a camcorder roll as you pass through the seam |
+| L069 | 010 | gemini | hurts | No visual identity of its own; "looks like every Backrooms video" | FIX (ongoing) | Our own: the survey crew (tripods, stencils, work lights, cables), generation-loss copy errors, the tape figure, graffiti v2 |
+| L070 | 010 | gemini | hurts | Footsteps sound like stomping on dry plywood | FIX | M3 sound set: squish steps on soaked carpet, positional so the room colors them (D026); 011 Gemini: "wet, heavy footsteps are perfect" |
+| L071 | 011 | opus gate | hurts | Dark rooms crush to pure black (a 4 s black sheet) | FIX | Gate-2 fixes: every dark room keeps one dim tube, ambient 0.015 to 0.022; focus shots wait for streaming (the black frame in 010 was an unloaded chunk) |
 
 ## Closed
 

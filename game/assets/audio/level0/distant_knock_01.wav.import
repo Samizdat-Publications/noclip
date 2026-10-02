@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://vu2w3uamkjaw"
+uid="uid://dato5mod75tjs"
 path="res://.godot/imported/distant_knock_01.wav-3817edbc34ca15fed851bcf5f5a9af2e.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

@@ -197,8 +197,10 @@ def eleven_sfx(tag, text, duration, prompt_influence=0.5, loop=False):
 
 def _decode(path, fmt):
     if fmt.startswith("pcm"):
+        # ElevenLabs pcm_48000 is interleaved STEREO; reading it as mono doubled every sound's
+        # length and dropped it an octave (found in S03: the "dry plywood" footsteps).
         x = np.frombuffer(path.read_bytes(), dtype="<i2").astype(np.float64) / 32768
-        return x
+        return x[: len(x) // 2 * 2].reshape(-1, 2).mean(1)
     x, sr = sf.read(path, dtype="float64")
     if x.ndim == 2:
         x = x.mean(1)

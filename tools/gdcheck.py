@@ -25,5 +25,19 @@ for l in bad:
     if l not in seen and len(seen) < 25:
         seen.add(l)
         print(l)
+# Audio sanity (S03: a half-written breath loop played as a full-scale square wave in a capture).
+try:
+    import glob as _glob
+    import numpy as _np
+    import soundfile as _sf
+    for _f in sorted(_glob.glob(os.path.join(paths.GAME, "assets", "audio", "**", "*.wav"), recursive=True)):
+        _d, _sr = _sf.read(_f, always_2d=True)
+        _rms = float(_np.sqrt((_d ** 2).mean())) if _d.size else 0.0
+        _dc = float(abs(_d.mean())) if _d.size else 0.0
+        if _rms > 0.35 or _dc > 0.05:
+            bad.append(f"AUDIO SUSPECT {os.path.basename(_f)}: rms {_rms:.3f} dc {_dc:.3f}")
+            print(bad[-1])
+except ImportError:
+    pass
 print("gdcheck:", "FAIL" if bad else "ok", f"({len(bad)} error lines)")
 sys.exit(1 if bad else 0)
