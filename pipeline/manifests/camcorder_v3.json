@@ -1,0 +1,19 @@
+{
+ "asset": "camcorder_v3",
+ "purpose": "camcorder_v2 (cand1) geometry with a baked worn-ABS PBR set; drop-in for camcorder_v2.glb",
+ "paid_calls": 0,
+ "script": "pipeline/blender/texture_camcorder_v3.py",
+ "preview_script": "pipeline/blender/preview_camcorder_v3.py",
+ "command": "blender -b -P pipeline/blender/texture_camcorder_v3.py -- --res 2048 --samples 32",
+ "blender": "5.1.2",
+ "renderer": "Cycles CPU, seed 3, EMIT bakes of one procedural shader + NORMAL bake",
+ "source_mesh": "game/assets/props/player/camcorder_v2.glb (Sketchfab CC-BY, Panasonic NV-G120 VHS-C CAMERA by PetyaPetr)",
+ "output": "game/assets/props/player/camcorder_v3.glb",
+ "textures": {"basecolor": "sRGB 2048", "orm": "R occlusion, G roughness, B metallic, 2048", "normal": "tangent, OpenGL +Y, 2048"},
+ "texture_files": "pipeline/textures/camcorder_v3/",
+ "materials": {"camcorder_body": "everything except the lens glass", "camcorder_glass": "lens/viewfinder glass, flat dark purple tint, metallic 0.35, rough 0.045, clearcoat"},
+ "tris": 33404,
+ "bounds_check": "vertex positions identical to v2 (max diff 0.0 mm); gltf min [-0.015,-0.061,-0.215] max [0.060,0.024,0.000]",
+ "uv": "new smart-project + pack layer, 49% coverage, old UVs dropped",
+ "preview": "pipeline/blender/previews/camcorder_v3.png (v2 top row, v3 bottom row), camcorder_v3_detail.png"
+}

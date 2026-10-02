@@ -38,7 +38,8 @@ var _steps_soggy: AudioStreamRandomizer
 var _steps_run: AudioStreamRandomizer
 var _step_player: AudioStreamPlayer3D
 var _steps_squish: AudioStreamRandomizer
-var _breath: Array[AudioStreamPlayer] = []   # calm, heavy, fear loops (M3, D026)
+var _breath: Array[AudioStreamPlayer] = []
+var _vm_baked := false   # camcorder_v3 carries its own worn, baked materials (L087)   # calm, heavy, fear loops (M3, D026)
 
 
 func _ready() -> void:
@@ -60,7 +61,12 @@ func _ready() -> void:
 	cam.current = true
 	camcorder = Camcorder.new()
 	add_child(camcorder)
-	var vm_path := "res://assets/props/player/camcorder_v2.glb" if ResourceLoader.exists("res://assets/props/player/camcorder_v2.glb") else "res://assets/props/player/camcorder.glb"
+	var vm_path := "res://assets/props/player/camcorder.glb"
+	for cand in ["camcorder_v3", "camcorder_v2"]:
+		if ResourceLoader.exists("res://assets/props/player/%s.glb" % cand):
+			vm_path = "res://assets/props/player/%s.glb" % cand
+			break
+	_vm_baked = vm_path.contains("_v3")
 	if ResourceLoader.exists(vm_path):
 		var vm := (load(vm_path) as PackedScene).instantiate() as Node3D
 		cam.add_child(vm)
@@ -82,7 +88,7 @@ func _prep_viewmodel(n: Node) -> void:
 		var mi := n as MeshInstance3D
 		for i in mi.mesh.get_surface_count():
 			var m := mi.mesh.surface_get_material(i)
-			if m is BaseMaterial3D:
+			if m is BaseMaterial3D and not _vm_baked:
 				var d := (m as BaseMaterial3D).duplicate() as BaseMaterial3D
 				if m.resource_name == "camcorder_body":
 					d.albedo_color = d.albedo_color * Color(0.32, 0.32, 0.33)
