@@ -19,4 +19,6 @@ Session 01 total: about $0.17 of a $40 cap.
 | 2026-10-02 | S02 | Gemini (gemini-2.5-flash-image) | graffiti retries: lights, exits (apostrophes) | 2 | ~$0.08 |
 | 2026-10-02 | S02 | Gemini (gemini-3.1-flash-image) | graffiti retries: tally_copy, same, gaps_child (tally glyphs, garbled SAME, crayon figure) | 3 | ~$0.20 ($0.067 each) |
 | 2026-10-02 | S02 | Gemini (gemini-3.1-flash-image) | graffiti retry 2: lights, exits (apostrophe, faint scratches) | 2 | ~$0.13 |
-| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 008_gemini.md | 1 | $0.09 (24555 in / 3173 out tokens) |
+| 2026-10-02 | S02 | Gemini (gemini-3.1-pro-preview) | video critic -> 008_gemini.md | 1 | $0.09 (24555 in / 3173 out tokens) |
+
+Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques $0.18).
