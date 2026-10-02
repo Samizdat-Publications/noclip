@@ -1395,7 +1395,8 @@ func _build_props() -> void:
 			inst0.position = Vector3(pr[1], 0.0, pr[2])
 			inst0.rotation.y = deg_to_rad(float(pr[3]))
 			add_child(inst0)
-			if String(pr[0]).contains("chair"):
+			# Chairs, and the crew's camcorders left recording (they end up pointed at you).
+			if String(pr[0]).contains("chair") or pr[0] == "prop_tripod_camcorder":
 				movables.append(inst0)
 			var half0: float = PROPS.get(pr[0], {}).get("half", 0.3)
 			if PROPS.get(pr[0], {}).has("tint"):

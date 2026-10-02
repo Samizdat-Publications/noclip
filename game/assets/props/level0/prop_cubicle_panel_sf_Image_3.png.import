@@ -2,24 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx7w47ep15gpb"
-path="res://.godot/imported/prop_cubicle_panel_sf_Image_3.png-99bacd71d567127f5da0496132c1c070.ctex"
+uid="uid://kk43jkqm4cvi"
+path.bptc="res://.godot/imported/prop_cubicle_panel_sf_Image_3.png-99bacd71d567127f5da0496132c1c070.bptc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "98e4925c35d8d0df5a1b8c40be6a5356"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/level0/prop_cubicle_panel_sf_Image_3.png"
-dest_files=["res://.godot/imported/prop_cubicle_panel_sf_Image_3.png-99bacd71d567127f5da0496132c1c070.ctex"]
+dest_files=["res://.godot/imported/prop_cubicle_panel_sf_Image_3.png-99bacd71d567127f5da0496132c1c070.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

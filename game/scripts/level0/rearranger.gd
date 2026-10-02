@@ -2,9 +2,9 @@ class_name Rearranger
 extends Node
 ## Unobserved rearrangement (VISION non-euclidean toolkit; critique 009, L052, D025): things you
 ## have already looked at change while you are not looking. A chair you passed turns to face
-## where you are now. Never while it could be seen: it must be outside the camera's view, or
-## hidden behind a wall (checked with a ray), for several seconds, and it is checked again at the
-## moment it changes. Rare: at most one change every 25 s and six a run.
+## where you are now; a camcorder the survey crew left recording has turned to point at you.
+## Never while it could be seen: it must be outside the camera's view, or hidden behind a wall
+## (checked with a ray), for several seconds, and it is checked again at the moment it changes. Rare: at most one change every 25 s and six a run.
 
 const CHECK := 0.25
 const UNSEEN_FOR := 6.0
