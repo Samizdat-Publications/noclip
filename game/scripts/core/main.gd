@@ -28,6 +28,7 @@ func _ready() -> void:
 	space.build(Game.run_seed)
 
 	world_env = WorldEnvironment.new()
+	world_env.name = "WorldEnvironment"
 	world_env.environment = space.make_environment()
 	world_env.camera_attributes = space.make_camera_attributes()
 	add_child(world_env)

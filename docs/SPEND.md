@@ -11,3 +11,7 @@ Soft cap per session: `SESSION_SPEND_CAP_USD` from .env (default 40). Estimates 
 
 Session 01 total: about $0.17 of a $40 cap.
 | 2026-10-01 | auto | Gemini (gemini-3.1-pro-preview) | video critic -> 007_gemini.md | 1 | $0.09 (20631 in / 3752 out tokens) |
+| 2026-10-02 | S02 | Gemini (gemini-2.5-flash-image) | Level 0 graffiti decals, first pass, 14 pieces (build_graffiti.py) | 14 | ~$0.55 ($0.039 each) |
+| 2026-10-02 | S02 | Gemini (gemini-2.5-flash-image) | graffiti retries: lights, exits (apostrophes) | 2 | ~$0.08 |
+| 2026-10-02 | S02 | Gemini (gemini-3.1-flash-image) | graffiti retries: tally_copy, same, gaps_child (tally glyphs, garbled SAME, crayon figure) | 3 | ~$0.20 ($0.067 each) |
+| 2026-10-02 | S02 | Gemini (gemini-3.1-flash-image) | graffiti retry 2: lights, exits (apostrophe, faint scratches) | 2 | ~$0.13 |

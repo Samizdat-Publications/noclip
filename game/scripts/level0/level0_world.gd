@@ -96,9 +96,17 @@ func _new_chunk(c: Vector2i) -> Level0Chunk:
 	return ch
 
 
+## Every chunk draws its own random streams, except loop copies, which share their template's.
+func _salt(c: Vector2i, L: Dictionary) -> String:
+	if L.has("loop"):
+		return "loop%d:" % int(L["loop"]["row"])
+	return "c%d_%d:" % [c.x, c.y]
+
+
 func _build_now(c: Vector2i) -> void:
 	var ch := _new_chunk(c)
-	ch.build(gen.generate(c.x, c.y), "c%d_%d:" % [c.x, c.y], mats, seed_offset)
+	var L := gen.generate(c.x, c.y)
+	ch.build(L, _salt(c, L), mats, seed_offset)
 	_finish(c, ch)
 
 
@@ -137,6 +145,16 @@ var _pos_log_t := 0.0
 
 
 func _process(delta: float) -> void:
+	if _temporal_reset > 0:
+		_temporal_reset -= 1
+		if _temporal_reset == 0:
+			var we := get_tree().root.find_child("WorldEnvironment", true, false) as WorldEnvironment
+			if we and we.environment:
+				we.environment.volumetric_fog_temporal_reprojection_enabled = true
+			get_viewport().use_taa = ProjectSettings.get_setting("rendering/anti_aliasing/quality/use_taa", true)
+	if _loop_shot_frames > 0:
+		_loop_shot_frames -= 1
+		get_viewport().get_texture().get_image().save_png("%s/r%d_after%d.png" % [String(Game.opts["loop-shots"]), loops_done - 1, 4 - _loop_shot_frames])
 	if Game.opts.has("log-stream"):
 		_pos_log_t -= delta
 		if _pos_log_t <= 0.0:
@@ -159,7 +177,8 @@ func _process(delta: float) -> void:
 				continue
 			_building_coord = c
 			_building_chunk = _new_chunk(c)
-			_steps = _building_chunk.begin_build(gen.generate(c.x, c.y), "c%d_%d:" % [c.x, c.y], mats, seed_offset)
+			var L := gen.generate(c.x, c.y)
+			_steps = _building_chunk.begin_build(L, _salt(c, L), mats, seed_offset)
 		else:
 			var t0 := Time.get_ticks_usec()
 			var st: Callable = _steps.pop_front()
@@ -183,12 +202,12 @@ func get_spawn_transform() -> Transform3D:
 	var ch: Level0Chunk = chunks.get(Vector2i.ZERO)
 	var s: Array = ch.L.get("spawn", [12.0, 12.0, 90.0])
 	var p := Vector3(s[0], 0.0, s[1])
-	# Face the longest open view.
+	# Face the longest open view; on a tie, face east (down the spawn hall, toward its loop).
 	var best_yaw := 0.0
 	var best_d := -1.0
 	for k in 16:
 		var yaw := TAU * k / 16.0
-		var d := view_depth(p, yaw, 30.0)
+		var d := view_depth(p, yaw, 30.0) + (0.5 if k == 12 else 0.0)
 		if d > best_d:
 			best_d = d
 			best_yaw = yaw
@@ -239,8 +258,125 @@ func get_interest_points() -> Array:
 
 var _last_chunk := Vector2i(1 << 20, 0)
 
+# ------------------------------------------------------------------ the loop
+# "The corridor that repeats until you turn around" (VISION toolkit, D017). A loop run is
+# LOOP_LEN identical copies of one hall. Walking on in the direction you entered, you are moved
+# back one copy (24 m) the moment you step into the next one; everything around you is the same,
+# so nothing changes on screen. Look back down the hall for a moment, or walk back a few meters,
+# and the loop lets go: the far end becomes reachable. Never a softlock: the way you came in is
+# always open.
+var player_ref: Player
+var _loop_start := 1 << 20
+var _loop_row := 0
+var _loop_dir := 0           # +1 entered walking east, -1 west, 0 not in a loop
+var _loop_released := false
+var _look_back_t := 0.0
+var _back_walk := 0.0
+var _last_x := 0.0
+var loops_done := 0
+var _loop_shot_frames := 0
+var _temporal_reset := 0
+var loops_done_here := 0
+
+
+func _update_loop(p: Vector3, delta: float) -> bool:
+	var c := chunk_of(p)
+	var k := gen.loop_index(c.x, c.y)
+	if k < 0:
+		_loop_dir = 0
+		_loop_released = false
+		_last_x = p.x
+		return false
+	if _loop_dir == 0:
+		_loop_start = gen.loop_start(c.x, c.y)
+		_loop_row = c.y
+		_loop_dir = 1 if k <= 1 else -1
+		_loop_released = false
+		_look_back_t = 0.0
+		_back_walk = 0.0
+		_last_x = p.x
+		loops_done_here = 0
+	var dx := p.x - _last_x
+	_last_x = p.x
+	if _loop_released:
+		return false
+	# Turning around: looking back down the hall, or walking back.
+	if director.view_fwd.x * _loop_dir < -0.6:
+		_look_back_t += delta
+	else:
+		_look_back_t = maxf(_look_back_t - delta * 0.5, 0.0)
+	if dx * _loop_dir < 0.0:
+		_back_walk += -dx * _loop_dir
+	if loops_done_here > 0 and (_look_back_t > 1.5 or _back_walk > 6.0):
+		_loop_released = true
+		if Game.opts.has("log-stream"):
+			print("[loop] released after %d repeats at t=%.1f" % [loops_done, Game.clock])
+		return false
+	var trap := _loop_start + 2 if _loop_dir > 0 else _loop_start + 1
+	var lx := float(c.x)
+	if (_loop_dir > 0 and c.x >= trap) or (_loop_dir < 0 and c.x <= trap):
+		teleport(Vector3(-CHUNK * _loop_dir, 0.0, 0.0))
+		loops_done += 1
+		loops_done_here += 1
+		_look_back_t = 0.0
+		_back_walk = 0.0
+		if Game.opts.has("log-stream"):
+			print("[loop] repeat %d at t=%.1f (chunk %d)" % [loops_done, Game.clock, int(lx)])
+		return true
+	return false
+
+
+## Moves the player by `offset` between identical places, carrying the lights and hum that
+## were lent to the panels around them over to the matching panels, so nothing visibly changes.
+func teleport(offset: Vector3) -> void:
+	if player_ref == null:
+		return
+	if Game.opts.has("loop-shots"):
+		# Debug: the last frame before the jump, then a few after (review of the seam).
+		var dir := String(Game.opts["loop-shots"])
+		DirAccess.make_dir_recursive_absolute(dir)
+		get_viewport().get_texture().get_image().save_png("%s/r%d_before.png" % [dir, loops_done])
+		_loop_shot_frames = 4
+	player_ref.global_position += offset
+	player_ref.reset_physics_interpolation()
+	if player_ref.input is AutoplayBot:
+		(player_ref.input as AutoplayBot).shift(offset)
+	_player += offset
+	_last_x += offset.x
+	pool.carry_over(offset, func(fx: Fixture) -> Fixture: return _twin(fx, offset))
+	pool.listener = _player
+	director.listener = _player
+	if tape.figure.visible:
+		tape.figure.global_position += offset
+	# Temporal effects remember the old view; across a jump that memory is wrong. Drop the haze
+	# reprojection and TAA history for a couple of frames.
+	_temporal_reset = 2
+	var env := get_viewport().world_3d.environment if get_viewport().world_3d else null
+	if env == null:
+		var we := get_tree().root.find_child("WorldEnvironment", true, false) as WorldEnvironment
+		env = we.environment if we else null
+	if env:
+		env.volumetric_fog_temporal_reprojection_enabled = false
+	if Game.opts.has("taa-reset"):
+		get_viewport().use_taa = false
+
+
+## The panel at the same place in the copy `offset` away, or null.
+func _twin(fx: Fixture, offset: Vector3) -> Fixture:
+	var ch := fx.get_parent() as Level0Chunk
+	if ch == null or not ch.L.has("loop"):
+		return null
+	var c2 := chunk_of(ch.position + Vector3(CHUNK * 0.5, 0.0, CHUNK * 0.5) + offset)
+	var other: Level0Chunk = chunks.get(c2)
+	if other == null or not other.L.has("loop"):
+		return null
+	var i := ch.fixtures.find(fx)
+	return other.fixtures[i] if i >= 0 and i < other.fixtures.size() else null
+
 
 func set_listener(p: Vector3) -> void:
+	if _update_loop(p, get_physics_process_delta_time()):
+		p = player_ref.global_position
 	if Game.opts.has("log-stream") and chunk_of(p) != _last_chunk:
 		_last_chunk = chunk_of(p)
 		print("[stream] t=%.1f player chunk %s pos (%.1f, %.1f) loaded=%d" % [Game.clock, _last_chunk, p.x, p.z, chunks.size()])
@@ -251,6 +387,7 @@ func set_listener(p: Vector3) -> void:
 
 func attach_player(p: Player) -> void:
 	tape.player = p
+	player_ref = p
 
 
 ## The lit ceiling panel nearest to p (within r), or null.
@@ -316,7 +453,8 @@ func _chunk_route(a: Vector2i, b: Vector2i) -> Array:
 			break
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var n: Vector2i = c + d
-			if chunks.has(n) and not prev.has(n):
+			var side := "E" if d.x > 0 else ("W" if d.x < 0 else ("S" if d.y > 0 else "N"))
+			if chunks.has(n) and not prev.has(n) and not (chunks[c] as Level0Chunk).L["gates"][side].is_empty():
 				prev[n] = c
 				frontier.append(n)
 	if not prev.has(b):

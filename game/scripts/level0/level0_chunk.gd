@@ -102,6 +102,16 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	_collect_solids()
 	_pick_leaks()
 	var kit := MeshKit.new()
+	# World-continuous wallpaper; a loop copy uses its template's origin so every copy matches.
+	kit.uv_origin = Vector3(position.x, 0.0, position.z)
+	if L.has("loop"):
+		var lp: Dictionary = L["loop"]
+		kit.uv_origin = Vector3(float(lp["start"]) * extent.x, 0.0, float(lp["row"]) * extent.y)
+		var shift := Vector3(position.x, 0.0, position.z) - kit.uv_origin
+		for key in ["carpet", "ceiling"]:
+			if mats[key] == shared_mats[key]:
+				mats[key] = (shared_mats[key] as ShaderMaterial).duplicate()
+			(mats[key] as ShaderMaterial).set_shader_parameter("world_shift", shift)
 	var cells := {}
 	return [
 		func() -> void:
@@ -506,6 +516,10 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	for h in ctx["hints"]:
 		if c.distance_to(h) < 1.3:
 			st = Fixture.State.PULSE
+	if L.get("steady_lights", false):
+		# Loop copies must look identical at every moment: no flicker, only on or dead.
+		st = Fixture.State.DEAD if in_dark else Fixture.State.ON
+		dim = false
 	if c.distance_to(ctx["spawn"]) < 3.2 and st != Fixture.State.PULSE:
 		st = Fixture.State.ON
 	for lz in L.get("lit_zones", []):
@@ -855,8 +869,28 @@ func _nearest_wall_face(p: Vector2, max_d: float) -> Array:
 	return best
 
 
+static var _graffiti_table := {}
+
+
+## Marks left by earlier people (data/graffiti.json, made by pipeline/textures/build_graffiti.py).
+func _build_graffiti() -> void:
+	if _graffiti_table.is_empty():
+		_graffiti_table = JSON.parse_string(FileAccess.get_file_as_string("res://data/graffiti.json"))
+	var r := _rng("level0:graffiti")
+	for g in L.get("graffiti", []):
+		var info: Dictionary = _graffiti_table.get(g[0], {})
+		if info.is_empty():
+			continue
+		var w: float = float(info["width"]) * r.randf_range(0.9, 1.1)
+		var h: float = w * float(info["aspect"])
+		var n := Vector3(g[3], 0.0, g[4])
+		var b := _basis_facing(n).rotated(n, r.randf_range(-0.05, 0.05))
+		_decal(String(info["tex"]), Vector3(g[1], g[5], g[2]), b, Vector3(w, 0.3, h), Color(1, 1, 1, r.randf_range(0.82, 0.96)))
+
+
 func _build_decals() -> void:
 	var r := _rng("level0:decals")
+	_build_graffiti()
 	for pc in _pending_contacts:
 		_contact_shadow(pc[0], pc[1])
 	for lk in leaks:

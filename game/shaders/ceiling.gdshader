@@ -27,11 +27,15 @@ uniform float halo_strength = 0.55;
 
 uniform float ceiling_h = 2.6;
 
+uniform vec3 world_shift = vec3(0.0);   // a loop copy samples its template's patterns
+
 varying vec3 wpos;
+varying vec3 wraw;
 varying float wup;
 
 void vertex() {
-	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wraw = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wpos = wraw - world_shift;
 	wup = (MODEL_MATRIX * vec4(NORMAL, 0.0)).y;
 }
 
@@ -74,7 +78,7 @@ void fragment() {
 	if (wup > 0.5) { alb *= vec3(0.36, 0.33, 0.28); }
 	ALBEDO = alb;
 	if (wpos.y > ceiling_h - 0.15) {
-		EMISSION = alb * halo_at(wpos.xz) * halo_strength;
+		EMISSION = alb * halo_at(wraw.xz) * halo_strength;
 	}
 	ROUGHNESS = use_tex ? textureGrad(rough_tex, uv, gx, gy).r : 0.93;
 	AO = use_tex ? textureGrad(ao_tex, uv, gx, gy).r : 1.0;

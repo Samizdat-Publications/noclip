@@ -61,6 +61,36 @@ func hwy_col(cx: int) -> int:
 	return r.randi_range(5, 13) if r.randf() < 0.22 else -1
 
 
+## Loops (VISION non-euclidean toolkit: "the corridor that repeats until you turn around").
+## On some highway rows a run of LOOP_LEN chunks is built from one identical template: the hall
+## with no side doors, the same lights, stains and the same lone chair. Level0World quietly moves
+## the player back one copy while they keep walking, until they turn around (DECISIONS D017).
+const LOOP_LEN := 4
+
+
+## Index of chunk (cx, cz) inside a loop run (0 .. LOOP_LEN - 1), or -1.
+func loop_index(cx: int, cz: int) -> int:
+	var start := loop_start(cx, cz)
+	return cx - start if start != 1 << 20 else -1
+
+
+## First chunk column of the loop run containing (cx, cz), or 1 << 20 if none.
+func loop_start(cx: int, cz: int) -> int:
+	if hwy_row(cz) < 0:
+		return 1 << 20
+	var block := floori(cx / 12.0)
+	var r := _rng("loop:%d:%d" % [cz, block])
+	var has := r.randf() < 0.55
+	var lx0 := block * 12 + r.randi_range(3, 7)
+	if cz == 0:
+		# The spawn row always has one, starting two chunks east of the start (48 m).
+		has = block == 0
+		lx0 = 2
+	if has and cx >= lx0 and cx < lx0 + LOOP_LEN:
+		return lx0
+	return 1 << 20
+
+
 ## Gaps (open intervals in meters along the edge, 0..CHUNK) of a shared chunk edge.
 ## axis "V": the vertical line x = ex * CHUNK spanning chunk row ez.
 ## axis "H": the horizontal line z = ez * CHUNK spanning chunk column ex.
@@ -68,6 +98,13 @@ func edge_gaps(axis: String, ex: int, ez: int) -> Array:
 	var r := _rng("edge:%s:%d:%d" % [axis, ex, ez])
 	# A highway crossing this edge: the boundary is walled except for the corridor (and maybe one
 	# far door), so the hall reads as one continuous corridor.
+	# Edges around a loop run are closed (the copies must be identical and sealed), and the
+	# edges between copies only pass the hall.
+	if axis == "H" and (loop_index(ex, ez) >= 0 or loop_index(ex, ez - 1) >= 0):
+		return []
+	if axis == "V" and (loop_index(ex, ez) >= 0 or loop_index(ex - 1, ez) >= 0):
+		var hl := hwy_row(ez)
+		return [[hl * MOD, (hl + 2) * MOD, "open"]]
 	var hw := hwy_row(ez) if axis == "V" else hwy_col(ex)
 	if hw >= 0:
 		var hg := [[hw * MOD, (hw + 2) * MOD, "open"]]
@@ -124,6 +161,8 @@ static func _solid_runs(gaps: Array, length: float) -> Array:
 # ------------------------------------------------------------------ chunk
 
 func generate(cx: int, cz: int) -> Dictionary:
+	if loop_index(cx, cz) >= 0:
+		return _loop_layout(cx, cz)
 	var r := _rng("chunk:%d:%d" % [cx, cz])
 	var L := {
 		"name": "level0_chunk_%d_%d" % [cx, cz],
@@ -205,7 +244,22 @@ func generate(cx: int, cz: int) -> Dictionary:
 			L["dark_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y])
 			dark_rooms += 1
 	# --- landmarks and splice errors
+	L["graffiti"] = []
 	_landmarks(r, L, leaves, spawn_chunk)
+	# Graffiti from earlier people (pipeline/manifests/graffiti_level0.json). Fair hints first:
+	# "TURN AROUND" just before a loop run, "LOOK THROUGH IT" near the start of the run.
+	var hr0 := hwy_row(cz)
+	var fixed := []
+	if hr0 >= 0 and loop_index(cx + 1, cz) == 0:
+		fixed.append(["turn_around", 19.0, hr0 + 2, -1.0, 1.45, 1.1])
+	if hr0 >= 0 and loop_index(cx - 1, cz) == LOOP_LEN - 1:
+		fixed.append(["turn_around", 5.0, hr0, 1.0, 1.45, 1.1])
+	if spawn_chunk and hr0 >= 0:
+		fixed.append(["look_through", 8.5, hr0, 1.0, 1.5, 1.0])
+	for fg in fixed:
+		var x := _wall_run_x(L, fg[1], int(fg[2]) * MOD, fg[5])
+		if x > -50.0:
+			L["graffiti"].append([fg[0], x, int(fg[2]) * MOD + T * 0.5 * fg[3], 0.0, fg[3], fg[4]])
 	if spawn_chunk:
 		L["spawn"] = _spawn_point(L, leaves)
 		# The opening stretch of the spawn hall is lit: the first image is the long bright hall.
@@ -213,6 +267,50 @@ func generate(cx: int, cz: int) -> Dictionary:
 			if lf.get("highway", false):
 				var hr2: Rect2 = lf["rect"]
 				L["lit_zones"] = [[0.0, hr2.position.y, 16.0, hr2.end.y]]
+	return L
+
+
+## One copy of a loop run: the highway hall only, sealed, identical in every copy (the template
+## depends on the row, never on cx). The space beside the hall is left empty and dark.
+func _loop_layout(cx: int, cz: int) -> Dictionary:
+	var r := _rng("looptemplate:%d" % cz)
+	var hr := hwy_row(cz)
+	var lx0 := loop_start(cx, cz)
+	var L := {
+		"name": "level0_loop_%d_%d" % [cx, cz],
+		"chunk": [cx, cz],
+		"size": [CHUNK, CHUNK], "ceiling_height": H, "plenum_height": 3.3, "wall_thickness": T,
+		"door_height": 2.1, "tile": TILE,
+		"walls": [], "edge_walls": [], "doors": [], "pillars": [], "fixtures": [], "rooms": [],
+		"dark_zones": [], "failing_hint": [], "tint_zones": [], "flood_candidates": [], "splices": [],
+		"shear_bands": [], "wall_fixtures": [], "floor_fixtures": [], "stairs": [], "fake_doors": [],
+		"exit_signs": [], "props": [], "interest": [], "fidelity": fidelity,
+		"loop": {"index": cx - lx0, "start": lx0, "row": cz, "len": LOOP_LEN},
+		"steady_lights": true,
+	}
+	var hg := [[hr * MOD, (hr + 2) * MOD, "open"]]
+	L["gates"] = {"W": hg, "E": hg, "N": [], "S": []}
+	# West edge (built here): only the hall passes. North edge: closed. East/south: neighbors.
+	for run in _solid_runs(hg, CHUNK):
+		L["walls"].append([0.0, run[0], 0.0, run[1]])
+		L["edge_walls"].append([CHUNK, run[0], CHUNK, run[1]])
+	L["walls"].append([0.0, 0.0, CHUNK, 0.0])
+	L["edge_walls"].append([0.0, CHUNK, CHUNK, CHUNK])
+	for line in [hr, hr + 2]:
+		L["walls"].append([0.0, line * MOD, CHUNK, line * MOD])
+	var strip := Rect2i(0, hr, NMOD, 2)
+	var lf := {"m": strip, "rect": Rect2(Vector2(strip.position) * MOD, Vector2(strip.size) * MOD), "depth": 0, "corridor": true, "highway": true}
+	_furnish_room(r, L, lf, false)
+	# The lone chair that keeps coming back: the tell that you are walking the same hall again.
+	var zc := (hr + 2) * MOD - T * 0.5 - 0.42
+	L["props"].append(["prop_folding_chair_sf", r.randf_range(8.0, 16.0), zc, 0.0])
+	# Marks left by someone who walked this hall before you, the same in every copy.
+	L["graffiti"] = [["tally_copy", 5.5, hr * MOD + T * 0.5, 0.0, 1.0, 1.35], ["same", 18.5, (hr + 2) * MOD - T * 0.5, 0.0, -1.0, 1.5]]
+	# A dead panel or two, the same in every copy.
+	if L["fixtures"].size() > 3:
+		var k := r.randi_range(1, L["fixtures"].size() - 2)
+		var f: Array = L["fixtures"][k]
+		L["dark_zones"].append([f[0] - 0.8, f[1] - 0.8, f[0] + 0.8, f[1] + 0.8])
 	return L
 
 
@@ -490,6 +588,14 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			x += step
 	L["rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, kind])
 	L["interest"].append({"name": "%s_%d_%d" % [kind, int(rr.position.x * 10), int(rr.position.y * 10)], "p": [rr.get_center().x, rr.get_center().y]})
+	if lf.get("highway", false):
+		# Long halls pull people along them: points every 6 m down the hall.
+		var long_x := rr.size.x > rr.size.y
+		var t := 3.0
+		while t < (rr.size.x if long_x else rr.size.y) - 1.0:
+			var q := Vector2(rr.position.x + t, rr.get_center().y) if long_x else Vector2(rr.get_center().x, rr.position.y + t)
+			L["interest"].append({"name": "hall_%d_%d" % [int(q.x * 10), int(q.y * 10)], "p": [q.x, q.y]})
+			t += 6.0
 	# Ceiling grid for this room. Fixture = 1 x 2 tiles; long axis along corridors.
 	var along_x := corridor and rr.size.x > rr.size.y
 	var fw := 0.6
@@ -528,6 +634,25 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			if blocked:
 				continue
 			L["fixtures"].append([px, pz, 1 if along_x else 0])
+
+
+## The x nearest `want` where a horizontal wall on line z has a solid run wide enough for a
+## piece `w` meters wide (graffiti never hangs over a doorway). -100 if none.
+func _wall_run_x(L: Dictionary, want: float, z: float, w: float) -> float:
+	var best := -100.0
+	var bd := 1e9
+	for wl in L["walls"]:
+		if absf(wl[1] - z) > 0.01 or absf(wl[3] - z) > 0.01:
+			continue
+		var a := minf(wl[0], wl[2]) + w * 0.5 + 0.3
+		var b := maxf(wl[0], wl[2]) - w * 0.5 - 0.3
+		if b < a:
+			continue
+		var x := clampf(want, a, b)
+		if absf(x - want) < bd:
+			bd = absf(x - want)
+			best = x
+	return best
 
 
 func _spawn_point(L: Dictionary, leaves: Array) -> Array:
@@ -698,6 +823,19 @@ func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_ch
 			var b: Vector2 = s8[1]
 			var y0 := r.randf_range(0.9, 1.5)
 			L["shear_bands"].append([minf(a.x, b.x) - 0.15, minf(a.y, b.y) - 0.15, maxf(a.x, b.x) + 0.15, maxf(a.y, b.y) + 0.15, y0, y0 + r.randf_range(0.25, 0.5), 0.036])
+	# Graffiti on a couple of room walls.
+	var pieces := ["only_on_tape", "lights", "map_loop", "sigil", "exits", "gaps_child", "days", "we_are_copy", "handprints", "was_here", "same", "tally_copy"]
+	for k in r.randi_range(0, 2):
+		var spg: Array = take_spot.call(2.4)
+		if spg.size() == 0:
+			break
+		var sg: Array = spg[1]
+		var pg: Vector2 = (sg[0] as Vector2).lerp(sg[1], r.randf_range(0.25, 0.75)) + sg[2] * (T * 0.5)
+		if _near_door(L, pg, 0.9):
+			continue
+		var slug: String = pieces[r.randi() % pieces.size()]
+		var gy := r.randf_range(1.15, 1.6) if slug != "handprints" else r.randf_range(0.9, 1.3)
+		L["graffiti"].append([slug, pg.x, pg.y, sg[2].x, sg[2].y, gy])
 	# Ordinary abandoned things.
 	var props := ["prop_office_chair_alt_sf", "prop_folding_chair_sf", "prop_crt_monitor_sf", "prop_cardboard_box_sf", "prop_cardboard_box"]
 	var n_props := r.randi_range(1, 4)

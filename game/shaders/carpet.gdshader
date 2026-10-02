@@ -32,10 +32,14 @@ uniform vec2 field_size = vec2(1.0);
 uniform float ceiling_h = 2.6;
 uniform float reflect_strength = 0.9;
 
+uniform vec3 world_shift = vec3(0.0);   // a loop copy samples its template's patterns
+
 varying vec3 wpos;
+varying vec3 wraw;
 
 void vertex() {
-	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wraw = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wpos = wraw - world_shift;
 }
 
 void fragment() {
@@ -115,10 +119,10 @@ void fragment() {
 	// Soft reflection of the lit panels above, in wet patches and the flooded room.
 	float sheen = max(wet * 0.75, flood) + mottle * 0.15;
 	if (sheen > 0.01) {
-		vec3 V = normalize(CAMERA_POSITION_WORLD - wpos);
+		vec3 V = normalize(CAMERA_POSITION_WORLD - wraw);
 		vec3 R = reflect(-V, vec3(0.0, 1.0, 0.0));
 		if (R.y > 0.02) {
-			vec2 pc = wpos.xz + R.xz * ((ceiling_h - wpos.y) / R.y);
+			vec2 pc = wraw.xz + R.xz * ((ceiling_h - wraw.y) / R.y);
 			vec2 t = (pc - field_origin) / field_cell;
 			// Wider blur farther away along the ray (rough, wet fibers smear the image).
 			float spread = 0.6 + 0.25 * length(R.xz) / max(R.y, 0.05);

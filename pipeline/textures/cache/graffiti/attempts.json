@@ -1,0 +1,282 @@
+{
+ "turn_around": {
+  "attempts": [
+   {
+    "file": "turn_around__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black permanent marker, on a PURE SOLID WHITE background. The words \"TURN AROUND\" in large, hurried, slanted block capital letters in black permanent marker, with a bent arrow below pointing back and around. Rough, fast, panicked handwriting. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "only_on_tape": {
+  "attempts": [
+   {
+    "file": "only_on_tape__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: white chalk, on a PURE SOLID BLACK background. The words \"IT'S ONLY ON THE TAPE\" in rough white chalk capital letters at the top, and below them a crude chalk drawing of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs. Chalk on black, dusty and smudged. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     864,
+     1184
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "tally_copy": {
+  "attempts": [
+   {
+    "file": "tally_copy__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. Dozens of tally marks in groups of five (four vertical strokes crossed by a diagonal) in black marker, arranged in rows, and under them the words \"COPY 31\" in black marker capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "tally_copy__a2.jpg",
+    "model": "gemini-3.1-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. Dozens of tally marks in groups of five (four vertical strokes crossed by a diagonal) in black marker, arranged in rows, and under them the words \"COPY 31\" in black marker capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1200,
+     896
+    ],
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 2
+ },
+ "lights": {
+  "attempts": [
+   {
+    "file": "lights__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: key scratches, on a PURE SOLID BLACK background. The words \"DONT TRUST THE LIGHTS\" scratched with a key: thin, pale, jagged gouged lines forming rough capital letters, uneven, shaky. Pale scratch lines on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "lights__a2.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: key scratches, on a PURE SOLID BLACK background. The words \"DONT TRUST THE LIGHTS\" scratched with a key: thin, pale, jagged gouged lines forming rough capital letters, uneven, shaky. Pale scratch lines on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "lights__a3.jpg",
+    "model": "gemini-3.1-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: key scratches, on a PURE SOLID BLACK background. The words \"DONT TRUST THE LIGHTS\" scratched with a key: thin, pale, jagged gouged lines forming rough capital letters, uneven, shaky. Pale scratch lines on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1200,
+     896
+    ],
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 3
+ },
+ "map_loop": {
+  "attempts": [
+   {
+    "file": "map_loop__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: blue ballpoint pen, on a PURE SOLID WHITE background. A hand-drawn sketch map in blue ballpoint pen: boxy rectangular corridors and rooms seen from above, and one corridor drawn as a loop with circling arrows going round and round, labelled \"SAME HALL\" in small blue pen capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1024,
+     1024
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "sigil": {
+  "attempts": [
+   {
+    "file": "sigil__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. A small simple hand drawing in black marker of a VHS video cassette with an open eye drawn in its window: a rectangle cassette with two reels and a window in which a single open eye is drawn. No text at all. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1024,
+     1024
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "exits": {
+  "attempts": [
+   {
+    "file": "exits__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. The words \"EXITS DONT LINE UP\" in black marker capital letters, hurried, with a bold arrow beneath them pointing to the right. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "exits__a2.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The words \"EXITS DONT LINE UP\" in black marker capital letters, hurried, with a bold arrow beneath them pointing to the right. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "exits__a3.jpg",
+    "model": "gemini-3.1-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The words \"EXITS DONT LINE UP\" in black marker capital letters, hurried, with a bold arrow beneath them pointing to the right. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1200,
+     896
+    ],
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 3
+ },
+ "gaps_child": {
+  "attempts": [
+   {
+    "file": "gaps_child__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: reddish-brown wax crayon, on a PURE SOLID WHITE background. A child-like frantic drawing in reddish-brown wax crayon of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs, scribbled over and over many times, messy crayon strokes, and the words \"IT STANDS IN THE GAPS\" written in shaky crayon capitals. Crayon only, no blood. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     864,
+     1184
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "gaps_child__a2.jpg",
+    "model": "gemini-3.1-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: reddish-brown wax crayon, on a PURE SOLID WHITE background. A child-like frantic drawing in reddish-brown wax crayon of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs, scribbled over and over many times, messy crayon strokes, and the words \"IT STANDS IN THE GAPS\" written in shaky crayon capitals. Crayon only, no blood. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     896,
+     1200
+    ],
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 2
+ },
+ "days": {
+  "attempts": [
+   {
+    "file": "days__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. A column of four lines written in black marker, each line crossed out with a strike: \"DAY 9\", \"10?\", \"11?\", \"?\". The later lines are shakier and more crooked. Handwritten, one under the other. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     864,
+     1184
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "we_are_copy": {
+  "attempts": [
+   {
+    "file": "we_are_copy__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. The words \"WE ARE THE COPY\" written three times in a column in black marker capitals. Each repeated line is slightly more degraded, smeared and fuzzy than the one above, like a copy of a copy of a copy; the third line is barely legible but still the same words. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     864,
+     1184
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "handprints": {
+  "attempts": [
+   {
+    "file": "handprints__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: dirty water, on a PURE SOLID WHITE background. Two or three smeared human hand prints in dark grey-brown dirty water, palm and fingers visible, smudged and dragged as if someone slid along a wall. Murky grey-brown, not red. No text. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "look_through": {
+  "attempts": [
+   {
+    "file": "look_through__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: white chalk, on a PURE SOLID BLACK background. A simple white chalk outline drawing of a camcorder (boxy body, lens, viewfinder, handgrip), with a chalk arrow pointing to it, and the words \"LOOK THROUGH IT\" in rough chalk capitals. Chalk on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ },
+ "same": {
+  "attempts": [
+   {
+    "file": "same__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. The word \"SAME\" written six times in black marker capitals, arranged in a spiral that winds inward, each repetition smaller than the last, getting tiny at the centre. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1024,
+     1024
+    ],
+    "cost_usd": 0.039
+   },
+   {
+    "file": "same__a2.jpg",
+    "model": "gemini-3.1-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The word \"SAME\" written six times in black marker capitals, arranged in a spiral that winds inward, each repetition smaller than the last, getting tiny at the centre. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1024,
+     1024
+    ],
+    "cost_usd": 0.067
+   }
+  ],
+  "choice": 2
+ },
+ "was_here": {
+  "attempts": [
+   {
+    "file": "was_here__a1.jpg",
+    "model": "gemini-2.5-flash-image",
+    "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black ballpoint pen, on a PURE SOLID WHITE background. Small, neat handwriting in black ballpoint pen: \"R. WAS HERE 10/14/96\", and right next to it a tiny neat sketch of a VHS video cassette with an open eye drawn in its window. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+    "size": [
+     1184,
+     864
+    ],
+    "cost_usd": 0.039
+   }
+  ],
+  "choice": 1
+ }
+}

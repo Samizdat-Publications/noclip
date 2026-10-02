@@ -68,6 +68,51 @@ func _player(unit: float, maxd: float) -> AudioStreamPlayer3D:
 	return p
 
 
+## The player was moved by `offset` between identical places: shift every lent light and sound
+## by the same offset and hand it to the matching panel (twin_of), so the lighting and the hum
+## carry on unbroken. Anything without a twin is taken back and re-lent on the next update.
+func carry_over(offset: Vector3, twin_of: Callable) -> void:
+	listener += offset
+	var moves := []
+	for fx in fixtures:
+		if not is_instance_valid(fx):
+			continue
+		if fx.light == null and fx.hum == null and fx.buzz == null:
+			continue
+		var tw: Fixture = twin_of.call(fx)
+		moves.append([fx, tw, {"light": fx.light, "hum": fx.hum, "buzz": fx.buzz, "tick": fx.tick_player}])
+	# Take everything back first, then hand it out, so nothing is moved twice.
+	for m in moves:
+		var f0: Fixture = m[0]
+		f0.light = null
+		f0.hum = null
+		f0.buzz = null
+		f0.tick_player = null
+	for m in moves:
+		var tw: Fixture = m[1]
+		var held: Dictionary = m[2]
+		if tw == null:
+			for key in held:
+				var obj = held[key]
+				if obj == null:
+					continue
+				if obj is Light3D:
+					(obj as Light3D).visible = false
+				elif obj is AudioStreamPlayer3D:
+					(obj as AudioStreamPlayer3D).stop()
+			continue
+		for key in held:
+			var obj = held[key]
+			if obj is Node3D:
+				(obj as Node3D).global_position += offset
+		tw.light = held["light"]
+		tw.hum = held["hum"]
+		tw.buzz = held["buzz"]
+		tw.tick_player = held["tick"]
+		tw.apply()
+	_t = 0.0
+
+
 ## A fixture is leaving (its chunk unloads): give back anything it holds.
 func release(fx: Fixture) -> void:
 	if fx.light and fx.light in _lights:

@@ -1,0 +1,294 @@
+{
+ "generated": "2026-10-02",
+ "tool": "pipeline/textures/build_graffiti.py",
+ "notes": "alpha from stroke strength (soft threshold 0.10-0.55), RGB = ink colour, crop +6% padding, longest side 1024",
+ "decals": [
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_01_turn_around.png",
+   "slug": "turn_around",
+   "text": "TURN AROUND",
+   "medium": "black permanent marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black permanent marker, on a PURE SOLID WHITE background. The words \"TURN AROUND\" in large, hurried, slanted block capital letters in black permanent marker, with a bent arrow below pointing back and around. Rough, fast, panicked handwriting. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/turn_around__a1.jpg",
+   "size_px": [
+    1024,
+    611
+   ],
+   "wall_width_m": 1.0
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_02_only_on_tape.png",
+   "slug": "only_on_tape",
+   "text": "IT'S ONLY ON THE TAPE",
+   "medium": "white chalk",
+   "background": "black",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: white chalk, on a PURE SOLID BLACK background. The words \"IT'S ONLY ON THE TAPE\" in rough white chalk capital letters at the top, and below them a crude chalk drawing of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs. Chalk on black, dusty and smudged. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/only_on_tape__a1.jpg",
+   "size_px": [
+    699,
+    1024
+   ],
+   "wall_width_m": 1.0
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_03_tally_copy.png",
+   "slug": "tally_copy",
+   "text": "COPY 31",
+   "medium": "black marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. Dozens of tally marks in groups of five (four vertical strokes crossed by a diagonal) in black marker, arranged in rows, and under them the words \"COPY 31\" in black marker capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-3.1-flash-image",
+   "retries": 1,
+   "attempt_models": [
+    "gemini-2.5-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "chosen_attempt": 2,
+   "raw_cache": "pipeline/textures/cache/graffiti/tally_copy__a2.jpg",
+   "size_px": [
+    1024,
+    765
+   ],
+   "wall_width_m": 0.8
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_04_lights.png",
+   "slug": "lights",
+   "text": "DONT TRUST THE LIGHTS",
+   "medium": "key scratches",
+   "background": "black",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: key scratches, on a PURE SOLID BLACK background. The words \"DONT TRUST THE LIGHTS\" scratched with a key: thin, pale, jagged gouged lines forming rough capital letters, uneven, shaky. Pale scratch lines on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-3.1-flash-image",
+   "retries": 2,
+   "attempt_models": [
+    "gemini-2.5-flash-image",
+    "gemini-2.5-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "chosen_attempt": 3,
+   "raw_cache": "pipeline/textures/cache/graffiti/lights__a3.jpg",
+   "size_px": [
+    1024,
+    544
+   ],
+   "wall_width_m": 0.9
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_05_map_loop.png",
+   "slug": "map_loop",
+   "text": "SAME HALL",
+   "medium": "blue ballpoint pen",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: blue ballpoint pen, on a PURE SOLID WHITE background. A hand-drawn sketch map in blue ballpoint pen: boxy rectangular corridors and rooms seen from above, and one corridor drawn as a loop with circling arrows going round and round, labelled \"SAME HALL\" in small blue pen capitals. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/map_loop__a1.jpg",
+   "size_px": [
+    1024,
+    727
+   ],
+   "wall_width_m": 0.7
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_06_sigil.png",
+   "slug": "sigil",
+   "text": "",
+   "medium": "black marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. A small simple hand drawing in black marker of a VHS video cassette with an open eye drawn in its window: a rectangle cassette with two reels and a window in which a single open eye is drawn. No text at all. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/sigil__a1.jpg",
+   "size_px": [
+    1024,
+    497
+   ],
+   "wall_width_m": 0.25
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_07_exits.png",
+   "slug": "exits",
+   "text": "EXITS DONT LINE UP",
+   "medium": "black marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The words \"EXITS DONT LINE UP\" in black marker capital letters, hurried, with a bold arrow beneath them pointing to the right. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-3.1-flash-image",
+   "retries": 2,
+   "attempt_models": [
+    "gemini-2.5-flash-image",
+    "gemini-2.5-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "chosen_attempt": 3,
+   "raw_cache": "pipeline/textures/cache/graffiti/exits__a3.jpg",
+   "size_px": [
+    1024,
+    589
+   ],
+   "wall_width_m": 1.0
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_08_gaps_child.png",
+   "slug": "gaps_child",
+   "text": "IT STANDS IN THE GAPS",
+   "medium": "reddish-brown wax crayon",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: reddish-brown wax crayon, on a PURE SOLID WHITE background. A child-like frantic drawing in reddish-brown wax crayon of a tall, thin, faceless humanoid figure, blank head with no features, arms hanging down far past its knees, very long thin limbs, scribbled over and over many times, messy crayon strokes, and the words \"IT STANDS IN THE GAPS\" written in shaky crayon capitals. Crayon only, no blood. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-3.1-flash-image",
+   "retries": 1,
+   "attempt_models": [
+    "gemini-2.5-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "chosen_attempt": 2,
+   "raw_cache": "pipeline/textures/cache/graffiti/gaps_child__a2.jpg",
+   "size_px": [
+    765,
+    1024
+   ],
+   "wall_width_m": 0.9
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_09_days.png",
+   "slug": "days",
+   "text": "DAY 9 / 10? / 11? / ?",
+   "medium": "black marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. A column of four lines written in black marker, each line crossed out with a strike: \"DAY 9\", \"10?\", \"11?\", \"?\". The later lines are shakier and more crooked. Handwritten, one under the other. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/days__a1.jpg",
+   "size_px": [
+    557,
+    1024
+   ],
+   "wall_width_m": 0.6
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_10_we_are_copy.png",
+   "slug": "we_are_copy",
+   "text": "WE ARE THE COPY",
+   "medium": "black marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black marker, on a PURE SOLID WHITE background. The words \"WE ARE THE COPY\" written three times in a column in black marker capitals. Each repeated line is slightly more degraded, smeared and fuzzy than the one above, like a copy of a copy of a copy; the third line is barely legible but still the same words. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/we_are_copy__a1.jpg",
+   "size_px": [
+    1024,
+    401
+   ],
+   "wall_width_m": 1.1
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_11_handprints.png",
+   "slug": "handprints",
+   "text": "",
+   "medium": "dirty water",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: dirty water, on a PURE SOLID WHITE background. Two or three smeared human hand prints in dark grey-brown dirty water, palm and fingers visible, smudged and dragged as if someone slid along a wall. Murky grey-brown, not red. No text. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/handprints__a1.jpg",
+   "size_px": [
+    1024,
+    598
+   ],
+   "wall_width_m": 0.7
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_12_look_through.png",
+   "slug": "look_through",
+   "text": "LOOK THROUGH IT",
+   "medium": "white chalk",
+   "background": "black",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: white chalk, on a PURE SOLID BLACK background. A simple white chalk outline drawing of a camcorder (boxy body, lens, viewfinder, handgrip), with a chalk arrow pointing to it, and the words \"LOOK THROUGH IT\" in rough chalk capitals. Chalk on black. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/look_through__a1.jpg",
+   "size_px": [
+    1024,
+    816
+   ],
+   "wall_width_m": 0.9
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_13_same.png",
+   "slug": "same",
+   "text": "SAME",
+   "medium": "black marker",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Do not add apostrophes or any punctuation that is not in the quoted text. Medium: black marker, on a PURE SOLID WHITE background. The word \"SAME\" written six times in black marker capitals, arranged in a spiral that winds inward, each repetition smaller than the last, getting tiny at the centre. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-3.1-flash-image",
+   "retries": 1,
+   "attempt_models": [
+    "gemini-2.5-flash-image",
+    "gemini-3.1-flash-image"
+   ],
+   "chosen_attempt": 2,
+   "raw_cache": "pipeline/textures/cache/graffiti/same__a2.jpg",
+   "size_px": [
+    1024,
+    1024
+   ],
+   "wall_width_m": 0.8
+  },
+  {
+   "file": "game/assets/textures/level0/graffiti/graffiti_14_was_here.png",
+   "slug": "was_here",
+   "text": "R. WAS HERE 10/14/96",
+   "medium": "black ballpoint pen",
+   "background": "white",
+   "prompt": "A flat, front-on, high-resolution scan of this marking alone, centered, filling most of the frame. No wall, no paper texture, no shadows, no perspective, no hands, no pens, no other objects. Medium: black ballpoint pen, on a PURE SOLID WHITE background. Small, neat handwriting in black ballpoint pen: \"R. WAS HERE 10/14/96\", and right next to it a tiny neat sketch of a VHS video cassette with an open eye drawn in its window. Spell any text exactly as quoted, in English capitals. Gritty, 1990s, unsettling mood. No blood, no pentagrams, no occult symbols, no skulls, no brands or logos.",
+   "model": "gemini-2.5-flash-image",
+   "retries": 0,
+   "attempt_models": [
+    "gemini-2.5-flash-image"
+   ],
+   "chosen_attempt": 1,
+   "raw_cache": "pipeline/textures/cache/graffiti/was_here__a1.jpg",
+   "size_px": [
+    1024,
+    123
+   ],
+   "wall_width_m": 0.3
+  }
+ ]
+}

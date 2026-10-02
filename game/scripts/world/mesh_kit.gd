@@ -5,6 +5,9 @@ extends RefCounted
 ## ceilings: world x/z). commit() turns everything into MeshInstance3D nodes.
 
 var _tools: Dictionary = {}
+## Added to vertex positions when computing UVs, so wallpaper on a long wall continues
+## seamlessly from one chunk to the next (set to the chunk's world origin).
+var uv_origin := Vector3.ZERO
 
 
 func st(key: String) -> SurfaceTool:
@@ -40,7 +43,7 @@ static func world_uv(p: Vector3, n: Vector3, v_ref: float) -> Vector2:
 func face(key: String, pts: Array, n: Vector3, v_ref: float, col: Color = Color(1, 1, 1, 1)) -> void:
 	var uvs := []
 	for q in pts:
-		uvs.append(world_uv(q, n, v_ref))
+		uvs.append(world_uv(q + uv_origin, n, v_ref))
 	quad(key, pts, n, uvs, col)
 
 

@@ -64,6 +64,9 @@ func _pick_target(player: Player) -> void:
 		if space.has_method("get_focus_shots"):
 			var to: Vector3 = (p["pos"] - player.global_position).normalized()
 			score *= 1.0 + 0.9 * maxf(0.0, to.dot(_heading))
+			# A long hall running the way you are going is hard to resist.
+			if String(p["name"]).contains("hall_") and to.dot(_heading) > 0.8:
+				score *= 2.2
 		if score > best_score:
 			best_score = score
 			best = p
@@ -78,6 +81,13 @@ func _pick_target(player: Player) -> void:
 	path = space.find_path(player.global_position, goal)
 	path_i = 1 if path.size() > 1 else 0
 	_sneak = rng.randf() < 0.12 or target_name.contains("dark")
+
+
+## The world moved us (a loop repeat): carry the plan along.
+func shift(offset: Vector3) -> void:
+	for i in path.size():
+		path[i] += offset
+	_last_pos += offset
 
 
 ## A yaw near `base + offset` that looks down open space instead of into a wall.
@@ -130,6 +140,9 @@ func update_move(player: Node, delta: float) -> void:
 	if not _started:
 		_started = true
 		_last_pos = pl.global_position
+		if space.has_method("get_focus_shots"):
+			# In the endless level, set off the way we are facing.
+			_heading = Basis(Vector3.UP, pl.yaw) * Vector3.FORWARD
 		_want_yaw = pl.yaw
 		_mode_left = rng.randf_range(1.5, 3.0)
 		mode = Mode.PAUSE
