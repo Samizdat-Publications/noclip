@@ -52,7 +52,7 @@ static func make_ceiling_light() -> SpotLight3D:
 	var sl := SpotLight3D.new()
 	sl.spot_range = float(Game.opts.get("spot_range", "7"))
 	sl.spot_angle = float(Game.opts.get("spot_angle", "82"))
-	sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "1.5"))
+	sl.spot_angle_attenuation = float(Game.opts.get("spot_cone", "2.0"))
 	sl.spot_attenuation = float(Game.opts.get("spot_atten", "1.7"))
 	# 0: plain filtered shadows. 0.7 (contact-hardening PCSS) cost about 8 fps and looked the same
 	# under these soft, high panels (D024).
@@ -63,7 +63,7 @@ static func make_ceiling_light() -> SpotLight3D:
 	sl.shadow_blur = float(Game.opts.get("shadow_blur", "2.5"))
 	sl.shadow_normal_bias = float(Game.opts.get("nbias", "2.6"))
 	sl.light_specular = 0.85
-	sl.light_volumetric_fog_energy = float(Game.opts.get("fog_light", "1.3"))
+	sl.light_volumetric_fog_energy = float(Game.opts.get("fog_light", "2.6"))
 	sl.distance_fade_enabled = true
 	sl.distance_fade_begin = 22.0
 	sl.distance_fade_length = 6.0

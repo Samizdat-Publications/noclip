@@ -17,3 +17,8 @@
 - Gate attempt 2 capture running (s03-m2-gate2). Then apply patch_seamcross (L068).
 - M3 assets job (breath loops, drone, distant one-shots, squish steps) was running; check files exist before relying on them (code tolerates missing files).
 - Spend so far: graffiti v2 ~$6.37, carpet v2 ~$0.60, sound ~$0.16 + M3 job, Gemini critic calls ~$0.09 each.
+
+## Audio incident (03:24-03:45)
+- Gate-2 capture 20261002-032422-1cbee1b is INVALID: its import step ran while the M3 sound job was still writing WAVs; breath_calm_loop.wav was a full-scale square wave at import time, so the clip measured +0.7 LUFS / +12.9 dBFS, and the job's CPU work dragged the perf run to 61.9/50.5. Rule from now on: no asset job may write into game/ while a capture runs.
+- Fixes: gdcheck and capture.py refuse square-wave/DC audio files. l0_lib._decode read ElevenLabs stereo PCM as mono (every generated sound an octave low, twice as long) -> fixed, S01 and S03 sounds rebuilt from cache (0c9a040).
+- Clean recapture 20261002-034413-bc73bfd: perf 98.2/68.8, -18.6 LUFS. Gate attempt 2 critiques 012 running.

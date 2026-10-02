@@ -198,7 +198,7 @@ static func make_environment(preset: String) -> Environment:
 	e.glow_normalized = true
 	e.glow_intensity = 0.85
 	e.glow_strength = 1.0
-	e.glow_bloom = float(Game.opts.get("bloom", "0.1"))
+	e.glow_bloom = float(Game.opts.get("bloom", "0.17"))
 	e.glow_hdr_threshold = 0.95
 	e.glow_hdr_scale = 2.0
 	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
@@ -210,10 +210,10 @@ static func make_environment(preset: String) -> Environment:
 	e.set_glow_level(5, 0.0)
 
 	e.volumetric_fog_enabled = true
-	e.volumetric_fog_density = float(Game.opts.get("fog", "0.016"))
+	e.volumetric_fog_density = float(Game.opts.get("fog", "0.021"))
 	e.volumetric_fog_albedo = Color(0.95, 0.92, 0.82)
 	e.volumetric_fog_emission = Color(0, 0, 0)
-	e.volumetric_fog_anisotropy = 0.45
+	e.volumetric_fog_anisotropy = float(Game.opts.get("fog_aniso", "0.62"))
 	e.volumetric_fog_length = 36.0
 	e.volumetric_fog_detail_spread = 2.0
 	e.volumetric_fog_gi_inject = 0.6
