@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode cull_back, shadows_disabled, fog_disabled, diffuse_lambert, specular_schlick_ggx;
+render_mode cull_back, shadows_disabled, diffuse_lambert, specular_schlick_ggx;
 // The figure that exists only on tape (TapeEvents, D018/D021). Through the camcorder it is fully
 // there: a dark, real-shaped person under the light. But it is made of bad tape: its outline
 // fizzes away into noise, its head smears sideways like a paused frame, thin bands of it slip
@@ -10,6 +10,11 @@ uniform float jitter = 0.012;     // band slip in meters
 uniform float tear = 0.0;         // 0..1, a burst of slip on the frame it changes pose
 uniform float smear = 0.05;       // how far the head drags sideways (m)
 uniform float head_y = 1.52;      // above this the head and neck smear
+// Its own light haze instead of the level's fog: with the real fog it vanished into bright halls
+// (S03), with none it looked pasted on, floating in front of the haze (L102). About half the
+// haze the hall around it gets.
+uniform vec3 haze_color = vec3(0.32, 0.3, 0.24);
+uniform float haze_density = 0.006;
 
 float h(float x) { return fract(sin(x * 91.17) * 43758.5453); }
 float h2(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
@@ -44,6 +49,7 @@ void fragment() {
 	// Dark, but with mass: the panel above catches its head and shoulders (critique 010).
 	vec3 col = vec3(0.075, 0.068, 0.06) * (0.6 + 0.8 * n);
 	ALBEDO = col;
+	FOG = vec4(haze_color, 1.0 - exp(-haze_density * length(VERTEX)));
 	ROUGHNESS = 0.78;
 	SPECULAR = 0.3;
 	// Drop-out streaks: short white horizontal lines, a few per frame, as on old tape.

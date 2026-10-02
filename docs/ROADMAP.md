@@ -28,6 +28,7 @@ Status after S03: EXIT CRITERION MET (Gemini Sound 8, 8, 8 in critiques 013, 014
 
 ## M3.5: Look pass (effort: xhigh) (added S03)
 The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6), Shadows and depth (Gemini 4 to 5) and Materials (4 to 7); the ship gate needs 8. One focused session before the Entity:
+- Done in S03: corner occlusion strips (D031); hum drift and power sags, carpet rolls and anti-tiling, rectangular light pools (D032).
 - Corner occlusion strips along every wall base, ceiling line and vertical corner (deterministic, visible on video), contact shading under all props.
 - GI: more warm bounce color while darkness comes from fewer lit panels, check auto-exposure compression, lit surfaces near panels.
 - The held camcorder out of frame until late in the lift (L092), door slabs with hinges and kick plates, better partitions, tall-room upper walls (L094).

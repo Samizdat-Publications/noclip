@@ -71,7 +71,9 @@ static func make_ceiling_light() -> SpotLight3D:
 	sl.distance_fade_shadow = float(Game.opts.get("shadow_dist", "13"))
 	# A soft rounded-rectangle pool, longer along the panel (L101: "round pools under square
 	# panels"). pipeline/textures/build_light_projector.py; u is the panel's long axis.
-	if not Game.opts.has("no_projector"):
+	# Opt-in (--projector): it cost about 4 ms of GPU time at 1440p (85 to 63 fps on seed 4242,
+	# the texture size made no difference), D032.
+	if Game.opts.has("projector"):
 		var pj := "res://assets/textures/level0/troffer_projector.png"
 		if ResourceLoader.exists(pj):
 			sl.light_projector = load(pj)

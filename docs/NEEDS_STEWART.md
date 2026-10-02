@@ -3,7 +3,7 @@
 Claude keeps this list short and gives exact click-by-click steps. Nothing here blocks Claude from working.
 
 ## 1. (When you have 5 minutes) Play the new build and write what you felt
-Your notes outrank every AI critic. New since last time: hidden doorways you can only see through the camcorder, a person who appears only on tape and comes closer each time you look again, rooms three times too tall, chairs that turn to face you when you are not looking, real wallpaper and carpet, and a new sound pass (breathing, room echo, squelchy carpet, a low drone when something is near).
+Your notes outrank every AI critic. New since last time: hidden doorways you can only see through the camcorder, a person who appears only on tape and comes closer each time you look again, rooms three times too tall, chairs that turn to face you when you are not looking, real wallpaper and carpet, and a new sound pass (breathing, room echo, squelchy carpet, a low drone when something is near, and a building hum that rises, falls and every minute or so sags into near silence).
 1. Double-click `Play NOCLIP.bat` in `C:\Users\stewa\ClaudeProjects\Noclip`.
 2. Walk east down the long hall you start in and read the chalk on the walls. Hold the right mouse button to look through the camcorder.
 3. Find the block in a nearby room with a chalk door drawn on it ("HERE?"). Look at it through the camcorder, then walk through.
@@ -19,7 +19,7 @@ Right now the critic's safety guard also blocks the button it uses to send its r
    `if (tool === "SubagentHandback") allow();`
 5. Save (Ctrl+S) and close Notepad. Done. Nothing else changes: the critic still cannot read anything outside the review folder.
 
-## 3. (Before the monster milestone, which is next) Get the free Meshy credits
+## 3. (Before the monster milestone, two sessions from now) Get the free Meshy credits
 The Meshy account (3D model generator) had only 3 credits. The monster is our own original design, and Meshy is the right tool for it because it can generate it on-theme and also rig and animate it.
 1. Finish Meshy's onboarding (you found it gives 300 free credits).
 2. That is enough for the monster: about 150 to 250 credits for a few design attempts, rigging, and roughly 8 animations (Claude's estimate; exact prices get checked before spending).

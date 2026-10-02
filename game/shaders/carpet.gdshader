@@ -113,17 +113,17 @@ void fragment() {
 	float rx = p.x / roll_width + 0.37;
 	float rid = floor(rx);
 	float rh = n_hash12(vec2(rid, 17.0) + seed_offset);
-	vec3 lot = mix(vec3(0.95, 0.955, 0.965), vec3(1.045, 1.035, 1.01), rh);
+	vec3 lot = mix(vec3(0.97, 0.972, 0.978), vec3(1.03, 1.024, 1.008), rh);
 	vec3 Vc = CAMERA_POSITION_WORLD - wraw;
 	vec2 vxz = Vc.xz / max(length(Vc), 0.001);
 	float pile = (mod(rid, 2.0) < 1.0 ? 1.0 : -1.0) * vxz.y;
-	float sheen_dir = 1.0 + 0.06 * pile;
+	float sheen_dir = 1.0 + 0.04 * pile;
 	float sd = abs(fract(rx) - 0.5) * 2.0;           // 1 at a seam
 	float sw = 0.016 / roll_width;
 	float sfw = max(fwidth(sd), 1e-4);
 	float seam = smoothstep(1.0 - max(sw, sfw * 1.5), 1.0, sd) * clamp(sw / sfw, 0.0, 1.0);   // fades out before it can shimmer
 	alb *= mix(vec3(1.0), lot * sheen_dir, roll_strength);
-	alb *= 1.0 - 0.28 * seam * roll_strength;
+	alb *= 1.0 - 0.1 * seam * roll_strength;   // critique 017 found 0.28 "hard seam lines"
 
 	// Wet patches with a darker tide-line rim, plus fine damp mottling everywhere.
 	float field = n_fbm(p * wet_scale + seed_offset);

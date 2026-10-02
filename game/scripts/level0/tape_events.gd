@@ -111,12 +111,13 @@ func _make_figure() -> Node3D:
 	var inst := (load(MESH) as PackedScene).instantiate() as Node3D
 	# A person copied a little too tall and a little too narrow.
 	inst.scale = Vector3(0.94, 1.1, 0.94)
+	inst.position.y = -0.025      # feet sunk into the carpet pile, never hovering over it (L102)
 	root.add_child(inst)
 	var tex := "res://assets/textures/level0/decal_contact.png"
 	if ResourceLoader.exists(tex):
 		var dc := Decal.new()
 		dc.texture_albedo = load(tex)
-		dc.size = Vector3(0.9, 0.6, 0.9)
+		dc.size = Vector3(1.05, 0.6, 1.05)
 		dc.modulate = Color(1, 1, 1, 0.95)
 		dc.layers = LAYER_TAPE
 		root.add_child(dc)
@@ -218,7 +219,10 @@ func _pose_body() -> void:
 			_skel.set_bone_pose_rotation(i, _base[i])
 
 
-## Four held poses; the figure jumps between them with no motion in between (a frame skip).
+## Held poses; the figure jumps between them with no motion in between (a frame skip). The
+## turned-away pose only reads up close (from far it is just a back, L102), so it is kept for the
+## final close look.
+const WANDER_POSES := [0, 1, 2, 3, 5]
 const POSES := [
 	{"head": Vector3(0.10, 0.0, 0.16), "neck": Vector3(0.05, 0.0, 0.05), "spine_03": Vector3(0.0, 0.0, 0.0)},
 	{"head": Vector3(0.0, 0.28, -0.12), "neck": Vector3(0.0, 0.1, -0.04), "spine_03": Vector3(0.03, 0.04, 0.03)},
@@ -322,7 +326,10 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 	# Stutter: hold a pose, then jump to another in one frame.
 	_pose_t -= delta
 	if _pose_t <= 0.0:
-		_pose = (_pose + 1 + _rng.randi() % (POSES.size() - 1)) % POSES.size()
+		var nxt: int = WANDER_POSES[_rng.randi() % WANDER_POSES.size()]
+		if nxt == _pose:
+			nxt = WANDER_POSES[(WANDER_POSES.find(nxt) + 1) % WANDER_POSES.size()]
+		_pose = nxt
 		_pose_t = _rng.randf_range(0.5, 1.8)
 		_tear = 1.0
 		player.camcorder.glitch_small()
@@ -395,7 +402,7 @@ func _try_start(cam_on: bool) -> void:
 		return
 	var dir := Vector3(-sin(yaw), 0.0, -cos(yaw))
 	# Farther the first time, nearer on later encounters.
-	var dists: Array = [[19.0, 21.0, 17.0, 23.0], [16.0, 18.0, 14.0], [14.0, 12.5, 16.0]][mini(_encounters, 2)]
+	var dists: Array = [[15.0, 17.0, 13.5, 19.0], [12.5, 14.0, 11.0], [10.5, 12.0, 9.5]][mini(_encounters, 2)]   # L102: nearer
 	for dd in dists:
 		if dd > depth - 2.0:
 			continue
@@ -441,7 +448,7 @@ func _stand_point(q: Vector3, back: Vector3, keep_side: bool, need_light: bool =
 func _show_at(p: Vector3) -> void:
 	figure.global_position = p
 	_face_player()
-	_pose = _rng.randi() % POSES.size() if not _final else 4
+	_pose = WANDER_POSES[_rng.randi() % WANDER_POSES.size()] if not _final else 4
 	_pose_t = _rng.randf_range(0.6, 1.4) if not _final else 99.0
 	_apply_pose(_pose, 0.0)
 	_tear = 1.0

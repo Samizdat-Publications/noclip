@@ -29,7 +29,7 @@ def build(angle_deg: float, n: int, long_t: float, short_t: float, floor: float,
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--angle", type=float, default=82.0, help="spot_angle of the ceiling lights (fixture.gd)")
-    ap.add_argument("--size", type=int, default=1024)
+    ap.add_argument("--size", type=int, default=256)
     ap.add_argument("--long", type=float, default=0.85, help="half extent along the panel, in tan units (x height)")
     ap.add_argument("--short", type=float, default=0.55, help="half extent across the panel")
     ap.add_argument("--floor", type=float, default=0.6, help="light kept outside the pool (walls)")
