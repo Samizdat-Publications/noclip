@@ -36,7 +36,9 @@ var _steps_damp: AudioStreamRandomizer
 var _steps_wet: AudioStreamRandomizer
 var _steps_soggy: AudioStreamRandomizer
 var _steps_run: AudioStreamRandomizer
-var _step_player: AudioStreamPlayer
+var _step_player: AudioStreamPlayer3D
+var _steps_squish: AudioStreamRandomizer
+var _breath: Array[AudioStreamPlayer] = []   # calm, heavy, fear loops (M3, D026)
 
 
 func _ready() -> void:
@@ -101,10 +103,29 @@ func _setup_steps() -> void:
 	_steps_wet = _randomizer("step_carpet_wet_%02d", 6)
 	_steps_soggy = _randomizer("step_carpet_soggy_%02d", 8)
 	_steps_run = _randomizer("step_carpet_soggy_run_%02d", 4)
-	_step_player = AudioStreamPlayer.new()
+	_steps_squish = _randomizer("step_carpet_squish_%02d", 8)
+	# Positional at the feet, so the room's reverb (its Area3D) colors them (M3, D026).
+	_step_player = AudioStreamPlayer3D.new()
 	_step_player.bus = &"World"
 	_step_player.max_polyphony = 2
+	_step_player.unit_size = 3.0
+	_step_player.position = Vector3(0, 0.1, 0)
+	_step_player.attenuation_filter_cutoff_hz = 20000.0
 	add_child(_step_player)
+	for nm in ["breath_calm_loop", "breath_heavy_loop", "breath_fear_loop"]:
+		var bp := AudioStreamPlayer.new()
+		var path: String = "res://assets/audio/level0/" + nm + ".wav"
+		if ResourceLoader.exists(path):
+			var st := load(path) as AudioStreamWAV
+			if st:
+				st.loop_mode = AudioStreamWAV.LOOP_FORWARD
+				st.loop_end = int(st.get_length() * st.mix_rate)
+			bp.stream = st
+			bp.autoplay = true
+		bp.bus = &"Master"
+		bp.volume_db = -80.0
+		add_child(bp)
+		_breath.append(bp)
 
 
 func _randomizer(pattern: String, n: int) -> AudioStreamRandomizer:
@@ -152,10 +173,24 @@ func _physics_process(delta: float) -> void:
 	cap_shape.height = lerpf(cap_shape.height, 1.2 if _crouching else 1.75, 1.0 - exp(-10.0 * delta))
 	_cap.position.y = cap_shape.height * 0.5
 	camcorder.set_active(input.camcorder)
+	_update_breath(delta)
 	if space and space.has_method("set_listener"):
 		space.set_listener(global_position)
 	if space and space.has_method("set_view"):
 		space.set_view(global_position, Basis(Vector3.UP, yaw) * Vector3.FORWARD)
+
+
+## Breathing you hear in your own head: calm, winded after a sprint, held and shaky when afraid.
+func _update_breath(delta: float) -> void:
+	if _breath.size() < 3:
+		return
+	var winded := clampf((0.75 - _stamina) / 0.6, 0.0, 1.0)
+	var afraid := clampf(Game.fear, 0.0, 1.0)
+	var calm := clampf(1.0 - winded - afraid, 0.0, 1.0)
+	var lv := [calm, winded, afraid]
+	for i in 3:
+		var target: float = -80.0 if float(lv[i]) < 0.02 else linear_to_db(float(lv[i])) + [-6.0, -3.0, -4.0][i]
+		_breath[i].volume_db = lerpf(_breath[i].volume_db, target, 1.0 - exp(-3.0 * delta))
 
 
 func _footstep() -> void:
@@ -165,6 +200,8 @@ func _footstep() -> void:
 	var wet := space.floor_wetness(global_position) if space else 0.0
 	# The carpet never dries (critiques 006 to 008: steps sounded like shoes on dry concrete).
 	var bank := _steps_soggy if _steps_soggy.streams_count > 0 else _steps_damp
+	if _steps_squish.streams_count > 0 and Game.frame % 2 == 0:
+		bank = _steps_squish
 	if wet > 0.3 and _steps_wet.streams_count > 0 and Game.frame % 3 != 0:
 		bank = _steps_wet
 	if _sprinting and _steps_run.streams_count > 0:

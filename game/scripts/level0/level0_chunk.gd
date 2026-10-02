@@ -179,7 +179,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_traces(),
 		func() -> void:
 			_build_wall_details()
-			_build_seam_fx(),
+			_build_seam_fx()
+			_build_audio_zones(),
 	]
 
 
@@ -1263,6 +1264,35 @@ func _build_wall_details() -> void:
 			var wl3: Array = walls[i]
 			if _is_horizontal(wl3) and absf(wl3[1] - float(tr[0])) < 0.01:
 				_tile_along(place, i, "crayon_trail", 0.9, float(tr[1]))
+
+
+## Room acoustics (M3, D026): one Area3D per room sends the sounds made in it to the reverb
+## that fits its size.
+func _build_audio_zones() -> void:
+	for rm in L.get("rooms", []):
+		var w: float = rm[2] - rm[0]
+		var d: float = rm[3] - rm[1]
+		var kind: String = rm[4]
+		var bus := "RevSmall"
+		if kind == "corridor":
+			bus = "RevCorridor"
+		elif kind == "tall" or kind == "hall" or w * d > 60.0:
+			bus = "RevLarge"
+		var a := Area3D.new()
+		a.monitoring = false
+		a.monitorable = true
+		a.reverb_bus_enabled = true
+		a.reverb_bus_name = StringName(bus)
+		a.reverb_bus_amount = 0.75 if bus != "RevSmall" else 0.6
+		a.reverb_bus_uniformity = 0.35
+		var cs := CollisionShape3D.new()
+		var bs := BoxShape3D.new()
+		var ht := _ceil_at(Vector2((rm[0] + rm[2]) * 0.5, (rm[1] + rm[3]) * 0.5))
+		bs.size = Vector3(w, ht, d)
+		cs.shape = bs
+		a.add_child(cs)
+		a.position = Vector3((rm[0] + rm[2]) * 0.5, ht * 0.5, (rm[1] + rm[3]) * 0.5)
+		add_child(a)
 
 
 ## Lays a horizontally tileable wall detail end to end along wall i, on one side.

@@ -47,6 +47,7 @@ var _side := 1.0
 var _light_fx: Fixture
 var _drop: AudioStreamPlayer
 var _breath: AudioStreamPlayer
+var _drone: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -61,6 +62,17 @@ func _ready() -> void:
 	# Heard through the camcorder's own speaker (only while it records).
 	_drop = _ui_player("tape_dropout_%02d", 3, -14.0)
 	_breath = _ui_player("figure_breath_rev_%02d", 2, -16.0)
+	_drone = AudioStreamPlayer.new()
+	var dp := "res://assets/audio/level0/drone_dread_loop.wav"
+	if ResourceLoader.exists(dp):
+		var ds := load(dp) as AudioStreamWAV
+		if ds:
+			ds.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			ds.loop_end = int(ds.get_length() * ds.mix_rate)
+		_drone.stream = ds
+	_drone.bus = &"Master"
+	_drone.volume_db = -80.0
+	add_child(_drone)
 
 
 func _ui_player(pattern: String, n: int, db: float) -> AudioStreamPlayer:
@@ -226,6 +238,18 @@ func _apply_pose(k: int, breath: float) -> void:
 
 func _process(delta: float) -> void:
 	_mat.set_shader_parameter("time", Game.clock)
+	# While it is out there, the hum around you fades and a low drone comes up (M3, D026).
+	var present := state != S.IDLE
+	Game.duck_target = 0.85 if state == S.SHOWN else (0.5 if state == S.HIDDEN else 0.0)
+	if _drone.stream:
+		if present and not _drone.playing:
+			_drone.play()
+		var dt := -10.0 if state == S.SHOWN else (-16.0 if present else -80.0)
+		_drone.volume_db = lerpf(_drone.volume_db, dt, 1.0 - exp(-(0.8 if present else 0.4) * delta))
+		if not present and _drone.volume_db < -60.0 and _drone.playing:
+			_drone.stop()
+	if state == S.SHOWN:
+		Game.fear = maxf(Game.fear, 0.55 + 0.15 * _approaches)
 	_tear = maxf(_tear - delta * 6.0, 0.0)
 	_mat.set_shader_parameter("tear", _tear)
 	if player == null or space == null:

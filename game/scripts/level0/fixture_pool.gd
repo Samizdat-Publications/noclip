@@ -152,6 +152,27 @@ func _process(delta: float) -> void:
 	_assign(lit, LIGHTS, "light", _lights)
 	_assign(hum, HUMS, "hum", _hums)
 	_assign(buzz, BUZZES, "buzz", _buzzes)
+	_occlude()
+
+
+## A hum or buzz behind a wall sounds muffled and quieter (M3, D026): one ray per sound from
+## the listener's head, every PERIOD.
+func _occlude() -> void:
+	if not is_inside_tree():
+		return
+	var space := get_world_3d().direct_space_state
+	var head := listener + Vector3(0, 1.6, 0)
+	for pl in _hums + _buzzes:
+		if not pl.playing:
+			continue
+		var q := PhysicsRayQueryParameters3D.create(head, pl.global_position - Vector3(0, 0.15, 0))
+		var hit := space.intersect_ray(q)
+		var occ := not hit.is_empty()
+		pl.attenuation_filter_cutoff_hz = 900.0 if occ else 5000.0
+		pl.set_meta("occ_db", -7.0 if occ else 0.0)
+	for fx in fixtures:
+		if is_instance_valid(fx) and (fx.hum != null or fx.buzz != null):
+			fx.apply()
 
 
 func _assign(cands: Array, cap: int, slot: String, pool: Array) -> void:

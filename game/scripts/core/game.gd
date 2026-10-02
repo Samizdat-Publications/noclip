@@ -29,6 +29,12 @@ var frame: int = 0
 
 ## Hidden disorientation value (VISION "Drift"), 0..1. Systems read it; M2+ drives it.
 var drift: float = 0.0
+## How afraid the player is (0..1): something on tape, a light dying near you. Drives breathing
+## and the mix (M3, D026). Raised by events, falls back slowly on its own.
+var fear: float = 0.0
+## 0..1: how far the world sound is pulled down (the hum dies when something is near, D026).
+var duck: float = 0.0
+var duck_target: float = 0.0
 
 
 func _enter_tree() -> void:
@@ -58,6 +64,11 @@ func _enter_tree() -> void:
 func _process(delta: float) -> void:
 	clock += delta
 	frame += 1
+	fear = move_toward(fear, 0.0, delta * 0.06)
+	duck = move_toward(duck, duck_target, delta * (0.9 if duck_target > duck else 0.35))
+	var w := AudioServer.get_bus_index("World")
+	if w >= 0:
+		AudioServer.set_bus_volume_db(w, -10.0 * duck)
 
 
 ## A random stream that depends only on the run seed and a salt string, so every
@@ -132,3 +143,19 @@ func _setup_audio_buses() -> void:
 	var u := AudioServer.bus_count - 1
 	AudioServer.set_bus_name(u, "UI")
 	AudioServer.set_bus_send(u, "Master")
+	# Room reverbs (M3, D026): sounds made inside a room's Area3D are sent to the reverb that
+	# fits its size. Small offices, corridors, and big halls or rooms copied too tall.
+	for spec in [["RevSmall", 0.32, 0.55, 0.18, 12.0], ["RevCorridor", 0.55, 0.62, 0.2, 26.0], ["RevLarge", 0.86, 0.5, 0.28, 48.0]]:
+		AudioServer.add_bus()
+		var b := AudioServer.bus_count - 1
+		AudioServer.set_bus_name(b, spec[0])
+		AudioServer.set_bus_send(b, "Master")
+		var rv := AudioEffectReverb.new()
+		rv.room_size = spec[1]
+		rv.damping = spec[2]
+		rv.wet = spec[3]
+		rv.dry = 0.0
+		rv.predelay_msec = spec[4]
+		rv.spread = 0.8
+		rv.hipass = 0.2
+		AudioServer.add_bus_effect(b, rv)

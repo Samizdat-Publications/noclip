@@ -1,0 +1,17 @@
+{
+ "tag": "m3_breath_heavy_loop_t1",
+ "params": {
+  "text": "A person winded and out of breath after sprinting, heavy fast mouth breathing, open-mouth panting with loud rasping inhales and exhales, no coughing. Close microphone, intimate, completely dry with no room echo, no speech, no words, no voice, no music, no other sounds.",
+  "duration_seconds": 16.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "m3_breath_heavy_loop_t1_b305aa498519.pcm",
+ "format": "pcm_48000",
+ "credits": 88.0,
+ "est_usd": 0.0264,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

@@ -60,6 +60,11 @@ func _process(delta: float) -> void:
 			var s := _snd("distant_thud_%02d" % (k + 1))
 			if s:
 				thuds.append(s)
+		# M3: a door far away, a chair rolling, a ballast, steps that are not yours, knocks in a wall.
+		for nm in ["distant_door_01", "distant_chair_01", "distant_ballast_01", "distant_steps_01", "distant_knock_01", "distant_hum_drop_01"]:
+			var s2 := _snd(nm)
+			if s2:
+				thuds.append(s2)
 		if thuds.size() > 0:
 			var ang := _rng_amb.randf() * TAU
 			_thud_player.global_position = listener + Vector3(cos(ang), 0.0, sin(ang)) * _rng_amb.randf_range(16.0, 26.0) + Vector3(0, 1.0, 0)

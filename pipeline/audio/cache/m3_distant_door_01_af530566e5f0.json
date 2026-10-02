@@ -1,0 +1,17 @@
+{
+ "tag": "m3_distant_door_01",
+ "params": {
+  "text": "A heavy office door closing with a solid dull thud and latch click, one time, in another part of a large empty building. Heard from far away through several walls in an empty building: very muffled, distant, quiet, with long dull room reverb. No voices, no music.",
+  "duration_seconds": 4.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "m3_distant_door_01_af530566e5f0.pcm",
+ "format": "pcm_48000",
+ "credits": 22.0,
+ "est_usd": 0.0066,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

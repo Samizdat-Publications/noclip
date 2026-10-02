@@ -1,0 +1,17 @@
+{
+ "tag": "m3_distant_steps_01",
+ "params": {
+  "text": "Three or four slow heavy footsteps on soaked wet carpet, slow irregular pace, then silence. Heard from far away through several walls in an empty building: very muffled, distant, quiet, with long dull room reverb. No voices, no music.",
+  "duration_seconds": 5.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "m3_distant_steps_01_7227ae7dc7e5.pcm",
+ "format": "pcm_48000",
+ "credits": 27.0,
+ "est_usd": 0.0081,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

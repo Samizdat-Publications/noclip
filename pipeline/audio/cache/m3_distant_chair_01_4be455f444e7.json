@@ -1,0 +1,17 @@
+{
+ "tag": "m3_distant_chair_01",
+ "params": {
+  "text": "An office chair with plastic wheels rolling a short way across a hard floor then stopping, in another room. Heard from far away through several walls in an empty building: very muffled, distant, quiet, with long dull room reverb. No voices, no music.",
+  "duration_seconds": 4.0,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "m3_distant_chair_01_4be455f444e7.pcm",
+ "format": "pcm_48000",
+ "credits": 22.0,
+ "est_usd": 0.0066,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-02"
+}

@@ -102,10 +102,10 @@ func apply() -> void:
 		lens.set_instance_shader_parameter("tint", Vector3(tint.r, tint.g, tint.b))
 		lens.set_instance_shader_parameter("cathode", cathode_glow)
 	if hum:
-		hum.volume_db = -80.0 if level < 0.08 else lerpf(-14.0, -6.0, clampf(level, 0.0, 1.0))
+		hum.volume_db = (-80.0 if level < 0.08 else lerpf(-14.0, -6.0, clampf(level, 0.0, 1.0))) + float(hum.get_meta("occ_db", 0.0))
 	if buzz:
 		var failing := state == State.STARTER or state == State.PULSE or state == State.DROPOUT
-		buzz.volume_db = lerpf(-30.0, -8.0, clampf(level, 0.0, 1.0)) if failing and level > 0.05 else -80.0
+		buzz.volume_db = (lerpf(-30.0, -8.0, clampf(level, 0.0, 1.0)) if failing and level > 0.05 else -80.0) + float(buzz.get_meta("occ_db", 0.0))
 
 
 func _process(delta: float) -> void:
