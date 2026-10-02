@@ -34,7 +34,9 @@ try:
         _d, _sr = _sf.read(_f, always_2d=True)
         _rms = float(_np.sqrt((_d ** 2).mean())) if _d.size else 0.0
         _dc = float(abs(_d.mean())) if _d.size else 0.0
-        if _rms > 0.35 or _dc > 0.05:
+        _pk = float(_np.abs(_d).max()) if _d.size else 0.0
+        # Loud with no crest (a square wave / stuck sample) or a DC offset: a broken file.
+        if (_rms > 0.3 and _pk / max(_rms, 1e-9) < 1.2) or _rms > 0.7 or _dc > 0.05:
             bad.append(f"AUDIO SUSPECT {os.path.basename(_f)}: rms {_rms:.3f} dc {_dc:.3f}")
             print(bad[-1])
 except ImportError:

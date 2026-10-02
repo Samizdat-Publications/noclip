@@ -114,7 +114,9 @@ def main():
         import soundfile as sf
         for f in sorted(glob.glob(os.path.join(paths.GAME, "assets", "audio", "**", "*.wav"), recursive=True)):
             d, _sr = sf.read(f, always_2d=True)
-            if d.size and (float(np.sqrt((d ** 2).mean())) > 0.35 or abs(float(d.mean())) > 0.05):
+            rms = float(np.sqrt((d ** 2).mean())) if d.size else 0.0
+            pk = float(np.abs(d).max()) if d.size else 0.0
+            if d.size and ((rms > 0.3 and pk / max(rms, 1e-9) < 1.2) or rms > 0.7 or abs(float(d.mean())) > 0.05):
                 sys.exit(f"capture refused: suspect audio file {f}")
     except ImportError:
         pass
