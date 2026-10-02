@@ -109,7 +109,17 @@ func _make_figure() -> Node3D:
 	if not ResourceLoader.exists(MESH):
 		return root
 	var inst := (load(MESH) as PackedScene).instantiate() as Node3D
+	# A person copied a little too tall and a little too narrow.
+	inst.scale = Vector3(0.94, 1.1, 0.94)
 	root.add_child(inst)
+	var tex := "res://assets/textures/level0/decal_contact.png"
+	if ResourceLoader.exists(tex):
+		var dc := Decal.new()
+		dc.texture_albedo = load(tex)
+		dc.size = Vector3(0.9, 0.6, 0.9)
+		dc.modulate = Color(1, 1, 1, 0.95)
+		dc.layers = LAYER_TAPE
+		root.add_child(dc)
 	_prep(inst)
 	if _skel:
 		_pose_body()

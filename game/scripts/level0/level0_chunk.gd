@@ -589,7 +589,7 @@ func _build_fixtures(kit: MeshKit) -> Dictionary:
 					bd = dd
 					best = fx
 			if not alive and best:
-				best.setup(Fixture.State.ON, _rng("fixture:dz:%d" % fixtures.find(best)), 0.26, best.tint * Color(1.0, 0.92, 0.8))
+				best.setup(Fixture.State.ON, _rng("fixture:dz:%d" % fixtures.find(best)), 0.4, best.tint * Color(1.0, 0.92, 0.8))
 				best.apply()
 	return cells
 

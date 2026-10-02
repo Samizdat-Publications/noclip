@@ -38,3 +38,4 @@ Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques 
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 012_gemini.md | 1 | $0.08 (24599 in / 2849 out tokens) |
 | 2026-10-02 | S03 | Gemini (gemini-3-pro-image 2K) | wallpaper v2 photographic candidates (build_wallpaper_v2.py); 4 kept + 1 failed empty response (probably unbilled) | 5 | ~$0.67 (list estimate) |
 | 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 013_gemini.md | 1 | $0.08 (24596 in / 2452 out tokens) |
+| 2026-10-02 | S03 | Gemini (gemini-3.1-pro-preview) | video critic -> 014_gemini.md | 1 | $0.09 (24599 in / 3569 out tokens) |

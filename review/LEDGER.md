@@ -108,6 +108,11 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L084 | 013 | claude | hurts | The survey pocket is a flat orange wash | FIX | Narrower, paler halogen pool (38 degrees), half the fill: hot center, dark corners |
 | L085 | 013 | claude | nitpick | Some lit rooms wash out in haze; glitches still too frequent | FIX | Haze 0.021 to 0.019; seam crossing now a one-frame hiccup |
 | L086 | 013 | gemini | hurts | Ceiling grid and wallpaper look like flat images; want relief | FIX | T-bars 1.4 to 2.8 cm deep and wider; wallpaper normal strength 0.8 to 1.35 |
+| L087 | 014 | claude + gemini | ruins it | The held camcorder reads as an untextured blockout (flat black or grey, no specular, no wear) | FIX | Baked worn PBR texture set (charcoal ABS grain, edge wear, scratches, crevice grime, coated glass) as camcorder_v3 |
+| L088 | 014 | claude | ruins it | Some frames are 90% black (dark rooms) | FIX | Ambient 0.017 to 0.021, eye adaptation ceiling 1250 to 1700, the dark room's own tube 0.26 to 0.4 |
+| L089 | 014 | claude | hurts | Everything lands in one narrow warm band | FIX | Cold rooms 10 to 15 percent, sick-green 6 to 10 percent |
+| L090 | 014 | claude | hurts | Big open rooms murky under the haze; carpet turns to sandy mush | FIX | Haze 0.019 to 0.017 (scatter per light kept) |
+| L091 | 014 | claude + gemini | hurts | The figure reads as a placeholder man whose feet hover; crossing a seam is still a hard cut | FIX | Figure 10 percent taller and narrower, a tape-only contact shadow under it; seam crossing adds a short chromatic warp through the lens (drift spike) |
 
 ## Closed
 

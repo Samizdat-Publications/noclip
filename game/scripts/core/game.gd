@@ -65,6 +65,7 @@ func _process(delta: float) -> void:
 	clock += delta
 	frame += 1
 	fear = move_toward(fear, 0.0, delta * 0.06)
+	drift = move_toward(drift, 0.0, delta * 1.4)
 	duck = move_toward(duck, duck_target, delta * (0.9 if duck_target > duck else 0.35))
 	var w := AudioServer.get_bus_index("World")
 	if w >= 0:

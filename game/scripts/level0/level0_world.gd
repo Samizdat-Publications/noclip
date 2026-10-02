@@ -434,6 +434,7 @@ func _check_seam(p: Vector3) -> void:
 				inside = true
 	if inside and not _in_seam and player_ref:
 		player_ref.camcorder.glitch_small()
+		Game.drift = maxf(Game.drift, 0.7)
 		tape.seam_cross()
 	_in_seam = inside
 

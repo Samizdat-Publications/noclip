@@ -894,9 +894,9 @@ func _room_mood(L: Dictionary, rr: Rect2, first: int) -> void:
 		for i in range(first, fx.size()):
 			fx[i].append("dim")
 	var tint_roll := mr.randf()
-	if tint_roll < 0.1:
+	if tint_roll < 0.15:
 		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.76, 0.87, 1.0])    # cold blue-white
-	elif tint_roll < 0.16:
+	elif tint_roll < 0.25:
 		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.86, 0.97, 0.8])    # sickly pale green
 	if not L.has("recolor") and mr.randf() < 0.09:
 		var cols := [[0.80, 0.98, 0.86], [1.0, 0.82, 0.78], [0.80, 0.86, 1.0]]

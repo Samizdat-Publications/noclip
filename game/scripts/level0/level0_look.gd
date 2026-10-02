@@ -183,7 +183,7 @@ static func make_environment(preset: String) -> Environment:
 	e.background_color = Color(0, 0, 0)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.42, 0.38, 0.24)
-	e.ambient_light_energy = float(Game.opts.get("ambient", "0.017"))   # dark rooms readable, not void (L045)
+	e.ambient_light_energy = float(Game.opts.get("ambient", "0.021"))   # dark rooms readable, not void (L045)
 	e.reflected_light_source = Environment.REFLECTION_SOURCE_BG
 
 	e.tonemap_mode = Environment.TONE_MAPPER_AGX
@@ -237,7 +237,7 @@ static func make_environment(preset: String) -> Environment:
 	e.set_glow_level(5, 0.0)
 
 	e.volumetric_fog_enabled = true
-	e.volumetric_fog_density = float(Game.opts.get("fog", "0.019"))
+	e.volumetric_fog_density = float(Game.opts.get("fog", "0.017"))
 	e.volumetric_fog_albedo = Color(0.95, 0.92, 0.82)
 	e.volumetric_fog_emission = Color(0, 0, 0)
 	e.volumetric_fog_anisotropy = float(Game.opts.get("fog_aniso", "0.62"))
@@ -276,6 +276,6 @@ static func make_camera_attributes() -> CameraAttributesPractical:
 	c.auto_exposure_scale = float(Game.opts.get("ae", "0.36"))
 	c.auto_exposure_speed = 0.55
 	c.auto_exposure_min_sensitivity = 60.0
-	c.auto_exposure_max_sensitivity = float(Game.opts.get("ae_max", "1250"))   # dark rooms stay dark (L032) but not crushed (L045)   # dark rooms stay dark (L032)
+	c.auto_exposure_max_sensitivity = float(Game.opts.get("ae_max", "1700"))   # dark rooms stay dark (L032) but not crushed (L045)   # dark rooms stay dark (L032)
 	c.exposure_multiplier = 1.0
 	return c
