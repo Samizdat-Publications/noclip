@@ -49,3 +49,10 @@ Session 02 total: about $1.14 of a $40 cap (graffiti $0.96, two video critiques 
 Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and wallpaper about $1.3, sounds about $0.5, eleven video critiques about $1.0). Sketchfab models were free CC-BY downloads.
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 017_gemini.md | 1 | $0.10 (27638 in / 3623 out tokens) |
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 018_gemini.md | 1 | $0.09 (27639 in / 2534 out tokens) |
+
+## Session 04
+| Date | Session | Service | Purpose | Calls | Est. cost |
+|---|---|---|---|---|---|
+| 2026-10-02 | S04 | Gemini (gemini-3-pro-image, 2K, with wallpaper reference) | Occupant monster concept images, sets A and B (build_entity_concepts.py) | 12 | ~$1.61 ($0.134 each, list price estimate) |
+| 2026-10-02 | S04 | Gemini (gemini-3-pro-image, 2K) | Occupant concept round 2: B2_2 redrawn as a front A-pose model sheet for Meshy (build_entity_concepts_c.py) | 4 | ~$0.54 |
+| 2026-10-02 | S04 | Meshy (image-to-3d, meshy-7.1, 2k PBR, 40k tris, a-pose) | Occupant monster models from concept sheets C_2 and C_4 (build_entity_meshy.py); balance 1968 to 1908 | 2 | 60 credits |

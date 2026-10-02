@@ -18,6 +18,12 @@ const PERIOD := 0.2
 
 var fixtures: Array = []      # every ceiling fixture of the loaded chunks
 var listener := Vector3.ZERO
+# A second, smaller pool lights the hall inside a storeroom (PortalRoom, D036).
+var light_cap := LIGHTS
+var hum_cap := HUMS
+var layer_bits := 1           # render layers of its lights (camera cull masks hide another space's)
+var enabled := true           # false: everything handed back, nothing lent
+var _was_enabled := true
 
 var _lights: Array[SpotLight3D] = []
 var _hums: Array[AudioStreamPlayer3D] = []
@@ -32,10 +38,11 @@ var _base_range := float(Game.opts.get("spot_range", "7"))
 
 func _ready() -> void:
 	top_level = true
-	for k in LIGHTS:
+	for k in light_cap:
 		var l := Fixture.make_ceiling_light()
 		l.distance_fade_begin = FADE_BEGIN
 		l.distance_fade_length = FADE_LEN
+		l.layers = layer_bits
 		l.visible = false
 		add_child(l)
 		_lights.append(l)
@@ -45,7 +52,7 @@ func _ready() -> void:
 		var s := _snd("tube_tick_%02d" % (t + 1))
 		if s:
 			_tick_streams.append(s)
-	for k in HUMS:
+	for k in hum_cap:
 		var hp := _player(1.1, 9.0)
 		hp.bus = &"Hum"
 		_hums.append(hp)
@@ -132,6 +139,15 @@ func release(fx: Fixture) -> void:
 
 
 func _process(delta: float) -> void:
+	if not enabled:
+		if _was_enabled:
+			for fx in fixtures:
+				if is_instance_valid(fx):
+					release(fx)
+					fx.apply()
+		_was_enabled = false
+		return
+	_was_enabled = true
 	_t -= delta
 	if _t > 0.0:
 		return
@@ -151,8 +167,8 @@ func _process(delta: float) -> void:
 			hum.append([d, fx])
 		if d < BUZZ_R and fx.is_failing():
 			buzz.append([d, fx])
-	_assign(lit, LIGHTS, "light", _lights)
-	_assign(hum, HUMS, "hum", _hums)
+	_assign(lit, light_cap, "light", _lights)
+	_assign(hum, hum_cap, "hum", _hums)
 	_assign(buzz, BUZZES, "buzz", _buzzes)
 	_occlude()
 

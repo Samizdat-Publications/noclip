@@ -26,6 +26,13 @@ Status after S03: EXIT CRITERION MET (Gemini Sound 8, 8, 8 in critiques 013, 014
 - ElevenLabs asset pass with loudness normalization.
 - Exit: Gemini critic Sound at 7 or higher.
 
+## M2b: Impossible rooms (effort: xhigh) (added S04, Stewart's priority, D034)
+Stewart asked for rooms that are small outside, giant inside, and loop back paradoxically. The M2 toolkit pieces never built in S03 come first:
+- Portal doorways: render the destination through the doorway, cross seamlessly (no visible jump, no GI or fog pop), audio and the bot pass through.
+- A room bigger inside than outside: a small office you can walk all the way around whose door opens onto a giant hall; the hall's far exit leads back somewhere impossible (into the hall you came from, facing the small room's door from behind, or into a copy of the start).
+- Then: overlapping rooms (two rooms in one space, which one you are in depends on the door), impossible stairs, the corridor that grows each time you run it.
+- Exit: both critics Surreal 7 or higher on two loops, no visible seam at a portal on video, perf targets held, Stewart's notes.
+
 ## M3.5: Look pass (effort: xhigh) (added S03)
 The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6), Shadows and depth (Gemini 4 to 5) and Materials (4 to 7); the ship gate needs 8. One focused session before the Entity:
 - Done in S03: corner occlusion strips (D031); hum drift and power sags, carpet rolls and anti-tiling, rectangular light pools (D032).

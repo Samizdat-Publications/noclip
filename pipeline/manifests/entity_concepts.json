@@ -1,0 +1,179 @@
+{
+ "model": "gemini-3-pro-image",
+ "reference": "game\\assets\\textures\\level0\\wallpaper_v2_albedo.png",
+ "image_size": "2K",
+ "price_per_image_usd": 0.134,
+ "prompts": {
+  "A1": "The reference image is the game's own wallpaper texture; use it exactly for the creature's paper and for the corridor walls. Full body character model sheet, single figure, front view, centered, standing in a relaxed A-pose (arms angled about 30 degrees away from the body, legs slightly apart), feet flat, the whole figure in frame with margin above and below, plain flat neutral mid-grey seamless background, soft even studio lighting with no harsh shadows and no cast shadow on the floor, orthographic-looking straight-on camera at chest height, no text, no watermark. The creature is called the Occupant: a figure the building made out of its own materials, trying to copy a person. About 2.4 m tall, too thin, humanoid and bipedal with clearly separated arms and legs. Its entire body, head included, is papered in exactly the wallpaper shown in the reference image (pale mustard-yellow office wallpaper with thin vertical pinstripes and columns of small printed chevrons), hung in vertical strips with visible strip seams running down the body, water-stained with brown tide lines, peeling and curling at the elbows, knees, neck and fingertips to show dark wet grey plaster and torn drywall paper underneath. It has no face at all: the head is a smooth, slightly too-long papered oval where the wallpaper pattern jumps sideways in one horizontal band, like a misaligned seam. The neck is a little too long, the forearms and fingers are too long (fingers reach to mid-thigh), shoulders narrow and slightly sloped. No clothes, no hair, no mouth, no eyes, no horns, no claws, no smile, no glowing parts, no gore. It must not look like a person in a costume or a mummy: it looks like wall. Emphasis: the vertical strip seams running down the whole body and the horizontal pattern jump on the smooth oval head.",
+  "A2": "The reference image is the game's own wallpaper texture; use it exactly for the creature's paper and for the corridor walls. Full body character model sheet, single figure, front view, centered, standing in a relaxed A-pose (arms angled about 30 degrees away from the body, legs slightly apart), feet flat, the whole figure in frame with margin above and below, plain flat neutral mid-grey seamless background, soft even studio lighting with no harsh shadows and no cast shadow on the floor, orthographic-looking straight-on camera at chest height, no text, no watermark. The creature is called the Occupant: a figure the building made out of its own materials, trying to copy a person. About 2.4 m tall, too thin, humanoid and bipedal with clearly separated arms and legs. Its entire body, head included, is papered in exactly the wallpaper shown in the reference image (pale mustard-yellow office wallpaper with thin vertical pinstripes and columns of small printed chevrons), hung in vertical strips with visible strip seams running down the body, water-stained with brown tide lines, peeling and curling at the elbows, knees, neck and fingertips to show dark wet grey plaster and torn drywall paper underneath. It has no face at all: the head is a smooth, slightly too-long papered oval where the wallpaper pattern jumps sideways in one horizontal band, like a misaligned seam. The neck is a little too long, the forearms and fingers are too long (fingers reach to mid-thigh), shoulders narrow and slightly sloped. No clothes, no hair, no mouth, no eyes, no horns, no claws, no smile, no glowing parts, no gore. It must not look like a person in a costume or a mummy: it looks like wall. Emphasis: the peeling, curling joints (elbows, knees, neck, fingertips) and the dark wet grey plaster and torn drywall paper showing through.",
+  "B1": "The reference image is the game's own wallpaper texture; use it exactly for the creature's paper and for the corridor walls. Photograph-like still from a VHS camcorder (soft, a little noisy, slight tracking noise) in a dim 1990s office corridor: the same mustard wallpaper on the walls, damp beige carpet, drop ceiling with fluorescent panels, slight haze. No text, no watermark. The creature is called the Occupant: a figure the building made out of its own materials, trying to copy a person. About 2.4 m tall, too thin, humanoid and bipedal with clearly separated arms and legs. Its entire body, head included, is papered in exactly the wallpaper shown in the reference image (pale mustard-yellow office wallpaper with thin vertical pinstripes and columns of small printed chevrons), hung in vertical strips with visible strip seams running down the body, water-stained with brown tide lines, peeling and curling at the elbows, knees, neck and fingertips to show dark wet grey plaster and torn drywall paper underneath. It has no face at all: the head is a smooth, slightly too-long papered oval where the wallpaper pattern jumps sideways in one horizontal band, like a misaligned seam. The neck is a little too long, the forearms and fingers are too long (fingers reach to mid-thigh), shoulders narrow and slightly sloped. No clothes, no hair, no mouth, no eyes, no horns, no claws, no smile, no glowing parts, no gore. It must not look like a person in a costume or a mummy: it looks like wall. Scene: the Occupant stands flat against the corridor wall about 6 m away from the camera, nearly invisible because its paper matches the wall; only the pattern jump on its head and its too-long fingers give it away.",
+  "B2": "The reference image is the game's own wallpaper texture; use it exactly for the creature's paper and for the corridor walls. Photograph-like still from a VHS camcorder (soft, a little noisy, slight tracking noise) in a dim 1990s office corridor: the same mustard wallpaper on the walls, damp beige carpet, drop ceiling with fluorescent panels, slight haze. No text, no watermark. The creature is called the Occupant: a figure the building made out of its own materials, trying to copy a person. About 2.4 m tall, too thin, humanoid and bipedal with clearly separated arms and legs. Its entire body, head included, is papered in exactly the wallpaper shown in the reference image (pale mustard-yellow office wallpaper with thin vertical pinstripes and columns of small printed chevrons), hung in vertical strips with visible strip seams running down the body, water-stained with brown tide lines, peeling and curling at the elbows, knees, neck and fingertips to show dark wet grey plaster and torn drywall paper underneath. It has no face at all: the head is a smooth, slightly too-long papered oval where the wallpaper pattern jumps sideways in one horizontal band, like a misaligned seam. The neck is a little too long, the forearms and fingers are too long (fingers reach to mid-thigh), shoulders narrow and slightly sloped. No clothes, no hair, no mouth, no eyes, no horns, no claws, no smile, no glowing parts, no gore. It must not look like a person in a costume or a mummy: it looks like wall. Scene: the Occupant stands in the middle of the corridor about 10 m away under a flickering fluorescent panel, head tilted slightly, the corridor wallpaper continuing behind it.",
+  "C": "The first reference image shows a creature called the Occupant standing in a corridor. The second reference image is the game's own wallpaper texture. Draw exactly the same creature as a full body character model sheet for 3D modelling: single figure, front view, centered, standing in a relaxed A-pose (arms angled about 30 degrees away from the body, legs slightly apart), feet flat, the whole figure in frame with margin above and below, plain flat neutral mid-grey seamless background, soft even studio lighting with no harsh shadows and no cast shadow on the floor, orthographic-looking straight-on camera at chest height, no text, no watermark. Keep what makes the creature in the first image frightening, and push it further: it is gaunt and bony, about 2.4 m tall and too thin, with a slightly too long neck, narrow sloped shoulders, forearms and fingers far too long (the fingertips hang to the middle of the thigh), knobbly knees and elbows. It is not a smooth mannequin and not a person in a bodysuit: its whole body, head included, is papered in exactly the wallpaper of the second image, hung in overlapping vertical strips with clear seams, lumpy and wrinkled where the paper was pasted over bone, with air bubbles, brown water stains and tide lines. Long loose flaps of torn wallpaper hang off the shoulders, ribs, hips and forearms, curling away from the body, and the tears show dark wet grey plaster and torn drywall underneath. The pinstripes and chevrons of the wallpaper are clearly visible all over the body. No face at all: the head is a slightly too long papered oval where the wallpaper pattern jumps sideways in one horizontal band like a misaligned seam. No clothes, no hair, no mouth, no eyes, no claws, no glowing parts, no gore."
+ },
+ "calls": [
+  {
+   "file": "A1_1.jpg",
+   "prompt_key": "A1",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A1_2.jpg",
+   "prompt_key": "A1",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A1_3.jpg",
+   "prompt_key": "A1",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A1_4.jpg",
+   "prompt_key": "A1",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A2_1.jpg",
+   "prompt_key": "A2",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A2_2.jpg",
+   "prompt_key": "A2",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A2_3.jpg",
+   "prompt_key": "A2",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "A2_4.jpg",
+   "prompt_key": "A2",
+   "aspect": "2:3",
+   "size": [
+    1696,
+    2528
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "B1_1.jpg",
+   "prompt_key": "B1",
+   "aspect": "16:9",
+   "size": [
+    2752,
+    1536
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "B1_2.jpg",
+   "prompt_key": "B1",
+   "aspect": "16:9",
+   "size": [
+    2752,
+    1536
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "B2_1.jpg",
+   "prompt_key": "B2",
+   "aspect": "16:9",
+   "size": [
+    2752,
+    1536
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "B2_2.jpg",
+   "prompt_key": "B2",
+   "aspect": "16:9",
+   "size": [
+    2752,
+    1536
+   ],
+   "attempt": 1,
+   "result": "image"
+  },
+  {
+   "file": "C_1.jpg",
+   "model": "gemini-3-pro-image",
+   "set": "C",
+   "ok": true,
+   "when": "2026-10-02T13:47:22",
+   "cost_usd": 0.134
+  },
+  {
+   "file": "C_2.jpg",
+   "model": "gemini-3-pro-image",
+   "set": "C",
+   "ok": true,
+   "when": "2026-10-02T13:47:45",
+   "cost_usd": 0.134
+  },
+  {
+   "file": "C_3.jpg",
+   "model": "gemini-3-pro-image",
+   "set": "C",
+   "ok": true,
+   "when": "2026-10-02T13:48:06",
+   "cost_usd": 0.134
+  },
+  {
+   "file": "C_4.jpg",
+   "model": "gemini-3-pro-image",
+   "set": "C",
+   "ok": true,
+   "when": "2026-10-02T13:48:39",
+   "cost_usd": 0.134
+  }
+ ]
+}

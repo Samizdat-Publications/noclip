@@ -199,6 +199,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"graffiti": [],
 		"pocket_zones": [],
 		"tall_rooms": [],
+		"closets": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -239,6 +240,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 	# --- a seam (tape-only exit) into a sealed pocket, in about a third of the chunks
 	_pick_pocket_room(cx, cz, leaves, spawn_chunk)
 	_pick_tall_room(cx, cz, leaves, spawn_chunk)
+	_pick_closet_room(cx, cz, leaves)
 	# --- rooms, fixtures, pillars
 	for lf in leaves:
 		_furnish_room(r, L, lf, spawn_chunk)
@@ -304,6 +306,12 @@ func generate(cx: int, cz: int) -> Dictionary:
 		var x := _wall_run_x(L, fg[1], int(fg[2]) * MOD, fg[5])
 		if x > -50.0:
 			L["graffiti"].append([fg[0], x, int(fg[2]) * MOD + T * 0.5 * fg[3], 0.0, fg[3], fg[4]])
+	# Nothing stands inside a closet block (it would poke through its walls).
+	for cl in L["closets"]:
+		var blk: Array = cl["block"]
+		var br := Rect2(blk[0], blk[1], blk[2] - blk[0], blk[3] - blk[1]).grow(0.35)
+		L["props"] = L["props"].filter(func(pr): return not br.has_point(Vector2(pr[1], pr[2])))
+		L["graffiti"] = L["graffiti"].filter(func(gr): return not br.grow(-0.2).has_point(Vector2(gr[1], gr[2])))
 	if spawn_chunk:
 		L["spawn"] = _spawn_point(L, leaves)
 		# The opening stretch of the spawn hall is lit: the first image is the long bright hall.
@@ -649,7 +657,13 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 		L["tall_rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, H * 3.0])
 		kind = "tall"
 		_tall_cues(L, rr)
-	if lf.get("pocket", false):
+	if lf.get("closet", false):
+		if kind == "hall":
+			kind = "room"
+			while L["pillars"].size() > 0 and rr.has_point(Vector2(L["pillars"][-1][0], L["pillars"][-1][1])):
+				L["pillars"].pop_back()
+		focus = _closet(L, rr)
+	elif lf.get("pocket", false):
 		# The random draws above still happen so the rest of the chunk keeps its sequence.
 		if kind == "hall":
 			kind = "room"
@@ -748,6 +762,112 @@ func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> vo
 		if not best.is_empty():
 			best["pocket"] = size
 			return
+
+
+## Rooms bigger inside than outside (M2b, D036): a small storeroom stands free in a bigger room,
+## 3.6 x 3.6 m, and you can walk all the way round it. Its door opens onto a pillar hall 72 m
+## across built out of sight under the level (Level0World / PortalRoom), and that hall's far
+## door lets you out of the same storeroom door you went in by. Chunk (1, 0), just east of the
+## start, always has one; elsewhere about one chunk in eight. Each hall sits at one of three
+## depths, and two halls at the same depth never come within reach of each other.
+const CLOSET_SLOTS := 3
+
+
+func closet_roll(cx: int, cz: int) -> bool:
+	if cx == 1 and cz == 0:
+		return true
+	if (cx == 0 and cz == 0) or loop_index(cx, cz) >= 0:
+		return false
+	return _rng("closet:%d:%d" % [cx, cz]).randf() < 0.12
+
+
+func closet_slot(cx: int, cz: int) -> int:
+	return posmod(cx + 2 * cz, CLOSET_SLOTS)
+
+
+func has_closet(cx: int, cz: int) -> bool:
+	if not closet_roll(cx, cz):
+		return false
+	var sl := closet_slot(cx, cz)
+	for dx in range(-4, 5):
+		for dz in range(-4, 5):
+			if dx == 0 and dz == 0:
+				continue
+			var ox := cx + dx
+			var oz := cz + dz
+			# Only an earlier chunk (row-major) wins a conflict, so the rule never goes round in circles.
+			if (oz < cz or (oz == cz and ox < cx)) and closet_roll(ox, oz) and closet_slot(ox, oz) == sl:
+				return false
+	return true
+
+
+func _pick_closet_room(cx: int, cz: int, leaves: Array) -> void:
+	if not has_closet(cx, cz):
+		return
+	var cr := _rng("closetroom:%d:%d" % [cx, cz])
+	var best: Dictionary = {}
+	var best_score := -1e9
+	for lf in leaves:
+		if lf.get("corridor", false) or lf.get("pocket", false) or lf.get("tall", false):
+			continue
+		var rm: Rect2i = lf["m"]
+		if rm.size.x < 6 or rm.size.y < 6:
+			continue
+		var score := float(rm.size.x * rm.size.y) + cr.randf() * 8.0
+		if score > best_score:
+			best_score = score
+			best = lf
+	if not best.is_empty():
+		best["closet"] = true
+
+
+## Builds the storeroom block with its door and records it for the world (L["closets"]).
+## Returns where a visitor would stand to look in.
+func _closet(L: Dictionary, rr: Rect2) -> Vector2:
+	var cr := _rng("closet:in:%d:%d" % [L["chunk"][0], L["chunk"][1]])
+	var size := POCKET
+	var rm := Rect2i(Vector2i(roundi(rr.position.x / MOD), roundi(rr.position.y / MOD)), Vector2i(roundi(rr.size.x / MOD), roundi(rr.size.y / MOD)))
+	# Leave at least a two-module walk all round it.
+	var kx := rm.position.x + 2 + cr.randi_range(0, maxi(rm.size.x - size - 4, 0))
+	var kz := rm.position.y + 2 + cr.randi_range(0, maxi(rm.size.y - size - 4, 0))
+	var x0 := kx * MOD
+	var z0 := kz * MOD
+	var ps := size * MOD
+	var x1 := x0 + ps
+	var z1 := z0 + ps
+	var sides := [["W", x0 - rr.position.x], ["E", rr.end.x - x1], ["N", z0 - rr.position.y], ["S", rr.end.y - z1]]
+	var side := "W"
+	var room_in_front := -1.0
+	for sd in sides:
+		var v: float = sd[1] + cr.randf() * 0.1
+		if v > room_in_front:
+			room_in_front = v
+			side = sd[0]
+	var n: Vector2 = {"W": Vector2(-1, 0), "E": Vector2(1, 0), "N": Vector2(0, -1), "S": Vector2(0, 1)}[side]
+	var faces := {"N": [x0, z0, x1, z0], "S": [x0, z1, x1, z1], "W": [x0, z0, x0, z1], "E": [x1, z0, x1, z1]}
+	var door: Array = []
+	for f in faces:
+		var w: Array = faces[f]
+		if f != side:
+			L["walls"].append(w)
+			continue
+		var horiz: bool = f == "N" or f == "S"
+		var a: float = w[0] if horiz else w[1]
+		var line: float = w[1] if horiz else w[0]
+		for k in size:
+			if k == 1:
+				continue   # the door
+			var s0: float = a + k * MOD
+			L["walls"].append([s0, line, s0 + MOD, line] if horiz else [line, s0, line, s0 + MOD])
+		var m0 := a + MOD
+		door = [m0, line, m0 + MOD, line] if horiz else [line, m0, line, m0 + MOD]
+	L["doors"].append(door)
+	L["pocket_zones"].append([x0, z0, x1, z1])   # its own panels stay dark (nobody ever sees them)
+	var dc := Vector2((door[0] + door[2]) * 0.5, (door[1] + door[3]) * 0.5)
+	L["closets"].append({"door": dc, "n": n, "block": [x0, z0, x1, z1], "slot": closet_slot(L["chunk"][0], L["chunk"][1])})
+	var look := dc + n * minf(2.6, room_in_front * 0.6)
+	L["interest"].append({"name": "closet_%d_%d" % [int(look.x * 10), int(look.y * 10)], "p": [look.x, look.y], "closet": [dc.x, dc.y], "n": [n.x, n.y]})
+	return look
 
 
 ## Scale error (art direction #3, D023): about one chunk in five has a room copied at the wrong
