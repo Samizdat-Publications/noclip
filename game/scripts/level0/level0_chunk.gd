@@ -99,6 +99,12 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	if mats["carpet"] == shared_mats["carpet"]:
 		mats["carpet"] = (shared_mats["carpet"] as ShaderMaterial).duplicate()
 	field.bind(mats["carpet"])
+	# Seams: the patch of wall that only the eye sees uses the wallpaper slipped a few centimeters,
+	# a splice you can spot if you look for it (D022).
+	if L.get("seams", []).size() > 0:
+		mats["seam_wall"] = (mats["wall"] as ShaderMaterial).duplicate()
+		(mats["seam_wall"] as ShaderMaterial).set_shader_parameter("uv_slip", Vector2(0.0, 0.034))
+		mats["seam_base"] = mats["baseboard"]
 	_collect_solids()
 	_pick_leaks()
 	var kit := MeshKit.new()
@@ -121,13 +127,17 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_fake_doors(kit)
 			_build_exit_signs(kit)
 			_build_fallen_tile(kit)
-			_build_wrong_architecture(kit),
+			_build_wrong_architecture(kit)
+			_build_seams(kit),
 		func() -> void:
 			cells.merge(_build_fixtures(kit)),
 		func() -> void:
 			_build_ceiling(kit, cells),
 		func() -> void:
-			kit.commit(self, mats, ["tbar", "housing"]),
+			var parts := kit.commit(self, mats, ["tbar", "housing"])
+			for key in ["seam_wall", "seam_base"]:
+				if parts.has(key):
+					(parts[key] as GeometryInstance3D).layers = TapeEvents.LAYER_EYE,
 		func() -> void:
 			_build_decals(),
 		func() -> void:
@@ -140,7 +150,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 		func() -> void:
 			_build_traces(),
 		func() -> void:
-			_build_wall_details(),
+			_build_wall_details()
+			_build_seam_fx(),
 	]
 
 
@@ -896,7 +907,7 @@ func _build_graffiti() -> void:
 		var info: Dictionary = _graffiti_table.get(g[0], {})
 		if info.is_empty():
 			continue
-		var w: float = float(info["width"]) * r.randf_range(0.9, 1.1)
+		var w: float = (float(g[6]) if g.size() > 6 else float(info["width"])) * r.randf_range(0.9, 1.1)
 		var h: float = w * float(info["aspect"])
 		var n := Vector3(g[3], 0.0, g[4])
 		var b := _basis_facing(n).rotated(n, r.randf_range(-0.05, 0.05))
@@ -1252,6 +1263,94 @@ func _build_wrong_architecture(kit: MeshKit) -> void:
 		_build_stairs(kit, st)
 
 
+## Seams (D022): a door-sized patch of a pocket's wall that exists only for the naked eye. It is
+## drawn on render layer 12, which the camera stops drawing when the camcorder is up, and it has
+## no collision. Above it a normal lintel; its baseboard is eye-only too.
+const SEAM_H := 2.15
+
+
+func _build_seams(kit: MeshKit) -> void:
+	for sm in L.get("seams", []):
+		var w: Array = sm["wall"]
+		var horiz := _is_horizontal(w)
+		var r := _wall_rect(w, 0.0, 0.0)
+		var long_faces := (MeshKit.PZ | MeshKit.NZ) if horiz else (MeshKit.PX | MeshKit.NX)
+		kit.box("seam_wall", Vector3(r.position.x, 0.0, r.position.y), Vector3(r.end.x, SEAM_H, r.end.y), long_faces, H)
+		kit.box("wall", Vector3(r.position.x, SEAM_H, r.position.y), Vector3(r.end.x, H, r.end.y), long_faces | MeshKit.NY, H)
+		var bb := 0.012
+		var g := r.grow_individual(0.0, bb, 0.0, bb) if horiz else r.grow_individual(bb, 0.0, bb, 0.0)
+		kit.box("seam_base", Vector3(g.position.x, 0.0, g.position.y), Vector3(g.end.x, 0.1, g.end.y), long_faces | MeshKit.PY, 0.1)
+		var wa := 0.022
+		var ga := r.grow_individual(0.0, wa, 0.0, wa) if horiz else r.grow_individual(wa, 0.0, wa, 0.0)
+		kit.box("tbar", Vector3(ga.position.x, H - wa, ga.position.y), Vector3(ga.end.x, H, ga.end.y), long_faces | MeshKit.NY, H)
+
+
+var seam_fx: Array[MeshInstance3D] = []
+static var _tear_mat: ShaderMaterial
+
+
+## What only the tape shows at a seam (a torn outline where the wall is missing), and the survey
+## crew's work light inside the pocket.
+func _build_seam_fx() -> void:
+	if _tear_mat == null:
+		_tear_mat = ShaderMaterial.new()
+		_tear_mat.shader = load("res://shaders/seam_tear.gdshader")
+		_tear_mat.set_shader_parameter("size_m", Vector2(1.2, SEAM_H))
+	for sm in L.get("seams", []):
+		var w: Array = sm["wall"]
+		var n := Vector3(sm["n"][0], 0.0, sm["n"][1])
+		var t := Vector3.UP.cross(n)
+		var c := Vector3((w[0] + w[2]) * 0.5, SEAM_H * 0.5, (w[1] + w[3]) * 0.5)
+		for k in 2:
+			var q := MeshInstance3D.new()
+			var qm := QuadMesh.new()
+			qm.size = Vector2(Vector2(w[0], w[1]).distance_to(Vector2(w[2], w[3])), SEAM_H)
+			q.mesh = qm
+			q.material_override = _tear_mat
+			q.layers = TapeEvents.LAYER_TAPE
+			q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			q.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
+			var nn := n if k == 0 else -n
+			q.transform = Transform3D(Basis(Vector3.UP.cross(nn), Vector3.UP, nn), c + nn * (T * 0.5 + 0.004))
+			add_child(q)
+			seam_fx.append(q)
+	for wl in L.get("worklights", []):
+		var pos := Vector3(wl[0], 0.0, wl[1])
+		var yaw := deg_to_rad(float(wl[2]))
+		var path := "res://assets/props/level0/prop_worklight_box_sf.glb"
+		if ResourceLoader.exists(path):
+			var inst := PropCache.make(path)
+			inst.position = pos
+			inst.rotation.y = yaw
+			add_child(inst)
+			_contact_shadow(pos, 0.22)
+		var fwd := Vector3(sin(yaw), 0.0, cos(yaw))
+		var sl := SpotLight3D.new()
+		sl.light_color = Color(1.0, 0.71, 0.42)   # a halogen lamp: the one warm, hard light in the Yellow
+		sl.light_energy = 1.7
+		sl.spot_range = 6.5
+		sl.spot_angle = 52.0
+		sl.spot_attenuation = 1.1
+		sl.spot_angle_attenuation = 1.6
+		sl.shadow_enabled = true
+		sl.shadow_bias = 0.04
+		sl.light_size = 0.08
+		sl.distance_fade_enabled = true
+		sl.distance_fade_begin = 22.0
+		sl.distance_fade_length = 6.0
+		var lp := pos + Vector3(0, 0.22, 0) + fwd * 0.2
+		var target := pos + fwd * 2.4 + Vector3(0, 1.45, 0)
+		sl.transform = Transform3D(Basis.looking_at(target - lp, Vector3.UP), lp)
+		add_child(sl)
+		# A little of it bounces off the floor and walls of the pocket.
+		var fill := OmniLight3D.new()
+		fill.light_color = Color(1.0, 0.76, 0.5)
+		fill.light_energy = 0.25
+		fill.omni_range = 2.6
+		fill.position = pos + fwd * 1.2 + Vector3(0, 0.9, 0)
+		add_child(fill)
+
+
 ## A flight of carpeted stairs that the building grew by mistake (critique 006, L022): the same
 ## wallpaper, carpet, vinyl nosing and baseboard as everything else, a handrail on the wall,
 ## and it climbs straight up through a gap in the ceiling tiles into the dark above.
@@ -1458,7 +1557,11 @@ func find_path(from: Vector3, to: Vector3) -> PackedVector3Array:
 func get_interest_points() -> Array:
 	var out := []
 	for it in L["interest"]:
-		out.append({"name": it["name"], "pos": Vector3(it["p"][0], 0.0, it["p"][1])})
+		var e := {"name": it["name"], "pos": Vector3(it["p"][0], 0.0, it["p"][1])}
+		if it.has("seam"):
+			e["seam"] = Vector3(it["seam"][0], 0.0, it["seam"][1])
+			e["pocket"] = Vector3(it["pocket"][0], 0.0, it["pocket"][1])
+		out.append(e)
 	return out
 
 

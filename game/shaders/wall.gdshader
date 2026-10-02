@@ -18,6 +18,8 @@ uniform float normal_strength = 0.8;
 uniform float ceiling_h = 2.6;
 uniform float damage = 1.0;
 uniform vec2 seed_offset = vec2(0.0);
+// A seam's eye-only patch has its paper slipped a few centimeters (a splice, D022).
+uniform vec2 uv_slip = vec2(0.0);
 // Pushes the printed pattern away from the paper color so it reads at a few meters.
 uniform float pattern_contrast = 2.4;
 uniform vec3 tex_mean = vec3(0.584, 0.474, 0.162);
@@ -33,7 +35,7 @@ void vertex() {
 }
 
 void fragment() {
-	vec2 uv = UV / tile;
+	vec2 uv = (UV + uv_slip) / tile;
 	// Wallpaper hangs in sheets 0.53 m wide; each sheet's pattern sits a few millimeters off its
 	// neighbor and the seams show as a hairline with a lifted edge (critique 006: walls looked flat).
 	float sheet_w = 0.53;

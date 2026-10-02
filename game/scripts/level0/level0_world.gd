@@ -145,6 +145,8 @@ var _pos_log_t := 0.0
 
 
 func _process(delta: float) -> void:
+	if Level0Chunk._tear_mat:
+		Level0Chunk._tear_mat.set_shader_parameter("time", Game.clock)
 	if _temporal_reset > 0:
 		_temporal_reset -= 1
 		if _temporal_reset == 0:
@@ -252,7 +254,11 @@ func get_interest_points() -> Array:
 				continue
 			var ch: Level0Chunk = chunks[c]
 			for it in ch.get_interest_points():
-				out.append({"name": "%d_%d_%s" % [c.x, c.y, it["name"]], "pos": (it["pos"] as Vector3) + ch.position})
+				var e := {"name": "%d_%d_%s" % [c.x, c.y, it["name"]], "pos": (it["pos"] as Vector3) + ch.position}
+				if it.has("seam"):
+					e["seam"] = (it["seam"] as Vector3) + ch.position
+					e["pocket"] = (it["pocket"] as Vector3) + ch.position
+				out.append(e)
 	return out
 
 
@@ -277,6 +283,11 @@ var loops_done := 0
 var _loop_shot_frames := 0
 var _temporal_reset := 0
 var loops_done_here := 0
+
+
+## +1 or -1 while walking a loop run that has not let go yet, else 0.
+func loop_dir() -> int:
+	return 0 if _loop_released else _loop_dir
 
 
 func _update_loop(p: Vector3, delta: float) -> bool:
@@ -512,6 +523,28 @@ func get_focus_shots(n: int = 8) -> Array:
 	out.append({"pos": [spawn_xf.origin.x, spawn_xf.origin.z], "yaw": rad_to_deg(-spawn_xf.basis.get_euler().y), "pitch": 1.0, "settle": 2.5})
 	var keys := chunks.keys()
 	keys.sort_custom(func(a, b): return a.length_squared() < b.length_squared() or (a.length_squared() == b.length_squared() and (a.x < b.x or (a.x == b.x and a.y < b.y))))
+	# The nearest seam, as the eye sees it and then through the camcorder (D022).
+	for c in keys:
+		var done := false
+		for it in (chunks[c] as Level0Chunk).get_interest_points():
+			if it.has("seam"):
+				var sp: Vector3 = (it["seam"] as Vector3) + (chunks[c] as Level0Chunk).position
+				var pose := _pose_toward(sp, 3.0)
+				if not pose.is_empty():
+					out.append(pose)
+					var pc: Dictionary = pose.duplicate()
+					pc["camcorder"] = true
+					pc["settle"] = 3.0
+					out.append(pc)
+					# And from just inside the pocket, looking at what the crew left.
+					var pk: Vector3 = (it["pocket"] as Vector3) + (chunks[c] as Level0Chunk).position
+					var into := (pk - sp).normalized()
+					var ip := sp + into * 0.7
+					out.append({"pos": [ip.x, ip.z], "yaw": rad_to_deg(-atan2(-into.x, -into.z)), "pitch": -6.0, "settle": 2.5})
+					done = true
+					break
+		if done:
+			break
 	for c in keys:
 		var ch: Level0Chunk = chunks[c]
 		var L: Dictionary = ch.L

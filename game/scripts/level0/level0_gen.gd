@@ -194,6 +194,9 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"interest": [],
 		"gates": {},
 		"fidelity": fidelity,
+		"seams": [],
+		"worklights": [],
+		"graffiti": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -231,6 +234,8 @@ func generate(cx: int, cz: int) -> Dictionary:
 		max_depth = 4
 	for part in _highways(r, L, cx, cz, root_gaps, leaves):
 		_split(r, L, part[0], part[1], 0, max_depth, leaves)
+	# --- a seam (tape-only exit) into a sealed pocket, in about a third of the chunks
+	_pick_pocket_room(cx, cz, leaves, spawn_chunk)
 	# --- rooms, fixtures, pillars
 	for lf in leaves:
 		_furnish_room(r, L, lf, spawn_chunk)
@@ -244,7 +249,6 @@ func generate(cx: int, cz: int) -> Dictionary:
 			L["dark_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y])
 			dark_rooms += 1
 	# --- landmarks and splice errors
-	L["graffiti"] = []
 	_landmarks(r, L, leaves, spawn_chunk)
 	# Graffiti from earlier people (pipeline/manifests/graffiti_level0.json). Fair hints first:
 	# "TURN AROUND" just before a loop run, "LOOK THROUGH IT" near the start of the run.
@@ -593,10 +597,18 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 				L["pillars"].append([snappedf(x, MOD), snappedf(z, MOD), size, shape])
 				z += step
 			x += step
-	if kind == "room":
+	var focus := rr.get_center()
+	if lf.get("pocket", false):
+		# The random draws above still happen so the rest of the chunk keeps its sequence.
+		if kind == "hall":
+			kind = "room"
+			while L["pillars"].size() > 0 and rr.has_point(Vector2(L["pillars"][-1][0], L["pillars"][-1][1])):
+				L["pillars"].pop_back()
+		focus = _pocket(L, rr, spawn_chunk)
+	elif kind == "room":
 		_partitions(r, L, rr)
 	L["rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, kind])
-	L["interest"].append({"name": "%s_%d_%d" % [kind, int(rr.position.x * 10), int(rr.position.y * 10)], "p": [rr.get_center().x, rr.get_center().y]})
+	L["interest"].append({"name": "%s_%d_%d" % [kind, int(rr.position.x * 10), int(rr.position.y * 10)], "p": [focus.x, focus.y]})
 	if lf.get("highway", false):
 		# Long halls pull people along them: points every 6 m down the hall.
 		var long_x := rr.size.x > rr.size.y
@@ -648,6 +660,108 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			if blocked:
 				continue
 			L["fixtures"].append([px, pz, 1 if along_x else 0])
+
+
+## Seams (VISION "Exits", D022): about one chunk in three has a solid block standing in one of
+## its rooms, like a service core. One door-sized patch of its wall exists only for the naked eye:
+## through the camcorder it is not there, and you can walk through it into the sealed room inside,
+## where a survey crew left a camera on a tripod filming the wall under a work light. The spawn
+## chunk always has one, near the "LOOK THROUGH IT" chalk.
+const POCKET := 3
+
+
+func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> void:
+	var pr := _rng("pocket:%d:%d" % [cx, cz])
+	if not spawn_chunk and pr.randf() > 0.34:
+		return
+	var best: Dictionary = {}
+	var best_score := -1e9
+	for lf in leaves:
+		if lf.get("corridor", false):
+			continue
+		var rm: Rect2i = lf["m"]
+		if rm.size.x < POCKET + 2 or rm.size.y < POCKET + 2:
+			continue
+		var rr: Rect2 = lf["rect"]
+		if rr.has_point(Vector2(3.0, rr.get_center().y)) and spawn_chunk:
+			continue
+		# Near the start in the spawn chunk; otherwise any, seeded.
+		var score := -rr.get_center().distance_to(Vector2(10.0, 9.6)) if spawn_chunk else pr.randf()
+		if score > best_score:
+			best_score = score
+			best = lf
+	if not best.is_empty():
+		best["pocket"] = true
+
+
+## Builds the block, its seam and what is inside. Returns where a visitor would stand to look at
+## the seam (the room's interest point).
+func _pocket(L: Dictionary, rr: Rect2, spawn_chunk: bool) -> Vector2:
+	var pr := _rng("pocket:in:%d:%d" % [int(rr.position.x * 10), int(rr.position.y * 10)] + "%d" % L["chunk"][0] + ":%d" % L["chunk"][1])
+	var rm := Rect2i(Vector2i(roundi(rr.position.x / MOD), roundi(rr.position.y / MOD)), Vector2i(roundi(rr.size.x / MOD), roundi(rr.size.y / MOD)))
+	var kx := rm.position.x + 1 + pr.randi_range(0, rm.size.x - POCKET - 2)
+	var kz := rm.position.y + 1 + pr.randi_range(0, rm.size.y - POCKET - 2)
+	var x0 := kx * MOD
+	var z0 := kz * MOD
+	var ps := POCKET * MOD
+	var x1 := x0 + ps
+	var z1 := z0 + ps
+	# The seam faces the side with the most room in front of it.
+	var sides := [["W", x0 - rr.position.x], ["E", rr.end.x - x1], ["N", z0 - rr.position.y], ["S", rr.end.y - z1]]
+	var side := "W"
+	var room_in_front := -1.0
+	for sd in sides:
+		var v: float = sd[1] + pr.randf() * 0.1
+		if v > room_in_front:
+			room_in_front = v
+			side = sd[0]
+	var n: Vector2 = {"W": Vector2(-1, 0), "E": Vector2(1, 0), "N": Vector2(0, -1), "S": Vector2(0, 1)}[side]
+	# Four walls; the seam side in three pieces with the middle one left out (it is the seam).
+	var faces := {"N": [x0, z0, x1, z0], "S": [x0, z1, x1, z1], "W": [x0, z0, x0, z1], "E": [x1, z0, x1, z1]}
+	for f in faces:
+		var w: Array = faces[f]
+		if f != side:
+			L["walls"].append(w)
+			continue
+		var horiz: bool = f == "N" or f == "S"
+		var a: float = w[0] if horiz else w[1]
+		var line: float = w[1] if horiz else w[0]
+		for k in [0, 2]:
+			var s0: float = a + k * MOD
+			L["walls"].append([s0, line, s0 + MOD, line] if horiz else [line, s0, line, s0 + MOD])
+		var m0 := a + MOD
+		L["seams"].append({"wall": [m0, line, m0 + MOD, line] if horiz else [line, m0, line, m0 + MOD], "n": [n.x, n.y],
+			"pocket": [x0, z0, x1, z1]})
+	L["dark_zones"].append([x0, z0, x1, z1])
+	var c := Vector2((x0 + x1) * 0.5, (z0 + z1) * 0.5)
+	var seam_c := c + n * ps * 0.5
+	# Inside: the camera on its tripod filming the wall, a crate of tapes, a work light on the floor
+	# in a back corner throwing warm light up at it, and their marks on the walls.
+	var t := Vector2(-n.y, n.x)
+	var yaw_to_seam := rad_to_deg(atan2(n.x, n.y))
+	L["props"].append(["prop_tripod_camcorder", c.x - n.x * 0.35 + t.x * 0.3, c.y - n.y * 0.35 + t.y * 0.3, yaw_to_seam + pr.randf_range(-12, 12)])
+	var back := c - n * (ps * 0.5 - T * 0.5 - 0.3)
+	var side_s := 1.0 if pr.randf() < 0.5 else -1.0
+	var crate := back + t * side_s * (ps * 0.5 - 0.5)
+	L["props"].append(["prop_tape_crate", crate.x, crate.y, pr.randf_range(0, 360)])
+	L["props"].append(["prop_vhs_tape_sf", crate.x + n.x * 0.5 - t.x * side_s * 0.25, crate.y + n.y * 0.5 - t.y * side_s * 0.25, pr.randf_range(0, 360)])
+	var wl := back - t * side_s * (ps * 0.5 - 0.45) + n * 0.1
+	var aim := (seam_c + t * side_s * 0.4) - wl
+	L["worklights"].append([wl.x, wl.y, rad_to_deg(atan2(aim.x, aim.y))])
+	var back_wall := c - n * ps * 0.5 + n * T * 0.5
+	L["graffiti"].append(["hd_tape_label", back_wall.x + t.x * 0.6, back_wall.y + t.y * 0.6, n.x, n.y, 1.55])
+	var side_wall := c + t * side_s * (ps * 0.5 - T * 0.5)
+	L["graffiti"].append(["hd_survey", side_wall.x - n.x * 0.4, side_wall.y - n.y * 0.4, -t.x * side_s, -t.y * side_s, 1.2])
+	# Outside: sometimes someone traced the doorway in chalk, sometimes the crew marked it.
+	var hint := pr.randf()
+	var out_face := seam_c + n * T * 0.5
+	if spawn_chunk or hint < 0.4:
+		L["graffiti"].append(["chalk_door", out_face.x, out_face.y, n.x, n.y, 1.12, 1.7])
+	elif hint < 0.65:
+		L["graffiti"].append(["hd_survey", out_face.x + t.x * 1.15, out_face.y + t.y * 1.15, n.x, n.y, 1.25])
+	var look := seam_c + n * minf(2.2, room_in_front * 0.6)
+	L["interest"].append({"name": "seam_%d_%d" % [int(look.x * 10), int(look.y * 10)], "p": [look.x, look.y], "seam": [seam_c.x, seam_c.y], "pocket": [c.x, c.y]})
+	return look
 
 
 ## The x nearest `want` where a horizontal wall on line z has a solid run wide enough for a
@@ -875,7 +989,8 @@ func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_ch
 			var y0 := r.randf_range(0.9, 1.5)
 			L["shear_bands"].append([minf(a.x, b.x) - 0.15, minf(a.y, b.y) - 0.15, maxf(a.x, b.x) + 0.15, maxf(a.y, b.y) + 0.15, y0, y0 + r.randf_range(0.25, 0.5), 0.036])
 	# Graffiti on a couple of room walls.
-	var pieces := ["only_on_tape", "lights", "map_loop", "sigil", "exits", "gaps_child", "days", "we_are_copy", "handprints", "was_here", "same", "tally_copy"]
+	var pieces := ["only_on_tape", "lights", "map_loop", "sigil", "exits", "gaps_child", "days", "we_are_copy", "handprints", "was_here", "same", "tally_copy",
+		"film_walls", "missing_flyer", "calendar_oct96", "scrawl_small_1", "scrawl_small_2", "scrawl_small_3", "scrawl_small_4", "missing_flyer"]
 	for k in r.randi_range(0, 2):
 		var spg: Array = take_spot.call(2.4)
 		if spg.size() == 0:
@@ -886,6 +1001,8 @@ func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_ch
 			continue
 		var slug: String = pieces[r.randi() % pieces.size()]
 		var gy := r.randf_range(1.15, 1.6) if slug != "handprints" else r.randf_range(0.9, 1.3)
+		if slug in ["missing_flyer", "calendar_oct96"]:
+			gy = r.randf_range(1.45, 1.6)
 		L["graffiti"].append([slug, pg.x, pg.y, sg[2].x, sg[2].y, gy])
 	# Ordinary abandoned things.
 	var props := ["prop_office_chair_alt_sf", "prop_folding_chair_sf", "prop_crt_monitor_sf", "prop_cardboard_box_sf", "prop_cardboard_box"]

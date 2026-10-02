@@ -5,7 +5,7 @@ extends PlayerInput
 ## into dark rooms, hides crouched in corners, and films with the camcorder.
 ## Driven by the run seed, so a seed reproduces the same playthrough.
 
-enum Mode { WALK, PAUSE, HIDE }
+enum Mode { WALK, PAUSE, HIDE, SEAM }
 
 var space: Space
 var rng: RandomNumberGenerator
@@ -36,6 +36,13 @@ var _stuck_t := 0.0
 var _last_pos := Vector3.ZERO
 var _started := false
 var _heading := Vector3.FORWARD
+var _visited := {}         # chunk (Vector2i) -> seconds spent there
+var _seams_done := {}      # seam interest names already gone through
+var _seam: Dictionary = {}  # the seam being visited: look, seam, pocket (world)
+var _seam_step := 0
+var _seam_t := 0.0
+var _heading_t := 0.0
+var _relook_t := 0.0
 
 
 func _init() -> void:
@@ -60,13 +67,27 @@ func _pick_target(player: Player) -> void:
 			continue
 		var score := rng.randf() * (0.5 + minf(d, 18.0) / 18.0)
 		# In an endless level, keep a loose direction of travel so the walk actually goes
-		# somewhere instead of circling the start.
+		# somewhere instead of circling the start, and prefer places not seen yet.
 		if space.has_method("get_focus_shots"):
 			var to: Vector3 = (p["pos"] - player.global_position).normalized()
-			score *= 1.0 + 0.9 * maxf(0.0, to.dot(_heading))
+			score *= 1.0 + 1.2 * maxf(0.0, to.dot(_heading))
+			if to.dot(_heading) < -0.3:
+				score *= 0.35
+			var pc := Vector2i(floori(p["pos"].x / 24.0), floori(p["pos"].z / 24.0))
+			if not _visited.has(pc):
+				score *= 2.4
 			# A long hall running the way you are going is hard to resist.
 			if String(p["name"]).contains("hall_") and to.dot(_heading) > 0.8:
 				score *= 2.2
+			# Something that only shows on tape: a person who has learned that would go and look.
+			if p.has("seam") and not _seams_done.has(p["name"]) and d < 22.0:
+				score *= 25.0
+			# Inside a corridor that keeps repeating, a person keeps walking on for a while.
+			if space.has_method("loop_dir") and space.loop_dir() != 0:
+				if absf(p["pos"].z - player.global_position.z) > 3.0:
+					score *= 0.05
+				elif to.x * space.loop_dir() > 0.7:
+					score *= 4.0
 		if score > best_score:
 			best_score = score
 			best = p
@@ -74,10 +95,15 @@ func _pick_target(player: Player) -> void:
 		recent.clear()
 		return
 	target_name = best["name"]
+	if Game.opts.has("log-bot"):
+		print("[bot] t=%.1f target %s d=%.1f" % [Game.clock, target_name, player.global_position.distance_to(best["pos"])])
 	recent.append(target_name)
-	if recent.size() > 5:
+	if recent.size() > 12:
 		recent.pop_front()
-	var goal: Vector3 = best["pos"] + Vector3(rng.randf_range(-0.8, 0.8), 0, rng.randf_range(-0.8, 0.8))
+	_seam = {}
+	if best.has("seam") and not _seams_done.has(target_name):
+		_seam = {"name": target_name, "look": best["pos"], "seam": best["seam"], "pocket": best["pocket"]}
+	var goal: Vector3 = best["pos"] + (Vector3(rng.randf_range(-0.8, 0.8), 0, rng.randf_range(-0.8, 0.8)) if _seam.is_empty() else Vector3.ZERO)
 	path = space.find_path(player.global_position, goal)
 	path_i = 1 if path.size() > 1 else 0
 	_sneak = rng.randf() < 0.12 or target_name.contains("dark")
@@ -151,6 +177,30 @@ func update_move(player: Node, delta: float) -> void:
 	move = Vector2.ZERO
 	sprint = false
 	crouch = false
+	var here := Vector2i(floori(pl.global_position.x / 24.0), floori(pl.global_position.z / 24.0))
+	_visited[here] = float(_visited.get(here, 0.0)) + delta
+	# Every so often, or after lingering in one chunk, set off in a new direction (never straight back).
+	_heading_t += delta
+	if _heading_t > 45.0 or float(_visited[here]) > 40.0 and _heading_t > 15.0:
+		_heading_t = 0.0
+		var best_h := _heading
+		var best_s := -1.0
+		for k in 8:
+			var a := TAU * k / 8.0
+			var hd := Vector3(sin(a), 0.0, cos(a))
+			if hd.dot(_heading) < -0.5:
+				continue
+			var dep := space.view_depth(pl.global_position, yaw_of(hd), 30.0)
+			var ahead := Vector2i(floori((pl.global_position.x + hd.x * 30.0) / 24.0), floori((pl.global_position.z + hd.z * 30.0) / 24.0))
+			var sc := dep * rng.randf_range(0.6, 1.0) * (1.8 if not _visited.has(ahead) else 1.0)
+			if sc > best_s:
+				best_s = sc
+				best_h = hd
+		_heading = best_h
+
+	if mode == Mode.SEAM:
+		_update_seam(pl, delta)
+		return
 
 	_cam_cool -= delta
 	if _cam_left > 0.0:
@@ -161,6 +211,19 @@ func update_move(player: Node, delta: float) -> void:
 		_cam_left = rng.randf_range(4.0, 9.0)
 	camcorder = _cam_left > 0.0 and not Game.opts.has("nocam")
 
+	# Something only the tape shows: keep looking, lower the camera, raise it again (does it move?).
+	if space.attention_until > Game.clock and space.attention_kind == &"tape" and mode != Mode.HIDE:
+		var tt := space.attention_point - pl.global_position
+		_want_yaw = yaw_of(Vector3(tt.x, 0.0, tt.z))
+		_want_pitch = clampf(atan2(tt.y - 1.6, Vector2(tt.x, tt.z).length()) * 0.5, -0.1, 0.2)
+		_relook_t += delta
+		var cyc := fmod(_relook_t, 4.6)
+		camcorder = cyc < 3.2 and not Game.opts.has("nocam")
+		_sprint_left = 0.0
+		mode = Mode.WALK
+		path = PackedVector3Array()
+		return
+	_relook_t = 0.0
 	# Something happened (lights dying): stop and stare at it, like anyone would.
 	if space.attention_until > Game.clock and mode != Mode.HIDE:
 		var to := space.attention_point - pl.global_position
@@ -190,11 +253,16 @@ func update_move(player: Node, delta: float) -> void:
 
 	# WALK
 	if path.is_empty() or path_i >= path.size():
+		if not _seam.is_empty() and pl.global_position.distance_to(_seam["look"]) < 1.2:
+			mode = Mode.SEAM
+			_seam_step = 0
+			_seam_t = 0.0
+			return
 		var r := rng.randf()
-		if r < 0.28:
+		if r < 0.16:
 			_start_pause(pl)
 			return
-		elif r < 0.38:
+		elif r < 0.21:
 			_start_pause(pl, true)
 			return
 		_pick_target(pl)
@@ -249,6 +317,70 @@ func update_move(player: Node, delta: float) -> void:
 			path = PackedVector3Array()
 		_stuck_t = 0.0
 		_last_pos = pos
+
+
+## Going through a seam the way a player who knows the trick would: look at the wall, raise the
+## camcorder, see the opening, walk through it filming, look around inside, walk back out.
+func _update_seam(pl: Player, delta: float) -> void:
+	_seam_t += delta
+	var seam: Vector3 = _seam["seam"]
+	var pocket: Vector3 = _seam["pocket"]
+	match _seam_step:
+		0:   # look at the wall, then raise the camera
+			var to := seam - pl.global_position
+			_want_yaw = yaw_of(Vector3(to.x, 0.0, to.z))
+			_want_pitch = 0.02
+			camcorder = _seam_t > 1.4 and not Game.opts.has("nocam")
+			if _seam_t > 4.2:
+				path = space.find_path(pl.global_position, pocket)
+				path_i = 1 if path.size() > 1 else 0
+				_seam_step = 1
+				_seam_t = 0.0
+		1, 3:   # walk through, filming
+			camcorder = not Game.opts.has("nocam")
+			if path.is_empty() or path_i >= path.size() or _seam_t > 12.0:
+				_seam_step += 1
+				_seam_t = 0.0
+				if _seam_step == 4:
+					_seams_done[_seam["name"]] = true
+					_seam = {}
+					mode = Mode.WALK
+					path = PackedVector3Array()
+				return
+			_follow(pl)
+		2:   # inside: look around, lower the camera (the eye sees a sealed room), raise it again
+			var k := int(_seam_t / 1.6)
+			_want_yaw = pl.yaw + (0.9 if k % 2 == 0 else -0.9) * delta
+			_want_pitch = -0.05
+			camcorder = (_seam_t < 2.5 or _seam_t > 4.5) and not Game.opts.has("nocam")
+			if _seam_t > 6.5:
+				path = space.find_path(pl.global_position, _seam["look"])
+				path_i = 1 if path.size() > 1 else 0
+				_seam_step = 3
+				_seam_t = 0.0
+
+
+## Steps along the current path (shared by the walk and the seam visit).
+func _follow(pl: Player) -> void:
+	var pos := pl.global_position
+	if path_i >= path.size():
+		return
+	var wp := path[path_i]
+	var to := Vector3(wp.x - pos.x, 0.0, wp.z - pos.z)
+	if to.length() < 0.35:
+		path_i += 1
+		if path_i >= path.size():
+			return
+		wp = path[path_i]
+		to = Vector3(wp.x - pos.x, 0.0, wp.z - pos.z)
+	var dir := to.normalized()
+	var local := Basis(Vector3.UP, -pl.yaw) * dir
+	move = Vector2(local.x, -local.z) * clampf(1.25 - absf(angle_difference(pl.yaw, yaw_of(dir))), 0.25, 1.0) * 0.8
+	var ahead := _point_ahead(pos, 1.6)
+	var ld := Vector3(ahead.x - pos.x, 0.0, ahead.z - pos.z)
+	if ld.length() > 0.05:
+		_want_yaw = yaw_of(ld)
+	_want_pitch = -0.02
 
 
 ## A point about `dist` meters further along the current path.

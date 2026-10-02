@@ -13,6 +13,8 @@ extends Node3D
 ## and the light it stood under goes out.
 
 const LAYER_TAPE := 1 << 10
+## Render layer 12: things only the naked eye sees (the wall over a seam, D022).
+const LAYER_EYE := 1 << 11
 const MIN_DEPTH := 17.0
 const FIRST_AFTER := 8.0
 const COOLDOWN := 40.0
@@ -230,6 +232,10 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 
 
 func _update_hidden(cam_on: bool) -> void:
+	# Still worth staring at the spot (bots look again; a person would too).
+	space.attention_point = figure.global_position + Vector3(0, 1.7, 0)
+	space.attention_until = Game.clock + 0.5
+	space.attention_kind = &"tape"
 	if Game.clock - _hidden_at > RELOOK_WINDOW:
 		_end_encounter(false)
 		return
