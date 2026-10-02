@@ -690,7 +690,7 @@ async function main() {
 		const cc = pow( ce.div( 0.18 ), vec3( 1.12 ) ).mul( 0.18 ); // gentle filmic contrast around mid grey
 		return vec4( cc.mul( grain.add( 1.0 ) ), 1.0 );
 	} );
-	pipeline.outputNode = post();
+	pipeline.outputNode = PARAMS.has( 'passonly' ) ? vec4( colorT.rgb.mul( exposureU ), 1 ) : post();
 
 	// ------------------------------------------------------------------ per-frame state
 	const curLevels = new Float32Array( fixtures.length );
@@ -767,7 +767,12 @@ async function main() {
 	}
 
 	let frameNo = 0;
+	const nodeFrame = renderer._nodes.nodeFrame;
 	function render( dt = 1 / 30 ) {
+		// Fixed-step capture renders many frames inside one JS task, where the renderer's own rAF-driven frame
+		// counter does not advance; without this, per-frame passes (scene pass, TRAA, SSGI) only update once per task.
+		nodeFrame.update();
+		renderer.info.frame = nodeFrame.frameId;
 		assignPool();
 		updateExposure( dt, false );
 		frameU.value = ( frameNo ++ ) % 1000;

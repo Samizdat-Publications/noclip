@@ -62,7 +62,15 @@ Files: `index.html`, `src/main.js` (everything visual), `capture.mjs` (harness),
 
 ## Measured performance
 
-Final packet run (`review/archive/bakeoff/B/perf.json`): RTX 5070 Ti Laptop GPU, Chrome WebGPU, 2560x1440,
-40 s of the real-time track after 4 s warm-up: 38.2 fps average (26.2 ms), 1% low 23.5 fps, p99 frame 34.2 ms.
-Across this session the same measurement ranged from about 30 to 44 fps average (laptop clocks and Chrome's
-compositor both move it), so treat single runs as +/- 15%. Pool size is the main cost knob (`index.html?pool=20`).
+Perf stage re-run alone on an idle GPU (`review/archive/bakeoff/B/perf.json`): RTX 5070 Ti Laptop GPU, Chrome
+WebGPU, 2560x1440, 40 s of the real-time track after 4 s warm-up: 38.1 fps average (26.2 ms), 1% low 27.0 fps,
+p99 frame 33.7 ms. Earlier runs this session ranged from about 30 to 44 fps average, so treat single runs as
++/- 15%. Pool size is the main cost knob (`index.html?pool=20`).
+
+## Gotcha (fixed)
+
+The renderer's node frame counter only advances on its own requestAnimationFrame tick. The capture renders many
+frames inside one JS task, so per-frame passes (scene pass, TRAA, SSGI) ran only once per task, and every still
+showed the first warm-up frame (30 frames, about 1 s, earlier on the track) instead of the requested one.
+`render()` now calls `renderer._nodes.nodeFrame.update()` before each frame. Debug URL flags kept in `main.js`:
+`direct` (no post chain), `passonly`, `notaa`, `nograin`.

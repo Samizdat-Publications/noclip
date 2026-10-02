@@ -44,3 +44,11 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 ## D010 (2026-10-01, S01) An ambiguous organization: Halden Duplicating (placeholder name)
 - Stewart asked for suited people from the real world who work in the Backrooms, not quite on your side. The film's extraction team (a former MRI company) is its own organization, so ours is original and grows out of D009: a 1990s tape-duplication company whose clean-room crews (white suits, lab coats) study the place as a recording and hunt for the "master" deep down. They buy your recovered tapes (the hub trading loop, M5), but field teams also degauss sectors (lights and sound die, the Entity notices), sometimes leave supplies, sometimes lock doors behind you. Traces: tripod camcorders recording empty halls, labeled tape crates, chalk survey codes.
 - Revert: drop the organization from VISION; nothing in code depends on it yet.
+
+## D011 (2026-10-01, S01) Engine: Godot 4.7.2 Forward+ (bake-off won)
+- Blind A/B, same scene dump, same seed 4242, same camera track and frame times, camcorder off, judged separately by player-critic with the identical prompt (review/critiques/003_claude_bakeoff_A.md, 004_claude_bakeoff_B.md; side by side in progress/0026):
+  Build A (Godot, the early build 20261001-191043): First 5, Lighting 6, Shadows 5, Materials 6, Atmosphere 4, Camera 4, Surreal 4, Pace 3, Perf 4, Keep 4.
+  Build B (three.js r186 WebGPU, 67 + 25 min spike): First 5, Lighting 5, Shadows 4, Materials 5, Atmosphere 4, Camera 4, Surreal 4, Pace 4, Perf 4, Keep 5.
+- Godot wins all three look categories that decide this milestone (Lighting, Shadows, Materials). Perf at the time: A 39 fps, B 38 fps (idle GPU); Godot is now 66 fps after D007. Practical factors also favor Godot: real-time GI (SDFGI) and real shadow maps on procedural geometry (B needed a baked 2D irradiance map and 2D wall masks, which cannot handle stairs, portals, props or a monster's shadow), volumetric fog, Movie Maker deterministic capture with audio, native build.
+- Cost: no play-in-browser URL; the shareable link is an itch.io download page (M7). The spike stays in spike/threejs/ for reference.
+- Revert: only if a later three.js release gets real GI and shadows that beat Godot in a new blind test.

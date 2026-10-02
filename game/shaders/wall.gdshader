@@ -40,7 +40,8 @@ void fragment() {
 	vec3 alb = use_tex ? texture(albedo_tex, uv).rgb : base_color;
 	if (in_band > 0.5 && use_tex) {
 		// a little chroma slip inside the band, as on a bad dub
-		alb.r = texture(albedo_tex, uv + vec2(0.012, 0.0)).r;
+		alb.r = texture(albedo_tex, uv + vec2(0.03, 0.0)).r;
+		alb *= vec3(1.03, 0.98, 0.94);
 	}
 	alb = max(tex_mean + (alb - tex_mean) * pattern_contrast, vec3(0.0));
 	float rough = use_tex ? texture(rough_tex, uv).r : 0.68;
@@ -71,7 +72,7 @@ void fragment() {
 	alb *= mix(0.82, 1.0, smoothstep(0.0, 0.22, y));
 	alb *= mix(0.9, 1.0, smoothstep(ceiling_h, ceiling_h - 0.12, y));
 
-	alb = mix(alb, alb * 1.25 + vec3(0.02), band_edge * 0.6);
+	alb = mix(alb, alb * 1.12 + vec3(0.015), band_edge * 0.35);
 	ALBEDO = alb;
 	ROUGHNESS = rough;
 	AO = ao;

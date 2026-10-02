@@ -2,3 +2,4 @@ build_id,date,seed,critic,first_impression,lighting,shadows_depth,materials,atmo
 20261001-185732-96a370f,2026-10-01,4242,claude-A,6,6,5,6,5,6,4,NA,NA,5,4,5
 20261001-195213-338af5a,2026-10-01,575552,claude,6,6,6,6,5,7,4,NA,NA,4,5,5
 bakeoff-A-191043,2026-10-01,4242,claude-bakeoff-A,5,6,5,6,4,4,4,NA,NA,3,4,4
+bakeoff-B-threejs,2026-10-01,4242,claude-bakeoff-B,5,5,4,5,4,4,4,NA,NA,4,4,5
