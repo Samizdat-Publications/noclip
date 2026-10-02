@@ -60,6 +60,13 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L036 | 007 | gemini | hurts | Generic asset feel: wallpaper, tiles and doors look stock | DEFER M2/M3 | Needs more unique set dressing per area; the generator adds landmarks; revisit after the generated-level critique |
 | L037 | 007 | opus gate | nitpick | Exit lamp reads as a "sunset nightlight", not EXIT; the door under it opens onto a flat wall | FIX in S02 | Bigger, readable sign; in the generated level exit signs hang over real passages |
 | L038 | 007 | gemini | note | Sound N/A: Gemini said no audio track, but clip.mp4 has AAC audio (checked with ffprobe) | WATCH | Mix now -19.9 LUFS (was -26.5). If Gemini misses the audio again, send the audio as a separate file too |
+| L039 | 008 | claude | hurts | Everything is one yellow; no sense of place after five minutes; the red exit sign accent was missing from this set | FIX in S03 | Rooms with a different color temperature (cold replacement tubes, a sodium-orange room, a wrong-colored wall), exit signs more frequent near halls |
+| L040 | 008 | claude | hurts | The tape-only figure reads as a stiff, aliased mannequin, centered, barely moving | FIX in S03 | Off-center placement, a little closer each time, subtle sway and frame-skip motion, softer silhouette edge (keep it an absence, not a monster; M4 owns the Entity) |
+| L041 | 008 | claude | hurts | Big blank walls are dead space; wallpaper repeat too clean | FIX in S03 | More wall detail where the eye lands: tape marks, scuffs, posters removed (pale rectangles), water damage, more graffiti; macro variation of the pattern |
+| L042 | 008 | claude | hurts | Lit rooms evenly filled; want one pool of light and falloff | FIX in S03 | Fewer lit panels per room, more single-panel rooms, partial dead rows |
+| L043 | 008 | claude | hurts | The loop and the surreal hook are not legible in stills; wants one unmistakable "that is wrong" frame | FIX in S03 | Make the bot traverse the loop in captures (it turned back this run), a focus shot of the repeated chair/tally, scale-error rooms, more splices in view |
+| L044 | 008 | claude | nitpick | Orange cathode rims on dead tubes and the floor troffer look pasted on (no spill) | FIX in S03 | Small orange glow on adjacent tiles via the fixture field; floor troffer needs spill on carpet and a frame |
+| L045 | 008 | claude | nitpick | Crushed blacks in dark frames; a dead room can go fully black | FIX in S03 | Raise the floor of auto exposure / a little ambient in dead zones; every dead room keeps a weak source |
 
 ## Closed
 

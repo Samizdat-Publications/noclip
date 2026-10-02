@@ -3,7 +3,7 @@
 One milestone per session is the norm; big milestones may take two. Reorder or split freely, and log why in DECISIONS.md. Effort is the recommended Opus 5.5 effort for the session.
 
 ## M1: Foundation and look-dev (effort: xhigh)
-Status after S01: everything is built (engine chosen by blind bake-off, harness, both critics, hero slice). The exit criterion "Lighting and Atmosphere 7+" is not met yet: best was Lighting 7 / Atmosphere 6 in loop 3, and the gate gave 6/6 (Opus) and 3/4 (Gemini). S02 starts with the gate fixes listed in HANDOFF.
+Status after S02: CLOSED WITHOUT PASSING THE GATE (two honest attempts, D019). Everything is built (engine chosen by blind bake-off, harness, both critics, hero slice). Gate attempt 1 (S01): Opus 6/6, Gemini 3/4. Gate attempt 2 (S02, after the L021 to L029 fixes): Opus Lighting 6 / Atmosphere 5, Gemini 4/6. The named causes (nothing happens, the camcorder shows nothing, the 30 m slice repeats, flat fill) are M2 work and are re-judged in the M2 loops.
 - Environment check and installs (git, git LFS, Node, Python, ffmpeg, Blender, Godot 4.7.x, gh). Confirm GPU rendering works for captures.
 - Repo, LFS, .gitignore, layout from CLAUDE.md, private GitHub repo via gh.
 - Look-dev spike: the same hero slice of Level 0 (about 30 m x 30 m: corridors, one large open room, a doorway, fluorescent grid with dead and failing tubes, damp carpet, stained walls) in Godot Forward+ at final quality, and a time-boxed three.js WebGPU version (no more than a quarter of the session). Blind A/B by player-critic. Pick the engine; Godot wins ties.
@@ -12,6 +12,7 @@ Status after S01: everything is built (engine chosen by blind bake-off, harness,
 - Exit: harness runs end to end with one command; at least three critic loops on the hero slice; critic Lighting and Atmosphere at 7 or higher.
 
 ## M2: Infinite Level 0 and the non-euclidean toolkit (effort: xhigh)
+Status after S02 (started): infinite chunk-streamed Level 0 (Level0Gen BSP rooms, shared-edge connectivity, highways = long vanishing-point halls, pillar halls, dark rooms, splice errors incl. a troffer set into the floor), stepped deterministic streaming with a light pool, the loop corridor (identical sealed copies, silent repeat until you turn around), the tape-only figure (render layer 11), graffiti from earlier lost people (Gemini decals) with fair hints. Still to do: portal doorways / tape-only Seams (exits), overlapping spaces, unobserved rearrangement, impossible stairs, the four-right-turns loop, scale-error rooms, Stewart's layout language (plus-shaped columns, T/L partitions, wall fins, stepped walls), verify the loop jump on video, perf pass with streaming.
 - Seeded, chunk-streamed generator (room grammar, WFC, or graph-based; your call). S01 built Level 0 from code (MeshKit + shaders) rather than a Blender kit; keep that unless a kit clearly looks better.
 - Generation loss as a system (VISION, D009): a per-level `fidelity` dial driving splice errors (props clipped into walls and floors, looped-frame repeats, tracking-shear bands), detail loss and color bleed. Level 0 is generation 1.
 - Lighting that stays great when procedural: fixture grid grammar, dead-panel clusters, GI that keeps up with streaming, no light leaks.

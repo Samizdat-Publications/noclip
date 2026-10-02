@@ -85,11 +85,11 @@ def contact(files, out, cols=5, w=512, h=288):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=None)
-    ap.add_argument("--duration", type=float, default=95.0)
+    ap.add_argument("--duration", type=float, default=120.0)
     ap.add_argument("--stills", type=int, default=16)
     ap.add_argument("--sheets", type=int, default=4)
-    ap.add_argument("--focus", default="res://data/focus_review.json",
-                    help="focus shot list (res:// path); max 25%% of frames are used")
+    ap.add_argument("--focus", default="auto",
+                    help="focus shot list (res:// path), or 'auto' to let the level pick its landmarks; max 25%% of frames are used")
     ap.add_argument("--perf-seconds", type=float, default=40.0)
     ap.add_argument("--skip-perf", action="store_true")
     ap.add_argument("--extra", nargs="*", default=[], help="extra game args, e.g. preset=medium")
@@ -113,7 +113,9 @@ def main():
     focus_path = a.focus
     focus_local = os.path.join(paths.GAME, focus_path.replace("res://", "")) if focus_path.startswith("res://") else focus_path
     n_focus = 0
-    if os.path.exists(focus_local):
+    if focus_path == "auto":
+        n_focus = a.stills // 3
+    elif os.path.exists(focus_local):
         shots = json.load(open(focus_local, encoding="utf-8"))
         n_focus = min(len(shots), a.stills // 3)  # focus <= 25% of all frames
         if n_focus < len(shots):
@@ -127,7 +129,7 @@ def main():
     cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--write-movie", movie,
            "--fixed-fps", "30", "--disable-vsync", "--quit-after", str(frames_total), "--",
            f"--seed={seed}", f"--capture={raw}", f"--duration={a.duration}", f"--stills={a.stills}",
-           f"--sheets={a.sheets}"] + ([f"--focus={focus_path}"] if n_focus else []) + extra
+           f"--sheets={a.sheets}"] + ([f"--focus={focus_path}", f"--focus_n={n_focus}"] if n_focus else []) + extra
     r, out = run(cmd, 3600, "movie run")
     open(os.path.join(raw, "movie_log.txt"), "w", encoding="utf-8").write(out)
     stills = sorted(glob.glob(os.path.join(raw, "stills", "s_*.png")))

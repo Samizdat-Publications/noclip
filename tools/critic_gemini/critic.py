@@ -133,8 +133,11 @@ def main():
     tout = (getattr(um, "candidates_token_count", 0) or 0) + (getattr(um, "thoughts_token_count", 0) or 0)
     pin, pout = PRICES["flash" if "flash" in model else "pro"]
     cost = tin / 1e6 * pin + tout / 1e6 * pout
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import progress  # the session number comes from docs/HANDOFF.md
+    sess = f"S{progress.DEFAULT_SESSION:02d}"
     with open(SPEND, "a", encoding="utf-8", newline="\n") as s:
-        s.write(f"| {dt.date.today().isoformat()} | auto | Gemini ({model}) | video critic -> {os.path.basename(a.out)} | 1 | ${cost:.2f} ({tin} in / {tout} out tokens) |\n")
+        s.write(f"| {dt.date.today().isoformat()} | {sess} | Gemini ({model}) | video critic -> {os.path.basename(a.out)} | 1 | ${cost:.2f} ({tin} in / {tout} out tokens) |\n")
     print(f"[gemini] saved {a.out} ({len(text)} chars), est ${cost:.2f}")
 
 

@@ -284,6 +284,15 @@ func _build_walls(kit: MeshKit) -> void:
 	_build_outlets(kit)
 	for p in L["pillars"]:
 		var s: float = p[2]
+		if p.size() > 3 and p[3] == "plus":
+			# A cross-shaped column: two slabs crossing, each a third as thick as it is wide.
+			var th := s / 3.0
+			for slab in [Vector2(s, th), Vector2(th, s)]:
+				kit.box("wall", Vector3(p[0] - slab.x * 0.5, 0.0, p[1] - slab.y * 0.5), Vector3(p[0] + slab.x * 0.5, H, p[1] + slab.y * 0.5), MeshKit.SIDES, H)
+				var qb := Vector2(slab.x * 0.5 + 0.012, slab.y * 0.5 + 0.012)
+				kit.box("baseboard", Vector3(p[0] - qb.x, 0.0, p[1] - qb.y), Vector3(p[0] + qb.x, 0.1, p[1] + qb.y), MeshKit.SIDES | MeshKit.PY, 0.1)
+			_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.6])
+			continue
 		kit.box("wall", Vector3(p[0] - s * 0.5, 0.0, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, H, p[1] + s * 0.5), MeshKit.SIDES, H)
 		# Soft occlusion on the carpet around each column, so it stands on the floor (L032).
 		_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.62])

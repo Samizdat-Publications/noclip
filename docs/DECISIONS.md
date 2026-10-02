@@ -73,3 +73,16 @@ Newest at the bottom. Each entry: choice, alternatives, why, how to revert.
 
 ## D016 (2026-10-01, S02) Layout language from Stewart's floor-plan reference, not its layout
 - Stewart shared a hand-drawn floor plan from the film's promotional material. We use only general design language (stepped walls, plus-shaped columns, T/L partitions, fins, perimeter corridors, service cores, dead ends), never its layout or landmarks (CLAUDE.md IP rule). Notes: docs/reference/map_inspiration_s02.md.
+
+## D017 (2026-10-02, S02) The loop corridor: identical sealed copies plus a silent one-copy jump
+- Choice: on some highway rows a run of four chunks is built from one template (same layout, same random streams, wallpaper UVs and shader patterns offset back to the template). The run is sealed except for the hall. Walking on in the direction you entered, Level0World moves the player back one copy (24 m) when they step into the third copy; lights and hum lent to the panels around them are carried to the twin panels so they do not restart. Looking back down the hall for 1.5 s, or walking back 6 m, after at least one repeat releases the loop. The way in is always open, so it can never trap anyone. "TURN AROUND" graffiti sits just before each run (a fair hint); tally marks reading COPY 31 and a spiral of SAME repeat in every copy.
+- Alternatives: render-to-texture portals (Godot 4.7 has no oblique near plane, double tonemapping and fog to solve), moving the world instead of the camera (keeps temporal effects stable but every streamed position and shader pattern must carry a global offset; the fallback if the jump shows in review).
+- Known risk: temporal effects (TAA history, volumetric fog reprojection, SDFGI cascade scroll) can show for a frame or two at the jump; fog reprojection is disabled for two frames as mitigation. Verify on video.
+- Revert: Level0Gen.loop_start returns 1 << 20.
+
+## D018 (2026-10-02, S02) Things that exist only on tape: render layer 11
+- The player camera draws render layer 11 only while the camcorder is up. The first tenant is the figure at the end of the hall (TapeEvents): it appears under a lit panel 12 to 22 m down a long open view, at most three times a run, gone when the camera comes down or you walk toward it; the only naked-eye tell is the panel above it stuttering. This answers the top complaint of both gate critics (L031) and VISION's "the camera sees what you can't". The Entity proper is still M4; this figure must stay an absence (black, faceless, glitching), never a chasing monster.
+- Revert: remove TapeEvents from Level0World.
+
+## D019 (2026-10-02, S02) M1 gate: two honest attempts failed; remaining issues roll into M2
+- Gate attempt 2 (build 20261001-225950, critiques 007): Opus Lighting 6 / Atmosphere 5, Gemini 4 / 6 (attempt 1: 6/6 and 3/4). Per CLAUDE.md the milestone ends after two honest failed attempts. The causes both critics named (nothing happens, the camcorder shows nothing, the 30 m slice repeats, flat fill) are M2 work (generated level, tape-only figure, loops, darker fill) and are judged again in the M2 critic loops; the hero slice stays as a reference scene (`--hero`).

@@ -579,13 +579,18 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 	if not corridor and rr.size.x >= 7.0 and rr.size.y >= 7.0 and r.randf() < 0.55:
 		kind = "hall"
 		var step := 3.6 if r.randf() < 0.5 else 4.8
+		# Some halls have cross-shaped columns (layout language, D016).
+		var shape := "plus" if r.randf() < 0.4 else "square"
+		var size := 0.9 if shape == "plus" else 0.6
 		var x := rr.position.x + step
 		while x < rr.end.x - 1.6:
 			var z := rr.position.y + step
 			while z < rr.end.y - 1.6:
-				L["pillars"].append([snappedf(x, MOD), snappedf(z, MOD), 0.6])
+				L["pillars"].append([snappedf(x, MOD), snappedf(z, MOD), size, shape])
 				z += step
 			x += step
+	if kind == "room":
+		_partitions(r, L, rr)
 	L["rooms"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, kind])
 	L["interest"].append({"name": "%s_%d_%d" % [kind, int(rr.position.x * 10), int(rr.position.y * 10)], "p": [rr.get_center().x, rr.get_center().y]})
 	if lf.get("highway", false):
@@ -631,6 +636,11 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			for p in L["pillars"]:
 				if absf(px - p[0]) < ex + 0.45 and absf(pz - p[1]) < ez + 0.45:
 					blocked = true
+			var frect := Rect2(px - ex - 0.15, pz - ez - 0.15, 2.0 * ex + 0.3, 2.0 * ez + 0.3)
+			for w in L["walls"]:
+				var wr := Rect2(minf(w[0], w[2]) - 0.1, minf(w[1], w[3]) - 0.1, absf(w[2] - w[0]) + 0.2, absf(w[3] - w[1]) + 0.2)
+				if wr.intersects(frect):
+					blocked = true
 			if blocked:
 				continue
 			L["fixtures"].append([px, pz, 1 if along_x else 0])
@@ -653,6 +663,43 @@ func _wall_run_x(L: Dictionary, want: float, z: float, w: float) -> float:
 			bd = absf(x - want)
 			best = x
 	return best
+
+
+## Free-standing L and T partitions in big rooms, and short fins off long walls (layout language
+## from Stewart's floor-plan reference, D016). Partitions keep 1.2 m clear of every room wall, so
+## they never cut the room off; fins are short and only in deep rooms.
+func _partitions(r: RandomNumberGenerator, L: Dictionary, rr: Rect2) -> void:
+	if rr.size.x >= 7.2 and rr.size.y >= 7.2 and r.randf() < 0.4:
+		var cx := snappedf(rr.position.x + rr.size.x * r.randf_range(0.35, 0.65), MOD)
+		var cz := snappedf(rr.position.y + rr.size.y * r.randf_range(0.35, 0.65), MOD)
+		var ax := MOD * r.randi_range(2, 3) * (1.0 if r.randf() < 0.5 else -1.0)
+		var az := MOD * r.randi_range(2, 3) * (1.0 if r.randf() < 0.5 else -1.0)
+		var inner := rr.grow(-1.2)
+		if inner.has_point(Vector2(cx + ax, cz)) and inner.has_point(Vector2(cx, cz + az)) and inner.has_point(Vector2(cx, cz)):
+			L["walls"].append([minf(cx, cx + ax), cz, maxf(cx, cx + ax), cz])
+			L["walls"].append([cx, minf(cz, cz + az), cx, maxf(cz, cz + az)])
+			if r.randf() < 0.4 and inner.has_point(Vector2(cx - ax * 0.5, cz)):
+				# A T: the bar continues past the corner.
+				L["walls"][-2] = [minf(cx - ax * 0.5, cx + ax), cz, maxf(cx - ax * 0.5, cx + ax), cz]
+	# Fins: a short stub of wall standing out from a long wall, every few meters.
+	if minf(rr.size.x, rr.size.y) >= 4.8 and r.randf() < 0.3:
+		var along_x := rr.size.x >= rr.size.y
+		var z0 := rr.position.y if r.randf() < 0.5 else rr.end.y
+		var x0 := rr.position.x if r.randf() < 0.5 else rr.end.x
+		var length := MOD * r.randi_range(1, 2)
+		var t := 2.4
+		while t < (rr.size.x if along_x else rr.size.y) - 2.0:
+			if along_x:
+				var x := snappedf(rr.position.x + t, MOD)
+				var d := length if z0 == rr.position.y else -length
+				if not _near_door(L, Vector2(x, z0 + d * 0.5), 1.4):
+					L["walls"].append([x, minf(z0, z0 + d), x, maxf(z0, z0 + d)])
+			else:
+				var z := snappedf(rr.position.y + t, MOD)
+				var d2 := length if x0 == rr.position.x else -length
+				if not _near_door(L, Vector2(x0 + d2 * 0.5, z), 1.4):
+					L["walls"].append([minf(x0, x0 + d2), z, maxf(x0, x0 + d2), z])
+			t += MOD * r.randi_range(3, 5)
 
 
 func _spawn_point(L: Dictionary, leaves: Array) -> Array:
