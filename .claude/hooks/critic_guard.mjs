@@ -16,6 +16,7 @@ process.stdin.on("end", () => {
   }
 
   const tool = input.tool_name || "";
+  if (tool === "SubagentHandback") allow();
   const ti = input.tool_input || {};
   const cwd = input.cwd || process.cwd();
   const inbox = norm(path.resolve(cwd, "review", "inbox"));

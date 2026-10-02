@@ -1956,6 +1956,9 @@ func get_interest_points() -> Array:
 		if it.has("seam"):
 			e["seam"] = Vector3(it["seam"][0], 0.0, it["seam"][1])
 			e["pocket"] = Vector3(it["pocket"][0], 0.0, it["pocket"][1])
+		if it.has("closet"):
+			e["closet"] = Vector3(it["closet"][0], 0.0, it["closet"][1])
+			e["n"] = Vector3(it["n"][0], 0.0, it["n"][1])
 		out.append(e)
 	return out
 

@@ -137,7 +137,8 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L110 | 018 | claude | hurts | Bright evenly lit rooms go flat and tinted while dark ones are great; too big a gap between them | DEFER M3.5 | Fewer lit panels in big rooms, dark gaps between pools (same family as L093) |
 | L111 | 018 | claude | nitpick | Mop bucket reads as a flat glowing yellow blob | FIX next session | Check its material (unlit or emissive by mistake) |
 | L112 | 018 | gemini | nitpick | Hard boundary into a dark room instead of a falloff; footsteps sound hard, not squishy | DEFER M3.5 | Light the first meters of a dark room from the doorway; louder squish layer |
-| L113 | stewart+018 | stewart, gemini | hurts | No truly impossible space yet: Stewart wants small rooms that are giant inside and loop back; Gemini 018 "break away from the standard Backrooms layout" | FIX S04 (M2b, D034) | Portal doorways with seamless crossing, a bigger-inside room, a paradox exit |
+| L113 | stewart+018 | stewart, gemini | hurts | No truly impossible space yet: Stewart wants small rooms that are giant inside and loop back; Gemini 018 "break away from the standard Backrooms layout" | FIX S04 (D036) | Storeroom portals into a 72 m pillar hall, far door back out of the storeroom; crossing filmed seamless (progress/0134-0136). Awaiting critique |
+| L114 | S04 builder | claude | hurts | A doorway on screen costs about 3.5 ms at 1440p (a second render of the far side) | DEFER M3.5 | Render the far side only inside the doorway (scissor via a smaller camera frustum), skip SDFGI there, or update at half rate when far |
 
 ## Closed
 

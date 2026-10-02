@@ -30,6 +30,15 @@ var tape: TapeEvents
 var rearranger: Rearranger
 var _player := Vector3.ZERO
 var _stream_t := 0.0
+# Rooms bigger inside than outside (M2b, D036): "cx:cz" -> PortalRoom, built under the level
+# while their storeroom's chunk is loaded.
+var rooms := {}
+var _closets := {}               # "cx:cz" -> [chunk coord, closet dict]: storerooms of loaded chunks
+const ROOM_R := 36.0             # a hall is built when you come this near its storeroom
+var current_room: PortalRoom = null
+var portal_jumps := 0
+var _last_eye := Vector3.ZERO
+var _have_eye := false
 var build_log: Array = []     # [frame, coord, step, msec] for profiling
 
 
@@ -59,6 +68,7 @@ func build(p_seed: int) -> void:
 	_player = start
 	for c in _wanted(start):
 		_build_now(c)
+	_finish_rooms()
 	_player = get_spawn_transform().origin
 
 
@@ -117,6 +127,8 @@ func _build_now(c: Vector2i) -> void:
 
 func _finish(c: Vector2i, ch: Level0Chunk) -> void:
 	chunks[c] = ch
+	for cl in ch.L.get("closets", []):
+		_closets["%d:%d" % [c.x, c.y]] = [c, cl]
 	for fx in ch.fixtures:
 		director.fixtures.append(fx)
 		if fx.mount == Fixture.Mount.CEILING:
@@ -142,11 +154,53 @@ func prepare_view(p: Vector3) -> void:
 		if not chunks.has(c):
 			_build_now(c)
 	_queue.clear()
+	_finish_rooms()
 	pool.listener = p
 	director.listener = p
 
 
+## Starts a hall for every storeroom near p that has none yet, each at a depth no built hall
+## overlapping its ground plan is using.
+func _spawn_rooms(p: Vector3) -> void:
+	for key in _closets.keys():
+		if rooms.has(key):
+			continue
+		var c: Vector2i = _closets[key][0]
+		var cl: Dictionary = _closets[key][1]
+		var d: Vector2 = cl["door"]
+		var dw := Vector3(c.x * CHUNK + d.x, 0.0, c.y * CHUNK + d.y)
+		if Vector2(p.x - dw.x, p.z - dw.z).length() > ROOM_R:
+			continue
+		var fp := PortalRoom.footprint(dw, cl["n"])
+		var used := {}
+		for other in rooms.values():
+			if (other as PortalRoom).plan_rect.intersects(fp):
+				used[(other as PortalRoom).depth_index] = true
+		var depth := 0
+		while used.has(depth) and depth < PortalRoom.DEPTHS.size() - 1:
+			depth += 1
+		var room := PortalRoom.new()
+		add_child(room)
+		room.setup(self, c, cl, "pk%d_%d:" % [c.x, c.y], depth)
+		rooms[key] = room
+
+
+## Builds every hall that is still waiting (a loading moment).
+func _finish_rooms() -> void:
+	_spawn_rooms(_player)
+	for room in rooms.values():
+		while not (room as PortalRoom).step():
+			pass
+
+
 func _unload(c: Vector2i) -> void:
+	var key := "%d:%d" % [c.x, c.y]
+	if rooms.has(key):
+		if rooms[key] == current_room:
+			return    # never pull the floor out from under you
+		(rooms[key] as PortalRoom).queue_free()
+		rooms.erase(key)
+	_closets.erase(key)
 	var ch: Level0Chunk = chunks[c]
 	for fx in ch.fixtures:
 		pool.release(fx)
@@ -157,6 +211,7 @@ func _unload(c: Vector2i) -> void:
 
 
 func _stream() -> void:
+	_spawn_rooms(_player)
 	var p2 := Vector2(_player.x, _player.z)
 	# Free what is far behind.
 	for c in chunks.keys():
@@ -196,6 +251,12 @@ func _process(delta: float) -> void:
 	if _stream_t <= 0.0:
 		_stream_t = 0.25
 		_stream()
+	# A hall builds a step at a time when the level has nothing to build this frame.
+	if _steps.is_empty() and _queue.is_empty() and _building_chunk == null:
+		for room in rooms.values():
+			if not (room as PortalRoom).built:
+				(room as PortalRoom).step()
+				break
 	for k in STEPS_PER_FRAME:
 		if _steps.is_empty():
 			if _building_chunk:
@@ -255,6 +316,8 @@ func make_camera_attributes() -> CameraAttributes:
 
 
 func is_walkable(p: Vector3) -> bool:
+	if current_room and current_room.contains(p):
+		return current_room.is_walkable(p)
 	var ch := _chunk_at(p)
 	return ch != null and ch.is_walkable(_local(ch, p))
 
@@ -288,6 +351,9 @@ func get_interest_points() -> Array:
 				if it.has("seam"):
 					e["seam"] = (it["seam"] as Vector3) + ch.position
 					e["pocket"] = (it["pocket"] as Vector3) + ch.position
+				if it.has("closet"):
+					e["closet"] = (it["closet"] as Vector3) + ch.position
+					e["n"] = it["n"]
 				out.append(e)
 	return out
 
@@ -439,7 +505,23 @@ func _check_seam(p: Vector3) -> void:
 	_in_seam = inside
 
 
+## The figure on tape never follows you into a hall.
+func tape_allowed() -> bool:
+	return current_room == null
+
+
 func set_listener(p: Vector3) -> void:
+	if _check_portals(p):
+		p = player_ref.global_position
+	_update_rooms(p)
+	if current_room:
+		# In a hall: the level keeps streaming and lighting round its storeroom (the way out).
+		var nn := Vector3(current_room.n.x, 0.0, current_room.n.y)
+		var focus := current_room.door_world + nn * 2.0
+		_player = focus
+		pool.listener = focus
+		director.listener = focus
+		return
 	_check_seam(p)
 	if _update_loop(p, get_physics_process_delta_time()):
 		p = player_ref.global_position
@@ -449,6 +531,83 @@ func set_listener(p: Vector3) -> void:
 	_player = p
 	pool.listener = p
 	director.listener = p
+
+
+# ------------------------------------------------------------------ portals (D036)
+
+## The eye point between two physics ticks passing through a portal opening: move the player
+## (and anything carried) to the far side. Returns true if it did.
+func _check_portals(p: Vector3) -> bool:
+	if player_ref == null:
+		return false
+	var eye := p + Vector3(0, 1.5, 0)
+	if not _have_eye or eye.distance_to(_last_eye) > 2.0:
+		_last_eye = eye
+		_have_eye = true
+		return false
+	for room in rooms.values():
+		var rm := room as PortalRoom
+		if not rm.built:
+			continue
+		for po in rm.portals():
+			if po.crossed(_last_eye, eye):
+				_portal_jump(rm, po)
+				_last_eye = player_ref.global_position + Vector3(0, 1.5, 0)
+				return true
+	_last_eye = eye
+	return false
+
+
+func _portal_jump(rm: PortalRoom, po: Portal) -> void:
+	var M := po.mapping()
+	var pl := player_ref
+	var dyaw := M.basis.get_euler().y
+	pl.global_position = M * pl.global_position
+	pl.yaw += dyaw
+	pl.velocity = M.basis * pl.velocity
+	pl.reset_physics_interpolation()
+	if pl.input is AutoplayBot:
+		(pl.input as AutoplayBot).shift_xf(M, dyaw)
+	if tape.figure and tape.figure.visible:
+		tape.figure.visible = false
+	portal_jumps += 1
+	_update_rooms(pl.global_position)
+	# Unlike a loop repeat, the view on both sides of a portal is the same picture, so the haze's
+	# memory of the last frames is kept (dropping it darkened the haze for a few frames, S04).
+	if Game.opts.has("portal_fog_reset"):
+		_temporal_reset = 2
+		var we := get_tree().root.find_child("WorldEnvironment", true, false) as WorldEnvironment
+		if we and we.environment:
+			we.environment.volumetric_fog_temporal_reprojection_enabled = false
+	if Game.opts.has("log-stream") or Game.opts.has("log-portal"):
+		print("[portal] t=%.2f %s through %s -> %s room=%s" % [Game.clock, rm.key, po.name, pl.global_position, current_room != null])
+
+
+## Which hall you are in (if any), what the camera shows, and which hall pools are lit.
+func _update_rooms(p: Vector3) -> void:
+	var r: PortalRoom = null
+	for room in rooms.values():
+		var rm := room as PortalRoom
+		if rm.built and rm.contains(p):
+			r = rm
+			break
+	if r != current_room:
+		current_room = r
+		if player_ref:
+			player_ref.hide_layers = PortalRoom.LEVEL if r else PortalRoom.POCKET
+	for room in rooms.values():
+		var rm := room as PortalRoom
+		if not rm.built or rm.portal_in == null:
+			rm.pool.enabled = false
+			continue
+		if rm == current_room:
+			rm.pool.enabled = true
+			rm.pool.listener = p
+			continue
+		var near := Vector2(p.x - rm.door_world.x, p.z - rm.door_world.z).length() < 30.0 and absf(p.y - rm.door_world.y) < 3.0
+		rm.pool.enabled = near
+		if near:
+			rm.pool.listener = rm.portal_in.mapping() * p
 
 
 func attach_player(p: Player) -> void:
@@ -478,6 +637,8 @@ func set_view(_p: Vector3, fwd: Vector3) -> void:
 ## Path across chunks: a breadth-first search over loaded chunks, then the grid path inside each
 ## chunk to a crossing point on the shared edge (a gate both sides can stand in).
 func find_path(from: Vector3, to: Vector3) -> PackedVector3Array:
+	if current_room and current_room.contains(from):
+		return PackedVector3Array([from, to])
 	var ca := chunk_of(from)
 	var cb := chunk_of(to)
 	if not chunks.has(ca) or not chunks.has(cb):
@@ -503,6 +664,8 @@ func find_path(from: Vector3, to: Vector3) -> PackedVector3Array:
 			target = cross[0]
 			next_start = cross[1]
 		var part := ch.find_path(_local(ch, cur), _local(ch, target))
+		if part.is_empty() and Game.opts.has("log-bot"):
+			print("[path] no way inside chunk %s from %s to %s" % [c, _local(ch, cur), _local(ch, target)])
 		for q in part:
 			out.append(q + ch.position)
 		if i < seq.size() - 1:
@@ -598,6 +761,26 @@ func get_focus_shots(n: int = 8) -> Array:
 					break
 		if done:
 			break
+	# The nearest storeroom (D036): its doorway from the room, then inside its hall, looking back
+	# at the little door in the huge wall, and down the aisle.
+	var cl_key := ""
+	var cl_d := 1e9
+	for key in _closets.keys():
+		var cc: Vector2i = _closets[key][0]
+		var dd: Vector2 = _closets[key][1]["door"]
+		var dist := Vector2(cc.x * CHUNK + dd.x, cc.y * CHUNK + dd.y).distance_to(Vector2(spawn_xf.origin.x, spawn_xf.origin.z))
+		if dist < cl_d:
+			cl_d = dist
+			cl_key = key
+	if cl_key != "":
+		var c0: Vector2i = _closets[cl_key][0]
+		var cl0: Dictionary = _closets[cl_key][1]
+		var dw := Vector3(c0.x * CHUNK + cl0["door"].x, 0.0, c0.y * CHUNK + cl0["door"].y)
+		var n3 := Vector3(cl0["n"].x, 0.0, cl0["n"].y)
+		var lp := dw + n3 * 3.2
+		out.append({"pos": [lp.x, lp.z], "yaw": rad_to_deg(-atan2(n3.x, n3.z)), "pitch": 3.0, "settle": 3.0})
+		out.append({"room": cl_key, "local": [16.0, 36.0], "face": [-1.0, 0.0], "pitch": 3.0, "settle": 3.5, "anchor": [dw.x, dw.z], "pos": [dw.x, dw.z]})
+		out.append({"room": cl_key, "local": [2.6, 37.2], "face": [1.0, -0.05], "pitch": 7.0, "settle": 3.5, "anchor": [dw.x, dw.z], "pos": [dw.x, dw.z]})
 	# The nearest room copied at the wrong scale (D023), looking up at its ceiling.
 	for c in keys:
 		var trs: Array = (chunks[c] as Level0Chunk).L.get("tall_rooms", [])
@@ -645,6 +828,36 @@ func get_focus_shots(n: int = 8) -> Array:
 
 
 ## A standing spot 2.5 to 4 m from target with a clear line of sight, looking at it.
+## Debug start inside a storeroom's hall: loads the level round its storeroom, builds the hall
+## and returns where to stand (hall-local x, z) facing hall-local direction `face`.
+func room_spawn(key: String, lx: float, lz: float, face: Vector2) -> Transform3D:
+	if not _closets.has(key):
+		return get_spawn_transform()
+	var c: Vector2i = _closets[key][0]
+	var d: Vector2 = _closets[key][1]["door"]
+	prepare_view(Vector3(c.x * CHUNK + d.x, 0.0, c.y * CHUNK + d.y))
+	var g := resolve_focus({"room": key, "local": [lx, lz], "face": [face.x, face.y], "pos": [0, 0]})
+	var p: Array = g["pos"]
+	return Transform3D(Basis(Vector3.UP, -deg_to_rad(float(g["yaw"]))), Vector3(p[0], float(g.get("y", 0.0)), p[1]))
+
+
+## A focus shot placed inside a storeroom's hall ({"room": key, "local": [x, z], "face": [x, z]}
+## in hall-local meters) turned into a world position, height and yaw, once the hall is built.
+func resolve_focus(f: Dictionary) -> Dictionary:
+	if not f.has("room") or not rooms.has(String(f["room"])):
+		return f
+	var rm: PortalRoom = rooms[String(f["room"])]
+	var l: Array = f["local"]
+	var fc: Array = f.get("face", [1.0, 0.0])
+	var p := rm.global_transform * Vector3(l[0], 0.0, l[1])
+	var d := rm.global_transform.basis * Vector3(fc[0], 0.0, fc[1])
+	var g := f.duplicate()
+	g["pos"] = [p.x, p.z]
+	g["y"] = p.y
+	g["yaw"] = rad_to_deg(-atan2(-d.x, -d.z))
+	return g
+
+
 func _pose_toward(target: Vector3, pitch: float) -> Dictionary:
 	for dist in [3.2, 2.6, 4.0]:
 		for k in 8:

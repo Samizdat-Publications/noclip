@@ -20,6 +20,10 @@ var cam: Camera3D
 var camcorder: Camcorder
 var yaw := 0.0
 var pitch := 0.0
+## Render layers of the space you are not in (the hall under a storeroom, or the level above it,
+## PortalRoom / D036). The held camcorder lives on its own layer so it shows in both.
+var hide_layers := 1 << 12
+const VIEW_LAYER := 1 << 14
 var base_fov := 70.0   # 78 stretched the walls at the screen edges (critique 006, L024)
 
 var _eye := EYE
@@ -80,6 +84,7 @@ func _ready() -> void:
 func _prep_viewmodel(n: Node) -> void:
 	if n is GeometryInstance3D:
 		var g := n as GeometryInstance3D
+		g.layers = VIEW_LAYER
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		g.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 		g.extra_cull_margin = 1.0
@@ -252,6 +257,6 @@ func _process(delta: float) -> void:
 	cam.global_transform = Transform3D(b, t.origin + Vector3(0.0, _eye + bob_v, 0.0) + right * bob_h)
 	# Render layer 11 holds what exists only on tape (TapeEvents); the eye never draws it.
 	# Layer 12 holds what only the eye sees (the wall over a seam, D022); the tape never draws it.
-	cam.cull_mask = (0xFFFFF & ~TapeEvents.LAYER_EYE) if camcorder.active else (0xFFFFF & ~TapeEvents.LAYER_TAPE)
+	cam.cull_mask = ((0xFFFFF & ~TapeEvents.LAYER_EYE) if camcorder.active else (0xFFFFF & ~TapeEvents.LAYER_TAPE)) & ~hide_layers
 	var target_fov := camcorder.fov if camcorder.active else base_fov
 	cam.fov = lerpf(cam.fov, target_fov, 1.0 - exp(-9.0 * delta))

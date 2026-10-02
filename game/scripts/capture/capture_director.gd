@@ -81,10 +81,14 @@ func _run_focus(delta: float) -> void:
 		var hold := FocusHold.new()
 		hold.camcorder = bool(f.get("camcorder", false))
 		player.input = hold
-		var p: Array = f["pos"]
+		var anchor: Array = f.get("anchor", f["pos"])   # a shot inside a hall loads the level round its storeroom
 		if player.space.has_method("prepare_view"):
-			player.space.prepare_view(Vector3(p[0], 0.0, p[1]))
-		player.spawn(Transform3D(Basis(Vector3.UP, -deg_to_rad(float(f.get("yaw", 0.0)))), Vector3(p[0], 0.0, p[1])))
+			player.space.prepare_view(Vector3(anchor[0], 0.0, anchor[1]))
+		if player.space.has_method("resolve_focus"):
+			f = player.space.resolve_focus(f)
+		var p: Array = f["pos"]
+		var y := float(f.get("y", 0.0))
+		player.spawn(Transform3D(Basis(Vector3.UP, -deg_to_rad(float(f.get("yaw", 0.0)))), Vector3(p[0], y, p[1])))
 		player.pitch = deg_to_rad(float(f.get("pitch", 0.0)))
 		_focus_wait = float(f.get("settle", 2.0))
 		return

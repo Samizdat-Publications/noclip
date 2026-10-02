@@ -25,14 +25,19 @@ func _init() -> void:
 
 func update_move(player: Node, _delta: float) -> void:
 	var pl := player as Player
+	var ns := absf(sin(_yaw)) < 0.5     # walking north or south: keep to a lane in x
 	if not _started:
 		_started = true
-		_lane_z = pl.global_position.z
+		_lane_z = pl.global_position.x if ns else pl.global_position.z
 	move = Vector2(0.0, 1.0)
 	sprint = Game.opts.has("route-sprint")
 	# Stay in the lane we started in.
-	var off := pl.global_position.z - _lane_z
-	move.x = clampf(off * 0.8, -0.4, 0.4) * (-1.0 if absf(_yaw + PI * 0.5) < 0.1 else 1.0)
+	if ns:
+		var offx := pl.global_position.x - _lane_z
+		move.x = clampf(offx * 0.8, -0.4, 0.4) * (1.0 if absf(_yaw) > 1.0 else -1.0)
+	else:
+		var off := pl.global_position.z - _lane_z
+		move.x = clampf(off * 0.8, -0.4, 0.4) * (-1.0 if absf(_yaw + PI * 0.5) < 0.1 else 1.0)
 	if (_back_at > 0.0 and Game.clock > _back_at) or _stay:
 		move = Vector2.ZERO
 	camcorder = false

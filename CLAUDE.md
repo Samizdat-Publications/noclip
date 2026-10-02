@@ -119,7 +119,7 @@ review/    inbox/ archive/ critiques/ LEDGER.md scores.csv store_page.md
 progress/  numbered progress pictures + INDEX.md (every generated image gets a copy here)
 spike/     threejs/ (the S01 engine bake-off, kept for reference)
 ```
-- Critic reviews: the critic guard blocks the critic's hand-back tool, so after each critic run use `python tools/critic_extract.py <agent_id> review/critiques/NNN_claude.md` (DECISIONS D004).
+- Critic reviews: since 2026-10-02 the critic hands its review back directly (Stewart's guard fix, D033); save its reply verbatim. If a hand-back ever fails, `python tools/critic_extract.py <agent_id> review/critiques/NNN_claude.md` recovers it from the log (D004).
 - Stewart's rule: every generated image gets a copy in `progress/` via `python tools/progress.py` (lookdev.py and capture.py do it automatically). Name them so the history can be pieced back together.
 
 ## Engineering standards

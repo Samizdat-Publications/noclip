@@ -235,6 +235,8 @@ func generate(cx: int, cz: int) -> Dictionary:
 	var max_depth := 5 if style < 0.55 else (4 if style < 0.85 else 3)   # maze, mixed, halls
 	if spawn_chunk:
 		max_depth = 4
+	if cx == 1 and cz == 0:
+		max_depth = 1    # big rooms, so the storeroom by the start has space round it (D036)
 	for part in _highways(r, L, cx, cz, root_gaps, leaves):
 		_split(r, L, part[0], part[1], 0, max_depth, leaves)
 	# --- a seam (tape-only exit) into a sealed pocket, in about a third of the chunks
@@ -662,7 +664,7 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			kind = "room"
 			while L["pillars"].size() > 0 and rr.has_point(Vector2(L["pillars"][-1][0], L["pillars"][-1][1])):
 				L["pillars"].pop_back()
-		focus = _closet(L, rr)
+		focus = _closet(L, rr, int(lf["closet"]))
 	elif lf.get("pocket", false):
 		# The random draws above still happen so the rest of the chunk keeps its sequence.
 		if kind == "hall":
@@ -768,9 +770,8 @@ func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> vo
 ## 3.6 x 3.6 m, and you can walk all the way round it. Its door opens onto a pillar hall 72 m
 ## across built out of sight under the level (Level0World / PortalRoom), and that hall's far
 ## door lets you out of the same storeroom door you went in by. Chunk (1, 0), just east of the
-## start, always has one; elsewhere about one chunk in eight. Each hall sits at one of three
-## depths, and two halls at the same depth never come within reach of each other.
-const CLOSET_SLOTS := 3
+## start, nearly always has one (199 seeds in 200, tests_closet.gd); elsewhere about one chunk in ten. Level0World builds a hall only when
+## you come near its storeroom, at a depth no other built hall is using there.
 
 
 func closet_roll(cx: int, cz: int) -> bool:
@@ -778,27 +779,11 @@ func closet_roll(cx: int, cz: int) -> bool:
 		return true
 	if (cx == 0 and cz == 0) or loop_index(cx, cz) >= 0:
 		return false
-	return _rng("closet:%d:%d" % [cx, cz]).randf() < 0.12
-
-
-func closet_slot(cx: int, cz: int) -> int:
-	return posmod(cx + 2 * cz, CLOSET_SLOTS)
+	return _rng("closet:%d:%d" % [cx, cz]).randf() < 0.1
 
 
 func has_closet(cx: int, cz: int) -> bool:
-	if not closet_roll(cx, cz):
-		return false
-	var sl := closet_slot(cx, cz)
-	for dx in range(-4, 5):
-		for dz in range(-4, 5):
-			if dx == 0 and dz == 0:
-				continue
-			var ox := cx + dx
-			var oz := cz + dz
-			# Only an earlier chunk (row-major) wins a conflict, so the rule never goes round in circles.
-			if (oz < cz or (oz == cz and ox < cx)) and closet_roll(ox, oz) and closet_slot(ox, oz) == sl:
-				return false
-	return true
+	return closet_roll(cx, cz)
 
 
 func _pick_closet_room(cx: int, cz: int, leaves: Array) -> void:
@@ -811,25 +796,50 @@ func _pick_closet_room(cx: int, cz: int, leaves: Array) -> void:
 		if lf.get("corridor", false) or lf.get("pocket", false) or lf.get("tall", false):
 			continue
 		var rm: Rect2i = lf["m"]
-		if rm.size.x < 6 or rm.size.y < 6:
+		if rm.size.x < POCKET + 4 or rm.size.y < POCKET + 4:
 			continue
 		var score := float(rm.size.x * rm.size.y) + cr.randf() * 8.0
 		if score > best_score:
 			best_score = score
 			best = lf
+	if best.is_empty() and cx == 1 and cz == 0:
+		# The start's storeroom must exist: in a smaller room it shrinks to a 2.4 m cupboard.
+		for lf in leaves:
+			if lf.get("corridor", false) or lf.get("pocket", false) or lf.get("tall", false):
+				continue
+			var rm2: Rect2i = lf["m"]
+			if rm2.size.x >= 6 and rm2.size.y >= 6:
+				lf["closet"] = 2
+				return
 	if not best.is_empty():
-		best["closet"] = true
+		best["closet"] = POCKET
 
 
 ## Builds the storeroom block with its door and records it for the world (L["closets"]).
 ## Returns where a visitor would stand to look in.
-func _closet(L: Dictionary, rr: Rect2) -> Vector2:
+func _closet(L: Dictionary, rr: Rect2, size: int = POCKET) -> Vector2:
 	var cr := _rng("closet:in:%d:%d" % [L["chunk"][0], L["chunk"][1]])
-	var size := POCKET
 	var rm := Rect2i(Vector2i(roundi(rr.position.x / MOD), roundi(rr.position.y / MOD)), Vector2i(roundi(rr.size.x / MOD), roundi(rr.size.y / MOD)))
-	# Leave at least a two-module walk all round it.
-	var kx := rm.position.x + 2 + cr.randi_range(0, maxi(rm.size.x - size - 4, 0))
-	var kz := rm.position.y + 2 + cr.randi_range(0, maxi(rm.size.y - size - 4, 0))
+	# A two-module walk all round it, and never standing in front of a doorway (QA S04: a block
+	# one module from a wall closed the way into its room).
+	var kx := rm.position.x + 2
+	var kz := rm.position.y + 2
+	var best_s := -1e9
+	for ix in range(rm.position.x + 2, rm.position.x + rm.size.x - size - 1):
+		for iz in range(rm.position.y + 2, rm.position.y + rm.size.y - size - 1):
+			var blk := Rect2(ix * MOD, iz * MOD, size * MOD, size * MOD)
+			var clear := 99.0
+			for d in L["doors"]:
+				var dc0 := Vector2((d[0] + d[2]) * 0.5, (d[1] + d[3]) * 0.5)
+				var q := Vector2(clampf(dc0.x, blk.position.x, blk.end.x), clampf(dc0.y, blk.position.y, blk.end.y))
+				clear = minf(clear, q.distance_to(dc0))
+			if clear < 2.0:
+				continue
+			var sc := minf(clear, 6.0) + cr.randf() * 2.0
+			if sc > best_s:
+				best_s = sc
+				kx = ix
+				kz = iz
 	var x0 := kx * MOD
 	var z0 := kz * MOD
 	var ps := size * MOD
@@ -854,17 +864,18 @@ func _closet(L: Dictionary, rr: Rect2) -> Vector2:
 		var horiz: bool = f == "N" or f == "S"
 		var a: float = w[0] if horiz else w[1]
 		var line: float = w[1] if horiz else w[0]
+		var dk := 1 if size >= 3 else 0
 		for k in size:
-			if k == 1:
+			if k == dk:
 				continue   # the door
 			var s0: float = a + k * MOD
 			L["walls"].append([s0, line, s0 + MOD, line] if horiz else [line, s0, line, s0 + MOD])
-		var m0 := a + MOD
+		var m0 := a + dk * MOD
 		door = [m0, line, m0 + MOD, line] if horiz else [line, m0, line, m0 + MOD]
 	L["doors"].append(door)
 	L["pocket_zones"].append([x0, z0, x1, z1])   # its own panels stay dark (nobody ever sees them)
 	var dc := Vector2((door[0] + door[2]) * 0.5, (door[1] + door[3]) * 0.5)
-	L["closets"].append({"door": dc, "n": n, "block": [x0, z0, x1, z1], "slot": closet_slot(L["chunk"][0], L["chunk"][1])})
+	L["closets"].append({"door": dc, "n": n, "block": [x0, z0, x1, z1]})
 	var look := dc + n * minf(2.6, room_in_front * 0.6)
 	L["interest"].append({"name": "closet_%d_%d" % [int(look.x * 10), int(look.y * 10)], "p": [look.x, look.y], "closet": [dc.x, dc.y], "n": [n.x, n.y]})
 	return look

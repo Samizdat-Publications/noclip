@@ -20,8 +20,10 @@ var depth := 0.5                     # how far the surface box reaches past the 
 var show_layers := 1                 # the far side's space (render layers its camera may draw)
 var hide_layers := 0                 # layers the far side never shows (the near space)
 var main_cam: Camera3D               # the player's camera
-var range_m := 32.0                  # beyond this the far side is not rendered
+var range_m := 60.0                  # beyond this the far side is not rendered (it is lost in the haze)
 
+var _mat_live: ShaderMaterial        # shows the far side
+var _mat_far: ShaderMaterial         # not rendered: dark, and fogged like any distant wall
 var vp: SubViewport
 var cam: Camera3D
 var surface: MeshInstance3D
@@ -55,7 +57,11 @@ func setup(p_main_cam: Camera3D, src_env: Environment) -> void:
 	_env.tonemap_white = 1.0
 	_env.glow_enabled = false
 	_env.adjustment_enabled = false
-	cam.environment = _env
+	_env.volumetric_fog_density *= float(Game.opts.get("portal_fog_mul", "1"))
+	# No environment override: in a SubViewport it drops the volumetric haze (S04). The far side
+	# renders with the level's environment and the surface shader undoes its tonemapping.
+	if Game.opts.has("portal_env_override"):
+		cam.environment = _env
 	_attr = CameraAttributesPractical.new()
 	_attr.auto_exposure_enabled = false
 	_attr.exposure_multiplier = 1.0
@@ -74,7 +80,18 @@ func setup(p_main_cam: Camera3D, src_env: Environment) -> void:
 	var m := ShaderMaterial.new()
 	m.shader = SHADER
 	m.set_shader_parameter("view", vp.get_texture())
-	surface.material_override = m
+	if src_env:
+		m.set_shader_parameter("agx_contrast", src_env.tonemap_agx_contrast)
+		m.set_shader_parameter("agx_white", src_env.tonemap_agx_white)
+	m.set_shader_parameter("undo_tonemap", not Game.opts.has("portal_env_override"))
+	if Game.opts.has("portal_gain"):
+		m.set_shader_parameter("gain", float(Game.opts["portal_gain"]))
+	if Game.opts.has("portal_desat"):
+		m.set_shader_parameter("desat", float(Game.opts["portal_desat"]))
+	_mat_live = m
+	_mat_far = ShaderMaterial.new()
+	_mat_far.shader = preload("res://shaders/portal_far.gdshader")
+	surface.material_override = _mat_far
 	add_child(surface)
 
 
@@ -105,23 +122,40 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if cam == null or main_cam == null or not is_instance_valid(main_cam):
+	if cam == null:
 		return
-	var want := _wanted()
+	if main_cam == null or not is_instance_valid(main_cam) or not main_cam.current:
+		# Halls built while loading exist before the player's camera does.
+		main_cam = get_viewport().get_camera_3d()
+		if main_cam == null:
+			return
+	var want := (_wanted() or (Game.opts.has("portal_always") and local_of(main_cam.global_position).length() < range_m)) and not Game.opts.has("portal_never")
 	if want != active:
 		active = want
+		surface.material_override = _mat_live if active else _mat_far
+		if Game.opts.has("log-portal"):
+			print("[portal] %s %s at t=%.2f" % [get_parent().name + "/" + name, "on" if active else "off", Game.clock])
 		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if active else SubViewport.UPDATE_DISABLED
 	if not active:
 		return
 	var sz := Vector2i(get_viewport().get_visible_rect().size)
-	var sc := float(Game.opts.get("portal_scale", "1.0"))
+	var sc := float(Game.opts.get("portal_scale", "0.6"))   # 1.0 cost ~8 ms at 1440p (S04)
 	var want_sz := Vector2i(maxi(int(sz.x * sc), 64), maxi(int(sz.y * sc), 64))
 	if vp.size != want_sz:
 		vp.size = want_sz
 	cam.global_transform = mapping() * main_cam.global_transform
 	cam.fov = main_cam.fov
-	cam.near = main_cam.near
 	cam.far = main_cam.far
+	# No oblique clipping in Godot 4.7: push the near plane out to the doorway instead, so nothing
+	# between the far eye and the far doorway (walls behind it) gets drawn (exact when looking
+	# straight at it, close enough at an angle).
+	var mv := main_cam.global_transform.affine_inverse()
+	var min_d := 1e9
+	for zz in [-0.5, 0.5]:
+		for yy in [0.0, 1.0]:
+			var vpos: Vector3 = mv * (global_transform * Vector3(0.0, opening.y * yy, opening.x * zz))
+			min_d = minf(min_d, -vpos.z)
+	cam.near = clampf(min_d - 0.1, main_cam.near, 80.0) if min_d > main_cam.near + 0.1 else main_cam.near
 	# The far side shows its own space, never another portal's surface, and keeps the
 	# camcorder's tape/eye rule.
 	cam.cull_mask = (main_cam.cull_mask & ~(SURFACE_LAYER | hide_layers)) | show_layers
@@ -133,7 +167,8 @@ func _process(_delta: float) -> void:
 func _wanted() -> bool:
 	var e := main_cam.global_position
 	var l := local_of(e)
-	if l.x > 0.6 or l.length() > range_m:
+	# Only from the same floor (the hall under a storeroom is never seen from the level above).
+	if l.x > 0.6 or l.length() > range_m or l.y < -1.0 or l.y > 4.0:
 		return false
 	if l.x > -0.8:
 		return true     # standing in the doorway: always

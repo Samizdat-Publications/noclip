@@ -37,6 +37,17 @@ func _ready() -> void:
 	player.space = space
 	add_child(player)
 	player.spawn(space.get_spawn_transform())
+	if Game.opts.has("start"):
+		# Debug: --start=x,z,yaw_degrees (filmed checks of one spot).
+		var st := String(Game.opts["start"]).split(",")
+		if space.has_method("prepare_view"):
+			space.prepare_view(Vector3(float(st[0]), 0.0, float(st[1])))
+		player.spawn(Transform3D(Basis(Vector3.UP, deg_to_rad(float(st[2]))), Vector3(float(st[0]), 0.0, float(st[1]))))
+	if Game.opts.has("start-room") and space.has_method("room_spawn"):
+		# Debug: --start-room=cx:cz,hall_x,hall_z,face_x,face_z (inside a storeroom's hall, D036).
+		var sr := String(Game.opts["start-room"]).split(",")
+		var xf: Transform3D = space.room_spawn(sr[0], float(sr[1]), float(sr[2]), Vector2(float(sr[3]), float(sr[4])))
+		player.spawn(xf)
 	if space.has_method("attach_player"):
 		space.attach_player(player)
 	if Game.opts.has("route"):

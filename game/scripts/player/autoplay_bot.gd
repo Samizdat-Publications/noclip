@@ -5,7 +5,7 @@ extends PlayerInput
 ## into dark rooms, hides crouched in corners, and films with the camcorder.
 ## Driven by the run seed, so a seed reproduces the same playthrough.
 
-enum Mode { WALK, PAUSE, HIDE, SEAM }
+enum Mode { WALK, PAUSE, HIDE, SEAM, CLOSET }
 
 var space: Space
 var rng: RandomNumberGenerator
@@ -45,6 +45,11 @@ var _heading_t := 0.0
 var _relook_t := 0.0
 var _seam_looked_up := {}
 var _long_t := 0.0
+var _closets_done := {}
+var _closet: Dictionary = {}   # the storeroom being visited (D036): name, look, door, n, door0
+var _closet_step := 0
+var _closet_t := 0.0
+var _closet_tries := 0
 
 
 func _init() -> void:
@@ -86,6 +91,9 @@ func _pick_target(player: Player) -> void:
 			# Something that only shows on tape: a person who has learned that would go and look.
 			if p.has("seam") and not _seams_done.has(p["name"]) and d < 22.0:
 				score *= 25.0
+			# A door into a storeroom that shows a hall far too big for it: anyone would go in.
+			if p.has("closet") and not _closets_done.has(p["name"]) and d < 30.0:
+				score *= 40.0
 			if String(p["name"]).contains("_tall_") and not _seam_looked_up.has(p["name"]) and d < 24.0:
 				score *= 8.0
 			# Inside a corridor that keeps repeating, a person keeps walking on for a while.
@@ -107,6 +115,10 @@ func _pick_target(player: Player) -> void:
 	if recent.size() > 12:
 		recent.pop_front()
 	_seam = {}
+	_closet = {}
+	_closet_tries = 0
+	if best.has("closet") and not _closets_done.has(target_name):
+		_closet = {"name": target_name, "look": best["pos"], "door": best["closet"], "door0": best["closet"], "n": best["n"]}
 	if best.has("seam") and not _seams_done.has(target_name):
 		_seam = {"name": target_name, "look": best["pos"], "seam": best["seam"], "pocket": best["pocket"]}
 	var goal: Vector3 = best["pos"] + (Vector3(rng.randf_range(-0.8, 0.8), 0, rng.randf_range(-0.8, 0.8)) if _seam.is_empty() else Vector3.ZERO)
@@ -120,6 +132,19 @@ func shift(offset: Vector3) -> void:
 	for i in path.size():
 		path[i] += offset
 	_last_pos += offset
+
+
+## The world moved us through a portal (D036): carry the plan along, turned with us.
+func shift_xf(m: Transform3D, dyaw: float) -> void:
+	for i in path.size():
+		path[i] = m * path[i]
+	_last_pos = m * _last_pos
+	_heading = m.basis * _heading
+	_want_yaw += dyaw
+	_plan_base_yaw += dyaw
+	if not _closet.is_empty():
+		_closet["door"] = m * (_closet["door"] as Vector3)
+		_closet["n"] = m.basis * (_closet["n"] as Vector3)
 
 
 ## A yaw near `base + offset` that looks down open space instead of into a wall.
@@ -207,6 +232,9 @@ func update_move(player: Node, delta: float) -> void:
 	if mode == Mode.SEAM:
 		_update_seam(pl, delta)
 		return
+	if mode == Mode.CLOSET:
+		_update_closet(pl, delta)
+		return
 
 	_cam_cool -= delta
 	if _cam_left > 0.0:
@@ -264,6 +292,20 @@ func update_move(player: Node, delta: float) -> void:
 			_seam_step = 0
 			_seam_t = 0.0
 			return
+		if not _closet.is_empty() and Game.opts.has("log-bot"):
+			print("[bot] t=%.1f path done, %.2f m from the storeroom look point" % [Game.clock, pl.global_position.distance_to(_closet["look"])])
+		if not _closet.is_empty() and pl.global_position.distance_to(_closet["look"]) < 1.4:
+			mode = Mode.CLOSET
+			_closet_step = 0
+			_closet_t = 0.0
+			return
+		# Interrupted on the way (a dying light, a bump): carry on to the storeroom.
+		if not _closet.is_empty() and _closet_tries < 5:
+			_closet_tries += 1
+			path = space.find_path(pl.global_position, _closet["look"])
+			path_i = 1 if path.size() > 1 else 0
+			if not path.is_empty():
+				return
 		var r := rng.randf()
 		if target_name.contains("_tall_") and not _seam_looked_up.has(target_name):
 			# A room far too tall: stop and look up at it, and film it.
@@ -378,6 +420,78 @@ func _update_seam(pl: Player, delta: float) -> void:
 				path_i = 1 if path.size() > 1 else 0
 				_seam_step = 3
 				_seam_t = 0.0
+
+
+## A storeroom whose door shows a hall far too big for it (D036), visited the way a curious
+## person would: stare at the doorway and film it, walk in, take in the hall and its ceiling,
+## hurry down the long aisle, walk the dark last stretch toward the exit sign filming, go out
+## through it, and turn round in surprise at the storeroom you just came out of.
+func _update_closet(pl: Player, delta: float) -> void:
+	_closet_t += delta
+	var door: Vector3 = _closet["door"]
+	var nn: Vector3 = _closet["n"]
+	var nocam := Game.opts.has("nocam")
+	match _closet_step:
+		0:   # look in through the doorway, then lift the camera to it
+			var to := door + Vector3(0, 1.2, 0) - (pl.global_position + Vector3(0, 1.6, 0))
+			_want_yaw = yaw_of(Vector3(to.x, 0.0, to.z))
+			_want_pitch = 0.04
+			camcorder = _closet_t > 1.6 and not nocam
+			if _closet_t > 4.2:
+				path = PackedVector3Array([pl.global_position, door + nn * 0.9, door - nn * 1.8])
+				path_i = 1
+				_closet_step = 1
+				_closet_t = 0.0
+		1:   # walk in
+			camcorder = not nocam
+			if path_i >= path.size() or _closet_t > 10.0:
+				_closet_step = 2 if pl.space.has_method("tape_allowed") and not pl.space.tape_allowed() else 9
+				_closet_t = 0.0
+				_start_look_round(pl)
+				return
+			_follow(pl)
+		2:   # inside: look round the hall and up at its ceiling
+			camcorder = (_closet_t < 2.2 or _closet_t > 4.0) and not nocam
+			_plan_left -= delta
+			if _plan_left <= 0.0 and not _plan.is_empty():
+				var st: Array = _plan.pop_front()
+				_want_yaw = float(st[0])
+				_want_pitch = float(st[1])
+				_plan_left = float(st[2])
+			if _closet_t > 6.4:
+				var far := door - nn * 72.0
+				path = PackedVector3Array([pl.global_position, door - nn * 9.0, door - nn * 58.0, far + nn * 0.9, far - nn * 1.8])
+				path_i = 1
+				_closet_step = 3
+				_closet_t = 0.0
+		3:   # down the aisle, then the dark end toward the exit sign, filming
+			var along := (door - pl.global_position).dot(nn) * -1.0   # meters from the entrance
+			_follow(pl)
+			move /= 0.8
+			sprint = along > 10.0 and along < 56.0
+			camcorder = along > 57.0 and not nocam
+			if path_i >= path.size() or _closet_t > 40.0:
+				_closet_step = 4
+				_closet_t = 0.0
+		4:   # out again: turn round to the storeroom door, film it
+			var door0: Vector3 = _closet["door0"]
+			var tb := door0 + Vector3(0, 1.2, 0) - (pl.global_position + Vector3(0, 1.6, 0))
+			_want_yaw = yaw_of(Vector3(tb.x, 0.0, tb.z))
+			_want_pitch = 0.02
+			camcorder = _closet_t > 1.4 and _closet_t < 5.0 and not nocam
+			if _closet_t > 5.6:
+				_closet_step = 9
+		_:
+			_closets_done[_closet["name"]] = true
+			_closet = {}
+			mode = Mode.WALK
+			path = PackedVector3Array()
+
+
+func _start_look_round(pl: Player) -> void:
+	var y := pl.yaw
+	_plan = [[y + 0.7, 0.32, 1.6], [y - 0.8, 0.45, 1.8], [y, 0.05, 1.4], [y + 0.3, -0.02, 1.2]]
+	_plan_left = 0.0
 
 
 ## Steps along the current path (shared by the walk and the seam visit).

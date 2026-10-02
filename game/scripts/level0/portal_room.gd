@@ -1,0 +1,246 @@
+class_name PortalRoom
+extends Node3D
+## The hall inside a storeroom (M2b, D036). A 3.6 m storeroom stands free in a room of Level 0;
+## its door opens onto a pillar hall 72 x 72 m with a high ceiling, built out of sight under the
+## level (one of three depths, so neighbors never overlap). Three portals tie it together:
+##   door   the storeroom door, seen from the room: shows the hall, walking in takes you there;
+##   back   the hall's entrance, seen from inside: shows the room, walking out takes you back;
+##   far    the door at the hall's far end, under an exit sign: it lets you out of the same
+##          storeroom door you went in by, facing out into the room.
+## The hall has its own render layer (POCKET), its own small light pool and is built a chunk step
+## at a time by Level0World, like the level itself. This node's frame is hall-local: x from the
+## entrance wall (0) to the far wall (72), z across (0..72), the doors at z = 36.
+
+const POCKET := 1 << 12          # render layer 13
+const LEVEL := 1                 # render layer 1 (everything in the level)
+const N := 3                     # chunks per side
+const SIDE := 24.0 * N
+const MID := SIDE * 0.5
+const HALL_H := 4.4
+const DEPTHS := [-14.0, -26.0, -38.0, -50.0, -62.0]
+const OPENING := Vector2(1.16, 2.08)
+
+var world: Level0World
+var key := ""                    # "cx:cz"
+var door_world := Vector3.ZERO   # middle of the storeroom doorway, at the floor
+var n := Vector2.ZERO            # the storeroom door's outward normal
+var chunks: Array[Level0Chunk] = []
+var pool: FixturePool
+var portal_in: Portal            # storeroom door -> hall
+var portal_back: Portal          # hall entrance -> room
+var portal_far: Portal           # hall far door -> out of the storeroom door
+var steps: Array = []            # pending build steps (Callables), run by Level0World
+var built := false
+
+
+## The hall's footprint on the ground plan (world x/z) for a storeroom door, before it is built.
+static func footprint(door_w: Vector3, nn: Vector2) -> Rect2:
+	var bx := Vector3(-nn.x, 0.0, -nn.y)
+	var bz := bx.cross(Vector3.UP)
+	var o := door_w - bz * MID
+	var r := Rect2(Vector2(o.x, o.z), Vector2.ZERO)
+	for c in [o + bx * SIDE, o + bz * SIDE, o + bx * SIDE + bz * SIDE]:
+		r = r.expand(Vector2(c.x, c.z))
+	return r.grow(2.0)
+
+
+var depth_index := 0
+var plan_rect := Rect2()
+
+
+func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, p_depth: int = 0) -> void:
+	world = p_world
+	key = "%d:%d" % [c.x, c.y]
+	var d: Vector2 = closet["door"]
+	n = closet["n"]
+	door_world = Vector3(c.x * Level0World.CHUNK + d.x, 0.0, c.y * Level0World.CHUNK + d.y)
+	depth_index = p_depth
+	plan_rect = footprint(door_world, n)
+	var dy: float = DEPTHS[p_depth % DEPTHS.size()]
+	var bx := Vector3(-n.x, 0.0, -n.y)
+	var bz := bx.cross(Vector3.UP)
+	var b := Basis(bx, Vector3.UP, bz)
+	global_transform = Transform3D(b, door_world + Vector3(0, dy, 0) - b * Vector3(0, 0, MID))
+	name = "portal_room_%d_%d" % [c.x, c.y]
+	pool = FixturePool.new()
+	pool.name = "pool"
+	pool.light_cap = int(Game.opts.get("hall_lights", "32"))
+	pool.hum_cap = 8
+	pool.layer_bits = POCKET
+	pool.enabled = false
+	add_child(pool)
+	for j in N:
+		for i in N:
+			var ch := Level0Chunk.new()
+			ch.name = "hall_%d_%d" % [i, j]
+			ch.pooled = true
+			ch.own_far_edges = i == N - 1 or j == N - 1
+			ch.position = Vector3(i * 24.0, 0.0, j * 24.0)
+			add_child(ch)
+			chunks.append(ch)
+			steps.append(_begin_chunk.bind(ch, i, j, c, salt))
+	steps.append(_make_portals)
+
+
+## Sets one chunk up and puts its build steps at the front of the queue (the set-up itself is a
+## few ms, so it gets a frame of its own).
+func _begin_chunk(ch: Level0Chunk, i: int, j: int, c: Vector2i, salt: String) -> void:
+	var st: Array = ch.begin_build(_layout(i, j, c), "%s%d:%d:" % [salt, i, j], world.mats, world.seed_offset)
+	st.append(_finish_chunk.bind(ch))
+	steps = st + steps
+
+
+## One step of the build (Level0World calls this when it has a frame to spare). True when done.
+func step() -> bool:
+	if steps.is_empty():
+		return true
+	(steps.pop_front() as Callable).call()
+	if steps.is_empty():
+		built = true
+	return steps.is_empty()
+
+
+func _finish_chunk(ch: Level0Chunk) -> void:
+	for vi in ch.find_children("*", "VisualInstance3D", true, false):
+		(vi as VisualInstance3D).layers = POCKET
+	for fx in ch.fixtures:
+		if fx.mount == Fixture.Mount.CEILING:
+			pool.fixtures.append(fx)
+
+
+func _make_portals() -> void:
+	var env: Environment = null
+	var we := get_tree().root.find_child("WorldEnvironment", true, false) as WorldEnvironment
+	if we:
+		env = we.environment
+	var main_cam: Camera3D = world.player_ref.cam if world.player_ref else get_viewport().get_camera_3d()
+	var b_in := global_transform.basis               # x: into the hall
+	var b_out := Basis(-b_in.x, Vector3.UP, -b_in.z)  # x: out of the storeroom
+	var hall_door := global_transform * Vector3(0, 0, MID)
+	var far_door := global_transform * Vector3(SIDE, 0, MID)
+	var out_frame := Transform3D(b_out, door_world)
+	portal_in = _portal("door", Transform3D(b_in, door_world), Transform3D(b_in, hall_door), POCKET, LEVEL, main_cam, env)
+	portal_back = _portal("back", Transform3D(b_out, hall_door), out_frame, LEVEL, POCKET, main_cam, env)
+	portal_far = _portal("far", Transform3D(b_in, far_door), out_frame, LEVEL, POCKET, main_cam, env)
+
+
+func _portal(nm: String, frame: Transform3D, target: Transform3D, show: int, hide: int, main_cam: Camera3D, env: Environment) -> Portal:
+	var p := Portal.new()
+	p.name = nm
+	p.top_level = true
+	p.opening = OPENING
+	p.target = target
+	p.show_layers = show
+	p.hide_layers = hide
+	add_child(p)
+	p.global_transform = frame
+	p.setup(main_cam, env)
+	return p
+
+
+func portals() -> Array[Portal]:
+	var out: Array[Portal] = []
+	for p in [portal_in, portal_back, portal_far]:
+		if p:
+			out.append(p)
+	return out
+
+
+## True if p (world) is inside the hall.
+func contains(p: Vector3) -> bool:
+	var l := global_transform.affine_inverse() * p
+	return l.x > -0.5 and l.x < SIDE + 0.5 and l.z > -0.5 and l.z < SIDE + 0.5 and l.y > -2.0 and l.y < HALL_H + 2.0
+
+
+func hall_local(p: Vector3) -> Vector3:
+	return global_transform.affine_inverse() * p
+
+
+## A walkable point in the hall (pillars and walls kept clear by a margin).
+func is_walkable(p: Vector3) -> bool:
+	var l := hall_local(p)
+	if l.x < 0.5 or l.x > SIDE - 0.5 or l.z < 0.5 or l.z > SIDE - 0.5:
+		return false
+	for k in range(1, 15):
+		var px := 4.8 * k
+		if absf(l.x - px) < 0.75:
+			var dz := fposmod(l.z - MID + 2.4, 4.8)
+			if dz < 0.75 or dz > 4.05:
+				return false
+	return true
+
+
+# ------------------------------------------------------------------ layout
+
+func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
+	var L := {
+		"name": "portal_hall_%d_%d_%d_%d" % [c.x, c.y, i, j],
+		"chunk": [10000 + c.x * 7 + i, 10000 + c.y * 7 + j],
+		"size": [24.0, 24.0], "ceiling_height": HALL_H, "plenum_height": HALL_H + 0.7, "wall_thickness": 0.2,
+		"door_height": 2.1, "tile": 0.6,
+		"walls": [], "edge_walls": [], "doors": [], "pillars": [], "fixtures": [], "rooms": [],
+		"dark_zones": [], "failing_hint": [], "tint_zones": [], "flood_candidates": [], "splices": [],
+		"shear_bands": [], "wall_fixtures": [], "floor_fixtures": [], "stairs": [], "fake_doors": [],
+		"exit_signs": [], "props": [], "interest": [], "fidelity": 0.9, "seams": [], "worklights": [],
+		"graffiti": [], "pocket_zones": [], "tall_rooms": [], "closets": [],
+		"gates": {"W": [], "E": [], "N": [], "S": []},
+	}
+	var ox := i * 24.0
+	var oz := j * 24.0
+	var mid_row := j == 1
+	# The outer walls; the entrance and the far door in the middle of the west and east walls.
+	if i == 0:
+		if mid_row:
+			L["walls"].append([0.0, 0.0, 0.0, 11.4])
+			L["walls"].append([0.0, 12.6, 0.0, 24.0])
+			L["doors"].append([0.0, 11.4, 0.0, 12.6])
+		else:
+			L["walls"].append([0.0, 0.0, 0.0, 24.0])
+	if i == N - 1:
+		if mid_row:
+			L["walls"].append([24.0, 0.0, 24.0, 11.4])
+			L["walls"].append([24.0, 12.6, 24.0, 24.0])
+			L["doors"].append([24.0, 11.4, 24.0, 12.6])
+			L["exit_signs"].append([24.0 - 0.1, 12.0, -1.0, 0.0])
+		else:
+			L["walls"].append([24.0, 0.0, 24.0, 24.0])
+	if j == 0:
+		L["walls"].append([0.0, 0.0, 24.0, 0.0])
+	if j == N - 1:
+		L["walls"].append([0.0, 24.0, 24.0, 24.0])
+	# Columns on a 4.8 m grid, leaving a 4.8 m aisle from door to door down the middle.
+	for kx in range(1, 15):
+		var x := 4.8 * kx
+		for side in [-1.0, 1.0]:
+			for kz in 7:
+				var z: float = MID + side * (2.4 + 4.8 * kz)
+				if z < 1.5 or z > SIDE - 1.5:
+					continue
+				var lx := x - ox
+				var lz := z - oz
+				if lx >= 0.0 and lx < 24.0 and lz >= 0.0 and lz < 24.0:
+					L["pillars"].append([lx, lz, 0.6, "square"])
+	# Panels between the columns (lens along z), on whole ceiling tiles.
+	for kx in 15:
+		var px := 2.7 + 4.8 * kx
+		for kz in range(-7, 8):
+			var pz := MID + 4.8 * kz
+			var lx2 := px - ox
+			var lz2 := pz - oz
+			if lx2 > 0.7 and lx2 < 23.3 and lz2 > 0.9 and lz2 < 23.1:
+				L["fixtures"].append([lx2, lz2, 0])
+	L["rooms"].append([0.0, 0.0, 24.0, 24.0, "hall"])
+	# The far third is dark; the exit sign is the only light at the end of the hall.
+	if i == N - 1:
+		L["dark_zones"].append([12.0, 0.0, 24.0, 24.0])
+	if i == 0 and mid_row:
+		L["lit_zones"] = [[0.0, 5.0, 8.0, 19.0]]
+		# The survey crew got in before you: their camera on its tripod, filming the way back out.
+		L["props"].append(["prop_tripod_camcorder", 6.6, 15.0, -114.0])
+		L.get_or_add("rec_lights", []).append([6.6, 15.0, -90.0])
+		L["props"].append(["prop_tape_crate", 7.6, 16.4, 30.0])
+		L["graffiti"].append(["hd_survey", 0.1, 8.2, 1.0, 0.0, 1.25])
+	if i == 1 and mid_row:
+		L["props"].append(["prop_folding_chair_sf", 7.0, 13.0, 180.0])
+	L["interest"].append({"name": "hall_%d_%d" % [i, j], "p": [12.0, 12.0]})
+	return L

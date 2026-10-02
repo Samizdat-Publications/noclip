@@ -393,6 +393,8 @@ func _update_hidden(cam_on: bool) -> void:
 func _try_start(cam_on: bool) -> void:
 	if not cam_on or Game.clock < _next_ok or _encounters >= MAX_ENCOUNTERS or not player.camcorder.settled():
 		return
+	if space.has_method("tape_allowed") and not space.tape_allowed():
+		return
 	var yaw := player.yaw
 	var depth := space.view_depth(player.global_position, yaw, 34.0)
 	if depth < (15.0 if _encounters == 0 else MIN_DEPTH):
