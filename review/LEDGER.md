@@ -139,6 +139,11 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L112 | 018 | gemini | nitpick | Hard boundary into a dark room instead of a falloff; footsteps sound hard, not squishy | DEFER M3.5 | Light the first meters of a dark room from the doorway; louder squish layer |
 | L113 | stewart+018 | stewart, gemini | hurts | No truly impossible space yet: Stewart wants small rooms that are giant inside and loop back; Gemini 018 "break away from the standard Backrooms layout" | FIX S04 (D036) | Storeroom portals into a 72 m pillar hall, far door back out of the storeroom; crossing filmed seamless (progress/0134-0136). Awaiting critique |
 | L114 | S04 builder | claude | hurts | A doorway on screen costs about 3.5 ms at 1440p (a second render of the far side) | DEFER M3.5 | Render the far side only inside the doorway (scissor via a smaller camera frustum), skip SDFGI there, or update at half rate when far |
+| L115 | 019 | claude+gemini | hurts | Performance "abysmal" (53.9 / 27.4) | REJECT (measurement) | The capture's perf runs shared the GPU with another program (flagged "not trusted" in the log). Clean re-run on the same seed: 75.7 avg, 51.4 1% low (84.1 without portals). Portal cost tracked in L114 |
+| L116 | 019 | gemini | hurts | A floating office chair with a razor-sharp black shadow (frame 1, video 1:49) | DEFER (verify) | Not in frame 1; check the clip at 1:49 next session (the Rearranger's chairs, or the contact shadow decal on a hanging pillar) |
+| L117 | 019 | claude | nitpick | A wavy soft gradient along the foot of walls reads as an artifact, not grime | DEFER M3.6 | Probably the corner occlusion strips meeting the wet wall decals; tune strength and give the strip a straight, even edge |
+| L118 | 019 | claude | hurts | Same mustard everywhere; wants a second color temperature and different room types behind portals and seams | DEFER M3.6 | Remembered-wrong batch 1 and halls with their own palette (a cold hall, a dark hall) |
+| L119 | Stewart S04 | stewart | hurts | Exit sign: a hard red-white ball covered the letters | FIX (S04) | The lamp sat 9 cm from the sign face; now 45 cm out and below, the plate glows from behind, a soft red spill on the wall, little light in the haze (progress exit-sign-backlit) |
 
 ## Closed
 

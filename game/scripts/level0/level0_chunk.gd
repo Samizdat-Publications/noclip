@@ -664,6 +664,16 @@ func _build_fake_doors(kit: MeshKit) -> void:
 
 
 ## Exit signs: a lit box above a doorway with a faint red glow on the wall around it.
+static var _halo_mat: ShaderMaterial
+
+
+static func halo_material() -> ShaderMaterial:
+	if _halo_mat == null:
+		_halo_mat = ShaderMaterial.new()
+		_halo_mat.shader = load("res://shaders/exit_halo.gdshader")
+	return _halo_mat
+
+
 func _build_exit_signs(kit: MeshKit) -> void:
 	for es in L.get("exit_signs", []):
 		var p := Vector3(es[0], 2.36, es[1])
@@ -682,16 +692,30 @@ func _build_exit_signs(kit: MeshKit) -> void:
 		kit.box("housing", Vector3(minf(a.x, b.x), a.y, minf(a.z, b.z)), Vector3(maxf(a.x, b.x), b.y, maxf(a.z, b.z)), MeshKit.ALL, H)
 		var glow := OmniLight3D.new()
 		# Believable rather than neon (critique 006, L026): less saturated and weaker, shadowed so
-		# the door frame and the sign box block it.
+		# the door frame and the sign box block it. Barely any light in the haze: with the haze's
+		# full share it lit a hard red-white dome over the sign in foggy halls (Stewart, S04).
+		# It sat 9 cm in front of the sign face and burned a white dome into it (Stewart, S04):
+		# now 45 cm out and below, so it washes the wall and the door frame softly.
 		glow.light_color = Color(1.0, 0.3, 0.2)
-		glow.light_energy = 0.15
-		glow.omni_range = 1.9
-		glow.omni_attenuation = 1.8
+		glow.light_energy = 0.1
+		glow.omni_range = 2.8
+		glow.omni_attenuation = 1.6
+		glow.light_volumetric_fog_energy = 0.15
 		glow.shadow_enabled = true
 		glow.shadow_bias = 0.05
-		glow.light_size = 0.15
-		glow.position = p + n * 0.14 - Vector3(0, 0.12, 0)
+		glow.light_size = 0.3
+		glow.position = p + n * 0.45 - Vector3(0, 0.3, 0)
 		add_child(glow)
+		# The soft red the sign spills onto the wall round its box, as light leaks round a real one.
+		var halo := MeshInstance3D.new()
+		var hq := QuadMesh.new()
+		hq.size = Vector2(1.1, 0.7)
+		halo.mesh = hq
+		halo.material_override = Level0Chunk.halo_material()
+		halo.transform = Transform3D(Basis(t, Vector3.UP, n), p + n * 0.004)
+		halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		halo.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
+		add_child(halo)
 
 
 func _build_fixtures(kit: MeshKit) -> Dictionary:

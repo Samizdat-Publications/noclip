@@ -118,8 +118,10 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	exit.albedo_color = Color(0.1, 0.02, 0.02)
 	exit.emission_enabled = true
 	exit.emission_texture = ex
-	exit.emission = Color(1, 1, 1)
-	exit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+	# Lit from behind the plate (Stewart, S04): the whole face glows a dim red and the letters
+	# bright, like a real backlit sign, instead of letters on a black card.
+	exit.emission = Color(0.1, 0.014, 0.01)
+	exit.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
 	exit.emission_energy_multiplier = 0.85   # letters stay legible under the bloom (L037)
 	exit.roughness = 0.25
 	m["exit"] = exit

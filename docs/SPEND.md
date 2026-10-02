@@ -58,3 +58,5 @@ Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and w
 | 2026-10-02 | S04 | Meshy (image-to-3d, meshy-7.1, 2k PBR, 40k tris, a-pose) | Occupant monster models from concept sheets C_2 and C_4 (build_entity_meshy.py); balance 1968 to 1908 | 2 | 60 credits |
 | 2026-10-02 | S04 | Meshy (rigging, height 2.35 m) | Occupant C_4 rig (build_entity_rig.py); 5 credits | 1 | 5 credits |
 | 2026-10-02 | S04 | Meshy (animations, 9 action_ids in one task) | Occupant C_4 clips idle walk run lunge look twitch crouch crawl scream; 27 credits. Balance 1698 to 1666 | 1 | 27 credits |
+| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 019_gemini.md | 1 | $0.09 (27641 in / 3154 out tokens) |
+| 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 019_gemini.md | 1 | $0.09 (est) |
