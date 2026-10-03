@@ -278,14 +278,15 @@ func generate(cx: int, cz: int) -> Dictionary:
 	# (critique 012: "bring the dark gaps back"), and sometimes a stretch whose ceiling comes
 	# down low over you, a copy squashed out of scale (D029).
 	var hw := _rng("hwylight:%d:%d" % [cx, cz])
-	if hr0 >= 0 and loop_index(cx, cz) < 0 and not spawn_chunk:
+	if hr0 >= 0 and loop_index(cx, cz) < 0:
 		var hall_fx := []
 		for i in L["fixtures"].size():
 			var f: Array = L["fixtures"][i]
 			if f[1] > hr0 * MOD and f[1] < (hr0 + 2) * MOD and f.size() <= 3:
 				hall_fx.append(i)
 		# 0.55 to 0.75 and runs of 2 to 4 (critique 021: the bright S05 halls read "cheerful", L129).
-		if hall_fx.size() >= 4 and hw.randf() < 0.75:
+		# The spawn hall keeps its bright opening (its lit zone) and falls into pools beyond it.
+		if hall_fx.size() >= 4 and hw.randf() < 0.75 and not spawn_chunk:
 			var start := hw.randi_range(0, hall_fx.size() - 3)
 			var run := hw.randi_range(2, 4)
 			for k in range(start, mini(start + run, hall_fx.size())):
@@ -339,7 +340,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		for lf in leaves:
 			if lf.get("highway", false):
 				var hr2: Rect2 = lf["rect"]
-				L["lit_zones"] = [[0.0, hr2.position.y, 16.0, hr2.end.y]]
+				L["lit_zones"] = [[0.0, hr2.position.y, 9.6, hr2.end.y]]
 	return L
 
 

@@ -29,6 +29,7 @@ var _beat := -1.0
 var _snd: AudioStreamPlayer3D
 var _thud: AudioStreamPlayer3D
 var _left: Array = []                   # what he left: [node, blinking light or null]
+var _spare: HaldenBody                  # loaded at the start
 
 
 func _ready() -> void:
@@ -39,6 +40,12 @@ func _ready() -> void:
 		_next = 1e9
 	_snd = _player3d(2.0, 30.0)
 	_thud = _player3d(3.0, 40.0)
+	# Loaded now, at the loading moment, not mid-run (critique 026: a 133 ms hitch).
+	if _next < 1e8:
+		_spare = HaldenBody.new()
+		add_child(_spare)
+		_spare.visible = false
+		_spare.position = Vector3(0, -200, 0)
 
 
 func _player3d(unit: float, maxd: float) -> AudioStreamPlayer3D:
@@ -193,8 +200,13 @@ func _place(s: Vector3, d: Vector3, e: Vector3) -> void:
 	_s = s
 	_d = d
 	_e = e
-	_body = HaldenBody.new()
-	add_child(_body)
+	if _spare:
+		_body = _spare
+		_spare = null
+		_body.visible = true
+	else:
+		_body = HaldenBody.new()
+		add_child(_body)
 	_body.global_position = s
 	_body.hold("death", 1.0)
 	if _body.arms:
@@ -220,6 +232,19 @@ func _place(s: Vector3, d: Vector3, e: Vector3) -> void:
 		return
 	feet = (_body.bone_world("LeftFoot") + _body.bone_world("RightFoot")) * 0.5
 	_body.global_position += Vector3(s.x - feet.x, 0.0, s.z - feet.z)
+	# A soft shadow under him, so he lies on the carpet and not over it (critique 026); it goes with him.
+	var ct := "res://assets/textures/level0/decal_contact.png"
+	if ResourceLoader.exists(ct) and _body.get_node_or_null("contact") == null:
+		var dc := Decal.new()
+		dc.name = "contact"
+		dc.texture_albedo = load(ct)
+		dc.size = Vector3(0.95, 0.5, 2.1)
+		dc.modulate = Color(1, 1, 1, 0.95)
+		_body.add_child(dc)
+	var cdec := _body.get_node_or_null("contact") as Decal
+	if cdec:
+		var mid := s - d * 0.9
+		cdec.global_transform = Transform3D(Basis.looking_at(d, Vector3.UP), Vector3(mid.x, s.y, mid.z))
 	# His camcorder, still recording, dropped by his hand.
 	var side := d.cross(Vector3.UP).normalized()
 	_drop("res://assets/props/player/camcorder_v3.glb", s - d * 0.5 + side * 0.7, true, Vector3(PI * 0.5, _rng.randf() * TAU, 0.0))
@@ -278,7 +303,8 @@ func _lying(delta: float) -> void:
 			_start_drag()
 	# Never seen and you are long gone: he was never there.
 	if _beat < 0.0 and (dd > 34.0 or _t > 40.0) and not looked:
-		_body.queue_free()
+		_spare = _body
+		_spare.visible = false
 		_body = null
 		for it in _left:
 			(it[0] as Node3D).queue_free()

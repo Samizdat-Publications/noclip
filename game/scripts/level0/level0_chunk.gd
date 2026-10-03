@@ -2147,6 +2147,18 @@ func _build_seam_fx() -> void:
 		dot.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		dot.position = Vector3(rl[0], 1.70, rl[1]) + fwd * 0.08 + right * 0.03
 		add_child(dot)
+	# An old monitor left on the carpet, its screen still lit (a storeroom hall's one thing to walk
+	# toward, S06, L168): a cold light on the floor and on the chair facing it.
+	for sg in L.get("screen_glows", []):
+		var gl := OmniLight3D.new()
+		gl.light_color = Color(0.62, 0.78, 1.0)
+		gl.light_energy = 0.9
+		gl.omni_range = 3.2
+		gl.omni_attenuation = 1.6
+		gl.shadow_enabled = false
+		gl.light_volumetric_fog_energy = 0.6
+		gl.position = Vector3(sg[0], sg[1], sg[2])
+		add_child(gl)
 	for wl in L.get("worklights", []):
 		var pos := Vector3(wl[0], 0.0, wl[1])
 		var yaw := deg_to_rad(float(wl[2]))

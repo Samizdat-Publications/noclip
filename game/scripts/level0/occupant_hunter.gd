@@ -22,7 +22,7 @@ const FIRST_AT := 70.0               # seconds into a run before it first comes
 const GAP := [75.0, 130.0]           # seconds between hunts
 const STALK_SPEED := 1.25
 const CATCHUP_SPEED := 2.4
-const CHASE_SPEED := 3.3              # you sprint at 3.8 and walk at 1.45
+const CHASE_SPEED := 3.1              # you sprint at 3.8 and walk at 1.45
 const STALK_BACK := 14.0              # path meters it keeps behind you while stalking
 const CATCH_R := 1.05
 const SEE_LIT := 14.0
@@ -334,6 +334,8 @@ func _arrive() -> void:
 		_next = Game.clock + 4.0
 		return
 	hunts += 1
+	_close_done = false
+	_close = false
 	global_position = spot
 	suspicion = 0.0
 	rig.visible = true
@@ -360,7 +362,104 @@ func _paper() -> void:
 	rig.set_paper(tint, sat)
 
 
+var _door_hold := 0.0                # seconds it stands in a doorway it has just come through
+var _close := false                  # standing right behind you, still (the close beat)
+var _close_t := 0.0
+var _close_done := false
+var _close_seen := 0.0
+var _close_filmed := 0.0
+var _still_t := 0.0
+
+
+## Too close and too still (critique 026: "something that sits too close and too still"): once a hunt,
+## when you stand still a while, it is suddenly right behind you, two meters away, not moving. The
+## panel over it dies, the hum sinks away, you hear it breathe. Turn round and film it and it screams
+## in your face and comes for you. Look at it by eye and it is gone. Do nothing and it leaves.
+func _start_close() -> bool:
+	var cam := player.cam
+	var back := cam.global_transform.basis.z
+	back.y = 0.0
+	if back.length() < 0.1:
+		return false
+	back = back.normalized()
+	var pp := player.global_position
+	for ang in [0.0, 22.0, -22.0, 40.0, -40.0]:
+		for dist in [2.2, 2.6, 1.9]:
+			var p: Vector3 = pp + back.rotated(Vector3.UP, deg_to_rad(ang)) * dist
+			if not space.is_walkable(p):
+				continue
+			if _player_sees(p + Vector3(0, 1.2, 0), 75.0):
+				continue
+			var hq := PhysicsRayQueryParameters3D.create(p + Vector3(0, 1.9, 0), player.cam.global_position)
+			hq.exclude = [player.get_rid()]
+			if not get_world_3d().direct_space_state.intersect_ray(hq).is_empty():
+				continue
+			global_position = Vector3(p.x, pp.y, p.z)
+			_face(pp)
+			rig.global_transform = global_transform
+			rig.set_clip("idle", 0.5)
+			rig.snap()
+			rig.presence = 0.9
+			_close = true
+			_close_t = 0.0
+			_close_seen = 0.0
+			_close_filmed = 0.0
+			_speed = 0.0
+			var fx := space.fixture_near(global_position, 2.2)
+			if fx and not _killed.has(fx):
+				fx.kill(0.2)
+				_killed.append(fx)
+			_voice_play("res://assets/audio/entity/occ_breath_%02d.wav" % (1 + _rng.randi() % 2), -3.0)
+			_log("right behind you (%.1f m)" % _dist())
+			return true
+	return false
+
+
+func _close_beat(delta: float) -> void:
+	_close_t += delta
+	_face(player.global_position)
+	Game.duck_extra = move_toward(Game.duck_extra, 0.85, delta * 1.5)
+	Game.fear = maxf(Game.fear, 0.7)
+	if _being_filmed():
+		_close_filmed += delta
+	elif _player_sees(_head(), 32.0):
+		_close_seen += delta
+	if _close_filmed > 0.45:
+		_close = false
+		_close_done = true
+		_log("filmed up close: it screams")
+		_set_state(S.NOTICE)
+		return
+	if _close_seen > 0.9 or _close_t > 7.0 or _dist() > 6.0:
+		_close = false
+		_close_done = true
+		rig.tear = 1.0
+		_log("gone from behind you (seen %.1f, %.1f s)" % [_close_seen, _close_t])
+		# back down your trail, out of sight, still following
+		var here := _space_of(player.global_position)
+		for k in range(_trail.size() - 1, 0, -1):
+			var q := _trail[k]
+			var flat := Vector2(q.x - player.global_position.x, q.z - player.global_position.z).length()
+			if flat > 12.0 and absf(q.y - player.global_position.y) < 2.0 and _space_of(q) == here and not _player_sees(q + Vector3(0, 1.2, 0), 80.0):
+				global_position = q
+				room = here
+				break
+		rig.global_transform = global_transform
+		rig.snap()
+		_st = 8.0
+
+
 func _stalk(delta: float) -> void:
+	if _close:
+		_close_beat(delta)
+		return
+	if Vector2(player.velocity.x, player.velocity.z).length() < 0.3:
+		_still_t += delta
+	else:
+		_still_t = 0.0
+	if not _close_done and _st > 16.0 and _still_t > 1.4 and not player.camcorder.active and _space_of(player.global_position) == room and not space.in_pocket(player.global_position):
+		if _start_close():
+			return
 	var d := _dist()
 	# Senses: seen, heard (steps, the beep), filmed. While it only follows, it looks less hard.
 	if _sees_player(0.7):
@@ -369,7 +468,13 @@ func _stalk(delta: float) -> void:
 	if _being_filmed():
 		suspicion += delta * 0.9
 	suspicion = maxf(suspicion - delta * 0.08, 0.0)
-	if suspicion >= 1.0 or (d < 3.5 and _st > 2.0):
+	# Just come through a storeroom door after you: it stands in the doorway a moment first.
+	if _door_hold > 0.0:
+		_door_hold -= delta
+		_speed = 0.0
+		rig.set_clip("look", 0.6)
+		return
+	if (suspicion >= 1.0 and d < 40.0) or (d < 3.5 and _st > 2.0):
 		_set_state(S.NOTICE)
 		return
 	if _st > 90.0:
@@ -438,10 +543,11 @@ func _chase(delta: float) -> void:
 		_lost += delta
 	if space.in_pocket(player.global_position):
 		_lost += delta * 2.0
-	if _lost > 4.0 and d > 8.0:
+	# Lost you, or you kept ahead of it long enough: it stops and searches.
+	if (_lost > 4.0 and d > 8.0) or (_st > 15.0 and d > 3.5):
 		_set_state(S.SEARCH)
 		return
-	if d < CATCH_R and not player.caught:
+	if d < CATCH_R and not player.caught and _st > 1.0:
 		_caught()
 		return
 	_repath -= delta
@@ -632,6 +738,9 @@ func _check_portal() -> void:
 	rig.snap()
 	_paper()
 	_log("went through a storeroom door, now in %s" % (room.key if room else "the level"))
+	if state == S.STALK:
+		_door_hold = 2.5
+		_st = minf(_st, 20.0)
 
 
 func _face(p: Vector3) -> void:

@@ -391,6 +391,7 @@ var _flee_t := 0.0
 var _back_t := 0.0
 var _back_cool := 3.0
 var _stalk_cool := 6.0
+var _close_cool := 0.0
 
 
 ## The Occupant (S06). Following you: now and then a person hears the steps behind, stops, turns
@@ -407,8 +408,11 @@ func _hunt_react(pl: Player, delta: float) -> bool:
 	var in_sight := d < 26.0 and _clear_line(pl, pl.global_position + Vector3(0, 1.6, 0), hp + Vector3(0, 1.8, 0))
 	if h.state == OccupantHunter.S.STALK:
 		_stalk_cool -= delta
-		if in_sight and _stalk_cool <= 0.0 and mode == Mode.WALK:
+		_close_cool -= delta
+		var close_turn := d < 4.0 and _close_cool <= 0.0 and mode != Mode.SEAM and mode != Mode.CLOSET
+		if in_sight and ((_stalk_cool <= 0.0 and mode == Mode.WALK) or close_turn):
 			_stalk_cool = rng.randf_range(10.0, 18.0)
+			_close_cool = 8.0
 			_start_pause(pl)
 			var y := yaw_of(to_h)
 			_plan = [[y, -0.02, 1.2], [y + rng.randf_range(-0.2, 0.2), -0.02, 2.8]]

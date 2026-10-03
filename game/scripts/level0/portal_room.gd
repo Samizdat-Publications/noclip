@@ -340,5 +340,64 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 		L["graffiti"].append(["hd_survey", 0.1, 8.2, 1.0, 0.0, 1.25])
 	if i == 1 and mid_row:
 		L["props"].append(["prop_folding_chair_sf", 7.0, 13.0, 180.0])
+	_variety(L, i, j, ox, oz)
 	L["interest"].append({"name": "hall_%d_%d" % [i, j], "p": [12.0, 12.0]})
 	return L
+
+
+## Each hall its own (critique 025: "the pillar hall repeats itself, the same fog, pillars and glow
+## frame after frame"; L168). Off the central aisle, seeded per storeroom: a stretch where columns are
+## missing and one hangs short of the floor; a free-standing wall with a doorway in it; a patch of
+## tubes of another colour; and one thing to walk toward: an office chair facing an old monitor left
+## on the carpet, its screen still glowing.
+func _variety(L: Dictionary, i: int, j: int, _ox: float, _oz: float) -> void:
+	var vr := Game.rng("hallvariety:%s" % key)
+	var pick_i := vr.randi_range(0, N - 1)
+	var pick_j := 0 if vr.randf() < 0.5 else N - 1
+	var wall_i := (pick_i + 1 + vr.randi() % (N - 1)) % N
+	var wall_j := N - 1 - pick_j
+	var tint_i := vr.randi_range(0, N - 1)
+	var beacon_i := (pick_i + 1) % N
+	var beacon_j := pick_j
+	var kinds := ["warm", "cold", "green"]
+	var tint_kind: String = kinds[vr.randi() % kinds.size()]
+	if Game.opts.has("log-hall") and i == 0 and j == 0:
+		print("[hall] %s collapse chunk %d,%d  wall chunk %d,%d  tint chunk %d (%s)  monitor chunk %d,%d" % [key, pick_i, pick_j, wall_i, wall_j, tint_i, tint_kind, beacon_i, beacon_j])
+	# 1. The collapse: a 2 x 2 patch of columns gone, one beside it hanging short of the floor.
+	if i == pick_i and j == pick_j:
+		var cx := 12.0 + vr.randf_range(-4.8, 4.8)
+		var cz := 12.0 + vr.randf_range(-3.0, 3.0)
+		var kept := []
+		var hung := false
+		for pl in L["pillars"]:
+			var d := Vector2(pl[0] - cx, pl[1] - cz)
+			if absf(d.x) < 4.9 and absf(d.y) < 4.9:
+				continue
+			if not hung and d.length() < 8.0:
+				pl.append("hang")
+				hung = true
+			kept.append(pl)
+		L["pillars"] = kept
+		L["dark_zones"].append([cx - 3.0, cz - 3.0, cx + 3.0, cz + 3.0])
+	# 2. A free-standing wall across the side aisle, a doorway in it.
+	if i == wall_i and j == wall_j:
+		var wx := 9.6 + 2.4 * float(vr.randi() % 3)
+		var za := 0.0 if j == 0 else 15.0
+		var zb := 9.0 if j == 0 else 24.0
+		var dz := (za + zb) * 0.5
+		L["walls"].append([wx, za, wx, dz - 0.55])
+		L["walls"].append([wx, dz + 0.55, wx, zb])
+		L["doors"].append([wx, dz - 0.55, wx, dz + 0.55])
+		L["pillars"] = L["pillars"].filter(func(pl): return absf(pl[0] - wx) > 0.8 or pl[1] < minf(za, zb) - 0.5 or pl[1] > maxf(za, zb) + 0.5)
+	# 3. A patch of tubes that are not the hall's.
+	if i == tint_i and j != 1:
+		var tcs := {"warm": [1.0, 0.82, 0.62], "cold": [0.7, 0.86, 1.0], "green": [0.82, 1.0, 0.78]}
+		var tc: Array = tcs[tint_kind]
+		L["tint_zones"].append([4.0, 2.0, 20.0, 22.0, tc[0], tc[1], tc[2]])
+	# 4. Something to walk toward.
+	if i == beacon_i and j == beacon_j:
+		var bx := 12.0 + vr.randf_range(-3.0, 3.0)
+		var bz := 9.0 if j == 0 else 15.0
+		L["props"].append(["prop_crt_monitor", bx, bz, 90.0 if j == 0 else -90.0])
+		L["props"].append(["prop_office_chair", bx, bz + (1.3 if j == 0 else -1.3), 0.0 if j == 0 else 180.0])
+		L.get_or_add("screen_glows", []).append([bx, 0.35, bz])

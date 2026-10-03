@@ -62,6 +62,7 @@ func _ready() -> void:
 	_edge.set_look("silhouette")
 	_edge.visible = false
 	add_child(_edge)
+	_corner_setup()          # loaded now, not mid-run (critique 026: a 133 ms hitch)
 	_shut_snd = AudioStreamPlayer3D.new()
 	_shut_snd.bus = &"World"
 	_shut_snd.unit_size = 2.0
