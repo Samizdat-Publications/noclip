@@ -352,14 +352,15 @@ func _apply_palette(shared_mats: Dictionary) -> void:
 		var et: Array = pal["ceil_tint"]
 		(mats["ceiling"] as ShaderMaterial).set_shader_parameter("ceil_tint", Vector3(et[0], et[1], et[2]))
 	if pal.has("pillar"):
-		# Painted concrete: the wall shader without the paper (flat paint, the same water damage).
+		# Paint over the old paper: the pattern faint under the paint, its relief still there, the
+		# colour the palette's (critique 023: "untextured white developer blocks").
 		var pc: Array = pal["pillar"]
 		var pm := wm.duplicate() as ShaderMaterial
-		pm.set_shader_parameter("use_tex", false)
-		pm.set_shader_parameter("base_color", Vector3(pc[0], pc[1], pc[2]))
-		pm.set_shader_parameter("pattern_contrast", 1.0)
-		pm.set_shader_parameter("paper_sat", 1.0)
-		pm.set_shader_parameter("paper_tint", Vector3.ONE)
+		var lin := Color(pc[0], pc[1], pc[2]).srgb_to_linear()
+		pm.set_shader_parameter("pattern_contrast", 0.35)
+		pm.set_shader_parameter("paper_sat", 0.0)
+		pm.set_shader_parameter("paper_tint", Vector3(lin.r, lin.g, lin.b) / 0.49)
+		pm.set_shader_parameter("normal_strength", 0.6)
 		# Its own dirt whatever the wall's grime patches say: water lines, hand grime, scuffs (L128).
 		pm.set_shader_parameter("damage", 1.25)
 		pm.set_shader_parameter("grime_zones", 0.0)
@@ -1078,6 +1079,10 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	# Remembered wrong (S05): a lit panel that throws no light (the pool never lends it one).
 	fx.blind = hint == "blind"
 	fx.setup(st, _rng("fixture:" + id), energy, tint)
+	if L.get("quiet_dead", false) and st == Fixture.State.DEAD:
+		# Switched off, not dying: no glowing tube ends (the hall's many off panels made orange
+		# splotches all over its ceiling, critique 023).
+		fx.cathode_glow = 0.0
 	fx.apply()
 	fixtures.append(fx)
 	field.add(fx, [Vector2i(ix, iz) + _tile_off, c2 + _tile_off])

@@ -52,11 +52,13 @@ func _ready() -> void:
 	_peek.set_shadows(false)
 	_peek.visible = false
 	_peek.mat.set_shader_parameter("use_clip", true)
-	_peek.mat.set_shader_parameter("gap", 0.22)
+	_peek.mat.set_shader_parameter("gap", 0.12)
 	add_child(_peek)
 	_edge = Occupant.new()
 	_edge.set_layers(TapeEvents.LAYER_EYE)   # only the naked eye sees it
 	_edge.set_shadows(false)
+	# By eye it is nearly solid: a piece of the wall standing up, not a see-through glitch (023).
+	_edge.mat.set_shader_parameter("gap", 0.1)
 	_edge.visible = false
 	add_child(_edge)
 	_shut_snd = AudioStreamPlayer3D.new()
@@ -189,6 +191,7 @@ func _open(d: Dictionary) -> void:
 	var tilt := Basis(face.x, deg_to_rad(16.0)) * face
 	_peek.global_transform = Transform3D(tilt, Vector3.ZERO)
 	_peek.hold("look", _rng.randf_range(0.3, 0.6))
+	_paper_at(_peek, fr.origin)
 	_peek.visible = true
 	# Shift so the head lands at the edge of the door (after the pose has been applied).
 	await get_tree().process_frame
@@ -307,7 +310,28 @@ func _try_edge(force_yaw: float = INF) -> bool:
 	return false
 
 
+## The paper of the space at p: a hall's own palette, or the level's wallpaper.
+func _paper_at(o: Occupant, p: Vector3) -> void:
+	var tint := Vector3(1.03, 0.97, 0.86)
+	var sat := 1.25
+	var wm := space.mats.get("wall") as ShaderMaterial
+	if wm:
+		tint = wm.get_shader_parameter("paper_tint")
+		sat = float(wm.get_shader_parameter("paper_sat"))
+	for rm in space.rooms.values():
+		var r := rm as PortalRoom
+		if r.built and r.contains(p):
+			var pal: Dictionary = PortalRoom.PALETTES.get(r.palette, {})
+			if pal.has("wall_tint"):
+				var wt: Array = pal["wall_tint"]
+				tint = Vector3(wt[0], wt[1], wt[2])
+			if pal.has("wall_sat"):
+				sat = float(pal["wall_sat"])
+	o.set_paper(tint, sat)
+
+
 func _show_edge(p: Vector3, eye: Vector3) -> void:
+	_paper_at(_edge, p)
 	_edge.global_position = p
 	var t := Vector3(eye.x, p.y, eye.z)
 	_edge.look_at(t, Vector3.UP, true)

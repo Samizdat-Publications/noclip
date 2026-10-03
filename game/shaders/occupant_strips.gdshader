@@ -74,12 +74,16 @@ void fragment() {
 	float id = strip_id;
 	float r1 = n_hash12(vec2(id, 1.7 + seed));
 	float r2 = n_hash12(vec2(id, 5.3 + seed));
-	float g = mix(gap, gap * 0.35, tape);
+	float g = gap;
 	// Each strip covers part of its slot, offset a little; edges torn (noise along y).
 	float edge_n = n_fbm(vec2(id * 3.1, mpos.y * 9.0)) * 0.22;
 	float c0 = 0.5 * g + (r1 - 0.5) * 0.18 + edge_n * 0.4;
 	float c1 = 1.0 - 0.5 * g + (r1 - 0.5) * 0.18 - edge_n * 0.4;
-	if (strip_f < c0 || strip_f > c1) {
+	bool in_gap = strip_f < c0 || strip_f > c1;
+	// By eye the gaps are empty (you see the wall through it). On tape they are dropout: the
+	// recording has a hole there, black with white streaks, so on tape it is a person-shaped hole
+	// held together by strips of paper (S05, critique 023: "a gold glitch").
+	if (in_gap && tape < 0.5) {
 		discard;
 	}
 	// Ragged ends: some strips stop short at the top or the bottom.
@@ -117,8 +121,17 @@ void fragment() {
 	// On tape: a little chroma slip and lift.
 	alb = mix(alb, vec3(alb.r * 1.08, alb.g, alb.b * 0.9), tape * 0.6);
 	float hz = horizon_fade(VERTEX);
-	ALBEDO = alb * hz;
-	ROUGHNESS = 0.82;
-	SPECULAR = 0.3 * hz;
-	BACKLIGHT = vec3(0.25) * alb;   // thin paper lets a little light through
+	if (in_gap) {
+		float row = floor(FRAGCOORD.y / 2.0);
+		float streak = step(0.9, n_hash12(vec2(row, floor(time * 30.0)))) * step(0.3, n_hash12(vec2(floor(FRAGCOORD.x / 24.0), row + floor(time * 30.0))));
+		ALBEDO = vec3(0.0);
+		ROUGHNESS = 1.0;
+		SPECULAR = 0.0;
+		EMISSION = vec3(0.85, 0.85, 0.8) * streak * 0.9 * hz;
+	} else {
+		ALBEDO = alb * hz;
+		ROUGHNESS = 0.82;
+		SPECULAR = 0.3 * hz;
+		BACKLIGHT = vec3(0.25) * alb;   // thin paper lets a little light through
+	}
 }

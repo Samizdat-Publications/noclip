@@ -138,6 +138,13 @@ func shade(tape: float, tear: float, fade: float = 1.0) -> void:
 	mat.set_shader_parameter("fade", fade)
 
 
+## Papered in the paper of the space it stands in (a hall behind a storeroom door has its own).
+func set_paper(tint: Vector3, sat: float) -> void:
+	if mat:
+		mat.set_shader_parameter("paper_tint", tint)
+		mat.set_shader_parameter("paper_sat", sat)
+
+
 ## World position of the head (for peeking and for attention).
 func head_position() -> Vector3:
 	if skel:

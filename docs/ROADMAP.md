@@ -46,9 +46,11 @@ The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6)
 ## M3.6: Remembered wrong, batch 1 (Stewart, S04; see VISION "Remembered wrong")
 - Look toward the reference stills: cleaner, more saturated mono-yellow, brighter panel rows, plain walls with grime concentrated, huge plain blocks and columns.
 - Generator rules for the first tricks: handle-less doors, freestanding door frames, mirrored or almost-right signs, category objects (solid filing cabinet, bottle-less water cooler), chairs facing walls, the floor opening that looks down onto the level below's lit ceiling.
+- Status S05: built. Look moved toward the stills (D038: saturated mustard paper, grime in patches, cream ceiling with a bounce glow, light grid, brighter panels); storeroom halls with their own palettes, painted columns, handle-less doors, a lit far door (D039); the hall lit by a sparse grid of stronger panels so columns throw shadows (D043); remembered-wrong batch 1 as learned misunderstandings per 3 x 3 block of chunks (D040: all seven tricks above plus blind panels). The held camcorder turned the right way round with a flip-out screen (D041). Next batch: windows into the wall cavity, switches at ankle height, clocks with no hands, carpet running up a wall, the corridor that narrows, the plenum crawl.
 
 ## M4: The Entity and the watchers (effort: xhigh)
 - Abstract and plural (Stewart, S04): the Occupant as a strip-cut outline of wallpaper driven by the Meshy C_4 rig; the Dropout, a hole in the recording that slides along walls; the watchers layer (the high door that opens a crack, peripheral figures, things drawing back from wall openings).
+- Status S05 (started, D042): the Occupant is in (strip shader on the rig, nine clips, held frame-skip poses) as the tape encounter's body; the watchers: the high door that opens with a papered head looking out, the figure at the edge of sight. Not yet: the Occupant hunting (senses, stalking, chase through portals and loops), the Dropout, things drawing back from wall openings, the VHS death replay.
 - Design per VISION, Meshy to Blender pipeline, animation set, shader distortion, VHS face smear.
 - AI: senses, stalking, investigation, chase, using portals and loops, readable tells.
 - Death and the VHS death replay.

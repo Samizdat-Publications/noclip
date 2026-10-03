@@ -170,6 +170,12 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L143 | 022 | gemini | ruins it | Pillar room lighting flat, pillars cast zero shadows (repeat of L134) | FIX (S05, 787061f) | Sparse grid of stronger panels in the hall: verified shadows on frames (progress s05-hall-sparse-lights) |
 | L144 | 022 | gemini | hurts | Monster a static untextured black mannequin (repeat of L130) | FIX (S05, 787061f) | The Occupant |
 | L145 | 022 | gemini | hurts | Materials lack normal maps and specular; carpet matte (repeat of L136) | DEFER M7 | Wallpaper and carpet do have normal maps; the wet sheen is subtle on video. Next sound and material polish |
+| L146 | 023 | claude | hurts | The Occupant by eye reads as a see-through gold texture glitch, wrong colour for the cold hall; wants a silhouette you'd mistake for a pillar until it moves | FIX (S05) | By eye nearly solid (gap 0.1) and papered in the paper of the space it stands in; on tape the gaps between its strips are dropout (black, white streaks): a person-shaped hole held together by paper |
+| L147 | 023 | claude+gemini | ruins it | Green and orange splotches on the hall ceiling | FIX (S05) | Green: cold tubes through the warm haze; each palette now has its own haze colour and a bluer cold tube. Orange: the sparse grid left many dead panels with glowing tube ends; the hall's panels are switched off, not dying |
+| L148 | 023 | claude+gemini | hurts | Columns look like untextured white developer blocks (repeat of L128) | FIX (S05) | Paint over the old paper: the pattern faint under the paint, its relief kept, palette colour, own grime |
+| L149 | 023 | claude+gemini | hurts | The yellow areas are flat and generic next to the halls; fixtures cast no distinct pools in the yellow halls | DEFER S06 | Bring the hall's lighting idea (fewer, stronger, pooled lights, one impossible thing per room) to the level; balance against Stewart's bright reference stills |
+| L150 | 023 | claude | hurts | Corridor walls go near black off-axis (dark rooms seen from halls) | DEFER S06 | Dark with a reason: keep a lit near wall, a dead panel at the end |
+| L151 | 023 | gemini | nitpick | Footsteps a bit too fast and rhythmic for the walking speed | DEFER M3 polish | Step interval from actual speed |
 
 ## Closed
 

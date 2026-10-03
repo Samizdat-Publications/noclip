@@ -44,6 +44,7 @@ A layer of almost-sightings that runs all the time, separate from any monster at
 - A silhouette in a far doorway for one frame while a light flickers.
 - Halden's tripod camcorders that have turned to follow you; chairs that face you (built S03).
 Rule: never a clear look, never twice the same way in a row, and it escalates with Drift.
+Built S05 (D042): the high door (it stands open while you are not looking, a papered head and hand in the gap, shut when you look back) and the figure at the edge of sight (eye-only, fades as you turn to it). Both are the Occupant.
 
 ## Halden Duplicating (placeholder name, DECISIONS D010)
 A 1990s tape-duplication company whose clean-room crews (white suits, hoods, lab coats) entered the Backrooms through their own mastering equipment. They treat it as a recording and want the "master" at the bottom. They are not your friends and not your enemies:
@@ -99,6 +100,7 @@ Seed concept: **the Occupant.** A tall humanoid that is a misremembered person. 
 - **Escalation per depth:** more aggressive, new behaviors. Deeper levels add a second entity type of your own design (for example, something that only moves in total darkness). Never use named fan-wiki entities.
 - **Pipeline:** Meshy (image or text to 3D, auto-rig, animation and text-to-motion) for the base, Blender headless to distort proportions, add damage and wetness, and retarget. Mixamo is a fallback only (no API, unreliable): put it in NEEDS_STEWART if needed. Vertex-shader distortion and the VHS smear on its face sell the uncanny.
 
+S05: the Occupant is in the game (D042): vertical strips of Level 0's wallpaper on the Meshy rig, gaps between them, the back of the paper showing inside, frozen mid-move on every frame skip; by eye it is nearly part of the wall, on tape it is more there. It is the body of the tape encounter and of the watchers; it does not hunt yet.
 S04 direction (Stewart): the monsters are abstract, and there can be several. Concept work so far (D035): the Occupant, the building's own copy of a person, papered in Level 0's wallpaper (Meshy 7.1 model C_4, progress/0123 to 0126). It is to be rendered abstractly: a tall outline made of loose wallpaper strips hanging in the air with gaps between them, so you see the wall through it, fluttering and stuttering as it moves (the Meshy body and animations drive it, a shader cuts it into strips). A second one, the Dropout: a door-sized hole in the recording (black, white dropout streaks, tracking tear) that slides along walls, seen only through the camcorder; to the eye the wallpaper pattern stutters where it is and the lights die as it passes. The watchers (above) are the third, the ones you never see clearly.
 
 ## Non-euclidean toolkit

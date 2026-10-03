@@ -51,9 +51,9 @@ var plan_rect := Rect2()
 const PALETTES := {
 	"yellow": {"pillar": [0.8, 0.68, 0.34]},
 	"cold": {"wall_tint": [0.84, 0.88, 0.95], "wall_sat": 0.12, "carpet_sat": 0.25, "carpet_tint": [0.8, 0.86, 0.98],
-		"ceil_tint": [0.93, 0.96, 1.02], "pillar": [0.6, 0.62, 0.64], "tube": [0.78, 0.9, 1.0]},
+		"ceil_tint": [0.93, 0.96, 1.02], "pillar": [0.6, 0.62, 0.64], "tube": [0.84, 0.9, 1.0], "fog": [0.88, 0.91, 0.97]},
 	"green": {"wall_tint": [0.84, 1.03, 0.86], "wall_sat": 0.35, "carpet_sat": 0.6, "carpet_tint": [0.92, 1.02, 0.9],
-		"pillar": [0.7, 0.78, 0.68], "tube": [0.92, 1.0, 0.86]},
+		"pillar": [0.7, 0.78, 0.68], "tube": [0.92, 1.0, 0.86], "fog": [0.9, 0.94, 0.88]},
 }
 var palette := "yellow"
 var floor_y := 0.0               # world height of the hall's floor (its shaders shade by height)
@@ -105,7 +105,9 @@ func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, 
 		fv.layers = POCKET
 		var fm := FogMaterial.new()
 		fm.density = fogd
-		fm.albedo = Color(0.95, 0.92, 0.84)
+		# its own air colour: cold tubes through the level's warm haze read green (critique 023)
+		var fc: Array = PALETTES.get(palette, {}).get("fog", [0.95, 0.92, 0.84])
+		fm.albedo = Color(fc[0], fc[1], fc[2])
 		fm.edge_fade = 0.05
 		fv.material = fm
 		add_child(fv)
@@ -317,6 +319,7 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 	# instead of stopping at a line (L127).
 	var lr := Game.rng("halllights:%s:%d:%d" % [key, i, j])
 	L["light_gain"] = float(Game.opts.get("hall_gain", "1.8"))
+	L["quiet_dead"] = true
 	for f in L["fixtures"]:
 		var gx: float = f[0] + ox
 		var kx := int(round((gx - 2.7) / 4.8))
