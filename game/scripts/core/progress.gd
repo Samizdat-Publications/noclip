@@ -15,7 +15,8 @@ const KIT := {
 	"radio": ["FIELD RADIO", [300], [2], "The hiss clears when you face the way down."],
 	"crowbar": ["CROWBAR", [340], [2], "Opens the doors with no handles."],
 }
-const KIT_ORDER := ["flash", "flares", "boots", "stock", "radio", "crowbar"]
+## What the locker offers. The radio and the crowbar join when they do something (S08).
+const KIT_ORDER := ["flash", "flares", "boots", "stock"]
 
 var salvage := 0
 var lifetime := 0
