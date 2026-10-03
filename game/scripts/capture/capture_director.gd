@@ -70,6 +70,12 @@ func _process(_delta: float) -> void:
 		var s: Dictionary = shots.pop_front()
 		_save(s["path"])
 	if _focus_i == -1 and Game.clock >= duration:
+		# A death replay still playing finishes first; then the Occupant stands down for the posed shots.
+		var sp := player.space
+		if sp.get("replay") and sp.replay.playing:
+			return
+		if sp.get("hunter"):
+			sp.hunter.stand_down()
 		_focus_i = 0
 		_focus_wait = -1.0
 	if _focus_i >= 0:

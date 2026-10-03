@@ -129,6 +129,13 @@ func active() -> bool:
 	return state != S.ABSENT
 
 
+## Gone for good (the capture's posed shots, after the run).
+func stand_down() -> void:
+	if state != S.ABSENT and state != S.KILL:
+		_gone()
+	_next = 1e9
+
+
 ## Come sooner (something drew its attention: you filmed it on tape).
 func soon(seconds: float) -> void:
 	if state == S.ABSENT and _next < 1e8:

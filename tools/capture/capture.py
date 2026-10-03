@@ -138,7 +138,9 @@ def main():
             json.dump(shots, open(trimmed, "w", encoding="utf-8"))
             focus_path = trimmed.replace("\\", "/")
     movie = os.path.join(raw, "movie.avi")
-    frames_total = int((a.duration + 3.0 * n_focus + 4.0) * 30)
+    # +30 s: a death replay still playing at the end of the run is finished before the posed shots
+    # (the game quits itself when the shots are done).
+    frames_total = int((a.duration + 3.0 * n_focus + 4.0 + 30.0) * 30)
     cmd = [paths.godot(), "--path", paths.GAME, "--resolution", "2560x1440", "--write-movie", movie,
            "--fixed-fps", "30", "--disable-vsync", "--quit-after", str(frames_total), "--",
            f"--seed={seed}", f"--capture={raw}", f"--duration={a.duration}", f"--stills={a.stills}",

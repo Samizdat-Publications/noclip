@@ -4,8 +4,8 @@ You were closing up the furniture store when you found the wall in the back, out
 
 Now there is carpet that never dries, a hum that never stops, and fluorescent light falling on rooms nobody built. You still have your camcorder. It sees things you can't.
 
-Go deeper. Film what you find. Find the seams that lead out, and try to bring the tape home.
+Something in here is made of the same paper as the walls. You will hear it before you see it, and you will only ever see it on tape.
 
-The place remembers you: your chalk marks, your footprints, and the camera you dropped the last time you died.
+Go deeper. Film what you find. Find the seams that lead out. The place remembers you, and the camera you dropped the last time you died.
 
-First-person surreal horror for one player. Slow dread, rare scares, and the feeling that the hallway behind you was shorter a minute ago.
+First-person surreal horror for one player. Slow dread, rare scares.

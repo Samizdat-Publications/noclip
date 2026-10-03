@@ -1006,7 +1006,7 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 		st = Fixture.State.ON
 	if L.get("steady_lights", false):
 		# Loop copies must look identical at every moment: no flicker, only on or dead.
-		st = Fixture.State.DEAD if in_dark else Fixture.State.ON
+		st = Fixture.State.DEAD if in_dark or hint == "dead" else Fixture.State.ON
 		dim = false
 	if c.distance_to(ctx["spawn"]) < 3.2 and st != Fixture.State.PULSE:
 		st = Fixture.State.ON
@@ -1033,6 +1033,12 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	if hint == "dim":
 		energy *= 0.55
 		tint = tint * Color(1.0, 0.88, 0.74)   # tired, warm, nearly spent tubes
+	if hint == "strong":
+		# One of the few panels left on in a pooled hall (S06): it carries the light of its dead
+		# neighbors, so the pools are bright and the gaps between them dark.
+		energy *= float(Game.opts.get("strong_gain", "1.6"))
+		if st == Fixture.State.DEAD and not in_dark:
+			st = Fixture.State.ON
 	var variant := r.randi()
 	var offset := r.randf_range(0.0, 7.9)
 

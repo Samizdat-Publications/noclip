@@ -245,7 +245,7 @@ func _give(fx: Fixture, slot: String, obj) -> void:
 		"light":
 			var l: SpotLight3D = obj
 			l.global_transform = Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0 if fx.along_x else PI * 0.5, 0)), top - Vector3(0, 0.004, 0))
-			l.spot_range = _base_range * fx.ceiling_h / 2.6
+			l.spot_range = _base_range * fx.ceiling_h / 2.6 * (1.18 if fx.base_energy > 1.25 else 1.0)
 			l.light_color = fx.tint
 			fx.light = l
 		"hum":

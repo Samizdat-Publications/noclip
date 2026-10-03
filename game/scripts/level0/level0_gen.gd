@@ -290,10 +290,21 @@ func generate(cx: int, cz: int) -> Dictionary:
 			var run := hw.randi_range(2, 4)
 			for k in range(start, mini(start + run, hall_fx.size())):
 				L["fixtures"][hall_fx[k]].append("dead")
+		_pooled_run(L, hall_fx, hw)
 		if hw.randf() < 0.22:
 			var lx0 := snappedf(hw.randf_range(3.0, 13.0), MOD)
 			var ln := MOD * hw.randi_range(4, 6)
 			L["ceil_zones"] = [[lx0, hr0 * MOD, lx0 + ln, (hr0 + 2) * MOD, 2.15]]
+	# North-south highways get the same pools.
+	var hc0 := hwy_col(cx)
+	if hc0 >= 0 and not spawn_chunk:
+		var col_fx := []
+		for i in L["fixtures"].size():
+			var f: Array = L["fixtures"][i]
+			if f[0] > hc0 * MOD and f[0] < (hc0 + 2) * MOD and f.size() <= 3:
+				col_fx.append(i)
+		col_fx.sort_custom(func(a, b): return L["fixtures"][a][1] < L["fixtures"][b][1])
+		_pooled_run(L, col_fx, _rng("hwycol:%d:%d" % [cx, cz]))
 	# The survey crew (D010, D022) left a camcorder on a tripod recording an empty stretch of hall,
 	# its red light still blinking, and sprayed their marks on the hall walls here and there.
 	var cr := _rng("crew:%d:%d" % [cx, cz])
@@ -363,6 +374,11 @@ func _loop_layout(cx: int, cz: int) -> Dictionary:
 	var strip := Rect2i(0, hr, NMOD, 2)
 	var lf := {"m": strip, "rect": Rect2(Vector2(strip.position) * MOD, Vector2(strip.size) * MOD), "depth": 0, "corridor": true, "highway": true}
 	_furnish_room(r, L, lf, false)
+	# Pools of light, the same in every copy (S06, L155).
+	var idx := []
+	for i in L["fixtures"].size():
+		idx.append(i)
+	_pooled_run(L, idx, _rng("looplight:%d" % cz))
 	# The lone chair that keeps coming back: the tell that you are walking the same hall again.
 	var zc := (hr + 2) * MOD - T * 0.5 - 0.42
 	L["props"].append(["prop_folding_chair_sf", r.randf_range(8.0, 16.0), zc, 0.0])
@@ -736,8 +752,37 @@ func _furnish_room(r: RandomNumberGenerator, L: Dictionary, lf: Dictionary, spaw
 			if blocked:
 				continue
 			L["fixtures"].append([px, pz, 1 if along_x else 0])
-	if kind != "corridor" and not lf.get("pocket", false):
+	if kind == "hall" and not lf.get("pocket", false):
+		_sparse_hall(L, rr, first_fixture)
+	elif kind != "corridor" and not lf.get("pocket", false):
 		_room_mood(L, rr, first_fixture)
+
+
+## A pillar hall is lit like the storeroom halls (D043, S06 L160): one panel in four, each stronger,
+## so every column has one light that wins and throws a shadow you can read, with dark between the
+## pools; a few strays left on so the pattern is not a pattern.
+func _sparse_hall(L: Dictionary, rr: Rect2, first: int) -> void:
+	var fx: Array = L["fixtures"]
+	var sr := _rng("sparse:%d:%d:%d:%d" % [L["chunk"][0], L["chunk"][1], int(rr.position.x * 10), int(rr.position.y * 10)])
+	var pi := sr.randi() % 2
+	var pj := sr.randi() % 2
+	for i in range(first, fx.size()):
+		var gi := int(round((fx[i][0] - rr.position.x) / 2.4))
+		var gj := int(round((fx[i][1] - rr.position.y) / 3.0))
+		var keep := (gi % 2 == pi and gj % 2 == pj) or sr.randf() < 0.07
+		fx[i].append("strong" if keep else "dead")
+
+
+## A long hall lit in pools (S06, L155): every second or third panel on and stronger, the rest dark,
+## so you walk from pool to pool. `idx` are the hall's fixtures in order along it.
+func _pooled_run(L: Dictionary, idx: Array, rnd: RandomNumberGenerator) -> void:
+	var per := 2 if rnd.randf() < 0.7 else 3
+	var ph := rnd.randi() % per
+	for k in idx.size():
+		var f: Array = L["fixtures"][idx[k]]
+		if f.size() > 3:
+			continue
+		f.append("strong" if k % per == ph else "dead")
 
 
 ## Seams (VISION "Exits", D022): about one chunk in three has a solid block standing in one of
@@ -1136,9 +1181,16 @@ func _room_mood(L: Dictionary, rr: Rect2, first: int) -> void:
 		for i in range(first, fx.size()):
 			var lowside: bool = (fx[i][0] < c.x) if along_x else (fx[i][1] < c.y)
 			fx[i].append("dead" if lowside == keep_low else "on")
-	elif roll < 0.68:
+	elif roll < 0.66:
 		for i in range(first, fx.size()):
 			fx[i].append("dim")
+	elif n >= 4 and roll < 0.82:
+		# Pools (S06, L155): every other panel on and stronger, like the storeroom halls.
+		var ph := mr.randi() % 2
+		for i in range(first, fx.size()):
+			var gi := int(round((fx[i][0] - rr.position.x) / 2.4))
+			var gj := int(round((fx[i][1] - rr.position.y) / 3.0))
+			fx[i].append("strong" if (gi + gj) % 2 == ph else "dead")
 	var tint_roll := mr.randf()
 	if tint_roll < 0.15:
 		L["tint_zones"].append([rr.position.x, rr.position.y, rr.end.x, rr.end.y, 0.76, 0.87, 1.0])    # cold blue-white
