@@ -61,7 +61,9 @@ vec3 halo_at(vec2 p) {
 }
 
 void fragment() {
-	bool expl = COLOR.a < 0.5;
+	bool expl = COLOR.a < 0.75;
+	// COLOR.a 0.5: a ceiling laid facing up (the level below seen through a floor opening, S05).
+	bool face_up = COLOR.a > 0.25 && COLOR.a < 0.75;
 	vec2 tc = wpos.xz / tile_size;
 	vec2 uv = expl ? UV : fract(tc);
 	float rnd = expl ? COLOR.r : n_hash12(floor(tc) + vec2(31.7, 11.3));
@@ -81,9 +83,11 @@ void fragment() {
 	float l = dot(alb, vec3(0.2126, 0.7152, 0.0722));
 	alb = mix(vec3(l), alb, ceil_sat) * 1.06 * ceil_tint;
 	// A tile that fell onto the wet carpet is dirty and damp, not bright white (critique 006).
-	if (wup > 0.5) { alb *= vec3(0.36, 0.33, 0.28); }
+	if (wup > 0.5 && !face_up) { alb *= vec3(0.36, 0.33, 0.28); }
 	ALBEDO = alb;
-	if (wpos.y > ceiling_h - 0.15) {
+	// Every ceiling face pointing down gets the glow, low ceiling stretches included (S05: a lowered
+	// stretch read as a black slab, critique 021).
+	if (wup < -0.5 && wpos.y > 1.5) {
 		EMISSION = alb * (halo_at(field_p(wraw)) * halo_strength + field_bounce(field_p(wraw)) * bounce_strength);
 	}
 	ROUGHNESS = use_tex ? textureGrad(rough_tex, uv, gx, gy).r : 0.93;

@@ -79,12 +79,56 @@ func _ready() -> void:
 			break
 	_vm_baked = vm_path.contains("_v3")
 	if ResourceLoader.exists(vm_path):
-		var vm := (load(vm_path) as PackedScene).instantiate() as Node3D
+		var body := (load(vm_path) as PackedScene).instantiate() as Node3D
+		# The model was built with its lens toward you (S05: that is why it read as a pistol aimed
+		# back at the player, L092/L125). Turned round inside a pivot whose origin is the eyecup and
+		# whose -z is the way the lens looks.
+		var vm := Node3D.new()
+		vm.name = "camcorder_view"
+		vm.add_child(body)
+		body.transform = Transform3D(Basis(Vector3.UP, PI), Vector3(0.0, 0.0, -0.215))
 		cam.add_child(vm)
+		_add_flip_screen(vm)
 		_prep_viewmodel(vm)
 		vm.visible = false
 		camcorder.viewmodel = vm
 	_setup_steps()
+
+
+## The open flip-out screen on the camera's left side, facing you (S05, L092/L125: critics read the
+## held camera as a pistol four times; the lit side screen is the one shape that says camcorder).
+## Pivot frame: eyecup at the origin, lens toward -z, the body's left side at x = -0.06.
+func _add_flip_screen(vm: Node3D) -> void:
+	var lcd := Node3D.new()
+	lcd.name = "flip_screen"
+	vm.add_child(lcd)
+	var frame := MeshInstance3D.new()
+	var fb := BoxMesh.new()
+	fb.size = Vector3(0.078, 0.054, 0.007)
+	frame.mesh = fb
+	var fm := StandardMaterial3D.new()
+	fm.albedo_color = Color(0.07, 0.07, 0.075)
+	fm.roughness = 0.55
+	frame.material_override = fm
+	frame.position = Vector3(-0.06 - 0.039, -0.022, -0.118)
+	lcd.add_child(frame)
+	var hinge := MeshInstance3D.new()
+	var hb := BoxMesh.new()
+	hb.size = Vector3(0.008, 0.05, 0.012)
+	hinge.mesh = hb
+	hinge.material_override = fm
+	hinge.position = Vector3(-0.062, -0.022, -0.122)
+	lcd.add_child(hinge)
+	var screen := MeshInstance3D.new()
+	var q := QuadMesh.new()
+	q.size = Vector2(0.064, 0.044)
+	screen.mesh = q
+	var sm := ShaderMaterial.new()
+	sm.shader = load("res://shaders/cam_lcd.gdshader")
+	screen.material_override = sm
+	screen.position = Vector3(-0.06 - 0.039, -0.022, -0.118 + 0.0036)
+	lcd.add_child(screen)
+	camcorder.lcd_mat = sm
 
 
 ## The held camcorder is part of the view, not the world: no shadows, no GI.

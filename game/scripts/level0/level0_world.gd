@@ -46,6 +46,8 @@ func build(p_seed: int) -> void:
 	super.build(p_seed)
 	space_id = &"level0"
 	gen = Level0Gen.new(p_seed, float(Game.opts.get("fidelity", "0.9")))
+	if Game.opts.has("wrong"):
+		gen.forced_wrong = Array(String(Game.opts["wrong"]).split(","))
 	var r := Game.rng("level0:look")
 	seed_offset = Vector2(r.randf_range(0.0, 50.0), r.randf_range(0.0, 50.0))
 	mats = Level0Look.make_materials(seed_offset)
@@ -744,6 +746,8 @@ func _crossing(a: Vector2i, b: Vector2i, from: Vector3, to: Vector3) -> Array:
 ## Hand-posed review shots chosen by the level itself (capture --focus=auto): the landmarks and
 ## splice errors near the spawn, framed from a few meters away, plus a few open views.
 func get_focus_shots(n: int = 8) -> Array:
+	if Game.opts.has("focus_wrong"):
+		return _wrong_shots(n)
 	var out := []
 	# The opening view down the spawn hall.
 	var spawn_xf := get_spawn_transform()
@@ -814,9 +818,10 @@ func get_focus_shots(n: int = 8) -> Array:
 			marks.append([Vector2(f[0], f[1]), 2.0])
 		for es in L.get("exit_signs", []):
 			marks.append([Vector2(es[0], es[1]), 8.0])
+		marks.append_array(_wrong_marks(L))
 		for m in marks:
 			var target := Vector3(m[0].x, 0.0, m[0].y) + ch.position
-			var pose := _pose_toward(target, float(m[1]))
+			var pose := _pose_toward(target, float(m[1]), 1.4)
 			if not pose.is_empty():
 				out.append(pose)
 	# Fill with open views from interest points.
@@ -836,6 +841,42 @@ func get_focus_shots(n: int = 8) -> Array:
 		# Focus yaw is the mirror of the player's yaw (capture_director spawns with -yaw).
 		out.append({"pos": [p.x, p.z], "yaw": rad_to_deg(-best_yaw), "pitch": -2.0, "settle": 2.5})
 	return out.slice(0, n)
+
+
+## Remembered-wrong things in a chunk layout worth a look (S05): [chunk-local point, pitch].
+func _wrong_marks(L: Dictionary) -> Array:
+	var marks := []
+	for ff in L.get("free_frames", []):
+		marks.append([Vector2(ff[0], ff[1]), 4.0])
+	for fh in L.get("floor_holes", []):
+		marks.append([Vector2((fh[0] + fh[2]) * 0.5, (fh[1] + fh[3]) * 0.5), -42.0])
+	var cats := 0
+	for pr in L.get("props", []):
+		if String(pr[0]).begins_with("cat:") or String(pr[0]).contains(":nobottle"):
+			if cats < 1:
+				marks.append([Vector2(pr[1], pr[2]), -6.0])
+			cats += 1
+	for fd in L.get("fake_doors", []):
+		if fd.size() > 5 and String(fd[5]).contains("nohandle") and float(fd[4]) < 0.5:
+			marks.append([Vector2(fd[0], fd[1]), 0.0])
+			break
+	return marks
+
+
+## Builder look-dev: only the remembered-wrong things nearest the start (--focus_wrong).
+func _wrong_shots(n: int) -> Array:
+	var out := []
+	var keys := chunks.keys()
+	keys.sort_custom(func(a, b): return a.length_squared() < b.length_squared())
+	for c in keys:
+		var ch: Level0Chunk = chunks[c]
+		for m in _wrong_marks(ch.L):
+			var pose := _pose_toward(Vector3(m[0].x, 0.0, m[0].y) + ch.position, float(m[1]), 1.4)
+			if not pose.is_empty():
+				out.append(pose)
+			if out.size() >= n:
+				return out
+	return out
 
 
 ## A standing spot 2.5 to 4 m from target with a clear line of sight, looking at it.
@@ -878,7 +919,7 @@ func resolve_focus(f: Dictionary) -> Dictionary:
 	return g
 
 
-func _pose_toward(target: Vector3, pitch: float) -> Dictionary:
+func _pose_toward(target: Vector3, pitch: float, slack: float = 0.7) -> Dictionary:
 	for dist in [3.2, 2.6, 4.0]:
 		for k in 8:
 			var a := TAU * k / 8.0
@@ -887,7 +928,7 @@ func _pose_toward(target: Vector3, pitch: float) -> Dictionary:
 				continue
 			var to: Vector3 = target - p
 			var yaw := atan2(-to.x, -to.z)
-			if view_depth(p, yaw, dist) < dist - 0.7:
+			if view_depth(p, yaw, dist) < dist - slack:
 				continue
 			return {"pos": [p.x, p.z], "yaw": rad_to_deg(-yaw), "pitch": pitch, "settle": 2.5}
 	return {}

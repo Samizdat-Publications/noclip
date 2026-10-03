@@ -151,6 +151,17 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L124 | 020 | claude | nitpick | Pillars wear the wallpaper at a giant scale; carpet reads as sandy noise in the hall | DEFER M3.6 | The hall's 4.4 m walls stretch the UV height; pillars in the hall should be painted concrete |
 | L125 | 020 | gemini | hurts | No physical lift of the camcorder (it snaps to the filter) | DEFER | Related to L092 (the held camcorder) |
 | L126 | QA S04 | qa-auditor | nitpick | A black unlit band on the storeroom door jamb when pressed against it (between the portal view and the wall) | DEFER | The jamb lining inside the portal box depth: extend the portal box sides to cover the lining, or light the lining |
+| L127 | 021 | claude | hurts | Darkness reads as broken lighting: a lowered ceiling stretch is a flat black slab (frame_06); the hall's ceiling ends in a hard floating shelf (frame_15, frame_17) | FIX (S05) | Every downward ceiling face now gets the bounce glow (it only applied at 2.6 m); the hall's lights thin out toward the far end instead of stopping at a line |
+| L128 | 021 | claude | hurts | The hall's columns are plain white showroom boxes; the hall became too clean and bright to be scary (it was oppressive in 020) | FIX (S05) | Columns get their own grime (water lines, scuffs) whatever the grime patches say; the cold palette less white; the hall gets its own thicker haze (FogVolume) and fewer lit panels |
+| L129 | 021 | claude | hurts | The main hallway is too bright and cheerful: wants dead fixtures, one flickering panel, pools of dark | FIX (S05) | Keep the reference-still brightness but more dark gaps: dead runs in more halls, a failing tube per hall stretch |
+| L130 | 021 | claude+gemini | hurts | The monster does not register: a flat dark cutout, the same pose (Claude 5); "a blurry tall shadow-man, cliche" (Gemini 5). Repeat of L108 | FIX (S05, M4) | The Occupant replaces the tape figure's body: a wallpaper-strip outline driven by its Meshy animations |
+| L131 | 021 | claude | nitpick | A faint rectangular decal edge behind the tripod; crate and tape look pasted on | DEFER M7 | Polish pass |
+| L132 | 021 | claude | nitpick | Two static blackouts show nearly the same dark blob (a template) | DEFER (verify) | Check the glitch overlay for a fixed pattern |
+| L133 | 021 | claude | nitpick | A misspelled exit sign is unreadable through the camcorder, so the joke does not land | DEFER | The signs are for the naked eye; revisit if a critic sees one by eye and misses it |
+| L134 | 021 | gemini | ruins it | Pillar hall "fullbright": pillars cast no shadows, no light direction (repeat of 020) | FIX (S05) | Fewer lit panels in the hall (rows and patches dead) so pools and pillar shadows read; thicker haze |
+| L135 | 021 | gemini | hurts | Corners where walls meet floor and ceiling have no darkening (repeat of L049, L079, L093) | FIX (S05) | Corner strips stronger; the brighter look had washed them out |
+| L136 | 021 | gemini | hurts | Carpet looks and sounds dry ("carpet that never dries"; repeat of L027, L081, L105) | DEFER M3 polish | Returned 3+ times: next sound pass gets squelch on every step on wet patches and a wet specular glint; recorded here so it is not lost |
+| L137 | 021 | gemini | nitpick | Ceiling lights look like stark white stickers without glare | FIX (small, S05) | A little more bloom on the lenses |
 
 ## Closed
 

@@ -1,0 +1,29 @@
+{
+  "method": "procedural PIL/numpy (same lamp as build_story_decals.exit_sign)",
+  "seed": 1997,
+  "variants": {
+    "ex1t": {
+      "text": "EX1T",
+      "mirrored": false
+    },
+    "mirror": {
+      "text": "EXIT",
+      "mirrored": true
+    },
+    "eixt": {
+      "text": "EIXT",
+      "mirrored": false
+    },
+    "backe": {
+      "text": "\u018eXIT",
+      "mirrored": false
+    }
+  },
+  "files": [
+    "exit_sign_wrong_ex1t_emission",
+    "exit_sign_wrong_mirror_emission",
+    "exit_sign_wrong_eixt_emission",
+    "exit_sign_wrong_backe_emission"
+  ],
+  "cost_usd": 0
+}

@@ -161,7 +161,7 @@ func _process(delta: float) -> void:
 		var p: Vector3 = fx.global_position
 		var d := Vector2(p.x - listener.x, p.z - listener.z).length()
 		var dark: bool = fx.state == Fixture.State.DEAD and fx.level < 0.002
-		if d < LIGHT_R and not dark:
+		if d < LIGHT_R and not dark and not fx.blind:
 			lit.append([d, fx])
 		if d < HUM_R and not dark:
 			hum.append([d, fx])

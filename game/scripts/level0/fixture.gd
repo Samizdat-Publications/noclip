@@ -27,6 +27,7 @@ var variant := 0              # picks hum and tick variants, stable per fixture
 var audio_offset := 0.0       # where its hum loop starts, so neighbors are not in phase
 var field: FixtureField       # told whenever the level changes (ceiling glow)
 var field_index := -1
+var blind := false            # lit lens, no light (remembered wrong, S05)
 
 var light: Light3D
 var lens: MeshInstance3D

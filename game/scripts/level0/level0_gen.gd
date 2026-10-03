@@ -29,6 +29,7 @@ const DOOR_W := 1.0
 
 var world_seed := 0
 var fidelity := 0.9
+var forced_wrong: Array = []   # debug: force remembered-wrong rules everywhere (--wrong=a,b)
 
 
 func _init(p_seed: int, p_fidelity: float = 0.9) -> void:
@@ -202,6 +203,8 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"closets": [],
 		"holes": [],
 		"ladders": [],
+		"free_frames": [],
+		"floor_holes": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -260,6 +263,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 	# --- landmarks and splice errors
 	_landmarks(r, L, leaves, spawn_chunk)
 	_crawl_holes(cx, cz, L)
+	_remembered_wrong(cx, cz, L, leaves, spawn_chunk)
 	# Graffiti from earlier people (pipeline/manifests/graffiti_level0.json). Fair hints first:
 	# "TURN AROUND" just before a loop run, "LOOK THROUGH IT" near the start of the run.
 	var hr0 := hwy_row(cz)
@@ -280,9 +284,10 @@ func generate(cx: int, cz: int) -> Dictionary:
 			var f: Array = L["fixtures"][i]
 			if f[1] > hr0 * MOD and f[1] < (hr0 + 2) * MOD and f.size() <= 3:
 				hall_fx.append(i)
-		if hall_fx.size() >= 4 and hw.randf() < 0.55:
+		# 0.55 to 0.75 and runs of 2 to 4 (critique 021: the bright S05 halls read "cheerful", L129).
+		if hall_fx.size() >= 4 and hw.randf() < 0.75:
 			var start := hw.randi_range(0, hall_fx.size() - 3)
-			var run := hw.randi_range(2, 3)
+			var run := hw.randi_range(2, 4)
 			for k in range(start, mini(start + run, hall_fx.size())):
 				L["fixtures"][hall_fx[k]].append("dead")
 		if hw.randf() < 0.22:
@@ -1427,6 +1432,214 @@ func _landmarks(r: RandomNumberGenerator, L: Dictionary, leaves: Array, spawn_ch
 				var pc := cc + (Vector2(off, 0) if along else Vector2(0, off))
 				L["props"].append(["prop_cubicle_panel_sf", pc.x, pc.y, 0.0 if along else 90.0])
 			break
+
+
+# ------------------------------------------------------------------ remembered wrong (S05)
+
+## VISION "Remembered wrong": Level 0 was rebuilt from a description, so its objects have the right
+## name and the wrong sense. The errors are learned misunderstandings, not noise: each block of
+## 3 x 3 chunks has picked up one or two of them and repeats them everywhere in that block (all its
+## exit signs misspelled the same way, every filing cabinet a solid block, every loose chair facing
+## a wall). Own random streams, so the rest of a chunk keeps its sequence.
+const WRONG_RULES := ["nohandle", "frames", "signs", "category", "chairs_wall", "floor_hole", "blind_panel"]
+const SIGN_VARIANTS := ["ex1t", "mirror", "eixt", "backe"]
+
+
+func wrong_rules(cx: int, cz: int) -> Array:
+	var bx := floori(cx / 3.0)
+	var bz := floori(cz / 3.0)
+	if not forced_wrong.is_empty():
+		return forced_wrong
+	if bx == 0 and bz == 0:
+		return ["frames", "category", "signs"]    # the start shows the idea early
+	var r := _rng("wrongrules:%d:%d" % [bx, bz])
+	var pool := WRONG_RULES.duplicate()
+	_seeded_shuffle(r, pool)
+	return pool.slice(0, 2)
+
+
+func wrong_sign(cx: int, cz: int) -> String:
+	var r := _rng("wrongsign:%d:%d" % [floori(cx / 3.0), floori(cz / 3.0)])
+	return SIGN_VARIANTS[r.randi() % SIGN_VARIANTS.size()]
+
+
+func _remembered_wrong(cx: int, cz: int, L: Dictionary, leaves: Array, spawn_chunk: bool) -> void:
+	if loop_index(cx, cz) >= 0:
+		return     # loop copies must stay identical and plain
+	var rules := wrong_rules(cx, cz)
+	L["wrong"] = rules
+	var wr := _rng("wrong:%d:%d" % [cx, cz])
+	var rooms := []
+	for lf in leaves:
+		if lf.get("corridor", false) or lf.get("pocket", false) or lf.get("tall", false) or lf.get("closet", false):
+			continue
+		rooms.append(lf)
+	_seeded_shuffle(wr, rooms)
+	if "signs" in rules:
+		L["sign_variant"] = wrong_sign(cx, cz)
+		# make sure there is a sign to misread: one over a doorway if the chunk has none
+		if L["exit_signs"].is_empty() and L["doors"].size() > 0:
+			var d: Array = L["doors"][wr.randi() % L["doors"].size()]
+			var horiz: bool = absf(d[1] - d[3]) < 0.001
+			var c := Vector2((d[0] + d[2]) * 0.5, (d[1] + d[3]) * 0.5)
+			var n := Vector2(0, 1) if horiz else Vector2(1, 0)
+			if wr.randf() < 0.5:
+				n = -n
+			if d.size() <= 4 and c.x > 1.0 and c.y > 1.0 and c.x < CHUNK - 1.0 and c.y < CHUNK - 1.0:
+				L["exit_signs"].append([c.x + n.x * 0.1, c.y + n.y * 0.1, n.x, n.y])
+	if "nohandle" in rules:
+		# Doors set into solid walls, copied from the word "door": no handle, no hinges.
+		for rm in rooms.slice(0, 2):
+			var spots := _wall_spots(L, rm["rect"], 2.4)
+			if spots.is_empty():
+				continue
+			var s: Array = spots[wr.randi() % spots.size()]
+			var mid: Vector2 = (s[0] + s[1]) * 0.5
+			if not _near_door(L, mid, 1.4):
+				L["fake_doors"].append([mid.x + s[2].x * 0.1, mid.y + s[2].y * 0.1, s[2].x, s[2].y, 0.0, "nohandle"])
+		for fd in L["fake_doors"]:
+			while fd.size() < 5:
+				fd.append(0.0)
+			if fd.size() < 6:
+				fd.append("nohandle")
+	if "frames" in rules:
+		# A finished door frame standing in the open, no wall round it. You can walk through it.
+		for rm in rooms:
+			var rr: Rect2 = rm["rect"]
+			if rr.size.x < 6.0 or rr.size.y < 6.0:
+				continue
+			var p := rr.get_center() + Vector2(wr.randf_range(-1.2, 1.2), wr.randf_range(-1.2, 1.2))
+			p = Vector2(snappedf(p.x, 0.6), snappedf(p.y, 0.6))
+			if _clear_of(L, p, 1.5):
+				var along_x := wr.randf() < 0.5
+				L["free_frames"].append([p.x, p.y, 0.0 if along_x else 1.0, 1.0 if along_x else 0.0, wr.randf() < 0.5])
+				break
+	if "category" in rules:
+		# The idea of the thing, the details missing: solid filing cabinets with the drawers painted
+		# on, a water cooler without its bottle, a desk that is one block flush to the carpet.
+		var swap := {"prop_filing_cabinet_sf": "cat:filing_cabinet", "prop_office_desk_sf": "cat:desk", "prop_water_cooler_sf": "prop_water_cooler_sf:nobottle"}
+		var any := false
+		for pr in L["props"]:
+			if swap.has(pr[0]):
+				pr[0] = swap[pr[0]]
+				any = true
+		if not any:
+			for rm in rooms:
+				var spots2 := _wall_spots(L, rm["rect"], 2.4)
+				if spots2.is_empty():
+					continue
+				var s2: Array = spots2[wr.randi() % spots2.size()]
+				var nn: Vector2 = s2[2]
+				var dirv: Vector2 = ((s2[1] as Vector2) - s2[0]).normalized()
+				var p2: Vector2 = (s2[0] as Vector2).lerp(s2[1], 0.5) + nn * (T * 0.5 + 0.3)
+				if _near_door(L, p2, 1.3) or not _clear_of(L, p2, 0.8):
+					continue
+				var yaw := rad_to_deg(atan2(nn.x, nn.y))
+				# a row of three, the way a filing room is remembered
+				for k in 3:
+					var q := p2 + dirv * (k - 1) * 0.42
+					L["props"].append(["cat:filing_cabinet", q.x, q.y, yaw])
+				break
+	if "chairs_wall" in rules:
+		# Every loose chair faces the nearest wall, close up, as if sent there.
+		for pr in L["props"]:
+			if not (String(pr[0]).contains("chair") and not String(pr[0]).contains("stack")):
+				continue
+			var wf := _nearest_wall(L, Vector2(pr[1], pr[2]), 3.0)
+			if wf.is_empty():
+				continue
+			var q: Vector2 = wf[0] + wf[1] * (T * 0.5 + 0.42)
+			if _near_door(L, q, 1.0):
+				continue
+			pr[1] = q.x
+			pr[2] = q.y
+			pr[3] = rad_to_deg(atan2(-wf[1].x, -wf[1].y))
+		# and a short row of them in one room, facing the wall like a waiting room for nothing
+		for rm in rooms:
+			var spots3 := _wall_spots(L, rm["rect"], 3.6)
+			if spots3.is_empty():
+				continue
+			var s3: Array = spots3[wr.randi() % spots3.size()]
+			var n3: Vector2 = s3[2]
+			var d3: Vector2 = ((s3[1] as Vector2) - s3[0]).normalized()
+			var c3: Vector2 = (s3[0] as Vector2).lerp(s3[1], 0.5) + n3 * (T * 0.5 + 0.45)
+			if _near_door(L, c3, 2.0):
+				continue
+			for k in 4:
+				var q3 := c3 + d3 * (k - 1.5) * 0.62
+				L["props"].append(["prop_folding_chair_sf", q3.x, q3.y, rad_to_deg(atan2(-n3.x, -n3.y))])
+			break
+	if "floor_hole" in rules and not spawn_chunk:
+		# A square opening in the carpet onto a drop ceiling with its lights on: the level below,
+		# seen from above, the right way up. A rail round it.
+		var placed := false
+		for rm in rooms:
+			if placed:
+				break
+			var rr2: Rect2 = rm["rect"]
+			if rr2.size.x < 4.8 or rr2.size.y < 4.8:
+				continue
+			for attempt in 4:
+				var c4 := rr2.get_center() + Vector2(wr.randf_range(-0.9, 0.9), wr.randf_range(-0.9, 0.9)) * (0.0 if attempt == 0 else 1.0)
+				c4 = Vector2(snappedf(c4.x, TILE), snappedf(c4.y, TILE))
+				if not _clear_of(L, c4, 1.6):
+					continue
+				L["floor_holes"].append([c4.x - 0.6, c4.y - 0.9, c4.x + 0.6, c4.y + 0.9])
+				var hole := Rect2(c4.x - 1.0, c4.y - 1.0, 2.0, 2.0)
+				L["props"] = L["props"].filter(func(pr): return not hole.has_point(Vector2(pr[1], pr[2])))
+				placed = true
+				break
+	if "blind_panel" in rules:
+		# A lit panel that throws no light: the lens glows, the floor under it stays dark.
+		var fx: Array = L["fixtures"]
+		var cands := []
+		for i in fx.size():
+			var f: Array = fx[i]
+			if f.size() <= 3:
+				cands.append(i)
+		if not cands.is_empty():
+			var k: int = cands[wr.randi() % cands.size()]
+			fx[k].append("blind")
+
+
+## Nothing within `rad` of p: no wall, pillar, doorway or prop (free-standing things need room).
+func _clear_of(L: Dictionary, p: Vector2, rad: float) -> bool:
+	if _near_door(L, p, rad + 0.5):
+		return false
+	for w in L["walls"] + L["edge_walls"]:
+		var a := Vector2(w[0], w[1])
+		var b := Vector2(w[2], w[3])
+		if Geometry2D.get_closest_point_to_segment(p, a, b).distance_to(p) < rad:
+			return false
+	for pl in L["pillars"]:
+		if Vector2(pl[0], pl[1]).distance_to(p) < rad + 0.4:
+			return false
+	for pr in L["props"]:
+		if Vector2(pr[1], pr[2]).distance_to(p) < rad:
+			return false
+	for z in L["pocket_zones"]:
+		if Rect2(z[0], z[1], z[2] - z[0], z[3] - z[1]).grow(rad).has_point(p):
+			return false
+	return p.x > rad and p.y > rad and p.x < CHUNK - rad and p.y < CHUNK - rad
+
+
+## The nearest wall face to p within max_d: [point on the face (Vector2), outward normal toward p].
+func _nearest_wall(L: Dictionary, p: Vector2, max_d: float) -> Array:
+	var best := []
+	var bd := max_d
+	for w in L["walls"] + L["edge_walls"]:
+		var a := Vector2(w[0], w[1])
+		var b := Vector2(w[2], w[3])
+		var q := Geometry2D.get_closest_point_to_segment(p, a, b)
+		var d := q.distance_to(p)
+		if d < bd and d > 0.01:
+			var horiz := absf(a.y - b.y) < 0.001
+			var n := Vector2(0, signf(p.y - q.y)) if horiz else Vector2(signf(p.x - q.x), 0)
+			if n.length() < 0.5:
+				continue
+			bd = d
+			best = [q, n]
+	return best
 
 
 static func _seeded_shuffle(r: RandomNumberGenerator, a: Array) -> void:

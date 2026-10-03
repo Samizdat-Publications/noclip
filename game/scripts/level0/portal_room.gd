@@ -50,8 +50,8 @@ var plan_rect := Rect2()
 # Colors are sRGB-ish multipliers on the level's own materials; "tube" tints every panel.
 const PALETTES := {
 	"yellow": {"pillar": [0.8, 0.68, 0.34]},
-	"cold": {"wall_tint": [0.98, 1.03, 1.12], "wall_sat": 0.12, "carpet_sat": 0.25, "carpet_tint": [0.86, 0.92, 1.05],
-		"ceil_tint": [0.95, 0.98, 1.04], "pillar": [0.74, 0.76, 0.78], "tube": [0.78, 0.9, 1.0]},
+	"cold": {"wall_tint": [0.84, 0.88, 0.95], "wall_sat": 0.12, "carpet_sat": 0.25, "carpet_tint": [0.8, 0.86, 0.98],
+		"ceil_tint": [0.93, 0.96, 1.02], "pillar": [0.6, 0.62, 0.64], "tube": [0.78, 0.9, 1.0]},
 	"green": {"wall_tint": [0.84, 1.03, 0.86], "wall_sat": 0.35, "carpet_sat": 0.6, "carpet_tint": [0.92, 1.02, 0.9],
 		"pillar": [0.7, 0.78, 0.68], "tube": [0.92, 1.0, 0.86]},
 }
@@ -85,6 +85,23 @@ func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, 
 	pool.layer_bits = POCKET
 	pool.enabled = false
 	add_child(pool)
+	# The hall's own air: thicker haze than the level's, so its far end is lost and its light hangs
+	# in shafts (critique 021: the hall had turned clean and flat, L128, L134). Only cameras that
+	# show the hall draw it.
+	var fogd := float(Game.opts.get("hall_fog", "0.011"))
+	if fogd > 0.0:
+		var fv := FogVolume.new()
+		fv.name = "hall_air"
+		fv.shape = RenderingServer.FOG_VOLUME_SHAPE_BOX
+		fv.size = Vector3(SIDE, HALL_H, SIDE)
+		fv.position = Vector3(MID, HALL_H * 0.5, MID)
+		fv.layers = POCKET
+		var fm := FogMaterial.new()
+		fm.density = fogd
+		fm.albedo = Color(0.95, 0.92, 0.84)
+		fm.edge_fade = 0.05
+		fv.material = fm
+		add_child(fv)
 	for j in N:
 		for i in N:
 			var ch := Level0Chunk.new()
@@ -285,8 +302,17 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 			if fx > 1.5 and fx < 22.5:
 				L["fake_doors"].append([fx, wz, 0.0, nz, 0.0, "nohandle"])
 	# The far third is dark; the exit sign is the only light at the end of the hall.
+	# The lights thin out toward the far end instead of stopping at a line (L127), and in patches
+	# and rows everywhere, so the columns throw shadows across pools of light (L134).
+	var lr := Game.rng("halllights:%s:%d:%d" % [key, i, j])
+	for f in L["fixtures"]:
+		var gx: float = f[0] + ox
+		var p_dead := 0.22 if gx < 20.0 else (0.38 if gx < 44.0 else (0.6 if gx < 60.0 else 0.85))
+		if int(round((f[1] + oz - MID) / 4.8)) % 3 == 0 and gx > 12.0:
+			p_dead += 0.25   # every third row darker
+		f.append("dead" if lr.randf() < p_dead else "on")
 	if i == N - 1:
-		L["dark_zones"].append([12.0, 0.0, 24.0, 24.0])
+		L["dark_zones"].append([18.0, 0.0, 24.0, 24.0])
 	if i == 0 and mid_row:
 		L["lit_zones"] = [[0.0, 5.0, 8.0, 19.0]]
 		# The survey crew got in before you: their camera on its tripod, filming the way back out.

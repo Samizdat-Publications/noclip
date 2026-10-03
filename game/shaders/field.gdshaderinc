@@ -19,9 +19,12 @@ vec3 field_bounce(vec2 p) {
 	// (a 5 x 5 kernel of single texels showed as stripes on the hall's wide ceiling).
 	vec2 t = (p - field_origin) / field_cell;
 	vec3 acc = vec3(0.0);
-	acc += textureLod(field_tex, (t + vec2(1.6, 0.8)) / field_size, 2.6).rgb;
-	acc += textureLod(field_tex, (t + vec2(-0.8, 1.6)) / field_size, 2.6).rgb;
-	acc += textureLod(field_tex, (t + vec2(-1.6, -0.8)) / field_size, 2.6).rgb;
-	acc += textureLod(field_tex, (t + vec2(0.8, -1.6)) / field_size, 2.6).rgb;
-	return acc * 0.25;
+	vec4 s = textureLod(field_tex, (t + vec2(1.6, 0.8)) / field_size, 2.6);
+	s += textureLod(field_tex, (t + vec2(-0.8, 1.6)) / field_size, 2.6);
+	s += textureLod(field_tex, (t + vec2(-1.6, -0.8)) / field_size, 2.6);
+	s += textureLod(field_tex, (t + vec2(0.8, -1.6)) / field_size, 2.6);
+	s *= 0.25;
+	// A dead tube's orange ends only warm the tiles right next to it, not the whole ceiling: alpha
+	// holds their share (S05, dark rooms' ceilings turned orange).
+	return max(s.rgb - vec3(1.0, 0.36, 0.08) * s.a, vec3(0.0));
 }

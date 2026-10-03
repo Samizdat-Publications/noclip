@@ -64,7 +64,7 @@ static func ao_material() -> ShaderMaterial:
 	if _ao_mat == null:
 		_ao_mat = ShaderMaterial.new()
 		_ao_mat.shader = load("res://shaders/corner_ao.gdshader")
-		_ao_mat.set_shader_parameter("strength", float(Game.opts.get("corner_ao", "0.5")))
+		_ao_mat.set_shader_parameter("strength", float(Game.opts.get("corner_ao", "0.68")))   # 0.5 washed out under the brighter S05 look (L135)
 	return _ao_mat
 
 
@@ -265,6 +265,8 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_exit_signs(kit)
 			_build_fallen_tile(kit)
 			_build_wrong_architecture(kit)
+			_build_free_frames(kit)
+			_build_floor_holes(kit)
 			_build_seams(kit),
 		func() -> void:
 			cells.merge(_build_fixtures(kit)),
@@ -351,7 +353,10 @@ func _apply_palette(shared_mats: Dictionary) -> void:
 		pm.set_shader_parameter("pattern_contrast", 1.0)
 		pm.set_shader_parameter("paper_sat", 1.0)
 		pm.set_shader_parameter("paper_tint", Vector3.ONE)
-		pm.set_shader_parameter("damage", 0.7)
+		# Its own dirt whatever the wall's grime patches say: water lines, hand grime, scuffs (L128).
+		pm.set_shader_parameter("damage", 1.25)
+		pm.set_shader_parameter("grime_zones", 0.0)
+		pm.set_shader_parameter("drift_amount", 1.0)
 		mats["pillar"] = pm
 
 
@@ -454,7 +459,12 @@ func _pick_leaks() -> void:
 # ---------------------------------------------------------------- geometry
 
 func _build_shell(kit: MeshKit) -> void:
-	kit.face("carpet", [Vector3(0, 0, 0), Vector3(extent.x, 0, 0), Vector3(extent.x, 0, extent.y), Vector3(0, 0, extent.y)], Vector3.UP, 0.0)
+	# The carpet, with the floor openings (remembered wrong, S05) cut out of it.
+	var floor_rects: Array[Rect2] = [Rect2(Vector2.ZERO, extent)]
+	for fh in L.get("floor_holes", []):
+		floor_rects = _rects_minus(floor_rects, Rect2(fh[0], fh[1], fh[2] - fh[0], fh[3] - fh[1]))
+	for rc in floor_rects:
+		kit.face("carpet", [Vector3(rc.position.x, 0, rc.position.y), Vector3(rc.end.x, 0, rc.position.y), Vector3(rc.end.x, 0, rc.end.y), Vector3(rc.position.x, 0, rc.end.y)], Vector3.UP, 0.0)
 	var ph := float(L["plenum_height"])
 	var rects: Array[Rect2] = [Rect2(Vector2.ZERO, extent)]
 	for tr in L.get("tall_rooms", []):
@@ -493,6 +503,23 @@ func _build_shell(kit: MeshKit) -> void:
 		var wa := 0.022
 		for b in [[x0 + h, z0 + h, x1 - h, z0 + h + wa], [x0 + h, z1 - h - wa, x1 - h, z1 - h], [x0 + h, z0 + h, x0 + h + wa, z1 - h], [x1 - h - wa, z0 + h, x1 - h, z1 - h]]:
 			kit.box("tbar", Vector3(b[0], ht - wa, b[1]), Vector3(b[2], ht, b[3]), MeshKit.SIDES | MeshKit.NY, ht)
+
+
+## Rectangles covering `rects` minus `hole`.
+static func _rects_minus(rects: Array[Rect2], hole: Rect2) -> Array[Rect2]:
+	var next: Array[Rect2] = []
+	for rc in rects:
+		if not rc.intersects(hole):
+			next.append(rc)
+			continue
+		var cut := rc.intersection(hole)
+		for piece in [Rect2(rc.position.x, rc.position.y, rc.size.x, cut.position.y - rc.position.y),
+				Rect2(rc.position.x, cut.end.y, rc.size.x, rc.end.y - cut.end.y),
+				Rect2(rc.position.x, cut.position.y, cut.position.x - rc.position.x, cut.size.y),
+				Rect2(cut.end.x, cut.position.y, rc.end.x - cut.end.x, cut.size.y)]:
+			if piece.size.x > 0.001 and piece.size.y > 0.001:
+				next.append(piece)
+	return next
 
 
 ## A tall room's wall above the normal ceiling, as boxes [min, max, faces], with the ladder hole
@@ -755,7 +782,7 @@ func _build_exit_signs(kit: MeshKit) -> void:
 		var q := QuadMesh.new()
 		q.size = Vector2(0.4, 0.2)
 		face.mesh = q
-		face.material_override = mats["exit"]
+		face.material_override = _exit_material()
 		face.transform = Transform3D(Basis(t, Vector3.UP, n), p + n * 0.051)
 		face.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(face)
@@ -926,7 +953,7 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	var hint: String = ctx.get("hint", "")
 	if hint == "dead" and not in_dark:
 		st = Fixture.State.DEAD
-	elif hint == "on" and not in_dark:
+	elif (hint == "on" or hint == "blind") and not in_dark:
 		st = Fixture.State.ON
 	if L.get("steady_lights", false):
 		# Loop copies must look identical at every moment: no flicker, only on or dead.
@@ -1000,6 +1027,8 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 				tk.volume_db = -6.0
 				fx.add_child(tk)
 				fx.tick_player = tk
+	# Remembered wrong (S05): a lit panel that throws no light (the pool never lends it one).
+	fx.blind = hint == "blind"
 	fx.setup(st, _rng("fixture:" + id), energy, tint)
 	fx.apply()
 	fixtures.append(fx)
@@ -1662,10 +1691,31 @@ func _build_props() -> void:
 	var r := _rng("level0:props")
 	if L.has("props"):
 		for pr in L["props"]:
-			var path0 := "res://assets/props/level0/%s.glb" % pr[0]
+			var pname := String(pr[0])
+			if pname.begins_with("cat:"):
+				# Remembered wrong: the idea of the thing with the details missing (S05).
+				add_child(_category_prop(pname.substr(4), Vector2(pr[1], pr[2]), float(pr[3])))
+				var hc := 0.45 if pname == "cat:desk" else 0.3
+				_contact_shadow(Vector3(pr[1], 0.0, pr[2]), hc)
+				solids.append(Rect2(pr[1] - hc, pr[2] - hc, hc * 2.0, hc * 2.0))
+				continue
+			var variant := ""
+			if pname.contains(":"):
+				variant = pname.get_slice(":", 1)
+				pname = pname.get_slice(":", 0)
+			var path0 := "res://assets/props/level0/%s.glb" % pname
 			if not ResourceLoader.exists(path0):
 				continue
 			var inst0 := PropCache.make(path0)
+			if variant == "nobottle":
+				# a water cooler remembered without its bottle
+				for mi in inst0.get_children():
+					var m3 := mi as MeshInstance3D
+					if m3 and m3.mesh:
+						for si in m3.mesh.get_surface_count():
+							var sm: Material = m3.mesh.surface_get_material(si)
+							if sm and sm.resource_name == "Water":
+								m3.set_surface_override_material(si, Level0Chunk.invisible_material())
 			inst0.position = Vector3(pr[1], 0.0, pr[2])
 			inst0.rotation.y = deg_to_rad(float(pr[3]))
 			add_child(inst0)
@@ -1702,6 +1752,174 @@ func _build_props() -> void:
 			var half: float = spec["half"]
 			_contact_shadow(Vector3(spot[0], 0.0, spot[1]), half)
 			solids.append(Rect2(spot[0] - half, spot[1] - half, half * 2.0, half * 2.0))
+
+
+# ---------------------------------------------------------------- remembered wrong (S05)
+
+static var _wrong_exit := {}
+static var _invisible: ShaderMaterial
+
+
+## The exit sign material for this chunk: misspelled the same way across its block (Level0Gen.wrong_sign).
+func _exit_material() -> Material:
+	var v := String(L.get("sign_variant", ""))
+	if v == "":
+		return mats["exit"]
+	if not _wrong_exit.has(v):
+		var t := Level0Look.tex("exit_sign_wrong_%s_emission" % v)
+		if t == null:
+			return mats["exit"]
+		var m := (mats["exit"] as StandardMaterial3D).duplicate() as StandardMaterial3D
+		m.emission_texture = t
+		_wrong_exit[v] = m
+	return _wrong_exit[v]
+
+
+static func invisible_material() -> ShaderMaterial:
+	if _invisible == null:
+		_invisible = ShaderMaterial.new()
+		var sh := Shader.new()
+		sh.code = "shader_type spatial;\nrender_mode unshaded, shadows_disabled;\nvoid fragment() { discard; }\n"
+		_invisible.shader = sh
+	return _invisible
+
+
+## A finished door frame standing in the open with no wall round it (remembered wrong). Casing on
+## both faces, lining between, sometimes its door hung open on the hinge side.
+func _build_free_frames(kit: MeshKit) -> void:
+	for ff in L.get("free_frames", []):
+		var p := Vector2(ff[0], ff[1])
+		var n := Vector2(ff[2], ff[3])       # the way you walk through it
+		var t := Vector2(-n.y, n.x)
+		var w := 0.92
+		var cw := 0.07
+		var dep := T * 0.5 + 0.018
+		var bx := [
+			["trim", -w * 0.5 - cw, -w * 0.5, 0.0, DH + cw, -dep, dep],
+			["trim", w * 0.5, w * 0.5 + cw, 0.0, DH + cw, -dep, dep],
+			["trim", -w * 0.5 - cw, w * 0.5 + cw, DH, DH + cw, -dep, dep],
+		]
+		for b in bx:
+			var c0 := p + t * float(b[1]) + n * float(b[5])
+			var c1 := p + t * float(b[2]) + n * float(b[6])
+			kit.box(b[0], Vector3(minf(c0.x, c1.x), b[3], minf(c0.y, c1.y)), Vector3(maxf(c0.x, c1.x), b[4], maxf(c0.y, c1.y)), MeshKit.ALL, H)
+		for side in [-1.0, 1.0]:
+			var post: Vector2 = p + t * side * (w * 0.5 + cw * 0.5)
+			var half := Vector2(absf(t.x) * cw * 0.5 + absf(n.x) * dep, absf(t.y) * cw * 0.5 + absf(n.y) * dep)
+			solids.append(Rect2(post - half, half * 2.0))
+			_pending_contacts.append([Vector3(post.x, 0.0, post.y), 0.16])
+		if bool(ff[4]):
+			# its door, hung on the left jamb and standing open into the room
+			var slab := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = Vector3(w - 0.01, DH - 0.01, 0.04)
+			slab.mesh = bm
+			slab.material_override = mats["door"]
+			var hinge := p - t * (w * 0.5) + n * dep
+			var ang := deg_to_rad(105.0)
+			var dir := t.rotated(-ang)   # from the hinge along the open slab
+			var mid := hinge + dir * (w * 0.5)
+			var yaw := atan2(dir.y, dir.x)
+			slab.transform = Transform3D(Basis(Vector3.UP, -yaw), Vector3(mid.x, DH * 0.5, mid.y))
+			add_child(slab)
+			solids.append(Rect2(mid - Vector2(0.3, 0.3), Vector2(0.6, 0.6)))
+
+
+## Floor openings (remembered wrong): a square hole in the carpet onto a lit drop ceiling a meter
+## down, the level below seen from above, the right way up. A rail round it; the hole is solid.
+func _build_floor_holes(kit: MeshKit) -> void:
+	for fh in L.get("floor_holes", []):
+		var r := Rect2(fh[0], fh[1], fh[2] - fh[0], fh[3] - fh[1])
+		var d := 0.6   # shallow, so the lit ceiling below is in view from a few steps away
+		var a := Vector3(r.position.x, -d, r.position.y)
+		var b := Vector3(r.end.x, 0.0, r.end.y)
+		# shaft walls, facing in
+		kit.face("plenum", [Vector3(a.x, a.y, a.z), Vector3(b.x, a.y, a.z), Vector3(b.x, b.y, a.z), Vector3(a.x, b.y, a.z)], Vector3.BACK, 0.0)
+		kit.face("plenum", [Vector3(a.x, a.y, b.z), Vector3(b.x, a.y, b.z), Vector3(b.x, b.y, b.z), Vector3(a.x, b.y, b.z)], Vector3.FORWARD, 0.0)
+		kit.face("plenum", [Vector3(a.x, a.y, a.z), Vector3(a.x, a.y, b.z), Vector3(a.x, b.y, b.z), Vector3(a.x, b.y, a.z)], Vector3.RIGHT, 0.0)
+		kit.face("plenum", [Vector3(b.x, a.y, a.z), Vector3(b.x, a.y, b.z), Vector3(b.x, b.y, b.z), Vector3(b.x, b.y, a.z)], Vector3.LEFT, 0.0)
+		# the ceiling below: tiles facing up (COLOR.a 0.5: an upward ceiling, not a fallen tile), a
+		# lens in the middle two tiles, the T-bar grid on top
+		var y := -d + 0.002
+		var nx := int(round(r.size.x / TILE))
+		var nz := int(round(r.size.y / TILE))
+		var lens_i := int(nx / 2.0) - 1
+		for i in nx:
+			for j in nz:
+				if j == int(nz / 2.0) and (i == lens_i or i == lens_i + 1):
+					continue
+				var x0 := r.position.x + i * TILE
+				var z0 := r.position.y + j * TILE
+				kit.quad("ceiling", [Vector3(x0, y, z0), Vector3(x0 + TILE, y, z0), Vector3(x0 + TILE, y, z0 + TILE), Vector3(x0, y, z0 + TILE)],
+					Vector3.UP, [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)], Color(fposmod(x0 * 3.7 + z0 * 1.3, 1.0), 0.0, 0.0, 0.5))
+		for i in nx + 1:
+			var x := r.position.x + i * TILE
+			kit.box("tbar", Vector3(x - 0.015, y, r.position.y), Vector3(x + 0.015, y + 0.028, r.end.y), MeshKit.PY | MeshKit.PX | MeshKit.NX, H)
+		for j in nz + 1:
+			var z := r.position.y + j * TILE
+			kit.box("tbar", Vector3(r.position.x, y, z - 0.015), Vector3(r.end.x, y + 0.028, z + 0.015), MeshKit.PY | MeshKit.PZ | MeshKit.NZ, H)
+		var lc := Vector3(r.position.x + (lens_i + 1) * TILE, y + 0.003, r.position.y + (int(nz / 2.0) + 0.5) * TILE)
+		var lens := MeshInstance3D.new()
+		lens.mesh = _make_lens_mesh(1.2, 0.6)
+		lens.material_override = mats["lens"]
+		lens.transform = Transform3D(Basis(Vector3.RIGHT, PI), lc)
+		lens.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		lens.set_instance_shader_parameter("light_level", 0.9)
+		lens.set_instance_shader_parameter("tint", Vector3(1.0, 0.975, 0.9))
+		add_child(lens)
+		# its light comes up out of the hole and throws a pool onto the ceiling above
+		var up := SpotLight3D.new()
+		up.light_color = Color(1.0, 0.96, 0.86)
+		up.light_energy = 1.4
+		up.spot_range = 4.2
+		up.spot_angle = 48.0
+		up.spot_attenuation = 1.4
+		up.light_volumetric_fog_energy = 0.8
+		up.shadow_enabled = false
+		up.transform = Transform3D(Basis(Vector3.RIGHT, PI * 0.5), lc + Vector3(0, 0.05, 0))
+		add_child(up)
+		var fill := OmniLight3D.new()
+		fill.light_color = Color(1.0, 0.95, 0.85)
+		fill.light_energy = 0.12
+		fill.omni_range = 1.0
+		fill.shadow_enabled = false
+		fill.position = Vector3(r.get_center().x, -0.3, r.get_center().y)
+		add_child(fill)
+		# the rail: thin galvanized pipe, posts and one top rail
+		var g := r.grow(0.18)
+		for cx in [g.position.x, g.end.x]:
+			for cz in [g.position.y, g.end.y]:
+				kit.box("rail", Vector3(cx - 0.018, 0.0, cz - 0.018), Vector3(cx + 0.018, 0.95, cz + 0.018), MeshKit.ALL, H)
+				_pending_contacts.append([Vector3(cx, 0.0, cz), 0.06])
+		for ry in [0.94]:
+			var q := 0.016
+			kit.box("rail", Vector3(g.position.x - q, ry - q, g.position.y - q), Vector3(g.end.x + q, ry + q, g.position.y + q), MeshKit.ALL, H)
+			kit.box("rail", Vector3(g.position.x - q, ry - q, g.end.y - q), Vector3(g.end.x + q, ry + q, g.end.y + q), MeshKit.ALL, H)
+			kit.box("rail", Vector3(g.position.x - q, ry - q, g.position.y - q), Vector3(g.position.x + q, ry + q, g.end.y + q), MeshKit.ALL, H)
+			kit.box("rail", Vector3(g.end.x - q, ry - q, g.position.y - q), Vector3(g.end.x + q, ry + q, g.end.y + q), MeshKit.ALL, H)
+		solids.append(g)
+
+
+## Category objects (remembered wrong): the idea of a thing with the details missing.
+func _category_prop(kind: String, pos: Vector2, yaw_deg: float) -> Node3D:
+	var root := Node3D.new()
+	root.name = "category_" + kind
+	var kit := MeshKit.new()
+	match kind:
+		"filing_cabinet":
+			# a solid putty block the size of a four-drawer cabinet, the drawers painted on, no handles
+			kit.box("plate", Vector3(-0.19, 0.0, -0.28), Vector3(0.19, 1.32, 0.28), MeshKit.ALL, 1.32)
+			for y in [0.33, 0.66, 0.99]:
+				kit.box("slot", Vector3(-0.17, y - 0.004, 0.28), Vector3(0.17, y + 0.004, 0.2815), MeshKit.PZ, 1.32)
+			kit.box("slot", Vector3(-0.17, 0.04, 0.28), Vector3(0.17, 0.048, 0.2815), MeshKit.PZ, 1.32)
+		"desk":
+			# one block flush to the carpet, a top slab a little proud of it: no legs, no drawers
+			kit.box("door", Vector3(-0.76, 0.0, -0.36), Vector3(0.76, 0.71, 0.36), MeshKit.ALL, 0.75)
+			kit.box("door", Vector3(-0.8, 0.71, -0.4), Vector3(0.8, 0.75, 0.4), MeshKit.ALL, 0.75)
+	kit.commit(root, mats)
+	root.position = Vector3(pos.x, 0.0, pos.y)
+	root.rotation.y = deg_to_rad(yaw_deg)
+	return root
 
 
 ## Generation-loss splice errors (VISION "Generation loss", DECISIONS D009): things copied

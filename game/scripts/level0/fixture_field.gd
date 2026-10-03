@@ -24,7 +24,7 @@ func _init(p_origin: Vector2, p_size_m: Vector2, p_cell: float) -> void:
 	cell = p_cell
 	size = Vector2i(ceili(p_size_m.x / cell - 0.001), ceili(p_size_m.y / cell - 0.001))
 	img = Image.create(size.x, size.y, true, Image.FORMAT_RGBA8)   # mips: the ceiling's wide bounce glow (S05)
-	img.fill(Color(0, 0, 0, 1))
+	img.fill(Color(0, 0, 0, 0))   # alpha: the dead-tube orange share of rgb (the bounce leaves it out)
 	tex = ImageTexture.create_from_image(img)
 
 
@@ -70,6 +70,7 @@ func update() -> void:
 		# A dead tube's glowing cathodes tint the tiles next to it orange (critique 008, L044).
 		var k := fx.cathode_glow * (1.0 - v) * 0.22
 		c += Color(1.0, 0.36, 0.08, 0.0) * k
+		c.a = k
 		var o := _last[i]
 		if absf(c.r - o.r) + absf(c.g - o.g) + absf(c.b - o.b) < 0.004:
 			continue

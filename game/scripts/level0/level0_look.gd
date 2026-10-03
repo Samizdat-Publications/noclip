@@ -156,6 +156,12 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	slot.roughness = 0.8
 	m["slot"] = slot
 
+	var rail := StandardMaterial3D.new()
+	rail.albedo_color = Color(0.42, 0.42, 0.43)   # galvanized pipe (the rail round a floor opening, S05)
+	rail.metallic = 0.55
+	rail.roughness = 0.42
+	m["rail"] = rail
+
 	var plenum := StandardMaterial3D.new()
 	plenum.albedo_color = Color(0.08, 0.075, 0.07)
 	plenum.roughness = 0.95
@@ -163,7 +169,7 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	for key in m:
 		if m[key] is BaseMaterial3D:
 			horizon(m[key])
-	for key in ["tbar", "baseboard", "trim", "door", "knob", "plate", "slot", "plenum"]:
+	for key in ["tbar", "baseboard", "trim", "door", "knob", "plate", "slot", "plenum", "rail"]:
 		m[key] = to_plain(m[key])
 	(m["trim"] as ShaderMaterial).set_shader_parameter("grime", 1.0)
 	(m["door"] as ShaderMaterial).set_shader_parameter("grime", 0.8)

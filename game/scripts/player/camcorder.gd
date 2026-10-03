@@ -14,6 +14,7 @@ var want := false
 ## 0 = held low out of view, 1 = eyecup at the eye.
 var raise := 0.0
 var viewmodel: Node3D
+var lcd_mat: ShaderMaterial          # the flip-out screen's picture (Player._add_flip_screen)
 var fov := 60.0
 var degrade := 0.0
 var _rect: ColorRect
@@ -131,14 +132,22 @@ func _update_viewmodel() -> void:
 	if viewmodel == null:
 		return
 	var r := raise
-	viewmodel.visible = r > 0.01 and not active
+	if Game.opts.has("vm_hold"):
+		r = float(Game.opts["vm_hold"])   # look-dev: photograph the camera mid-lift
+	if lcd_mat:
+		lcd_mat.set_shader_parameter("time", Game.clock)
+	# Out of sight for the first part of the lift (L092: seen low and pointing forward, the body
+	# read as a pistol); it comes up from below the frame with its side screen turned to you.
+	viewmodel.visible = r > 0.22 and not active
 	if not viewmodel.visible:
 		return
 	var e := 1.0 - pow(1.0 - r, 1.6)   # quick to come into view, settles onto the eye
-	var low := Vector3(0.21, -0.4, -0.36)
+	var low := Vector3(0.17, -0.42, -0.3)
 	var eye := Vector3(0.0, 0.0, 0.004)
-	var p := low.lerp(eye, e) + Vector3(0.0, sin(e * PI) * 0.06, sin(e * PI) * -0.05)
-	var low_rot := Quaternion.from_euler(Vector3(-0.8, 0.3, 0.35))
+	var p := low.lerp(eye, e) + Vector3(0.0, sin(e * PI) * 0.04, sin(e * PI) * -0.04)
+	# Held level and turned a little to the left, the way you hold a camcorder at the chest before
+	# you lift it, not tipped down like a held tool.
+	var low_rot := Quaternion.from_euler(Vector3(-0.12, -0.3, 0.08))
 	var q := low_rot.slerp(Quaternion.IDENTITY, pow(e, 0.8))
 	viewmodel.transform = Transform3D(Basis(q).scaled(Vector3.ONE * 0.82), p)
 
