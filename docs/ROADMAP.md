@@ -50,7 +50,7 @@ The critics' weakest categories after S03 are Lighting (Gemini 4 to 6, Claude 6)
 
 ## M4: The Entity and the watchers (effort: xhigh)
 - Abstract and plural (Stewart, S04): the Occupant as a strip-cut outline of wallpaper driven by the Meshy C_4 rig; the Dropout, a hole in the recording that slides along walls; the watchers layer (the high door that opens a crack, peripheral figures, things drawing back from wall openings).
-- Status S05 (started, D042): the Occupant is in (strip shader on the rig, nine clips, held frame-skip poses) as the tape encounter's body; the watchers: the high door that opens with a papered head looking out, the figure at the edge of sight. Not yet: the Occupant hunting (senses, stalking, chase through portals and loops), the Dropout, things drawing back from wall openings, the VHS death replay.
+- Status S05 (started, D042): the Occupant is in (strip shader on the rig, nine clips, held frame-skip poses) as the tape encounter's body; the watchers: the high door that opens with a papered head looking out, the figure at the edge of sight. Final critics: Monster 5 (Claude) and 3 (Gemini): it fails when seen plainly (L156). Not yet: its presentation fixed, the Occupant hunting (senses, stalking, chase through portals and loops), the Dropout, things drawing back from wall openings, the VHS death replay. Session 06 continues M4 (effort xhigh), after Stewart's play notes, with the level's lighting balance (L155) alongside.
 - Design per VISION, Meshy to Blender pipeline, animation set, shader distortion, VHS face smear.
 - AI: senses, stalking, investigation, chase, using portals and loops, readable tells.
 - Death and the VHS death replay.

@@ -1,77 +1,69 @@
-# Handoff: session 04 to 05 (10/02/2026)
+# Handoff: session 05 to 06 (10/02/2026)
 
 ## State in one paragraph
-Session 04 ran in the daytime with Stewart checking in, and his direction outranked the plan: rooms that are small outside and giant inside, crawling and climbing, an abstract monster, live crew members, and the "remembered wrong" feel of the reference stills. Built: storerooms (3.6 m blocks standing free in big rooms) whose doorway is a portal into a 72 x 72 m pillar hall built under the level; you walk in with no visible jump, and the hall's far door, under an exit sign at the dark end, lets you out of the same storeroom door you went in by (D036). A crawl stance that comes on by itself at low openings (or Z), crawl holes (fully cased doorways 72 cm tall), and ladders in tall rooms up to a nook 3.9 m up (D037). The monster has a design and a rigged model: the Occupant, the building's own copy of a person papered in our wallpaper (Meshy 7.1, 9 animations), to be shown abstractly as loose wallpaper strips (D035, VISION). VISION gained "Remembered wrong", "Being watched", live Halden field teams and plural abstract monsters; the roadmap now runs M3.6 (remembered wrong, look toward the stills), M4 (Entity and watchers), M4.5 (Halden teams). Stewart fixed the critic hand-back guard (D033).
+Session 05 did M3.6 and started M4, in Stewart's order. The look moved toward his reference stills: a cleaner, more saturated mustard paper with the dirt gathered into a few stretches, a cream ceiling that glows from the lit floor, a light grid, brighter panels (D038). The hall behind each storeroom door became its own place: a palette per storeroom (cold white, pale green or yellow), columns painted over the paper, handle-less doors on its walls, its own haze, a sparse grid of stronger panels so the columns throw real shadows, and a far door that shows the lit room beyond with a warm lamp shining through it (D039, D043). Remembered wrong batch 1 is in as learned misunderstandings per block of 3 x 3 chunks (D040). The held camcorder had been built backwards since S03 (the "pistol"); it is turned round and has a flip-out screen (D041). M4: the Occupant is in the game, a figure made of strips of the level's own wallpaper on its Meshy rig, frozen mid-move on every frame skip; it is the tape encounter's body (on tape the gaps between its strips are dropout). The watchers: the tall room's high door stands open while you are not looking, with a papered head and hand in the gap, and a figure stands only at the edge of your sight (D042). It does not hunt yet. Final critics are split: Gemini Atmosphere 8, Surreal 8, Sound 9, Camera 8, but Lighting 4 and Monster 3; Claude 5 to 7 across the board. Both say the bright yellow level is lit too evenly and the Occupant fails when seen plainly.
 
 ## Playable now (exact run command)
-- Double-click `Play NOCLIP.bat` in `C:\Users\stewa\ClaudeProjects\Noclip`. Controls: WASD, mouse, Shift sprint, Ctrl crouch, Z crawl (it also happens on its own at low holes), walk into a ladder to climb it, hold right mouse for the camcorder, F3 performance overlay, Esc pause (Q quits).
-- The storeroom: from the start, go east down the long hall; it stands in a big room on the left or right within about 30 m (chunk 1,0 in 198 of 200 seeds).
-- Debug: `-- --start=x,z,yaw_deg` starts at a spot; `-- --start-room=1:0,63,36,1,0` starts inside a storeroom's hall (hall-local x, z, facing); `--route=north|south|east|west` walks straight; `--log-portal`, `--portal_never`, `--portal_always`, `--portal_scale=0.6`, `--hall_lights=32`.
-- Review capture: `python tools/capture/capture.py`. Tests: `godot_console --headless --path game --script res://scripts/tests_closet.gd` (storeroom placement), `tests_holes.gd -- SEED` (lists holes and ladders), `tests_spawn_seam.gd`, `tests_gen_determinism.gd`.
+- Double-click `Play NOCLIP.bat` in `C:\Users\stewa\ClaudeProjects\Noclip`. Controls: WASD, mouse, Shift sprint, Ctrl crouch, Z crawl, walk into a ladder to climb, hold right mouse for the camcorder, F3 performance overlay, Esc pause (Q quits). Clean-checkout check this session: a fresh clone imports with 0 errors and runs 900 frames of autoplay with 0 script errors.
+- Review capture: `python tools/capture/capture.py` (`--extra focus_first=watch` puts the two watcher shots first). Tests: `godot_console --headless --path game --script res://scripts/tests_gen_determinism.gd`, `tests_spawn_seam.gd`, `tests_closet.gd`, `tests_wrong.gd -- SEED [rules]`.
+- Debug options: `--hall_palette=cold|green|yellow`, `--wrong=frames,floor_hole,category,signs,nohandle,chairs_wall,blind_panel` (force rules everywhere), `--focus_wrong`, `--focus_first=watch`, `--log-watch`, `--watch_now`, `--no_watchers`, `--old_figure`, `--occ_test` (the Occupant 3.5 m in front of you; `--occ_tape=1`, `--occ_clip=walk`, `--occ_t=0.4`, `--occ_plain`), `--vm_hold=0.5` (the camcorder frozen mid-lift), `--light_e`, `--hall_gain`, `--hall_fog`, `--far_range`, `--log-pool`, and the look knobs in level0_look.gd (`--wall_sat`, `--grime_zones`, `--ceil_bounce`...).
 
-## Done this session (commit, evidence)
-- Rooms bigger inside than outside (D036, a191471): storeroom placement (tests_closet.gd: chunk 1,0 in 198/200 seeds, about 7 percent of other chunks), PortalRoom hall under the level at the first free depth, Portal node (SubViewport camera, seamless crossing on the physics tick, near plane at the doorway, dark fogged stand-in when out of range), far door back out of the storeroom, bot visit routine, focus shots, debug starts. Evidence: progress/0129 (first look), 0134 and 0135 (crossing frames matched in brightness within about 3 percent), 0136 (far door out), 0137 (doorway still). Cost while a doorway is on screen: about 3.5 ms at 1440p (L114).
-- Crawl and climb (D037, c4fbd94): crawl stance (auto at low openings, Z), ladders, crawl holes (about a third of chunks), tall-room ladders to a lit nook 3.9 m up; collision over low doorways, on tall walls above 2.6 m, and no ceiling slab over tall rooms. Evidence: progress crawl-hole and ladder-climb sheets.
-- The Occupant (D035, 3030083, c4fbd94): concepts (progress/0123, 0124), Meshy 7.1 models C_2 and C_4 (progress/0125, 0126), C_4 rigged with 9 animations (progress/0138; game/assets/entity/occupant_rigged.glb and anims/). Not in the game yet.
-- Exit signs lit from behind the plate with a soft spill (L119, 173a660; progress/0145).
-- Design: VISION "Remembered wrong", "Being watched", live Halden field teams, abstract plural monsters; ROADMAP M2b crawl and climb, M3.6, M4 with watchers, M4.5 Halden teams (7646414). Stewart's notes copied to STEWART_FEEDBACK.md.
-- Critic guard: Stewart's edit tested (D033); the critic now hands back directly. CLAUDE.md updated.
-- Critic loops: 019, 020 (final).
+## Done this session (each with commit hash and evidence)
+- Look toward the reference stills (D038, 5381c7d): progress 0165 (baseline) to 0169 (chosen), 0178 (level with new defaults).
+- Storeroom halls (D039, 5381c7d; D043, 787061f; 9c5ed86): palettes (progress 0170 to 0175, cold 0218), lit far door from a still (0171 to 0174, hand-over 0173), sparse lights and column shadows (0201 s05-hall-sparse-lights; Claude 023 Shadows 7, "the columns cast real shadows"), per-palette haze, quiet switched-off panels, painted columns.
+- Bugs fixed on the way: hall shaders shaded by world height (base_y) and read the fixture field in world axes in a rotated hall (field_to_local); one wrapping glow field per space, no beam at chunk edges (0203); the mop bucket's baked glow (L111, L121); the plenum glowing through missing tiles (L142); dead-tube orange in the ceiling bounce.
+- Remembered wrong batch 1 (D040, 7331550): tests_wrong.gd on seed 4242, 169 chunks: 23 free-standing frames, 29 floor openings, 23 category objects and 8 bottle-less coolers, 86 handle-less doors, 35 chunks of misspelled signs, 26 blind panels. Pictures 0179, 0180 (signs), 0183, 0190 (floor opening).
+- Camcorder turned the right way round with a flip-out screen (D041, 7331550): progress s05-camcorder-lift (0184 to 0187). Claude 024: "the flip-out screen is a nice touch"; no critic called it a pistol after it.
+- The Occupant and the watchers (D042, 787061f, 9c5ed86): occupant strips 0206 to 0212, tape encounter 0216, 0217 (dropout), watchers 0204, 0205, 0208 to 0210. Logs: "[tape] figure shown / looked again / last look over", "[watch] door opened / door shut / edge figure at".
+- Footsteps at a walking cadence with variation (L151), the hall's far end not black (L152) (c557d3d).
+- Critic loops 021, 022, 023, 024 (final), Claude and Gemini each.
 
 ## Not done / known broken (be blunt)
-- The Occupant is not in the game: no strip shader, no AI, no watchers layer yet (M4). The tape figure is still the only presence and critics still call it a placeholder (Monster 4 to 5).
-- Halden field teams are design only (M4.5).
-- The crawl into the plenum over the rooms (in VISION) is not built: ceiling tiles have no top faces and the ceiling collision is a slab.
-- The bot does not use ladders or crawl holes on purpose (it may stumble through a hole); nothing shows them in captures unless a focus shot does.
-- Portals cost about 3.5 ms while on screen (portal view at 60 percent resolution, a second full render with SDFGI and haze); the far side's own glow cannot be undone exactly (gain 1.22 and 8 percent desaturation measured on video).
-- Perf in the 019 capture was contaminated by another program on the GPU (53.9 / 27.4). Clean runs on seed 84174 (60 s autoplay, 1440p): mine 75.7 / 51.4; QA 73.4 / 54.4 and 85.1 / 51.2 with portals, 92.6 / 68.1 without (runs vary by about 15 percent). The 1% low target (50) is only just met.
-- Signed Meshy download URLs (expiring 2026-10-05) were committed in pipeline/manifests/entity_meshy.json in 3030083 and c4fbd94; stripped at session end and build_entity_meshy.py now never writes them, but they stay in history (no history rewrite; they are download links to our own models, not keys).
-- At the end of this session the 020 capture build differs from HEAD by one line: the nook lamp range (L123), filmed (progress/0148) but not critic-reviewed.
-- Still open: the held camcorder reads as a pistol (L092), same mustard everywhere (L118), wall-foot gradient artifact (L117), carpet tiling and wallpaper banding (L104), a floating chair Gemini reported (L116, unverified).
+- The yellow level is lit too evenly for both critics (L155): the brightness came from Stewart's reference stills (D038), and the critics want pools and dark. Unresolved tension; Stewart's play notes should decide.
+- The Occupant fails in plain view (L156): by eye the edge figure can stand in good light and read as "a tan mannequin"; on tape it reads as "a stick figure of masking tape" (Gemini Monster 3). Only the dropout look on tape and the head in the high door work. It does not hunt, chase or kill. No Dropout entity, no death replay.
+- The bot does not seek the watchers or the remembered-wrong things; captures show them only by chance or in the two watcher focus shots.
+- Room colour variety in the level itself is unchanged (L138); the storeroom hall carries the colour, and a seed whose bot never enters it (024) shows only yellow.
+- About 61 "invalid UID" warnings per launch (stale UIDs in prop and Occupant imports, L154). Debug options above stay in the code.
+- The capture sometimes spends a motion sheet on nine frames of the tripod pocket (L153).
 
 ## Critic: latest scores and top open LEDGER items
 Columns: First, Light, Shadow, Mater., Atmos., Camera, Surreal, Monster, Sound, Pace, Perf, Keep.
 | Loop | Build | Critic | F | L | Sh | M | At | Ca | Su | Mo | So | Pa | Pe | K |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 018 (S03 final) | 00d5ddb | Claude | 7 | 7 | 6 | 6 | 6 | 8 | 6 | 4 | NA | 6 | 9 | 6 |
-| 018 (S03 final) | 00d5ddb | Gemini | 7 | 8 | 7 | 7 | 8 | 8 | 6 | 3 | 8 | 7 | 9 | 7 |
-| 019 | c4fbd94 | Claude | 7 | 7 | 6 | 6 | 6 | 8 | 7 | 4 | NA | 5 | 6 | 6 |
-| 019 | c4fbd94 | Gemini | 6 | 4 | 2 | 5 | 7 | 7 | 8 | 5 | 6 | 7 | 3 | 7 |
 | 020 (S04 final) | 173a660 | Claude | 7 | 7 | 6 | 6 | 6 | 7 | 8 | 6 | NA | NA | 7 | 6 |
 | 020 (S04 final) | 173a660 | Gemini | 4 | 3 | 3 | 4 | 6 | 6 | 8 | 4 | 5 | 6 | 5 | 6 |
-Surreal is now 7 to 8 on both critics (the storeroom hall: "the signature moment", "fantastic and seamless"). The 019 performance scores came from perf runs that shared the GPU with another program (L115; clean re-run 75.7 / 51.4). Gemini's Lighting and Shadows swing from 8/7 (018) to 3/3 (020) on similar lighting; read its trend over several runs. Both critics agree the next gains are the look (lighting depth, materials, color variety) and a monster that does something.
-Top open LEDGER items: L118 one mustard everywhere, L120 the hall's far door and walls, L092/L125 the held camcorder (reads as a pistol), L104 wallpaper and carpet repeat, L117 wall-foot gradient, L121/L122/L116 three props to verify (glowing bucket, something in a doorway top, a floating chair), L114 portal cost, L108 the figure (M4).
-Protected: the camcorder overlay, the chalk-door seam, the long fogged halls, the tripod room, the small door onto the giant hall and the hall's fog shafts, the figure with its floor reflection, the hum mix.
+| 021 | 5381c7d | Claude | 7 | 7 | 6 | 6 | 6 | 7 | 7 | 5 | NA | NA | 8 | 7 |
+| 021 | 5381c7d | Gemini | 6 | 4 | 3 | 4 | 8 | 8 | 8 | 5 | 6 | 7 | 8 | 7 |
+| 022 | 7331550 | Claude | 6 | 6 | 5 | 6 | 6 | 7 | 7 | 4 | NA | 5 | 8 | 6 |
+| 022 | 7331550 | Gemini | 5 | 4 | 4 | 5 | 7 | 6 | 6 | 3 | 8 | 6 | 8 | 5 |
+| 023 | 64563d2 | Claude | 7 | 7 | 7 | 6 | 6 | 7 | 6 | 4 | NA | 5 | 8 | 6 |
+| 023 | 64563d2 | Gemini | 6 | 5 | 6 | 4 | 7 | 8 | 7 | NA | 7 | 6 | 8 | 6 |
+| 024 (S05 final) | c557d3d | Claude | 6 | 6 | 5 | 6 | 5 | 7 | 6 | 5 | NA | 5 | 9 | 5 |
+| 024 (S05 final) | c557d3d | Gemini | 6 | 4 | 4 | 5 | 8 | 8 | 8 | 3 | 9 | 7 | 9 | 7 |
+Seeds differ per loop: 023 (cold storeroom hall visited) scored best on light and shadows; 024's bot stayed in the yellow level. Performance 8 to 9 all session.
+Top open LEDGER items: L155 the yellow level lit too evenly; L156 the Occupant in plain view; L138 colour variety in the level; L159 milky haze wall at hall ends; L160 the level's own pillar rooms washed out; L136/L145 carpet reads dry; L153 capture sheet choice.
+Protected (from 021 to 024): the camcorder overlay and tape tears, the chalk door that tears open on tape, the tripod room, the high door on the tall wall and the knee-high doorway, the cold foggy column hall with real shadows and the warm EXIT door as a beacon, the lone folding chair, embossed wallpaper and stained tiles up close, the hum and the wet footsteps (Gemini Sound 9), performance.
 
 ## qa-auditor result (pass/fail per claim)
-qa-auditor checked 12 claims (logs and frames in review/archive/qa/s04/). Fixes after it are noted.
-1. gdcheck: PASS.
-2. Storeroom placement: PASS (2 of 200 seeds without one in chunk 1,0; 7.2 percent of other chunks; the draft said about 9, corrected).
-3. Determinism and spawn seam tests: PASS.
-4. Portal crossing seamless: PASS ("[portal] t=3.30 ... through door"; central-frame brightness 113.7, 114.9, 112.0, 112.7, 114.4 across the crossing, a 2.6 percent spread; the frames look like the same hall).
-5. Far door leads out: PASS ("through far" at y about 0 at the storeroom door, then the room).
-6. Crawl: PASS (the room crawled into is very dark).
-7. Climb: PASS (the nook is lit and readable).
-8. Performance: PARTIAL (73.4 / 54.4 and 85.1 / 51.2 with portals, 92.6 / 68.1 without, idle GPU; the handoff numbers corrected to these).
-9. Occupant assets and spend: PARTIAL (assets and the 92 credits PASS; signed Meshy URLs in the manifest FAILED: stripped, and the build script now strips them on save).
-10. Critic guard: PASS (hand-back exit 0; a read of docs/VISION.md exit 2).
-11. No secrets: PARTIAL (no keys, no .env; only the signed URLs above).
-12. Progress copies and em dashes: PARTIAL (the 16 concept images were only in contact sheets: copied to progress/0149 to 0164; the only em dashes are in Gemini's verbatim critiques, as in every session since S01).
-Also found: a black unlit band on the storeroom door jamb when you press against it (minor, L126); engine exit-time leak messages and about 70 invalid-UID warnings (re-import would clear them); duplicate critic rows in SPEND.md (removed).
+14 claims (docs/handoffs/s05_claims_draft.md); scratch in review/archive/qa/s05/.
+1 gdcheck PASS. 2 tests PASS (numbers matched). 3 remembered wrong counts PASS (exact). 4 look defaults PASS (0165 vs 0169). 5 storeroom halls PASS, caveat: the far end very dark in 0218 (fixed after: L152). 6 hall shader fixes PASS (code; no baseline image of the old bug). 7 bucket PASS. 8 camcorder PARTIAL (code checked; QA did not open the pictures; I did, 0184 to 0187). 9 Occupant on tape PASS (logs and sheet, repeatable). 10 watchers PASS (log lines, image). 11 perf PARTIAL: true numbers but best average of 3 runs per build, different seeds, on the RTX 5070 Ti Laptop (CLAUDE.md names a 5070); 022 85.8 / 63.0, 023 84.8 / 56.8, 024 98.7 / 69.9; the laptop Medium 1080p target was not measured. 12 critic loops PASS. 13 no secrets or em dashes PASS. 14 progress copies PASS.
+Also found: uncommitted docs (committed after), stale-UID warnings (L154), the tripod sheet (L153), the session total missing in SPEND.md (added), a dead old-figure path in tape_events.gd (harmless, used by --old_figure).
 
 ## Next milestone and the first 3 concrete steps
-M3.6 Remembered wrong batch 1 plus the look toward Stewart's reference stills (effort xhigh), then M4 (the Occupant, the Dropout, the watchers).
-1. Look: cleaner, more saturated mono-yellow with brighter panel rows and plain walls (grime concentrated), and at least one hall with a different palette behind a portal or seam (L118); fix the wall-foot gradient (L117). A/B lookdev against the reference feel, then a critic loop.
-2. Remembered-wrong rules, batch 1: handle-less doors, freestanding door frames, almost-right signs, category objects, chairs facing walls, a floor opening onto the lit ceiling of the level below.
-3. The watchers, cheap first: the tall room's high door opening a crack with something looking out; a figure drawn only at the screen edge. Then the Occupant strip shader on occupant_rigged.glb.
+M4 continued (effort xhigh): make the Occupant work, then let it hunt.
+1. Read Stewart's play notes first (the brightness question, L155). Then the Occupant's presentation (L156): by eye never standing lit in the open (the edge figure only in dim places or as a silhouette against light, a doorway, a dead stretch), on tape mostly dropout held together by a few strips, bigger, smeared between held poses; a filmed check of both before any critic loop.
+2. Light the long halls and the level's own pillar rooms with the hall's idea (fewer, stronger, pooled panels, real dead stretches), keeping the bright clean offices Stewart chose (L155, L160).
+3. The hunt: senses (hearing first: sprinting, the camcorder's beep), stalking along loops and through storeroom portals, the tells (hum dies, lights flicker toward it, footsteps not yours), a chase, and the VHS death replay.
 
 ## Gotchas learned
-- A Camera3D environment override drops the volumetric haze when the camera renders in a SubViewport (Godot 4.7.2). Portal cameras use the world environment and the portal shader undoes AgX (copied from 4.7 tonemap.glsl and environment_storage.cpp).
-- Halls built during the loading moment exist before the player's camera; anything that grabs the camera at build time must pick it up again later.
-- Resetting volumetric fog temporal reprojection on a teleport darkens the haze for a few frames; across a portal (same picture both sides) keep it.
-- The chunk ceiling collision was a single slab at 2.6 m over the whole chunk, tall rooms included; walls had collision only up to 2.6 m.
-- The Meshy account is shared with Stewart's other projects; its balance drops between calls for reasons that are not ours.
-- A heredoc containing many nested quotes broke bash once; patch scripts are now written with the Write tool.
+- Godot 4.7: the Meshy rig's skeleton works in centimeters under a 0.01-scaled Armature, so VERTEX in a skinned mesh's shader is not meters; pass a body frame from script (Occupant.shade sets to_body / from_body).
+- Spot lights fade out by distance from the camera that draws them: a portal camera far from a room sees it dark. Take a still from close up instead (Portal.request_still).
+- Setting Node3D.rotation.y on a node whose basis is already rotated replaces the whole yaw; compose bases instead.
+- Every panel lit in a grid fills every column's shadow; readable shadows need one dominant light per patch of floor.
+- A per-chunk glow texture makes a hard line at every chunk edge once the glow is wide; share one wrapping texture per space.
+- Shaders that shade by world height break in spaces built off the level's floor (the halls under the level): pass the floor height (base_y).
+- The Gemini critic script takes the session number from docs/HANDOFF.md; moving HANDOFF.md before the last critic run labels its SPEND row S01.
+- Python on Windows writes CRLF in text mode; use newline="\n" when editing repo files from Python.
 
 ## Decisions made
-D033 critic hand-back (Stewart's edit), D034 Stewart's priorities, D035 the Occupant, D036 storeroom portals, D037 crawl and climb.
+D038 look toward the stills, D039 storeroom halls, D040 remembered wrong batch 1, D041 the camcorder turned round, D042 the Occupant and the watchers, D043 lighting for readable shadows and one glow field per space.

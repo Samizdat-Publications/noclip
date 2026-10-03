@@ -60,6 +60,13 @@ Session 03 total: about $9.24 of a $40 cap (graffiti v2 about $6.4, carpet and w
 | 2026-10-02 | S04 | Gemini (gemini-3.1-pro-preview) | video critic -> 020_gemini.md | 1 | $0.09 (27639 in / 3001 out tokens) |
 
 Session 04 total: about $2.52 of Gemini (monster concepts $2.15, four video critiques 017 to 020 about $0.37; 017 and 018 were the S03 overtime loops) and 92 Meshy credits (two image-to-3D models, a rig, nine animations) of the 1,000-credit budget Stewart set.
+
+## Session 05
+| Date | Session | Service | Purpose | Calls | Est. cost |
+|---|---|---|---|---|---|
 | 2026-10-02 | S05 | Gemini (gemini-3.1-pro-preview) | video critic -> 021_gemini.md | 1 | $0.09 (27638 in / 2766 out tokens) |
 | 2026-10-02 | S05 | Gemini (gemini-3.1-pro-preview) | video critic -> 022_gemini.md | 1 | $0.09 (27638 in / 3119 out tokens) |
 | 2026-10-02 | S05 | Gemini (gemini-3.1-pro-preview) | video critic -> 023_gemini.md | 1 | $0.09 (27639 in / 3058 out tokens) |
+| 2026-10-02 | S05 | Gemini (gemini-3.1-pro-preview) | video critic -> 024_gemini.md | 1 | $0.09 (27638 in / 2846 out tokens) |
+
+Session 05 total: about $0.36 of Gemini (four video critiques 021 to 024); no image generation, no Meshy credits (908 of the 1,000-credit budget left).
