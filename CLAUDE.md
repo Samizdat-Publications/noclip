@@ -117,13 +117,18 @@ game/      Godot 4.7 project: scenes/main.tscn, scripts/{core,world,level0,playe
            stalk, senses, close beat, chase, catch), watchers.gd (the high door, the edge figure, the head round a doorway),
            level0_scares.gd (the dragged Halden technician), halden_body.gd (Halden model + clips), catalogue.gd (what you
            filmed, the shelf kept between runs); core/death_replay.gd (the VHS death replay, the dropped camcorder's tape);
-           tests_*.gd (headless tests). Builder options for the hunt: --hunt_at=S --no_hunt --drag_at=S --no_scares --no_replay
+           tests_*.gd (headless tests). S07 the Descent: core/progress.gd (save: salvage, kit, deepest, layout seed),
+           core/run_director.gd (the run loop: stairs transition, appraisal, locker and lift screens), level0/depths.gd (depth
+           table), stairwell.gd, landing.gd, halden_teams.gd (last stand, help), crawler.gd + crawler_rig.gd (depth 1's hunter),
+           player/kit.gd (flashbulb F, flares G, overshoes), player/flare.gd. Options: --depth=N --no_descent --kit=flash:2,flares:1
+           --deepest=N --salvage=N --fresh_progress --keep_progress --descend_at=S --bot_stairs_after=S --halden_at=S --no_halden
+           --occupant_hunts --log-run --log-halden --log-kit Builder options for the hunt: --hunt_at=S --no_hunt --drag_at=S --no_scares --no_replay
            --found_test --show_vm --log-hunt --log-scare --log-watch --log-catalogue --log-hall --log-spikes (perf runs)
 pipeline/  textures/ audio/ blender/ meshes/ manifests/   (scripts that generate or fetch every asset)
-tools/     capture/capture.py (one-command review capture), critic_gemini/critic.py, critic_extract.py, scores.py,
+tools/     monster_panel.py (Monster Lab: blind Gemini judge of a review/monster_lab/rN folder), capture/capture.py (one-command review capture), critic_gemini/critic.py, critic_extract.py, scores.py,
            lookdev.py (builder-only renders; --focus auto), gdcheck.py (fast script check), perfprobe.sh, progress.py,
            import_presets.py, paths.py, layout_preview.py
-review/    inbox/ archive/ critiques/ LEDGER.md scores.csv store_page.md
+review/    inbox/ archive/ critiques/ monster_lab/ (blind option images per round) LEDGER.md scores.csv store_page.md
 progress/  numbered progress pictures + INDEX.md (every generated image gets a copy here)
 spike/     threejs/ (the S01 engine bake-off, kept for reference)
 ```
