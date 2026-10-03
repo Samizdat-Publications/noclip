@@ -559,7 +559,8 @@ func _chase(delta: float) -> void:
 	_advance(delta)
 	rig.set_clip("run", 1.0)
 	rig.presence = 1.0
-	rig.skip_gap = Vector2(0.12, 0.3)
+	rig.skip_gap = Vector2(0.24, 0.5)
+	rig.alt_clips = ["lunge", "scream", "crouch"]
 	# The panels it runs under die.
 	var fx := space.fixture_near(global_position, 1.9)
 	if fx and not _killed.has(fx):
@@ -574,6 +575,7 @@ func _chase(delta: float) -> void:
 
 
 func _search(delta: float) -> void:
+	rig.alt_clips = []
 	if _sees_player():
 		suspicion += delta * 2.0
 		last_known = player.global_position

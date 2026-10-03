@@ -226,7 +226,7 @@ func head_position() -> Vector3:
 
 ## How much the arms are pulled down to hang at its sides (the standing clips' arms stood out
 ## like a mannequin's, L156), and how far the head is tipped over.
-const HANG := {"idle": 0.85, "look": 0.75, "walk": 0.55, "scream": 0.0}
+const HANG := {"idle": 0.85, "look": 0.75, "walk": 0.55, "run": 0.5, "lunge": 0.35, "scream": 0.0}
 
 
 ## A person copied slightly wrong (the S03 tape figure's proportions, on the Meshy rig): forearms

@@ -18,6 +18,7 @@ var tear := 0.0
 var skip_gap := Vector2(0.18, 0.42)   # seconds between tape frame skips
 var show_eye := true
 var show_tape := true
+var alt_clips: Array = []    # other clips a held frame may come from (the chase: never just a sprint)
 var _skip_t := 0.0
 var _ghost_t := 0.0
 var _clip := ""
@@ -68,8 +69,12 @@ func skip_now() -> void:
 	_tape_xf = global_transform
 	tape.global_transform = _tape_xf
 	_held_clip = _clip
-	var ln := tape.clip_length(_clip)
+	if not alt_clips.is_empty() and _rng.randf() < 0.45:
+		_held_clip = alt_clips[_rng.randi() % alt_clips.size()]
+	var ln := tape.clip_length(_held_clip)
 	_held_t = fmod(Game.clock * _speed / maxf(ln, 0.01), 1.0) if ln > 0.0 else 0.0
+	if _held_clip != _clip:
+		_held_t = _rng.randf_range(0.2, 0.7)
 	tape.hold(_held_clip, _held_t)
 	tear = 1.0
 

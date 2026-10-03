@@ -700,7 +700,9 @@ func _on_caught() -> void:
 	if Game.opts.has("log-hunt"):
 		print("[hunt] t=%.1f the tape ends (death %d) at %s" % [Game.clock, deaths, _death_pos])
 	if replay:
-		replay.finished.connect(after_death, CONNECT_ONE_SHOT)
+		# The rebuild round the start happens while the END OF TAPE card is up (its loading moment
+		# is a long frame; Gemini 028 saw it as a hitch).
+		replay.card_up.connect(after_death, CONNECT_ONE_SHOT)
 		replay.start()
 	else:
 		after_death()

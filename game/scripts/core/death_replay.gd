@@ -10,6 +10,8 @@ extends CanvasLayer
 ## END OF TAPE, and you are back at the start (Level0World.after_death).
 
 signal finished
+## The end card is up (black): the world can rebuild round the start now, out of sight.
+signal card_up
 
 var catalogue: Catalogue            # what is on this tape (the end card's label)
 
@@ -199,6 +201,7 @@ func _record(delta: float) -> void:
 
 
 var _end_clock := 0.0
+var _card_text := ""
 var _found := false                 # playing the tape of the camcorder you dropped (not a death)
 var _saved: Array[RID] = []
 var _saved_tex: Array[Texture2DRD] = []
@@ -378,8 +381,11 @@ func _play(delta: float) -> void:
 				_sfx_play("vcr_eject_01", -6.0, false)
 		5:   # end card on black
 			_mat.set_shader_parameter("mode", 4)
-			_end.visible = true
-			_end.text = "END OF TAPE   %s\n\n%s" % [_stamp(nf - 1), catalogue.tape_label() if catalogue else ""]
+			if not _end.visible:
+				_card_text = "END OF TAPE   %s\n\n%s" % [_stamp(nf - 1), catalogue.tape_label() if catalogue else ""]
+				_end.visible = true
+				card_up.emit()
+			_end.text = _card_text
 			if _t > 5.0:
 				_finish()
 

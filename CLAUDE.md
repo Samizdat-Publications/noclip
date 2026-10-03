@@ -111,8 +111,14 @@ game/      Godot 4.7 project: scenes/main.tscn, scripts/{core,world,level0,playe
            level0/: level0_gen.gd (chunk layouts: BSP rooms, highways, loops, splices), level0_chunk.gd (builds a chunk),
            level0_world.gd (the infinite level: streaming, cross-chunk paths, the loop), level0_hero.gd (S01 hero slice, `-- --hero`),
            fixture*.gd (troffers, light pool, ceiling glow field, one wrapping field per space), level0_director.gd (dread beat, thuds),
-           tape_events.gd (tape-only things), portal_room.gd (the hall behind a storeroom door, palettes), occupant.gd (the monster:
-           wallpaper-strip shader on the Meshy rig), watchers.gd (the high door, the figure at the edge of sight); tests_*.gd (headless tests)
+           tape_events.gd (tape-only things), portal_room.gd (the hall behind a storeroom door, palettes, per-hall variety),
+           occupant.gd (the monster on the Meshy rig: looks paper/silhouette/tape/shimmer/shadow, proportions modifier),
+           occupant_rig.gd (the hunt's body: shimmer + shadow by eye, frame-skipping hole on tape), occupant_hunter.gd (the hunt:
+           stalk, senses, close beat, chase, catch), watchers.gd (the high door, the edge figure, the head round a doorway),
+           level0_scares.gd (the dragged Halden technician), halden_body.gd (Halden model + clips), catalogue.gd (what you
+           filmed, the shelf kept between runs); core/death_replay.gd (the VHS death replay, the dropped camcorder's tape);
+           tests_*.gd (headless tests). Builder options for the hunt: --hunt_at=S --no_hunt --drag_at=S --no_scares --no_replay
+           --found_test --show_vm --log-hunt --log-scare --log-watch --log-catalogue --log-hall --log-spikes (perf runs)
 pipeline/  textures/ audio/ blender/ meshes/ manifests/   (scripts that generate or fetch every asset)
 tools/     capture/capture.py (one-command review capture), critic_gemini/critic.py, critic_extract.py, scores.py,
            lookdev.py (builder-only renders; --focus auto), gdcheck.py (fast script check), perfprobe.sh, progress.py,
@@ -121,6 +127,7 @@ review/    inbox/ archive/ critiques/ LEDGER.md scores.csv store_page.md
 progress/  numbered progress pictures + INDEX.md (every generated image gets a copy here)
 spike/     threejs/ (the S01 engine bake-off, kept for reference)
 ```
+- Never edit game/ or tools/ while `tools/capture/capture.py` runs: its perf runs load the working tree after the movie run, and a half-edited script hangs them (S06).
 - Critic reviews: since 2026-10-02 the critic hands its review back directly (Stewart's guard fix, D033); save its reply verbatim. If a hand-back ever fails, `python tools/critic_extract.py <agent_id> review/critiques/NNN_claude.md` recovers it from the log (D004).
 - Stewart's rule: every generated image gets a copy in `progress/` via `python tools/progress.py` (lookdev.py and capture.py do it automatically). Name them so the history can be pieced back together.
 

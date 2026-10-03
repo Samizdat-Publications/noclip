@@ -208,6 +208,15 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L181 | 026 | claude | nitpick | The tape door's glowing outline reads like a debug highlight | DEFER S07 | Soften the seam's tape glow to a torn edge |
 | L182 | 026 | claude+gemini | nitpick | One 133 ms hitch, four frames over 25 ms | FIX (S06, 86a3b49) | The Halden model and the peek figure were loaded mid-run; now loaded at the start. Perf runs again shared the GPU with another program |
 | L183 | 026 | gemini | hurts | Looks like a generic Backrooms clone; lean into the furniture store (misplaced furniture, landmarks) | DEFER M5 | The store hub is M5; the halls' chair-and-monitor beacon is a first landmark |
+| L184 | 027 | claude | hurts | Yellow corridors generic: wants one wrong thing per hallway (a stain pattern, a light out of rhythm, a wall a degree off) | DEFER S07 | Remembered-wrong batch 2 (windows into the wall cavity, ankle-height switches, handless clocks, the narrowing corridor) is the answer; batch 1 tricks are per block, not per hall |
+| L185 | 027 | claude | hurts | The hallway monster (the tape encounter at the end of a hall) is a small still cutout with white stripes | FIX (partial, S06) | Far away it is now a solid shape with few streaks; its stillness is the encounter's design (it frame-skips closer between looks); the hunt's close beat is where it moves wrong |
+| L186 | 027 | claude | hurts | Pillar tops with notches and flaps; dark diamond wedges at pillar bases | FIX (S06, f0ffd8b) | Caused by this session's wider column strips: the ceiling strips are gone and the floor strips narrowed |
+| L187 | 027 | claude | hurts | The pillar room has little to read: identical pillars, flat grey carpet | FIX (partial, S06) | Hall variety (86a3b49) was in this build; this seed's variety fell in parts the bot did not see. More per-hall detail next session |
+| L188 | 027 | claude | hurts | The storeroom doorway shows a blown-out white void | DEFER S07 | The cold palette hall through the portal (gain 1.22) reads as white fog from outside; check the portal gain per palette |
+| L189 | 027 | claude | nitpick | A ladder huge in the view (frame_14) | DEFER (verify) | Probably the bot right by a tall-room ladder or the hall's ladder prop |
+| L190 | 027 | gemini | ruins it | The grey pillar room lighting flat, ambient white, no shadows (Claude the same frames: "the first screenshot", Lighting 7) | REJECT (split critics) | The critics disagree on the same hall; Claude 027 calls it the best image in the game. Watch the next loop |
+| L191 | 027 | gemini+claude | hurts | Performance 73 fps, 96 ms stutters (Gemini Perf 4) | FIX (S06, f0ffd8b) | Found: each doorway view built its render buffers on its first frame (when you stepped into a hall) and the still resized the view; now warmed once when the hall is built and the still taken at the live size: worst frame 133 to 72 ms on seed 865723. Average fps on hall seeds about 73 (perf runs shared the GPU) |
+| L192 | 027 | gemini | nitpick | Footsteps feel like a fixed interval | DEFER S07 | Steps already vary 7 percent; tie them to the head bob phase and speed |
 
 ## Closed
 
