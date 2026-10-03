@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://08qtewi5bo0c"
+uid="uid://2h8k5gavb25b"
 path="res://.godot/imported/scream_drag_01.wav-4f7c02c8c315cf1fdfd215a0556e56d6.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

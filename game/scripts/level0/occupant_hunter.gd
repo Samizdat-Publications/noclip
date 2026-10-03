@@ -130,8 +130,10 @@ func _do_stage() -> void:
 	fwd = fwd.normalized()
 	var side := fwd.cross(Vector3.UP)
 	var p := player.global_position + fwd * float(stage_req.get("dist", 5.0)) + side * float(stage_req.get("side", 0.0))
+	if stage_req.has("at"):
+		p = stage_req["at"]
 	global_position = Vector3(p.x, player.global_position.y, p.z)
-	_face(player.global_position)
+	_face(stage_req["face_to"] if stage_req.has("face_to") else player.global_position)
 	if rig is CrawlerRig and stage_req.get("by_face", false):
 		var ho := (rig as CrawlerRig).head_position() - rig.global_position
 		ho.y = 0.0

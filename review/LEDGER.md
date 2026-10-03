@@ -225,6 +225,10 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L198 | 029 | claude | nitpick | Ghost shapes by the mop bucket (frame_18) | REJECT (deliberate) + watch | The Occupant's after-images on tape; make them read clearer or drop them if it returns |
 | L199 | QA S06 | qa-auditor | hurts | The head round a doorway did not show on seed 4242 (the hunt started first) | FIX (S06) | First chance moved from 48 s to 30 s; in headless runs it shows on 4 of 6 seeds (777, 2024, 90210, 5150) |
 | L200 | QA S06 | qa-auditor | nitpick | "Texture is not a valid texture" errors at the respawn after a death; 240 textures leaked at exit | FIX (partial, S06) | The found tape's textures are freed at exit and the portal stills a frame late; two error lines remain at the respawn, source not the stills (tested with readback); no visible effect seen |
+| L201 | Stewart S07 | stewart | ruins it | Progression must be central: each run, even a quick death, has to make the next run stronger; the catalogue is too shallow | FIX (S07, D050) | The Descent: salvage paid per run, kit bought at the Landing's locker (flashbulb, flares, overshoes, tape stock, radio, crowbar), gated by depth reached; lift stops |
+| L202 | Stewart S07 | stewart | hurts | Exploring the construct is the goal, not only escaping; a staircase down to the next zone | FIX (S07, D050) | A stairwell in every depth (EXIT sign pointing down, red lamp, draft), depths 1 to 4 with their own palette, light and hunt tuning |
+| L203 | Stewart S07 + critics 025-029 | stewart | ruins it | Get the monster right with an early, critic-picked process; maybe different monsters per depth | FIX (S07, D051, D052) | Monster Lab rounds 1-3; the Crawler hunts depth 1; the ceiling hanger (round 2's pick for deeper) is next for depth 2, the fixture spider for depth 3 |
+| L204 | Stewart S07 | stewart | hurts | Halden teams battling the monster and losing (dragged away), sometimes coming to your aid | DEFER S08 | Sounds made (radio, shouts, scream, flare gun); the encounter is the next build after the review loop |
 
 ## Closed
 

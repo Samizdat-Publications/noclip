@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://il8rfbgtey4j"
+uid="uid://265kry74xn82"
 path="res://.godot/imported/crw_flashed_01.wav-5fe7fbff6895307ef4309c731c6407c6.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

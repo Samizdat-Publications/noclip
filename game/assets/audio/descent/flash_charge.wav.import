@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://btdtpcvny2acr"
+uid="uid://dcyebskrs7d5g"
 path="res://.godot/imported/flash_charge.wav-c58c3e239ecd37e11032399f4014dc48.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

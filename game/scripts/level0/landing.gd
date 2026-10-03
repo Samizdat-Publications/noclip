@@ -184,8 +184,9 @@ func _build_cage(at: Vector3, face: Vector3) -> void:
 	root.add_child(_bulb)
 	var sign := Label3D.new()
 	sign.text = "HALDEN   LIFT  2"
-	sign.font_size = 40
-	sign.pixel_size = 0.0035
+	sign.font_size = 28
+	sign.pixel_size = 0.0022
+	sign.outline_size = 0
 	sign.modulate = Color(0.08, 0.07, 0.05)
 	sign.position = Vector3(0, h - 0.04, w * 0.5 + 0.045)
 	sign.double_sided = false
@@ -207,11 +208,13 @@ func _build_locker(at: Vector3, face: Vector3) -> void:
 		_box(root, Vector3(0.22, 0.012, 0.01), Vector3(0.15, 1.62 - k * 0.035, 0.252), _mat(Color(0.08, 0.08, 0.07), 0.9))
 	_box(root, Vector3(0.03, 0.1, 0.03), Vector3(0.04, 1.0, 0.27), _mat(Color(0.6, 0.55, 0.4), 0.4, 0.9))
 	var sign := Label3D.new()
-	sign.text = "HALDEN\nFIELD KIT"
-	sign.font_size = 32
-	sign.pixel_size = 0.003
-	sign.modulate = Color(0.85, 0.82, 0.7)
-	sign.position = Vector3(0, 1.25, 0.257)
+	# a small worn stencil, not a label
+	sign.text = "HALDEN DUPL.\nFIELD KIT  07"
+	sign.font_size = 22
+	sign.pixel_size = 0.0016
+	sign.outline_size = 0
+	sign.modulate = Color(0.72, 0.7, 0.6, 0.7)
+	sign.position = Vector3(0, 1.45, 0.257)
 	sign.double_sided = false
 	root.add_child(sign)
 

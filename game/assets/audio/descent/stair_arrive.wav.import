@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cmdimlytwf30v"
+uid="uid://b3pqn0xkhfa3h"
 path="res://.godot/imported/stair_arrive.wav-7318ebfd3c9a9f96164a9be025a2f553.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dhhgehtqlflrl"
+uid="uid://pkkbjuhboc72"
 path="res://.godot/imported/flare_land_01.wav-8aa9a43e7d778ec77ffea0c5409d72cf.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

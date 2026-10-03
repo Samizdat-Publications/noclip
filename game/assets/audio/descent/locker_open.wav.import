@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://hq8t0scq8v4c"
+uid="uid://ov8iibnkcdhg"
 path="res://.godot/imported/locker_open.wav-35f97563e618a60b4f709ca569cff2e4.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

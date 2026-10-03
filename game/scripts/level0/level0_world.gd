@@ -55,6 +55,7 @@ var stairwell: Stairwell
 var landing: Landing
 var flares: Array = []
 var run: RunDirector
+var teams: HaldenTeams           # Halden's last stand and help (S07, L204)
 
 
 func build(p_seed: int) -> void:
@@ -101,6 +102,10 @@ func build(p_seed: int) -> void:
 	catalogue.name = "catalogue"
 	catalogue.space = self
 	add_child(catalogue)
+	teams = HaldenTeams.new()
+	teams.name = "halden_teams"
+	teams.space = self
+	add_child(teams)
 	# The first ring is built at once (this is the loading moment); the rest streams.
 	var start := Vector3(12, 0, 12)
 	_player = start
@@ -218,6 +223,9 @@ func goto_depth(d: int) -> void:
 	hunter.reset_after_death()
 	hunter.configure(d)
 	hunter.pins = 0
+	hunter.stage_req = {}
+	if teams:
+		teams.reset_run()
 	if Game.opts.has("log-run") or Game.opts.has("log-hunt"):
 		print("[run] t=%.1f built depth %d in %d ms" % [Game.clock, d, Time.get_ticks_msec() - t0])
 
@@ -531,7 +539,7 @@ func get_interest_points() -> Array:
 				out.append(e)
 	if stairwell and Vector2(stairwell.door_world.x - _player.x, stairwell.door_world.z - _player.z).length() < 40.0:
 		var look := stairwell.door_world + Vector3(stairwell.n.x, 0, stairwell.n.y) * 2.2
-		out.append({"name": "stairwell_d%d" % depth, "pos": look, "closet": stairwell.door_world, "n": stairwell.n, "stair": true})
+		out.append({"name": "stairwell_d%d" % depth, "pos": look, "closet": stairwell.door_world, "n": Vector3(stairwell.n.x, 0.0, stairwell.n.y), "stair": true})
 	return out
 
 
@@ -809,6 +817,7 @@ func attach_player(p: Player) -> void:
 	hunter.on_caught = _on_caught
 	scares.player = p
 	catalogue.player = p
+	teams.player = p
 
 
 ## Inside one of the sealed rooms behind a tape-only seam (the Occupant cannot follow you there).

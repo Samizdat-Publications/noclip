@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bfqygxbwdnxk1"
+uid="uid://b6ymctkp3un8i"
 path="res://.godot/imported/stair_draft_loop.wav-d42eca4e7cb818d5af5278ab166df6db.sample"
 
 [deps]
@@ -18,7 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop_mode=0
+edit/loop_mode=2
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

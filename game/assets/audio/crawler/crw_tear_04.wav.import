@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://d30gpv1tfejqm"
+uid="uid://c2eoy3lwa8eky"
 path="res://.godot/imported/crw_tear_04.wav-d13aa4f1bb57b4d68295a31b563ce7f2.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

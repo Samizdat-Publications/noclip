@@ -16,6 +16,8 @@ var _burn: AudioStreamPlayer3D
 var _rng := RandomNumberGenerator.new()
 var landed := false
 var out := false
+var _out_t := 0.0
+var life_override := 0.0     # > 0: burns this long instead of LIFE (Halden's last stand)
 
 
 func throw_from(from: Vector3, to: Vector3) -> void:
@@ -97,17 +99,26 @@ func _process(delta: float) -> void:
 			_play("flare_land_01", -4.0, false)
 			get_tree().create_timer(0.8).timeout.connect(_start_burn)
 	# It sputters: a fast random flicker over a slow breathing swell.
-	var life := clampf(1.0 - (_t - 0.55) / LIFE, 0.0, 1.0)
+	var life_s := life_override if life_override > 0.0 else LIFE
+	var life := clampf(1.0 - (_t - 0.55) / life_s, 0.0, 1.0)
 	var flick := 0.82 + 0.18 * _rng.randf() + 0.08 * sin(_t * 3.1)
 	if life < 0.08:
 		flick *= 0.4 + 0.6 * float(_rng.randf() > 0.4)
+	if out:
+		_out_t += delta
+		_light.light_energy = maxf(0.0, 3.2 * flick * (1.0 - _out_t / 1.5) * 0.3)
+		if _out_t > 2.5:
+			queue_free()
+		return
 	_light.light_energy = 3.2 * flick * (1.0 if life > 0.0 else 0.0)
-	if _t > LIFE + 0.55 and not out:
+	if _t > life_s + 0.55:
 		out = true
+		_out_t = 0.0
 		_play("flare_die_01", -6.0, false)
-		var tw := create_tween()
-		tw.tween_property(_light, "light_energy", 0.0, 1.5)
-		tw.tween_callback(queue_free).set_delay(2.5)
+
+
+func age() -> float:
+	return maxf(_t - 0.55, 0.0)
 
 
 func _start_burn() -> void:

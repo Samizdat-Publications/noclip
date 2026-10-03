@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dhamtxp5xgo35"
+uid="uid://b3xntaacsdkup"
 path="res://.godot/imported/crw_breath_02.wav-eb3f3475177f25f979b2409ee1deb41c.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

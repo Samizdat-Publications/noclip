@@ -101,3 +101,4 @@ Session 06 total: about $0.91 in dollars (Gemini about $0.60: one concept image 
 | 2026-10-03 | S07 | Meshy (rigging) | Crawler rig, 1.9 m | 1 | 5 credits |
 | 2026-10-03 | S07 | Meshy (animations, 9 action_ids in one task) | Crawler clips: crawl_slow crawl_fast crawl_idle look lunge listen crouch_walk turn grab; balance 1230 to 1136 | 1 | 27 credits |
 | 2026-10-03 | S07 | ElevenLabs (eleven_text_to_sound_v2) | Crawler creature sounds (build_s07_crawler.py) | 28 | ~$0.08 (251 credits) |
+| 2026-10-03 | S07 | Gemini (gemini-3.1-pro-preview) | monster panel -> monster_r3_gemini.md | 1 | $0.03 (7027 in / 1722 out tokens) |

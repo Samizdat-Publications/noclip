@@ -36,6 +36,32 @@ static func available() -> bool:
 	return ResourceLoader.exists(MODEL)
 
 
+static var _mottle_tex: Texture2D
+
+
+## Blotches, bruising and grime in one multiply layer (lighter than white never: it only darkens).
+static func _mottle() -> Texture2D:
+	if _mottle_tex == null:
+		var n := FastNoiseLite.new()
+		n.noise_type = FastNoiseLite.TYPE_CELLULAR
+		n.frequency = 0.035
+		n.fractal_type = FastNoiseLite.FRACTAL_FBM
+		n.fractal_octaves = 4
+		n.seed = 77
+		var nt := NoiseTexture2D.new()
+		nt.width = 512
+		nt.height = 512
+		nt.seamless = true
+		nt.noise = n
+		var g := Gradient.new()
+		g.set_color(0, Color(0.62, 0.6, 0.55))
+		g.set_color(1, Color(1.0, 1.0, 0.98))
+		g.add_point(0.55, Color(0.93, 0.9, 0.86))
+		nt.color_ramp = g
+		_mottle_tex = nt
+	return _mottle_tex
+
+
 static func _library() -> AnimationLibrary:
 	if _lib == null:
 		_lib = AnimationLibrary.new()
@@ -79,6 +105,7 @@ func _init() -> void:
 	body = _model.instantiate() as Node3D
 	add_child(body)
 	body.scale = Vector3.ONE * SCALE
+	body.position.y = -0.06     # its weight presses it into the carpet
 	skel = body.find_child("Skeleton3D", true, false) as Skeleton3D
 	anim = body.find_child("AnimationPlayer", true, false) as AnimationPlayer
 	if anim:
@@ -139,12 +166,18 @@ func _skin(n: Node) -> void:
 			var src := mi.mesh.surface_get_material(s)
 			if src is StandardMaterial3D:
 				var m := (src as StandardMaterial3D).duplicate() as StandardMaterial3D
-				m.roughness = 0.74
-				m.rim_enabled = true
-				m.rim = 0.12
-				m.rim_tint = 0.7
+				# Matte, dead, sickly: no shine, blotched like old skin, a little grey-green.
+				m.roughness = 0.97
+				m.metallic = 0.0
+				m.metallic_specular = 0.12
+				m.rim_enabled = false
+				m.albedo_color = Color(0.86, 0.86, 0.8)
 				m.subsurf_scatter_enabled = true
-				m.subsurf_scatter_strength = 0.25
+				m.subsurf_scatter_strength = 0.35
+				m.detail_enabled = true
+				m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+				m.detail_albedo = Crawler._mottle()
+				m.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
 				mi.set_surface_override_material(s, m)
 		mi.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 		mi.extra_cull_margin = 2.0

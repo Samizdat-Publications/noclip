@@ -116,14 +116,14 @@ func _build() -> void:
 	var em := _mat(Color(0.3, 0.02, 0.02))
 	em.emission_enabled = true
 	em.emission = Color(1.0, 0.12, 0.08)
-	em.emission_energy_multiplier = 4.0
+	em.emission_energy_multiplier = 2.2
 	_lamp_mesh.material_override = em
 	_lamp = OmniLight3D.new()
 	_lamp.light_color = Color(1.0, 0.18, 0.12)
-	_lamp.light_energy = 1.6
-	_lamp.omni_range = 4.6
-	_lamp.omni_attenuation = 1.3
-	_lamp.light_volumetric_fog_energy = 2.0
+	_lamp.light_energy = 0.9
+	_lamp.omni_range = 5.2
+	_lamp.omni_attenuation = 1.9
+	_lamp.light_volumetric_fog_energy = 0.5
 	_lamp.shadow_enabled = true
 	_lamp.position = Vector3(0, land_y + 2.1, along * 0.5 - 0.25)
 	shaft.add_child(_lamp)
@@ -153,7 +153,7 @@ func _build() -> void:
 	add_child(txt)
 	var glow := OmniLight3D.new()
 	glow.light_color = Color(1.0, 0.25, 0.18)
-	glow.light_energy = 0.5
+	glow.light_energy = 0.3
 	glow.omni_range = 1.8
 	glow.shadow_enabled = false
 	glow.position = sign_pos + out * 0.3 - Vector3(0, 0.15, 0)
@@ -179,4 +179,4 @@ func _process(delta: float) -> void:
 	_t += delta
 	if _lamp:
 		var f := 1.0 if fmod(_t * 1.7, 5.3) > 0.18 else 0.35
-		_lamp.light_energy = 1.6 * f
+		_lamp.light_energy = 0.9 * f

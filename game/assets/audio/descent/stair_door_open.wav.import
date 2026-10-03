@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bonu2a7sbperi"
+uid="uid://dw2siew87ir4w"
 path="res://.godot/imported/stair_door_open.wav-39298302c9596b965a3a0b67b5b43fda.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

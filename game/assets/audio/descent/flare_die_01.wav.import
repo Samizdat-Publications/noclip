@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://b7q4bacdsbgqo"
+uid="uid://47jp8b4bgg5"
 path="res://.godot/imported/flare_die_01.wav-026597cd16476c7112d5d7fc7c77d8c7.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

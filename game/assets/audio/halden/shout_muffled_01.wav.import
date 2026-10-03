@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bwkmpxm1vkhug"
+uid="uid://oegs87655xtd"
 path="res://.godot/imported/shout_muffled_01.wav-93df9a012c96cdb39cfaf9710a6ffb37.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

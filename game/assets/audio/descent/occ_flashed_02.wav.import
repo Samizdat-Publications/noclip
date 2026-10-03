@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cr1ht17264l1s"
+uid="uid://cq3i1xl30s7en"
 path="res://.godot/imported/occ_flashed_02.wav-6cf9a40811f5627367bb26cfdf7d6ebf.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

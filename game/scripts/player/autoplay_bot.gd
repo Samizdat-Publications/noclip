@@ -322,7 +322,7 @@ func update_move(player: Node, delta: float) -> void:
 				_stair_set = true
 				target_name = "stairwell"
 				_seam = {}
-				_closet = {"name": "stairwell", "look": look, "door": sw.door_world, "door0": sw.door_world, "n": sw.n}
+				_closet = {"name": "stairwell", "look": look, "door": sw.door_world, "door0": sw.door_world, "n": Vector3(sw.n.x, 0.0, sw.n.y)}
 				_closet_tries = 0
 				path = pth
 				path_i = 1 if pth.size() > 1 else 0
