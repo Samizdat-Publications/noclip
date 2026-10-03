@@ -140,7 +140,17 @@ func step() -> bool:
 	(steps.pop_front() as Callable).call()
 	if steps.is_empty():
 		built = true
+		_prewarm.call_deferred()
 	return steps.is_empty()
+
+
+## Each doorway view drawn once, a few frames apart, right after the hall is built (Portal.prewarm).
+func _prewarm() -> void:
+	for po in portals():
+		for k in 6:
+			await get_tree().process_frame
+		if is_instance_valid(po):
+			po.prewarm()
 
 
 func _finish_chunk(ch: Level0Chunk) -> void:

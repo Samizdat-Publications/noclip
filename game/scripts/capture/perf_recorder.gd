@@ -23,6 +23,8 @@ func _process(delta: float) -> void:
 		return
 	_ms.append(delta * 1000.0)
 	_gpu.append(RenderingServer.viewport_get_measured_render_time_gpu(_rid))
+	if delta > 0.035 and Game.opts.has("log-spikes"):
+		print("[spike] t=%.2f frame=%.1f ms gpu=%.1f ms" % [Game.clock, delta * 1000.0, _gpu[-1]])
 	if Game.clock >= Game.duration:
 		_write()
 		set_process(false)

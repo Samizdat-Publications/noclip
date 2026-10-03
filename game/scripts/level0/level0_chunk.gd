@@ -158,12 +158,13 @@ func _build_corner_ao(kit: MeshKit) -> void:
 			var t := Vector3(d.z, 0, -d.x)
 			var a2: Vector3 = c + d * (hs + e) - t * (hs + 0.02)
 			var b2: Vector3 = c + d * (hs + e) + t * (hs + 0.02)
-			strip.call(a2, b2, d * ff * 1.6)
-			strip.call(a2, b2, Vector3(0, wf * 1.5, 0))
+			# (critique 027: wider floor strips met at the corners as dark diamonds, and strips on the
+			# ceiling round the top read as notched flaps; the column itself darkens instead)
+			strip.call(a2, b2, d * ff * 1.1)
+			strip.call(a2, b2, Vector3(0, wf * 1.6, 0))
 			var a3 := Vector3(a2.x, top, a2.z)
 			var b3 := Vector3(b2.x, top, b2.z)
-			strip.call(a3, b3, Vector3(0, -cf * 1.4, 0))
-			strip.call(a3, b3, d * cf * 1.4)
+			strip.call(a3, b3, Vector3(0, -cf * 1.6, 0))
 
 
 ## True if a wall rect borders a tall room (its ceiling trim would cross the tall walls).

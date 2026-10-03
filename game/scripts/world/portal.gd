@@ -166,9 +166,7 @@ func _process(_delta: float) -> void:
 	if live_fog_from > 0.0:
 		var dist := -local_of(main_cam.global_position).x
 		surface.material_override = _mat_live_fog if dist > live_fog_from else _mat_live
-	var sz := Vector2i(get_viewport().get_visible_rect().size)
-	var sc := float(Game.opts.get("portal_scale", "0.6"))   # 1.0 cost ~8 ms at 1440p (S04)
-	var want_sz := Vector2i(maxi(int(sz.x * sc), 64), maxi(int(sz.y * sc), 64))
+	var want_sz := _live_size()
 	if vp.size != want_sz:
 		vp.size = want_sz
 	cam.global_transform = mapping() * main_cam.global_transform
@@ -191,11 +189,39 @@ func _process(_delta: float) -> void:
 		_env.volumetric_fog_temporal_reprojection_enabled = _src_env.volumetric_fog_temporal_reprojection_enabled
 
 
+## The live view's size (a fraction of the screen). Stills are taken at this size too: resizing the
+## view rebuilds its render buffers (its own GI cascades among them), which cost two 120 ms hitches
+## every time you walked into a hall (S06, critiques 026 and 027).
+func _live_size() -> Vector2i:
+	var sz := Vector2i(get_viewport().get_visible_rect().size)
+	var sc := float(Game.opts.get("portal_scale", "0.6"))   # 1.0 cost ~8 ms at 1440p (S04)
+	return Vector2i(maxi(int(sz.x * sc), 64), maxi(int(sz.y * sc), 64))
+
+
+var _still_rid: RID
+var _warmed := false
+
+
+## Draws the far side once, now, at the live size: a view's first frame builds its render buffers
+## (its own GI cascades, haze froxels), a 100+ ms hitch. Done when the hall is built, far away, instead
+## of the moment you step through (S06, critiques 026 and 027).
+func prewarm() -> void:
+	if _warmed or vp == null or main_cam == null:
+		return
+	_warmed = true
+	vp.size = _live_size()
+	cam.global_transform = mapping() * main_cam.global_transform
+	cam.cull_mask = (main_cam.cull_mask & ~(SURFACE_LAYER | hide_layers)) | show_layers
+	if not active:
+		vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+
+
 func _step_still() -> void:
 	if vp.render_target_update_mode != SubViewport.UPDATE_ALWAYS:
 		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	if vp.size != _still_size:
-		vp.size = _still_size
+	var ls := _live_size()
+	if vp.size != ls:
+		vp.size = ls
 	# An eye straight in front of the opening, looking through it, with the opening exactly filling
 	# the picture (vertical field of view to the top and bottom of the opening).
 	var eye := Transform3D(Basis(Vector3.UP, -PI * 0.5), Vector3(-_still_dist, opening.y * 0.5, 0.0))
@@ -206,10 +232,38 @@ func _step_still() -> void:
 	cam.cull_mask = (main_cam.cull_mask & ~(SURFACE_LAYER | hide_layers)) | show_layers
 	_still_frames -= 1
 	if _still_frames == 0:
-		var img := vp.get_texture().get_image()
-		if img:
-			_mat_far.set_shader_parameter("still", ImageTexture.create_from_image(img))
+		# Copied on the GPU, never read back (get_image stalls the frame).
+		var ok := false
+		var rd := RenderingServer.get_rendering_device()
+		if rd and not Game.opts.has("still_readback"):
+			var src := RenderingServer.texture_get_rd_texture(vp.get_texture().get_rid())
+			if src.is_valid():
+				var f := rd.texture_get_format(src)
+				var tf := RDTextureFormat.new()
+				tf.width = f.width
+				tf.height = f.height
+				tf.format = f.format
+				tf.usage_bits = RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT
+				if _still_rid.is_valid():
+					rd.free_rid(_still_rid)
+				_still_rid = rd.texture_create(tf, RDTextureView.new())
+				var dst := _still_rid
+				var w := f.width
+				var h := f.height
+				RenderingServer.call_on_render_thread(func() -> void:
+					rd.texture_copy(src, dst, Vector3.ZERO, Vector3.ZERO, Vector3(w, h, 1), 0, 0, 0, 0))
+				var t := Texture2DRD.new()
+				t.texture_rd_rid = dst
+				_mat_far.set_shader_parameter("still", t)
+				ok = true
+		if not ok:
+			var img := vp.get_texture().get_image()
+			if img:
+				_mat_far.set_shader_parameter("still", ImageTexture.create_from_image(img))
+				ok = true
+		if ok:
 			_mat_far.set_shader_parameter("use_still", true)
+			_mat_far.set_shader_parameter("still_xscale", (opening.x / opening.y) / (float(vp.size.x) / float(vp.size.y)))
 			has_still = true
 		vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if Game.opts.has("log-portal"):
@@ -239,3 +293,10 @@ func _wanted() -> bool:
 		if outside:
 			return false
 	return true
+
+
+func _exit_tree() -> void:
+	if _still_rid.is_valid():
+		var rd := RenderingServer.get_rendering_device()
+		if rd:
+			rd.free_rid(_still_rid)

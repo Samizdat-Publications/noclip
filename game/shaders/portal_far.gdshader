@@ -11,6 +11,7 @@ render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_opaque, specul
 uniform bool use_still = false;
 uniform sampler2D still : filter_linear, repeat_disable;
 uniform vec2 opening = vec2(1.16, 2.08);
+uniform float still_xscale = 1.0;   // share of the still's width the opening fills (S06: stills are taken at the live view's size)
 uniform float gain = 1.22;
 uniform float desat = 0.08;
 
@@ -23,7 +24,7 @@ void vertex() {
 void fragment() {
 	vec3 col = vec3(0.02, 0.018, 0.014) * horizon_fade(VERTEX);
 	if (use_still) {
-		vec2 uv = vec2(0.5 + lpos.z / opening.x, 0.5 - lpos.y / opening.y);
+		vec2 uv = vec2(0.5 + lpos.z / opening.x * still_xscale, 0.5 - lpos.y / opening.y);
 		vec3 s = agx_undo(texture(still, uv).rgb);
 		s = mix(s, vec3(dot(s, vec3(0.2126, 0.7152, 0.0722))), desat);
 		col = s * gain;

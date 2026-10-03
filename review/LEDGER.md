@@ -200,6 +200,14 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L173 | 025 | gemini | hurts | The monster sounds like generic TV static, not paper | FIX (S06, 79a13f4) | Paper tearing when it notices you and every second of a chase, rustling that grows as it nears, a reversed breath while it searches; the static is only the replay's tape |
 | L174 | 025 | gemini | hurts | Materials too clean: smooth wallpaper and pillars | DEFER M7 | Same family as L145, L148 |
 | L175 | 025 | gemini | nitpick | Razor-sharp black shadows in the yellow halls | DEFER (verify) | Probably the stronger pooled panels; check shadow blur at 1.6x energy |
+| L176 | 026 | claude | hurts | The monster does not scare: a distant paper-doll cutout in a bright room; wants it close, big, wrong, too close and too still (repeat of L167) | FIX (S06, 86a3b49) | Once a hunt, when you stop, it stands 2 m behind you, still, the panel over it dying and its breath close; film it and it screams in your face; look by eye and it is gone |
+| L177 | 026 | claude | hurts | One mustard colour everywhere; last build's cold blue-grey hall gone | REJECT (Stewart S06) + FIX (small) | Stewart likes the yellow level with colour shifting at the storeroom doors like another dimension; this seed's hall was the yellow palette. The halls now also carry a patch of other-coloured tubes (86a3b49) |
+| L178 | 026 | claude+gemini | hurts | Too evenly lit, nowhere to hide; dark rooms only dimmer (Gemini Lighting 4, Shadows 4 again: "white stickers, no falloff") | FIX (partial, S06) | The opening hall now falls into pools after its first 10 m; the rest of the level pooled since D047. Repeat item: the bright clean rooms are Stewart's reference; next session tests a darker night variant for him to choose |
+| L179 | 026 | claude | hurts | The carpet is orange noise with blurry blotches; does not read wet | DEFER S07 | Repeat of L136/L145/L105: a carpet pass (wet sheen where it is soaked, less sand at distance) |
+| L180 | 026 | claude | hurts | The surreal promise is thin in stills: ordinary partition rooms | DEFER S07 | M2b work still open: overlapping rooms, impossible stairs, the corridor that grows; the bot rarely shows the storeroom paradox in a still |
+| L181 | 026 | claude | nitpick | The tape door's glowing outline reads like a debug highlight | DEFER S07 | Soften the seam's tape glow to a torn edge |
+| L182 | 026 | claude+gemini | nitpick | One 133 ms hitch, four frames over 25 ms | FIX (S06, 86a3b49) | The Halden model and the peek figure were loaded mid-run; now loaded at the start. Perf runs again shared the GPU with another program |
+| L183 | 026 | gemini | hurts | Looks like a generic Backrooms clone; lean into the furniture store (misplaced furniture, landmarks) | DEFER M5 | The store hub is M5; the halls' chair-and-monitor beacon is a first landmark |
 
 ## Closed
 

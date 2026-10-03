@@ -81,3 +81,4 @@ Session 05 total: about $0.36 of Gemini (four video critiques 021 to 024); no im
 | 2026-10-03 | S06 | ElevenLabs (eleven_text_to_sound_v2) | Occupant/hunt/death-replay sounds (build_s06.py): steps, rustle, tears, breath, shriek, chase drone, kill tape, body drag/thud, VCR, peeks, knock, static; 29 calls incl. 7 discarded retakes; 1029 credits | 29 | ~$0.31 |
 | 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 025_gemini.md | 1 | $0.09 (27641 in / 2744 out tokens) |
 | 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 026_gemini.md | 1 | $0.10 (27642 in / 3449 out tokens) |
+| 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 027_gemini.md | 1 | $0.09 (27642 in / 2628 out tokens) |
