@@ -112,6 +112,7 @@ func _make_figure() -> Node3D:
 		# frozen mid-move on every frame skip. Critics called the old body "a guy in jeans" and
 		# "a shadow-man cutout" (L108, L130).
 		_occ = Occupant.new()
+		_occ.set_look("tape")      # a hole in the recording held together by strips (S06, L156)
 		_occ.set_layers(LAYER_TAPE)
 		_occ.set_shadows(false)
 		root.add_child(_occ)
@@ -332,6 +333,9 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 				space.attention_kind = &"light"
 			if Game.opts.has("log-tape"):
 				print("[tape] last look over at t=%.1f, light killed=%s" % [Game.clock, _light_fx != null])
+			# You filmed it long enough: now it knows you are here (S06).
+			if space.get("hunter"):
+				space.hunter.soon(14.0)
 			_vanish(true)
 			return
 	elif d < 8.0:
@@ -423,6 +427,8 @@ func _try_start(cam_on: bool) -> void:
 	if not cam_on or Game.clock < _next_ok or _encounters >= MAX_ENCOUNTERS or not player.camcorder.settled():
 		return
 	if space.has_method("tape_allowed") and not space.tape_allowed():
+		return
+	if space.get("hunter") and space.hunter.active():
 		return
 	var yaw := player.yaw
 	var depth := space.view_depth(player.global_position, yaw, 34.0)

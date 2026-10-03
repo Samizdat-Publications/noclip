@@ -1,0 +1,17 @@
+{
+ "tag": "s06_vcr_rewind",
+ "params": {
+  "text": "A 1990s VCR fast-rewinding a videotape, high whirring electric motor whine, mechanical whir, faint tape hiss, steady and continuous. No speech, no music.",
+  "duration_seconds": 4.5,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": true
+ },
+ "file": "s06_vcr_rewind_6f3522683ba1.pcm",
+ "format": "pcm_48000",
+ "credits": 25.0,
+ "est_usd": 0.0075,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

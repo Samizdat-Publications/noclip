@@ -103,7 +103,15 @@ func _update_hum() -> void:
 	AudioServer.set_bus_volume_db(b, -3.0 + wob - 13.0 * sag)
 
 
+## The Occupant has found you (S06): the building's hum falls away at once and comes back slowly.
+func hunt_shock(_p: Vector3) -> void:
+	_sag_start = Game.clock - 1.0
+	_sag_len = 9.0
+
+
 func _run_events() -> void:
+	if space.get("hunter") and space.hunter.active():
+		return
 	if _event_phase == 0 and Game.clock >= _event_t:
 		var cand := []
 		for fx in fixtures:

@@ -1,0 +1,137 @@
+{
+ "idle": {
+  "action": "Idle",
+  "frames": [
+   0.0,
+   96.0
+  ],
+  "fps": 24,
+  "seconds": 4.0,
+  "hips_travel_m": [
+   -0.0,
+   0.0,
+   -0.0
+  ],
+  "hips_end_z_m": 0.934
+ },
+ "walk": {
+  "action": "Casual_Walk",
+  "frames": [
+   0.0,
+   99.19999694824219
+  ],
+  "fps": 24,
+  "seconds": 4.13,
+  "hips_travel_m": [
+   0.004,
+   0.002,
+   0.012
+  ],
+  "hips_end_z_m": 0.992
+ },
+ "look": {
+  "action": "Long_Breathe_and_Look_Around",
+  "frames": [
+   0.0,
+   270.3999938964844
+  ],
+  "fps": 24,
+  "seconds": 11.27,
+  "hips_travel_m": [
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "hips_end_z_m": 0.943
+ },
+ "kneel": {
+  "action": "Kneel_on_One_Knee_and_Stand",
+  "frames": [
+   0.0,
+   60.79999923706055
+  ],
+  "fps": 24,
+  "seconds": 2.53,
+  "hips_travel_m": [
+   0.155,
+   -0.173,
+   0.383
+  ],
+  "hips_end_z_m": 0.999
+ },
+ "backaway": {
+  "action": "Walk_Backward",
+  "frames": [
+   0.0,
+   20.799999237060547
+  ],
+  "fps": 24,
+  "seconds": 0.87,
+  "hips_travel_m": [
+   0.001,
+   0.927,
+   -0.007
+  ],
+  "hips_end_z_m": 0.953
+ },
+ "warn": {
+  "action": "Talk_with_Left_Hand_Raised",
+  "frames": [
+   0.0,
+   111.19999694824219
+  ],
+  "fps": 24,
+  "seconds": 4.63,
+  "hips_travel_m": [
+   0.02,
+   -0.014,
+   -0.001
+  ],
+  "hips_end_z_m": 0.944
+ },
+ "film": {
+  "action": "Archery_Aim_with_Lateral_Scan",
+  "frames": [
+   0.0,
+   120.0
+  ],
+  "fps": 24,
+  "seconds": 5.0,
+  "hips_travel_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hips_end_z_m": 0.913
+ },
+ "death": {
+  "action": "dying_backwards",
+  "frames": [
+   0.0,
+   52.80000305175781
+  ],
+  "fps": 24,
+  "seconds": 2.2,
+  "hips_travel_m": [
+   -0.051,
+   0.769,
+   -0.715
+  ],
+  "hips_end_z_m": 0.242
+ },
+ "crawl": {
+  "action": "Crawl_and_Look_Back",
+  "frames": [
+   0.0,
+   165.60000610351562
+  ],
+  "fps": 24,
+  "seconds": 6.9,
+  "hips_travel_m": [
+   0.033,
+   -3.036,
+   0.034
+  ],
+  "hips_end_z_m": 0.566
+ }
+}

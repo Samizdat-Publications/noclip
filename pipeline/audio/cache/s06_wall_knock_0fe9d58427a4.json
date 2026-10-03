@@ -1,0 +1,17 @@
+{
+ "tag": "s06_wall_knock",
+ "params": {
+  "text": "Three slow hollow knocks from inside a wall, like knuckles on drywall, evenly spaced about half a second apart, then silence. No speech, no music.",
+  "duration_seconds": 3.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_wall_knock_0fe9d58427a4.pcm",
+ "format": "pcm_48000",
+ "credits": 16.0,
+ "est_usd": 0.0048,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

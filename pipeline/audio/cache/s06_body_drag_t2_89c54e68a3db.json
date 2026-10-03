@@ -1,0 +1,17 @@
+{
+ "tag": "s06_body_drag_t2",
+ "params": {
+  "text": "A heavy human body in a plastic coverall dragged very fast across wet carpet, loud plastic and fabric scraping and squelching, rushing past and moving away into the distance. Faster, more plastic crackle.",
+  "duration_seconds": 2.5,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_body_drag_t2_89c54e68a3db.pcm",
+ "format": "pcm_48000",
+ "credits": 14.0,
+ "est_usd": 0.0042,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

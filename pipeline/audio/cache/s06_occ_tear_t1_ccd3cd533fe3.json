@@ -1,0 +1,17 @@
+{
+ "tag": "s06_occ_tear_t1",
+ "params": {
+  "text": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music.",
+  "duration_seconds": 8.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_occ_tear_t1_ccd3cd533fe3.pcm",
+ "format": "pcm_48000",
+ "credits": 44.0,
+ "est_usd": 0.0132,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

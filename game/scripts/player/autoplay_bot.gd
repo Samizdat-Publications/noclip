@@ -229,6 +229,8 @@ func update_move(player: Node, delta: float) -> void:
 				best_h = hd
 		_heading = best_h
 
+	if _hunt_react(pl, delta):
+		return
 	if mode == Mode.SEAM:
 		_update_seam(pl, delta)
 		return
@@ -379,6 +381,102 @@ func update_move(player: Node, delta: float) -> void:
 			path = PackedVector3Array()
 		_stuck_t = 0.0
 		_last_pos = pos
+
+
+var _flee_t := 0.0
+var _back_t := 0.0
+var _back_cool := 3.0
+var _stalk_cool := 6.0
+
+
+## The Occupant (S06). Following you: now and then a person hears the steps behind, stops, turns
+## and films the way they came. After you: run (sprint while there is breath), away from it, and
+## glance back over your shoulder through the camcorder. A seam already being entered is kept (the
+## sealed room behind it is safe). Returns true while it has taken over.
+func _hunt_react(pl: Player, delta: float) -> bool:
+	var h: OccupantHunter = space.get("hunter")
+	if h == null or not h.active() or pl.caught:
+		return false
+	var hp := h.global_position
+	var to_h := Vector3(hp.x - pl.global_position.x, 0.0, hp.z - pl.global_position.z)
+	var d := to_h.length() if absf(hp.y - pl.global_position.y) < 3.0 else 1e9
+	var in_sight := d < 26.0 and _clear_line(pl, pl.global_position + Vector3(0, 1.6, 0), hp + Vector3(0, 1.8, 0))
+	if h.state == OccupantHunter.S.STALK:
+		_stalk_cool -= delta
+		if in_sight and _stalk_cool <= 0.0 and mode == Mode.WALK:
+			_stalk_cool = rng.randf_range(10.0, 18.0)
+			_start_pause(pl)
+			var y := yaw_of(to_h)
+			_plan = [[y, -0.02, 1.2], [y + rng.randf_range(-0.2, 0.2), -0.02, 2.8]]
+			_cam_left = maxf(_cam_left, 3.6)
+		return false
+	if h.state != OccupantHunter.S.NOTICE and h.state != OccupantHunter.S.CHASE:
+		return false
+	if mode == Mode.SEAM and _seam_step >= 1:
+		return false
+	if mode != Mode.WALK:
+		mode = Mode.WALK
+		_seam = {}
+		_closet = {}
+		path = PackedVector3Array()
+	_flee_t -= delta
+	if _flee_t <= 0.0 or path.is_empty() or path_i >= path.size():
+		_flee_t = 2.5
+		var away := -to_h.normalized() if d < 1e8 else _heading
+		var best := {}
+		var best_s := -1e9
+		for p in space.get_interest_points():
+			var pp: Vector3 = p["pos"]
+			var dm := pl.global_position.distance_to(pp)
+			if dm < 4.0:
+				continue
+			var dir := (pp - pl.global_position).normalized()
+			var s := pp.distance_to(hp) - dm * 0.4 + dir.dot(away) * 8.0 + rng.randf() * 2.0
+			if p.has("seam"):
+				s += 6.0
+			if s > best_s:
+				best_s = s
+				best = p
+		if not best.is_empty():
+			path = space.find_path(pl.global_position, best["pos"])
+			path_i = 1 if path.size() > 1 else 0
+	_follow(pl)
+	move /= 0.8
+	sprint = pl.stamina() > 0.12
+	crouch = false
+	# Glance back over the shoulder through the camcorder, when there is a line to it.
+	_back_cool -= delta
+	if _back_t > 0.0:
+		_back_t -= delta
+		_want_yaw = yaw_of(to_h)
+		_want_pitch = 0.04
+	elif _back_cool <= 0.0 and in_sight:
+		_back_t = rng.randf_range(1.9, 2.5)
+		_back_cool = rng.randf_range(3.5, 6.0)
+	camcorder = _back_t > 0.0 and not Game.opts.has("nocam")
+	return true
+
+
+func _clear_line(pl: Player, a: Vector3, b: Vector3) -> bool:
+	var q := PhysicsRayQueryParameters3D.create(a, b)
+	q.exclude = [pl.get_rid()]
+	return pl.get_world_3d().direct_space_state.intersect_ray(q).is_empty()
+
+
+## After the death replay you wake at the start: begin again, a little wiser.
+func reset(pl: Player) -> void:
+	path = PackedVector3Array()
+	path_i = 0
+	mode = Mode.PAUSE
+	_seam = {}
+	_closet = {}
+	_plan = [[pl.yaw, 0.0, 1.2], [pl.yaw + rng.randf_range(-0.8, 0.8), 0.05, 1.6], [pl.yaw, -0.03, 0.8]]
+	_plan_base_yaw = 0.0
+	_plan_left = 0.0
+	_want_yaw = pl.yaw
+	_last_pos = pl.global_position
+	_heading = Basis(Vector3.UP, pl.yaw) * Vector3.FORWARD
+	_back_t = 0.0
 
 
 ## Going through a seam the way a player who knows the trick would: look at the wall, raise the

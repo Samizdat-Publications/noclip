@@ -1,0 +1,11 @@
+{
+ "Idle": "idle",
+ "Casual_Walk": "walk",
+ "Long_Breathe_and_Look_Around": "look",
+ "Kneel_on_One_Knee_and_Stand": "kneel",
+ "Walk_Backward": "backaway",
+ "Talk_with_Left_Hand_Raised": "warn",
+ "Archery_Aim_with_Lateral_Scan": "film",
+ "dying_backwards": "death",
+ "Crawl_and_Look_Back": "crawl"
+}

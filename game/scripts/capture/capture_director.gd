@@ -41,6 +41,10 @@ func setup(p_dir: String, p_duration: float, p_player: Player) -> void:
 		var ts := t0 + seg * (k + r.randf_range(0.1, 0.7))
 		for f in 9:
 			shots.append({"t": ts + f * 0.4, "path": "%s/sheets/k%02d_f%d.png" % [dir, k, f]})
+	# Builder checks (never the critic's capture): stills at given game times, --shots_at=t1,t2,...
+	if Game.opts.has("shots_at"):
+		for ts in String(Game.opts["shots_at"]).split(","):
+			shots.append({"t": float(ts), "path": "%s/stills/at_%06.1f.png" % [dir, float(ts)]})
 	shots.sort_custom(func(a, b): return a["t"] < b["t"])
 	if Game.focus_file == "auto" and player.space.has_method("get_focus_shots"):
 		focus = player.space.get_focus_shots(int(Game.opts.get("focus_n", "8")))

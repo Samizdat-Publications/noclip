@@ -1,0 +1,862 @@
+{
+ "asset": "audio_s06",
+ "sample_rate": 48000,
+ "bit_depth": 16,
+ "elevenlabs": {
+  "model_id": "eleven_text_to_sound_v2",
+  "endpoint": "POST /v1/sound-generation"
+ },
+ "files": {
+  "occ_step_01.wav": {
+   "channels": 1,
+   "target_lufs": -25.72063023262073,
+   "duration_s": 0.854,
+   "spectral_centroid_hz": 3078,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets (sub-only thumps rejected), 50 Hz HP, slowed to 0.82x for weight, 8 kHz LP",
+   "take": 1,
+   "src_start_s": 0.348,
+   "prompt": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_step_02.wav": {
+   "channels": 1,
+   "target_lufs": -25.72063023262073,
+   "duration_s": 0.854,
+   "spectral_centroid_hz": 1617,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets (sub-only thumps rejected), 50 Hz HP, slowed to 0.82x for weight, 8 kHz LP",
+   "take": 1,
+   "src_start_s": 9.725,
+   "prompt": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_step_03.wav": {
+   "channels": 1,
+   "target_lufs": -25.72063023262073,
+   "duration_s": 0.854,
+   "spectral_centroid_hz": 1957,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets (sub-only thumps rejected), 50 Hz HP, slowed to 0.82x for weight, 8 kHz LP",
+   "take": 2,
+   "src_start_s": 8.378,
+   "prompt": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_step_04.wav": {
+   "channels": 1,
+   "target_lufs": -25.72063023262073,
+   "duration_s": 0.854,
+   "spectral_centroid_hz": 3401,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets (sub-only thumps rejected), 50 Hz HP, slowed to 0.82x for weight, 8 kHz LP",
+   "take": 3,
+   "src_start_s": 0.654,
+   "prompt": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_step_05.wav": {
+   "channels": 1,
+   "target_lufs": -25.72063023262073,
+   "duration_s": 0.854,
+   "spectral_centroid_hz": 3795,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets (sub-only thumps rejected), 50 Hz HP, slowed to 0.82x for weight, 8 kHz LP",
+   "take": 3,
+   "src_start_s": 1.894,
+   "prompt": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_step_06.wav": {
+   "channels": 1,
+   "target_lufs": -25.72063023262073,
+   "duration_s": 0.854,
+   "spectral_centroid_hz": 3625,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets (sub-only thumps rejected), 50 Hz HP, slowed to 0.82x for weight, 8 kHz LP",
+   "take": 3,
+   "src_start_s": 3.596,
+   "prompt": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_rustle_loop.wav": {
+   "channels": 1,
+   "target_lufs": -24.0,
+   "duration_s": 6.0,
+   "spectral_centroid_hz": 4866,
+   "note": "",
+   "method": "ElevenLabs loop take, 120 Hz HP, 0.4 s equal-power crossfade loop cut",
+   "prompt": "Loose strips of old dry wallpaper rustling and fluttering softly in a slow draft, dry paper crinkle, continuous, steady. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_tear_01.wav": {
+   "channels": 1,
+   "target_lufs": -20.0,
+   "duration_s": 0.4,
+   "spectral_centroid_hz": 7205,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 1,
+   "src_start_s": 0.255,
+   "prompt": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_tear_02.wav": {
+   "channels": 1,
+   "target_lufs": -20.0,
+   "duration_s": 0.4,
+   "spectral_centroid_hz": 7329,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 1,
+   "src_start_s": 1.187,
+   "prompt": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_tear_03.wav": {
+   "channels": 1,
+   "target_lufs": -20.0,
+   "duration_s": 0.4,
+   "spectral_centroid_hz": 5154,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 1,
+   "src_start_s": 5.744,
+   "prompt": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_tear_04.wav": {
+   "channels": 1,
+   "target_lufs": -20.0,
+   "duration_s": 0.4,
+   "spectral_centroid_hz": 5551,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 2,
+   "src_start_s": 5.656,
+   "prompt": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_breath_01.wav": {
+   "channels": 1,
+   "target_lufs": -24.0,
+   "duration_s": 2.0,
+   "spectral_centroid_hz": 1183,
+   "note": "",
+   "method": "ElevenLabs inhale, reversed, slowed to 0.8x (pitch and speed), 5.5 kHz LP, cut to 2 s",
+   "prompt": "A slow, deep, wet inhale through an open throat, a long wet rasping breath in, close, unsettling. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "occ_breath_02.wav": {
+   "channels": 1,
+   "target_lufs": -24.0,
+   "duration_s": 2.0,
+   "spectral_centroid_hz": 802,
+   "note": "",
+   "method": "ElevenLabs inhale, reversed, slowed to 0.8x (pitch and speed), 5.5 kHz LP, cut to 2 s",
+   "prompt": "A slow, deep, wet inhale through an open throat, a long wet rasping breath in, close, unsettling. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "chase_drone_loop.wav": {
+   "channels": 1,
+   "target_lufs": -24.0,
+   "duration_s": 8.0,
+   "spectral_centroid_hz": 110,
+   "note": "",
+   "method": "ElevenLabs loop take + loop cut, circular tape warble (5 and 17 cycles/8 s), soft clip, procedural 75 bpm sub heartbeat added (periodic)",
+   "prompt": "A low rising distorted synthesizer drone, dark and gritty, horror chase tension, one sustained evolving pad, no melody, no drums, no voice.",
+   "seed": null
+  },
+  "occ_shriek_01.wav": {
+   "channels": 1,
+   "target_lufs": -16.0,
+   "duration_s": 2.8,
+   "spectral_centroid_hz": 1065,
+   "note": "",
+   "method": "ElevenLabs scream, reversed, 0.75x slow, tape wow vibrato, random dropout chopping, 250 Hz-5.2 kHz band limit",
+   "prompt": "A loud distorted human scream, raw terrifying shriek, a single sustained scream."
+  },
+  "occ_shriek_02.wav": {
+   "channels": 1,
+   "target_lufs": -16.0,
+   "duration_s": 2.8,
+   "spectral_centroid_hz": 1046,
+   "note": "",
+   "method": "ElevenLabs scream, reversed, 0.75x slow, tape wow vibrato, random dropout chopping, 250 Hz-5.2 kHz band limit",
+   "prompt": "A loud distorted human scream, raw terrifying shriek, a single sustained scream."
+  },
+  "kill_tape_01.wav": {
+   "channels": 1,
+   "target_lufs": -16.0,
+   "duration_s": 1.5,
+   "spectral_centroid_hz": 6668,
+   "note": "peak-limited, loudness fell to -16.8 LUFS",
+   "method": "ElevenLabs take, trimmed to 1.5 s, hard-gated to dead silence after the last event",
+   "prompt": "A VHS tape mechanism jamming in a VCR: a loud crunching mechanical chew as the tape is chewed and snapped, a high squeal, then abrupt dead silence."
+  },
+  "body_drag_01.wav": {
+   "channels": 1,
+   "target_lufs": -20.0,
+   "duration_s": 1.8,
+   "spectral_centroid_hz": 1251,
+   "note": "",
+   "method": "ElevenLabs take, trimmed to 1.8 s, progressive lowpass + level fall (moving away)",
+   "prompt": "A heavy human body in a plastic coverall dragged very fast across wet carpet, loud plastic and fabric scraping and squelching, rushing past and moving away into the distance."
+  },
+  "body_drag_02.wav": {
+   "channels": 1,
+   "target_lufs": -20.0,
+   "duration_s": 1.8,
+   "spectral_centroid_hz": 2226,
+   "note": "",
+   "method": "ElevenLabs take, trimmed to 1.8 s, progressive lowpass + level fall (moving away)",
+   "prompt": "A heavy human body in a plastic coverall dragged very fast across wet carpet, loud plastic and fabric scraping and squelching, rushing past and moving away into the distance."
+  },
+  "body_thud_01.wav": {
+   "channels": 1,
+   "target_lufs": -18.0,
+   "duration_s": 1.0,
+   "spectral_centroid_hz": 47,
+   "note": "peak-limited, loudness fell to -18.6 LUFS",
+   "method": "ElevenLabs take, 700 Hz LP (through a wall), cut to 1 s",
+   "prompt": "A single heavy muffled thump of a heavy body hitting a wall in the next room, dull deep impact, then silence."
+  },
+  "vcr_rewind_loop.wav": {
+   "channels": 1,
+   "target_lufs": -24.0,
+   "duration_s": 3.0,
+   "spectral_centroid_hz": 4361,
+   "note": "",
+   "method": "ElevenLabs loop take, 80 Hz HP, 0.4 s crossfade loop cut",
+   "prompt": "A 1990s VCR fast-rewinding a videotape, high whirring electric motor whine, mechanical whir, faint tape hiss, steady and continuous. No speech, no music."
+  },
+  "vcr_play_01.wav": {
+   "channels": 1,
+   "target_lufs": -22.0,
+   "duration_s": 1.5,
+   "spectral_centroid_hz": 6382,
+   "note": "",
+   "method": "ElevenLabs take trimmed to 1.5 s",
+   "prompt": "A VCR play button being pressed: a mechanical clunk, tape heads engaging with a click, then a soft motor starting up and humming. No speech, no music."
+  },
+  "vcr_eject_01.wav": {
+   "channels": 1,
+   "target_lufs": -22.0,
+   "duration_s": 1.2,
+   "spectral_centroid_hz": 4390,
+   "note": "",
+   "method": "ElevenLabs take trimmed to 1.2 s",
+   "prompt": "A VHS cassette being ejected from a VCR: a plastic clunk, a spring release and the cassette popping out. No speech, no music."
+  },
+  "peek_rustle_01.wav": {
+   "channels": 1,
+   "target_lufs": -28.0,
+   "duration_s": 0.724,
+   "spectral_centroid_hz": 7202,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 1,
+   "src_start_s": 1.079,
+   "prompt": "A series of soft quick rustles of dry paper, as something slides and pulls back out of sight around a corner, each rustle brief and gentle. About one second of silence between each. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "peek_rustle_02.wav": {
+   "channels": 1,
+   "target_lufs": -28.0,
+   "duration_s": 0.8,
+   "spectral_centroid_hz": 7034,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 2,
+   "src_start_s": 0.225,
+   "prompt": "A series of soft quick rustles of dry paper, as something slides and pulls back out of sight around a corner, each rustle brief and gentle. About one second of silence between each. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "peek_rustle_03.wav": {
+   "channels": 1,
+   "target_lufs": -28.0,
+   "duration_s": 0.5,
+   "spectral_centroid_hz": 5889,
+   "note": "",
+   "method": "ElevenLabs take sliced at onsets, 150 Hz HP",
+   "take": 2,
+   "src_start_s": 2.086,
+   "prompt": "A series of soft quick rustles of dry paper, as something slides and pulls back out of sight around a corner, each rustle brief and gentle. About one second of silence between each. Close microphone, dry, no room echo. No speech, no music."
+  },
+  "distant_drag_01.wav": {
+   "channels": 1,
+   "target_lufs": -30.0,
+   "duration_s": 3.0,
+   "spectral_centroid_hz": 206,
+   "note": "",
+   "method": "ElevenLabs take, 1.5 kHz LP, synthetic 1.6 s reverb, 3 s cut",
+   "prompt": "Something very heavy dragged slowly across carpet in another room, a long low scraping drag, heard far away through walls, muffled. No speech, no music."
+  },
+  "wall_knock_01.wav": {
+   "channels": 1,
+   "target_lufs": -26.0,
+   "duration_s": 2.0,
+   "spectral_centroid_hz": 530,
+   "note": "",
+   "method": "ElevenLabs take, 60 Hz HP, 2.5 kHz LP, cut to 2 s",
+   "prompt": "Three quick hollow knocks in a row from inside a wall, knock, knock, knock, about half a second between each, like knuckles on drywall. No speech, no music."
+  },
+  "tape_static_loop.wav": {
+   "channels": 1,
+   "target_lufs": -24.0,
+   "duration_s": 4.0,
+   "spectral_centroid_hz": 1691,
+   "note": "",
+   "method": "ElevenLabs loop take + loop cut, plus procedural 60/120 Hz hum (periodic)",
+   "prompt": "VHS videotape noise: blank tape hiss with a low electrical hum, as on a TV tuned to a blank VCR channel. Steady, continuous, no music."
+  }
+ },
+ "paid_calls": [
+  {
+   "tag": "s06_occ_step_v2_t1",
+   "params": {
+    "text": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music.",
+    "duration_seconds": 12.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_step_v2_t1_7d1add383659.pcm",
+   "format": "pcm_48000",
+   "credits": 66.0,
+   "est_usd": 0.0198,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_step_v2_t2",
+   "params": {
+    "text": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music. Slightly slower.",
+    "duration_seconds": 12.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_step_v2_t2_9e09a2819859.pcm",
+   "format": "pcm_48000",
+   "credits": 66.0,
+   "est_usd": 0.0198,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_step_v2_t3",
+   "params": {
+    "text": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music. Heavier, wetter squelch.",
+    "duration_seconds": 12.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_step_v2_t3_d4840a9f82dc.pcm",
+   "format": "pcm_48000",
+   "credits": 66.0,
+   "est_usd": 0.0198,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_rustle",
+   "params": {
+    "text": "Loose strips of old dry wallpaper rustling and fluttering softly in a slow draft, dry paper crinkle, continuous, steady. Close microphone, dry, no room echo. No speech, no music.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s06_occ_rustle_5ebce2a5d88f.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_tear_t1",
+   "params": {
+    "text": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_tear_t1_ccd3cd533fe3.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_tear_t2",
+   "params": {
+    "text": "A series of separate short sharp tears of old brittle wallpaper, a strip of paper ripped off a wall, each one a quick rrrip. About one second of silence between each tear. Close microphone, dry, no room echo. No speech, no music. Faster, harsher rips.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_tear_t2_030775cfc23f.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_breath_t1",
+   "params": {
+    "text": "A slow, deep, wet inhale through an open throat, a long wet rasping breath in, close, unsettling. Close microphone, dry, no room echo. No speech, no music.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_breath_t1_22e7d58d62ab.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_breath_t2",
+   "params": {
+    "text": "A slow, deep, wet inhale through an open throat, a long wet rasping breath in, close, unsettling. Close microphone, dry, no room echo. No speech, no music. Even deeper and wetter.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_breath_t2_b53ae0742f83.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_chase_drone",
+   "params": {
+    "text": "A low rising distorted synthesizer drone, dark and gritty, horror chase tension, one sustained evolving pad, no melody, no drums, no voice.",
+    "duration_seconds": 12.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s06_chase_drone_e97ca9600221.pcm",
+   "format": "pcm_48000",
+   "credits": 66.0,
+   "est_usd": 0.0198,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_shriek_t1",
+   "params": {
+    "text": "A loud distorted human scream, raw terrifying shriek, a single sustained scream.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_shriek_t1_82a497b67ea1.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_occ_shriek_t2",
+   "params": {
+    "text": "A loud distorted human scream, raw terrifying shriek, a single sustained scream. Higher pitched, more strained.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_occ_shriek_t2_6cec5dd4324a.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_kill_tape",
+   "params": {
+    "text": "A VHS tape mechanism jamming in a VCR: a loud crunching mechanical chew as the tape is chewed and snapped, a high squeal, then abrupt dead silence.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_kill_tape_f5f1bfda1e39.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_body_drag_t1",
+   "params": {
+    "text": "A heavy human body in a plastic coverall dragged very fast across wet carpet, loud plastic and fabric scraping and squelching, rushing past and moving away into the distance.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_body_drag_t1_b67c14041b12.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_body_drag_t2",
+   "params": {
+    "text": "A heavy human body in a plastic coverall dragged very fast across wet carpet, loud plastic and fabric scraping and squelching, rushing past and moving away into the distance. Faster, more plastic crackle.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_body_drag_t2_89c54e68a3db.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_body_thud",
+   "params": {
+    "text": "A single heavy muffled thump of a heavy body hitting a wall in the next room, dull deep impact, then silence.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_body_thud_d70aeed9148a.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_vcr_rewind",
+   "params": {
+    "text": "A 1990s VCR fast-rewinding a videotape, high whirring electric motor whine, mechanical whir, faint tape hiss, steady and continuous. No speech, no music.",
+    "duration_seconds": 4.5,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s06_vcr_rewind_6f3522683ba1.pcm",
+   "format": "pcm_48000",
+   "credits": 25.0,
+   "est_usd": 0.0075,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_vcr_play",
+   "params": {
+    "text": "A VCR play button being pressed: a mechanical clunk, tape heads engaging with a click, then a soft motor starting up and humming. No speech, no music.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_vcr_play_ea00e8dd4ac5.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_vcr_eject",
+   "params": {
+    "text": "A VHS cassette being ejected from a VCR: a plastic clunk, a spring release and the cassette popping out. No speech, no music.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_vcr_eject_66a5e742dc75.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_peek_rustle_t1",
+   "params": {
+    "text": "A series of soft quick rustles of dry paper, as something slides and pulls back out of sight around a corner, each rustle brief and gentle. About one second of silence between each. Close microphone, dry, no room echo. No speech, no music.",
+    "duration_seconds": 6.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_peek_rustle_t1_48b37837d15a.pcm",
+   "format": "pcm_48000",
+   "credits": 33.0,
+   "est_usd": 0.0099,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_peek_rustle_t2",
+   "params": {
+    "text": "A series of soft quick rustles of dry paper, as something slides and pulls back out of sight around a corner, each rustle brief and gentle. About one second of silence between each. Close microphone, dry, no room echo. No speech, no music. Quieter, softer.",
+    "duration_seconds": 6.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_peek_rustle_t2_b71264ab03bd.pcm",
+   "format": "pcm_48000",
+   "credits": 33.0,
+   "est_usd": 0.0099,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_distant_drag",
+   "params": {
+    "text": "Something very heavy dragged slowly across carpet in another room, a long low scraping drag, heard far away through walls, muffled. No speech, no music.",
+    "duration_seconds": 4.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_distant_drag_b0388cf1c5f3.pcm",
+   "format": "pcm_48000",
+   "credits": 22.0,
+   "est_usd": 0.0066,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_wall_knock_v2",
+   "params": {
+    "text": "Three quick hollow knocks in a row from inside a wall, knock, knock, knock, about half a second between each, like knuckles on drywall. No speech, no music.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.85,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s06_wall_knock_v2_61a5f45fc64a.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s06_tape_static",
+   "params": {
+    "text": "VHS videotape noise: blank tape hiss with a low electrical hum, as on a TV tuned to a blank VCR channel. Steady, continuous, no music.",
+    "duration_seconds": 5.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s06_tape_static_07b717edb233.pcm",
+   "format": "pcm_48000",
+   "credits": 30.0,
+   "est_usd": 0.009,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  }
+ ],
+ "verification": {
+  "body_drag_01.wav": {
+   "seconds": 1.8,
+   "lufs": -20.0,
+   "peak_dbfs": -3.0,
+   "centroid_hz": 1251
+  },
+  "body_drag_02.wav": {
+   "seconds": 1.8,
+   "lufs": -20.0,
+   "peak_dbfs": -1.7,
+   "centroid_hz": 2226
+  },
+  "body_thud_01.wav": {
+   "seconds": 1.0,
+   "lufs": -18.62,
+   "peak_dbfs": -1.2,
+   "centroid_hz": 47
+  },
+  "chase_drone_loop.wav": {
+   "seconds": 8.0,
+   "lufs": -24.0,
+   "peak_dbfs": -7.89,
+   "centroid_hz": 110,
+   "seam_step_ratio": 0.22
+  },
+  "distant_drag_01.wav": {
+   "seconds": 3.0,
+   "lufs": -30.0,
+   "peak_dbfs": -14.85,
+   "centroid_hz": 206
+  },
+  "kill_tape_01.wav": {
+   "seconds": 1.5,
+   "lufs": -16.76,
+   "peak_dbfs": -1.2,
+   "centroid_hz": 6668
+  },
+  "occ_breath_01.wav": {
+   "seconds": 2.0,
+   "lufs": -24.0,
+   "peak_dbfs": -8.85,
+   "centroid_hz": 1183
+  },
+  "occ_breath_02.wav": {
+   "seconds": 2.0,
+   "lufs": -24.0,
+   "peak_dbfs": -9.0,
+   "centroid_hz": 802
+  },
+  "occ_rustle_loop.wav": {
+   "seconds": 6.0,
+   "lufs": -24.0,
+   "peak_dbfs": -2.4,
+   "centroid_hz": 4866,
+   "seam_step_ratio": 0.01
+  },
+  "occ_shriek_01.wav": {
+   "seconds": 2.8,
+   "lufs": -16.0,
+   "peak_dbfs": -6.39,
+   "centroid_hz": 1065
+  },
+  "occ_shriek_02.wav": {
+   "seconds": 2.8,
+   "lufs": -16.0,
+   "peak_dbfs": -4.6,
+   "centroid_hz": 1046
+  },
+  "occ_step_01.wav": {
+   "seconds": 0.854,
+   "lufs": -25.72,
+   "peak_dbfs": -4.51,
+   "centroid_hz": 3078
+  },
+  "occ_step_02.wav": {
+   "seconds": 0.854,
+   "lufs": -25.72,
+   "peak_dbfs": -2.97,
+   "centroid_hz": 1617
+  },
+  "occ_step_03.wav": {
+   "seconds": 0.854,
+   "lufs": -25.72,
+   "peak_dbfs": -6.27,
+   "centroid_hz": 1957
+  },
+  "occ_step_04.wav": {
+   "seconds": 0.854,
+   "lufs": -25.72,
+   "peak_dbfs": -3.66,
+   "centroid_hz": 3401
+  },
+  "occ_step_05.wav": {
+   "seconds": 0.854,
+   "lufs": -25.72,
+   "peak_dbfs": -3.67,
+   "centroid_hz": 3795
+  },
+  "occ_step_06.wav": {
+   "seconds": 0.854,
+   "lufs": -25.72,
+   "peak_dbfs": -2.45,
+   "centroid_hz": 3625
+  },
+  "occ_tear_01.wav": {
+   "seconds": 0.4,
+   "lufs": -20.0,
+   "peak_dbfs": -3.53,
+   "centroid_hz": 7205
+  },
+  "occ_tear_02.wav": {
+   "seconds": 0.4,
+   "lufs": -20.0,
+   "peak_dbfs": -1.04,
+   "centroid_hz": 7329
+  },
+  "occ_tear_03.wav": {
+   "seconds": 0.4,
+   "lufs": -20.0,
+   "peak_dbfs": -2.01,
+   "centroid_hz": 5154
+  },
+  "occ_tear_04.wav": {
+   "seconds": 0.4,
+   "lufs": -20.0,
+   "peak_dbfs": -3.7,
+   "centroid_hz": 5551
+  },
+  "peek_rustle_01.wav": {
+   "seconds": 0.724,
+   "lufs": -28.0,
+   "peak_dbfs": -13.58,
+   "centroid_hz": 7202
+  },
+  "peek_rustle_02.wav": {
+   "seconds": 0.8,
+   "lufs": -28.0,
+   "peak_dbfs": -11.98,
+   "centroid_hz": 7034
+  },
+  "peek_rustle_03.wav": {
+   "seconds": 0.5,
+   "lufs": -28.0,
+   "peak_dbfs": -2.86,
+   "centroid_hz": 5889
+  },
+  "tape_static_loop.wav": {
+   "seconds": 4.0,
+   "lufs": -24.0,
+   "peak_dbfs": -10.15,
+   "centroid_hz": 1691,
+   "seam_step_ratio": 0.8
+  },
+  "vcr_eject_01.wav": {
+   "seconds": 1.2,
+   "lufs": -22.0,
+   "peak_dbfs": -1.3,
+   "centroid_hz": 4390
+  },
+  "vcr_play_01.wav": {
+   "seconds": 1.5,
+   "lufs": -22.0,
+   "peak_dbfs": -2.69,
+   "centroid_hz": 6382
+  },
+  "vcr_rewind_loop.wav": {
+   "seconds": 3.0,
+   "lufs": -24.0,
+   "peak_dbfs": -13.04,
+   "centroid_hz": 4361,
+   "seam_step_ratio": 0.64
+  },
+  "wall_knock_01.wav": {
+   "seconds": 2.0,
+   "lufs": -26.0,
+   "peak_dbfs": -4.73,
+   "centroid_hz": 530
+  }
+ },
+ "notes": [
+  "Player step reference (step_carpet_soggy_01) LUFS: -25.72; occ_step_* target matched to it.",
+  "Loops are cut from longer ElevenLabs takes with an equal-power crossfade; seam step ratio ~1 means no click.",
+  "ElevenLabs pcm_48000 is interleaved stereo and is folded to mono (as in build_m3.py).",
+  "occ_step v1 prompt (huge creature) gave sub-only thumps; replaced by v2 prompt. wall_knock v1 gave 2 knocks; chase_drone first 10 s take had a dropout; all discarded takes remain in cache."
+ ],
+ "cost": {
+  "paid_calls": 23,
+  "est_total_usd": 0.2082,
+  "credits": 694.0,
+  "credits_including_discarded_retakes": 1029,
+  "calls_including_discarded": 29
+ }
+}

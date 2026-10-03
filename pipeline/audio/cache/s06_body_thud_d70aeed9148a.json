@@ -1,0 +1,17 @@
+{
+ "tag": "s06_body_thud",
+ "params": {
+  "text": "A single heavy muffled thump of a heavy body hitting a wall in the next room, dull deep impact, then silence.",
+  "duration_seconds": 2.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_body_thud_d70aeed9148a.pcm",
+ "format": "pcm_48000",
+ "credits": 11.0,
+ "est_usd": 0.0033,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

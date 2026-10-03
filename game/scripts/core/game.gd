@@ -35,6 +35,8 @@ var fear: float = 0.0
 ## 0..1: how far the world sound is pulled down (the hum dies when something is near, D026).
 var duck: float = 0.0
 var duck_target: float = 0.0
+## A second pull on the world sound that the Occupant owns (the hum dies near it, S06).
+var duck_extra: float = 0.0
 
 
 func _enter_tree() -> void:
@@ -66,7 +68,8 @@ func _process(delta: float) -> void:
 	frame += 1
 	fear = move_toward(fear, 0.0, delta * 0.06)
 	drift = move_toward(drift, 0.0, delta * 1.4)
-	duck = move_toward(duck, duck_target, delta * (0.9 if duck_target > duck else 0.35))
+	var dt := maxf(duck_target, duck_extra)
+	duck = move_toward(duck, dt, delta * (0.9 if dt > duck else 0.35))
 	var w := AudioServer.get_bus_index("World")
 	if w >= 0:
 		AudioServer.set_bus_volume_db(w, -10.0 * duck)

@@ -57,8 +57,9 @@ func _ready() -> void:
 	_edge = Occupant.new()
 	_edge.set_layers(TapeEvents.LAYER_EYE)   # only the naked eye sees it
 	_edge.set_shadows(false)
-	# By eye it is nearly solid: a piece of the wall standing up, not a see-through glitch (023).
-	_edge.mat.set_shader_parameter("gap", 0.1)
+	# By eye a dark shape, nearly solid, where the light does not reach (L156: lit and standing in the
+	# open it read as "a tan mannequin"); it is only ever put somewhere dim (_try_edge).
+	_edge.set_look("silhouette")
 	_edge.visible = false
 	add_child(_edge)
 	_shut_snd = AudioStreamPlayer3D.new()
@@ -91,23 +92,45 @@ func _process(delta: float) -> void:
 	if player == null or player.cam == null:
 		return
 	if Game.opts.has("occ_test"):
-		# Look-dev: the Occupant standing 3.5 m in front of the camera, whole and lit.
-		var cam := player.cam
-		var f := -cam.global_transform.basis.z
-		f.y = 0.0
-		var pos := cam.global_position + f.normalized() * 3.5
-		pos.y = player.global_position.y
-		_edge.global_position = pos
-		_edge.look_at(Vector3(cam.global_position.x, pos.y, cam.global_position.z), Vector3.UP, true)
-		_edge.set_layers(1)
-		if not _edge.visible:
-			_edge.hold(String(Game.opts.get("occ_clip", "idle")), float(Game.opts.get("occ_t", "0.3")))
-		_edge.visible = true
-		_edge.shade(float(Game.opts.get("occ_tape", "0")), 0.0, 1.0)
+		_occ_test()
 		return
 	_peek.shade(0.0, 0.0, 1.0)
 	_update_door(delta)
 	_update_edge(delta)
+
+
+var _test_rig: OccupantRig
+
+
+## Look-dev (--occ_test): the Occupant standing --occ_dist (3.5) m in front of the camera in the look
+## --occ_look=paper|silhouette|tape|rig (rig: the hunt's body, shimmer and shadow by eye, the hole on
+## tape), holding --occ_clip at --occ_t.
+func _occ_test() -> void:
+	var cam := player.cam
+	var f := -cam.global_transform.basis.z
+	f.y = 0.0
+	var pos := cam.global_position + f.normalized() * float(Game.opts.get("occ_dist", "3.5"))
+	pos.y = player.global_position.y
+	var face := Vector3(cam.global_position.x, pos.y, cam.global_position.z)
+	var lk := String(Game.opts.get("occ_look", "paper"))
+	var clip := String(Game.opts.get("occ_clip", "idle"))
+	if lk == "rig":
+		if _test_rig == null:
+			_test_rig = OccupantRig.new()
+			add_child(_test_rig)
+			_test_rig.set_clip(clip, float(Game.opts.get("occ_speed", "1.0")))
+			_paper_at(_test_rig.tape, pos)
+		_test_rig.global_position = pos
+		_test_rig.look_at(face, Vector3.UP, true)
+		return
+	_edge.global_position = pos
+	_edge.look_at(face, Vector3.UP, true)
+	if not _edge.visible:
+		_edge.set_look(lk)
+		_edge.set_layers(TapeEvents.LAYER_TAPE if lk == "tape" else 1)
+		_edge.hold(clip, float(Game.opts.get("occ_t", "0.3")))
+	_edge.visible = true
+	_edge.shade(1.0 if lk == "tape" else 0.0, 0.0, 1.0)
 
 
 # ------------------------------------------------------------------ helpers
@@ -276,6 +299,8 @@ func _update_edge(delta: float) -> void:
 	if Game.clock < _next_edge or player.camcorder.active:
 		return
 	if space.tape and space.tape.state != TapeEvents.S.IDLE:
+		return
+	if space.hunter and space.hunter.active():
 		return
 	if _last == "edge" and not doors.is_empty() and Game.clock - _next_edge < 20.0:
 		_next_edge = Game.clock + 10.0

@@ -1,0 +1,17 @@
+{
+ "tag": "s06_occ_step_v2_t3",
+ "params": {
+  "text": "A series of single slow barefoot steps on soaking wet carpet, each one a loud wet slap of flesh on sodden carpet followed by a long squelching squish as water is squeezed out. Wet, splashy and bright, with a heavy weight behind it. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music. Heavier, wetter squelch.",
+  "duration_seconds": 12.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_occ_step_v2_t3_d4840a9f82dc.pcm",
+ "format": "pcm_48000",
+ "credits": 66.0,
+ "est_usd": 0.0198,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

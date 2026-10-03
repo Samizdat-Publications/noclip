@@ -1,0 +1,17 @@
+{
+ "tag": "s06_occ_shriek_t2",
+ "params": {
+  "text": "A loud distorted human scream, raw terrifying shriek, a single sustained scream. Higher pitched, more strained.",
+  "duration_seconds": 3.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_occ_shriek_t2_6cec5dd4324a.pcm",
+ "format": "pcm_48000",
+ "credits": 16.0,
+ "est_usd": 0.0048,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

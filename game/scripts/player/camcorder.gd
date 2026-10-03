@@ -6,6 +6,9 @@ extends CanvasLayer
 ## and lowering reverses it (critique 006, L025). Later: infrared and showing things the
 ## naked eye cannot see.
 
+## The record beep (something listening hears it, S06).
+signal beeped
+
 const RAISE_T := 0.52   # 0.3 s read as an instant toggle on video (critique 008, L048)
 const LOWER_T := 0.42
 
@@ -120,6 +123,7 @@ func _switch(on: bool) -> void:
 		_hide_in = -1.0
 		if _beep.stream:
 			_beep.play()
+		beeped.emit()
 		if _motor.stream:
 			_motor.play()
 	else:

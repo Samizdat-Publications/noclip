@@ -29,6 +29,10 @@ var director: Level0Director
 var tape: TapeEvents
 var rearranger: Rearranger
 var watchers: Watchers
+var hunter: OccupantHunter        # the Occupant when it hunts (S06)
+var replay: DeathReplay           # set by main: the tape that plays when it gets you
+var deaths := 0
+var _dropped: Array = []          # your camcorders left where you died
 var field: FixtureField          # one wrapping glow field for every chunk (S05)
 var _player := Vector3.ZERO
 var _stream_t := 0.0
@@ -75,6 +79,10 @@ func build(p_seed: int) -> void:
 	watchers.name = "watchers"
 	watchers.space = self
 	add_child(watchers)
+	hunter = OccupantHunter.new()
+	hunter.name = "occupant_hunter"
+	hunter.space = self
+	add_child(hunter)
 	# The first ring is built at once (this is the loading moment); the rest streams.
 	var start := Vector3(12, 0, 12)
 	_player = start
@@ -247,6 +255,8 @@ var _pos_log_t := 0.0
 
 
 func _process(delta: float) -> void:
+	for d in _dropped:
+		(d[1] as OmniLight3D).light_energy = 0.4 if fmod(Game.clock, 1.0) < 0.55 else 0.0
 	if Level0Chunk._tear_mat:
 		Level0Chunk._tear_mat.set_shader_parameter("time", Game.clock)
 	if Level0Chunk._rec_mat:
@@ -477,6 +487,8 @@ func teleport(offset: Vector3) -> void:
 	director.listener = _player
 	if tape.figure.visible:
 		tape.figure.global_position += offset
+	if hunter:
+		hunter.shift(offset)
 	# Temporal effects remember the old view; across a jump that memory is wrong. Drop the haze
 	# reprojection and TAA history for a couple of frames.
 	_temporal_reset = 2
@@ -645,6 +657,76 @@ func attach_player(p: Player) -> void:
 	watchers.player = p
 	rearranger.player = p
 	player_ref = p
+	hunter.attach(p)
+	hunter.on_caught = _on_caught
+
+
+## Inside one of the sealed rooms behind a tape-only seam (the Occupant cannot follow you there).
+func in_pocket(p: Vector3) -> bool:
+	if current_room and current_room.contains(p):
+		return false
+	var ch := _chunk_at(p)
+	if ch == null:
+		return false
+	var lp := _local(ch, p)
+	for z in ch.L.get("pocket_zones", []):
+		if Rect2(z[0], z[1], z[2] - z[0], z[3] - z[1]).has_point(Vector2(lp.x, lp.z)):
+			return true
+	return false
+
+
+# ------------------------------------------------------------------ death (S06)
+
+var _saved_input: PlayerInput
+var _death_pos := Vector3.ZERO
+
+
+func _on_caught() -> void:
+	deaths += 1
+	_death_pos = player_ref.global_position
+	if Game.opts.has("log-hunt"):
+		print("[hunt] t=%.1f the tape ends (death %d) at %s" % [Game.clock, deaths, _death_pos])
+	if replay:
+		replay.finished.connect(after_death, CONNECT_ONE_SHOT)
+		replay.start()
+	else:
+		after_death()
+
+
+## You wake at the start of the level. Your camcorder stays where it got you, its light blinking.
+func after_death() -> void:
+	_drop_camcorder(_death_pos)
+	var orig: PlayerInput = hunter.saved_input
+	var sp := get_spawn_transform()
+	prepare_view(sp.origin)
+	player_ref.spawn(sp)
+	player_ref.input = orig
+	if orig is AutoplayBot:
+		(orig as AutoplayBot).reset(player_ref)
+	hunter.reset_after_death()
+	Game.fear = 0.0
+	Game.drift = 0.0
+
+
+func _drop_camcorder(p: Vector3) -> void:
+	var path := "res://assets/props/player/camcorder_v3.glb"
+	if not ResourceLoader.exists(path):
+		return
+	var root := Node3D.new()
+	root.name = "dropped_camcorder_%d" % deaths
+	add_child(root)
+	var m := (load(path) as PackedScene).instantiate() as Node3D
+	root.add_child(m)
+	var r := Game.rng("drop:%d" % deaths)
+	root.global_position = Vector3(p.x, p.y + 0.06, p.z)
+	m.rotation = Vector3(PI * 0.5, r.randf() * TAU, 0.0)
+	var dot := OmniLight3D.new()
+	dot.light_color = Color(1.0, 0.1, 0.06)
+	dot.light_energy = 0.4
+	dot.omni_range = 0.6
+	dot.position = Vector3(0, 0.12, 0)
+	root.add_child(dot)
+	_dropped.append([root, dot])
 
 
 ## The lit ceiling panel nearest to p (within r), or null.

@@ -18,8 +18,12 @@ const STRIDE_WALK := 0.76   # about 1.9 steps a second at a walk (0.66 read as h
 const STRIDE_SPRINT := 0.98
 const STRIDE_CROUCH := 0.5
 
+## Every footstep, with how far it carries in meters (the Occupant listens, S06).
+signal stepped(loud_m: float)
+
 var input: PlayerInput
 var space: Space
+var caught := false          # the Occupant has you: no control, the death replay follows (S06)
 var cam: Camera3D
 var camcorder: Camcorder
 var yaw := 0.0
@@ -326,11 +330,39 @@ func _update_breath(delta: float) -> void:
 		_breath[i].volume_db = lerpf(_breath[i].volume_db, target, 1.0 - exp(-3.0 * delta))
 
 
+## How far your steps carry right now (meters): running on wet carpet is loud, crouching is not.
+func noise_radius() -> float:
+	if _speed < 0.2:
+		return 0.0
+	if _sprinting:
+		return 21.0
+	if _crawling:
+		return 1.5
+	if _crouching:
+		return 2.5
+	if _climbing:
+		return 5.0
+	return 6.5
+
+
+func stamina() -> float:
+	return _stamina
+
+
+func is_sprinting() -> bool:
+	return _sprinting
+
+
+func is_low() -> bool:
+	return _crouching or _crawling
+
+
 func _footstep() -> void:
 	_kick = 0.008 if _sprinting else 0.004
+	var wet := space.floor_wetness(global_position) if space else 0.0
+	stepped.emit(noise_radius() + (2.5 if wet > 0.3 else 0.0))
 	if _step_player == null:
 		return
-	var wet := space.floor_wetness(global_position) if space else 0.0
 	# The carpet never dries (critiques 006 to 008: steps sounded like shoes on dry concrete).
 	var bank := _steps_soggy if _steps_soggy.streams_count > 0 else _steps_damp
 	if _steps_squish.streams_count > 0 and Game.frame % 2 == 0:

@@ -1,0 +1,17 @@
+{
+ "tag": "s06_occ_step_t1",
+ "params": {
+  "text": "A series of single slow heavy bare footsteps of a huge barefoot creature on soaking wet carpet, each one a wet slap and squelch with water squeezing out, something large and wrong. About two seconds of silence between each step. Close microphone, dry, no room echo. No speech, no music.",
+  "duration_seconds": 12.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_occ_step_t1_83592a31b84b.pcm",
+ "format": "pcm_48000",
+ "credits": 66.0,
+ "est_usd": 0.0198,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

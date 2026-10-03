@@ -63,8 +63,15 @@ func _ready() -> void:
 
 	_make_post()
 	add_child(PerfOverlay.new())
+	if space is Level0World:
+		# Records your last seconds all the time; plays them back when the Occupant gets you (S06).
+		var rp := DeathReplay.new()
+		rp.name = "death_replay"
+		add_child(rp)
+		(space as Level0World).replay = rp
 	if Game.is_capture():
 		var cd := CaptureDirector.new()
+		cd.process_mode = Node.PROCESS_MODE_ALWAYS   # keeps shooting while the death replay plays
 		add_child(cd)
 		cd.setup(Game.capture_dir, Game.duration, player)
 	if Game.is_perf():

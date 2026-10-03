@@ -70,3 +70,12 @@ Session 04 total: about $2.52 of Gemini (monster concepts $2.15, four video crit
 | 2026-10-02 | S05 | Gemini (gemini-3.1-pro-preview) | video critic -> 024_gemini.md | 1 | $0.09 (27638 in / 2846 out tokens) |
 
 Session 05 total: about $0.36 of Gemini (four video critiques 021 to 024); no image generation, no Meshy credits (908 of the 1,000-credit budget left).
+
+## Session 06
+| Date | Session | Service | Purpose | Calls | Est. cost |
+|---|---|---|---|---|---|
+| 2026-10-03 | S06 | Gemini (gemini-3-pro-image, 2K) | Halden technician concept model sheet (build_halden_tech.py) | 1 | ~$0.13 |
+| 2026-10-03 | S06 | Meshy (meshy-7.1 image-to-3D) | Halden technician model, 30k tris, 2k PBR (build_halden_tech.py) | 1 | 30 credits |
+| 2026-10-03 | S06 | Meshy (rigging) | Halden technician rig, 1.78 m | 1 | 5 credits |
+| 2026-10-03 | S06 | Meshy (animations, 9 action_ids in one task) | Halden clips: idle walk look kneel backaway warn film death crawl; balance 1292 to 1230 | 1 | 27 credits |
+| 2026-10-03 | S06 | ElevenLabs (eleven_text_to_sound_v2) | Occupant/hunt/death-replay sounds (build_s06.py): steps, rustle, tears, breath, shriek, chase drone, kill tape, body drag/thud, VCR, peeks, knock, static; 29 calls incl. 7 discarded retakes; 1029 credits | 29 | ~$0.31 |

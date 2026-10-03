@@ -1,0 +1,17 @@
+{
+ "tag": "s06_kill_tape",
+ "params": {
+  "text": "A VHS tape mechanism jamming in a VCR: a loud crunching mechanical chew as the tape is chewed and snapped, a high squeal, then abrupt dead silence.",
+  "duration_seconds": 2.5,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s06_kill_tape_f5f1bfda1e39.pcm",
+ "format": "pcm_48000",
+ "credits": 14.0,
+ "est_usd": 0.0042,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}
