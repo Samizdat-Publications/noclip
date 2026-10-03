@@ -325,7 +325,8 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 		var kx := int(round((gx - 2.7) / 4.8))
 		var kz := int(round((f[1] + oz - MID) / 4.8))
 		var lit := (kx % 2 == 0 and kz % 2 == 0) or lr.randf() < 0.06
-		if gx > 44.0 and lr.randf() < (0.35 if gx < 60.0 else 0.8):
+		# (the far end keeps a few panels: QA S05 found it nearly black past the lamp's reach)
+		if gx > 44.0 and lr.randf() < (0.35 if gx < 60.0 else 0.62):
 			lit = false
 		f.append("on" if lit else "dead")
 	if i == N - 1:

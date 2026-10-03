@@ -175,7 +175,10 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L148 | 023 | claude+gemini | hurts | Columns look like untextured white developer blocks (repeat of L128) | FIX (S05) | Paint over the old paper: the pattern faint under the paint, its relief kept, palette colour, own grime |
 | L149 | 023 | claude+gemini | hurts | The yellow areas are flat and generic next to the halls; fixtures cast no distinct pools in the yellow halls | DEFER S06 | Bring the hall's lighting idea (fewer, stronger, pooled lights, one impossible thing per room) to the level; balance against Stewart's bright reference stills |
 | L150 | 023 | claude | hurts | Corridor walls go near black off-axis (dark rooms seen from halls) | DEFER S06 | Dark with a reason: keep a lit near wall, a dead panel at the end |
-| L151 | 023 | gemini | nitpick | Footsteps a bit too fast and rhythmic for the walking speed | DEFER M3 polish | Step interval from actual speed |
+| L151 | 023 | gemini | nitpick | Footsteps a bit too fast and rhythmic for the walking speed | FIX (S05) | Walk stride 0.66 to 0.76 m (about 1.9 steps a second) and each step 7 percent longer or shorter |
+| L152 | QA S05 | qa-auditor | nitpick | The far end of a hall is nearly black past the far door lamp's reach | FIX (S05) | A few more panels kept lit past 60 m (62 instead of 80 percent switched off) |
+| L153 | QA S05 | qa-auditor | nitpick | A motion sheet of nine near-identical frames of the tripod pocket | DEFER M7 | The capture's sheet moments should skip long stands; harness polish |
+| L154 | QA S05 | qa-auditor | nitpick | About 61 "invalid UID, using text path" warnings per launch (stale UIDs in prop and Occupant imports) | DEFER | Harmless; an editor re-import would rewrite them |
 
 ## Closed
 

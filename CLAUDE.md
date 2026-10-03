@@ -110,7 +110,9 @@ docs/      VISION.md ROADMAP.md DECISIONS.md HANDOFF.md handoffs/ NEEDS_STEWART.
 game/      Godot 4.7 project: scenes/main.tscn, scripts/{core,world,level0,player,capture}, shaders/, data/ (layouts, shot lists, graffiti table), assets/
            level0/: level0_gen.gd (chunk layouts: BSP rooms, highways, loops, splices), level0_chunk.gd (builds a chunk),
            level0_world.gd (the infinite level: streaming, cross-chunk paths, the loop), level0_hero.gd (S01 hero slice, `-- --hero`),
-           fixture*.gd (troffers, light pool, ceiling glow field), level0_director.gd (dread beat, thuds), tape_events.gd (tape-only things)
+           fixture*.gd (troffers, light pool, ceiling glow field, one wrapping field per space), level0_director.gd (dread beat, thuds),
+           tape_events.gd (tape-only things), portal_room.gd (the hall behind a storeroom door, palettes), occupant.gd (the monster:
+           wallpaper-strip shader on the Meshy rig), watchers.gd (the high door, the figure at the edge of sight); tests_*.gd (headless tests)
 pipeline/  textures/ audio/ blender/ meshes/ manifests/   (scripts that generate or fetch every asset)
 tools/     capture/capture.py (one-command review capture), critic_gemini/critic.py, critic_extract.py, scores.py,
            lookdev.py (builder-only renders; --focus auto), gdcheck.py (fast script check), perfprobe.sh, progress.py,

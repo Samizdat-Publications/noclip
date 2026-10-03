@@ -14,7 +14,7 @@ const EYE := 1.62
 const EYE_CROUCH := 1.06
 const EYE_CRAWL := 0.36
 const STRIDE_CRAWL := 0.4
-const STRIDE_WALK := 0.66
+const STRIDE_WALK := 0.76   # about 1.9 steps a second at a walk (0.66 read as hurried, Gemini 023)
 const STRIDE_SPRINT := 0.98
 const STRIDE_CROUCH := 0.5
 
@@ -34,6 +34,8 @@ var _eye := EYE
 var _phase := 0.0
 var _step_acc := 0.0
 var _stride := STRIDE_WALK
+var _stride_jitter := 1.0
+var _step_rng := Game.rng("player:steps")
 var _stamina := 1.0
 var _kick := 0.0
 var _speed := 0.0
@@ -267,8 +269,10 @@ func _physics_process(delta: float) -> void:
 	_stride = STRIDE_SPRINT if _sprinting else (STRIDE_CRAWL if _crawling else (STRIDE_CROUCH if _crouching else STRIDE_WALK))
 	if not _climbing:
 		_step_acc += _speed * delta
-		if _step_acc >= _stride:
-			_step_acc -= _stride
+		if _step_acc >= _stride * _stride_jitter:
+			_step_acc -= _stride * _stride_jitter
+			# no two steps quite the same length, so the rhythm is a person's, not a metronome's
+			_stride_jitter = _step_rng.randf_range(0.93, 1.07)
 			_footstep()
 	var eye_want := EYE_CRAWL if _crawling else (EYE_CROUCH if _crouching else EYE)
 	_eye = lerpf(_eye, eye_want, 1.0 - exp(-7.0 * delta))
