@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dk8fnc6smju6"
+uid="uid://cj4av0einjav3"
 path="res://.godot/imported/occ_rustle_loop.wav-e278b1eb7b2889e261118f7d57ff34c2.sample"
 
 [deps]
@@ -18,7 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop_mode=0
+edit/loop_mode=2
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

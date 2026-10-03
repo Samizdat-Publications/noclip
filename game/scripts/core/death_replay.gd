@@ -11,6 +11,8 @@ extends CanvasLayer
 
 signal finished
 
+var catalogue: Catalogue            # what is on this tape (the end card's label)
+
 const W := 480
 const H := 270
 const FPS := 15.0
@@ -283,8 +285,8 @@ func _play(delta: float) -> void:
 		5:   # end card on black
 			_mat.set_shader_parameter("mode", 4)
 			_end.visible = true
-			_end.text = "END OF TAPE\n\n%s" % _stamp(nf - 1)
-			if _t > 2.6:
+			_end.text = "END OF TAPE   %s\n\n%s" % [_stamp(nf - 1), catalogue.tape_label() if catalogue else ""]
+			if _t > 5.0:
 				_finish()
 
 

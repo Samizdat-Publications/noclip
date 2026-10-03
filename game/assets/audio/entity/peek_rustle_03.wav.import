@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://wd4vr3wejimh"
+uid="uid://dj7tra05jixl8"
 path="res://.godot/imported/peek_rustle_03.wav-5f974d0b3acd54afaa6553b2963976b9.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

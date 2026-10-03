@@ -70,8 +70,20 @@ You slipped out of reality and you are holding a camcorder. Go deeper, film what
 
 ### The run
 Start at Level 0, descend through procedurally generated levels, and the run ends when you die or when you take a Seam marked as a way back up. Either way your tape is "recovered". On death, play the last 20 seconds back as a VHS tape with tracking errors (a ring buffer of the player's view). It should feel like found footage of your own death.
+Built S06 (D046): the replay is the last 16 s, recorded all the time at 15 frames a second with the sound, played as a crunch, a rewind, PLAY, a shaking freeze, snow and END OF TAPE; you wake at the start of the level with your camcorder lying where you died, its light blinking.
 
-### Progression that carries between runs
+### How a run can fail (Stewart, S06: "there must be some way to fail the run"; D049)
+- **Caught.** The Occupant reaches you: the recording ends, the death replay plays, the tape is recovered damaged (some of what you filmed is lost: the last minutes are the replay, the rest is chewed).
+- **Lost the thread.** Drift reaches its top (too long in impossible places, in the dark, too long staring at things on tape): the picture slowly becomes the recording, the sound goes to tape hiss, and you are not killed, you are copied. You wake in the store with the tape, and from then on a copy of you is one of the watchers in that level (your own figure at the edge of sight, in your clothes, holding your camera).
+- **Dead battery** is not a fail but it is close to one: without the camcorder you cannot see seams or the Occupant, only hear them.
+
+### Progression that carries between runs (Stewart, S06: "less make the run easier, more get deeper in and discover more unique stuff"; D049)
+The spine is discovery, and the tape is the currency because the tape is the proof.
+- **The Catalogue.** Every distinct thing you film long enough (an entity, a kind of impossible room, a Halden artifact, a remembered-wrong object, a once-in-many-runs event) becomes a labeled cassette on a shelf in the store. Most of the shelf starts blank, with only a handwritten title so you know something is there to find ("THE HALL UNDER THE STOREROOM", "THE ONE WHO WATCHES FROM THE HIGH DOOR", "??? (LEVEL 2)"). Rare things are rare: some appear once in many runs, some only under conditions (dark, a dead battery, after dying in the same place twice). Filling the shelf is the long game.
+- **Gear opens places, it does not make you stronger.** Halden's buyer trades for tapes. Each piece of gear is a key to content: a crowbar opens the handle-less doors (rooms behind them), an IR lamp makes the dark levels playable, chalk marks persist between runs, a tripod camcorder you can leave recording a corridor and collect later (what walked past?), an audio recorder that shows where sounds come from, a second battery.
+- **Known Seams.** Each exit you have been through is written in the notebook; the level's seams follow learnable tells, and enough of them let you start a run deeper.
+- **The descent has a fixed spine.** Levels are procedural, but each level has a few hand-made anchor rooms that are always there in the same order (Stewart, S06: a set map is fine if it is deep enough). You learn them, find them again, and they hold the rare things and the lore tapes.
+- **The Backrooms remember you** (kept, protected): your dropped camcorders with their replays, your chalk, your copy among the watchers.
 - **Tape** buys gear: bigger batteries, an IR lamp, an audio recorder that shows the direction of sounds, chalk, flares, a sturdier camcorder.
 - **The Backrooms remember you.** Traces of past runs appear in new runs: your chalk marks, wet footprints, and your dropped camcorder where you died. Pick it up and its footage plays, showing how you died, which is also a hint. This is the signature surreal hook. Protect it.
 - **Known Seams:** each exit type you discover goes into your notebook. Enough discoveries unlock starting deeper (shortcuts).

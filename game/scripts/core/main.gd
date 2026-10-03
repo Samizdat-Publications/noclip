@@ -69,6 +69,7 @@ func _ready() -> void:
 		rp.name = "death_replay"
 		add_child(rp)
 		(space as Level0World).replay = rp
+		rp.catalogue = (space as Level0World).catalogue
 	if Game.is_capture():
 		var cd := CaptureDirector.new()
 		cd.process_mode = Node.PROCESS_MODE_ALWAYS   # keeps shooting while the death replay plays
@@ -135,6 +136,8 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif e.is_action_pressed("pause"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		_pause.visible = true
+		var cat = space.get("catalogue")
+		_pause.text = "Paused.  Click to keep going.  Press Q to quit." + (("\n\nON THIS TAPE\n" + (cat as Catalogue).tape_label()) if cat else "")
 	elif e is InputEventMouseButton and e.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		_pause.visible = false

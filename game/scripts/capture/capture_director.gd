@@ -58,7 +58,7 @@ func _process(_delta: float) -> void:
 	if _event_sheet >= 0 and Game.clock > 3.0:
 		var sp: Space = player.space
 		# Prefer the moment something shows on tape; any other event will do later in the run.
-		var on_tape := sp != null and sp.attention_until > Game.clock and sp.attention_kind == &"tape"
+		var on_tape := sp != null and sp.attention_until > Game.clock and (sp.attention_kind in [&"tape", &"scare", &"hunt", &"peek"])
 		var any_ev := sp != null and sp.attention_until > Game.clock and Game.clock > duration * 0.6
 		var fire := on_tape or any_ev or Game.clock >= duration - 5.0
 		if fire:

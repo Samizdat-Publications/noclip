@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bhqql2i1s0kg3"
+uid="uid://cq644fgjbewt1"
 path="res://.godot/imported/vcr_play_01.wav-899f6d0ddc61d7a6c435207f93b0dfcb.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

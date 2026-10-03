@@ -30,6 +30,8 @@ var tape: TapeEvents
 var rearranger: Rearranger
 var watchers: Watchers
 var hunter: OccupantHunter        # the Occupant when it hunts (S06)
+var scares: Level0Scares          # the dragged body and other set scares (S06)
+var catalogue: Catalogue          # what you filmed: this tape, and the shelf kept between runs (S06)
 var replay: DeathReplay           # set by main: the tape that plays when it gets you
 var deaths := 0
 var _dropped: Array = []          # your camcorders left where you died
@@ -83,6 +85,14 @@ func build(p_seed: int) -> void:
 	hunter.name = "occupant_hunter"
 	hunter.space = self
 	add_child(hunter)
+	scares = Level0Scares.new()
+	scares.name = "scares"
+	scares.space = self
+	add_child(scares)
+	catalogue = Catalogue.new()
+	catalogue.name = "catalogue"
+	catalogue.space = self
+	add_child(catalogue)
 	# The first ring is built at once (this is the loading moment); the rest streams.
 	var start := Vector3(12, 0, 12)
 	_player = start
@@ -659,6 +669,8 @@ func attach_player(p: Player) -> void:
 	player_ref = p
 	hunter.attach(p)
 	hunter.on_caught = _on_caught
+	scares.player = p
+	catalogue.player = p
 
 
 ## Inside one of the sealed rooms behind a tape-only seam (the Occupant cannot follow you there).
@@ -704,6 +716,7 @@ func after_death() -> void:
 	if orig is AutoplayBot:
 		(orig as AutoplayBot).reset(player_ref)
 	hunter.reset_after_death()
+	catalogue.new_tape()
 	Game.fear = 0.0
 	Game.drift = 0.0
 

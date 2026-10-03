@@ -269,6 +269,10 @@ func update_move(player: Node, delta: float) -> void:
 		if _cam_cool <= 0.0 and _cam_left <= 0.0:
 			_cam_left = rng.randf_range(3.0, 5.0)
 		camcorder = _cam_left > 0.0 and not Game.opts.has("nocam")
+		# A body on the floor: a person goes closer, slowly, to see.
+		if space.attention_kind == &"scare" and Vector2(to.x, to.z).length() > 4.0:
+			var off := absf(angle_difference(pl.yaw, _want_yaw))
+			move = Vector2(0.0, 0.5 if off < 0.4 else 0.0)
 		mode = Mode.WALK
 		path = PackedVector3Array()
 		return

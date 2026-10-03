@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://btjf6ubwnh68g"
+uid="uid://bqaa65h004d04"
 path="res://.godot/imported/occ_shriek_01.wav-c4d764093288f02cfde362515e60d249.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

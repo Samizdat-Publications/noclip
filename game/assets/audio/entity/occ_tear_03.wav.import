@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://b8653ufifuk3k"
+uid="uid://bda3pdi8s1bf7"
 path="res://.godot/imported/occ_tear_03.wav-1e1574449fd25ac2a534a29e75ad9e68.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://juec1ds0ae52"
+uid="uid://3lxm1s1l0j0m"
 path="res://.godot/imported/kill_tape_01.wav-b02edba14d1f3b1fa57c953420a63ee1.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

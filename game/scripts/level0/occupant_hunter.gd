@@ -285,6 +285,8 @@ func _can_start() -> bool:
 		return false
 	if space.in_pocket(player.global_position):
 		return false
+	if space.scares and space.scares._state in [1, 2]:
+		return false     # a body lies ahead of you: that scene plays out first
 	return _trail.size() > 12
 
 

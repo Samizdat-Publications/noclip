@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bnv0emiqkmykj"
+uid="uid://xhm6xdbuc446"
 path="res://.godot/imported/distant_drag_01.wav-979b8d4835266c06c2b6ffaa044b5dc7.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

@@ -97,6 +97,7 @@ func _process(delta: float) -> void:
 	_peek.shade(0.0, 0.0, 1.0)
 	_update_door(delta)
 	_update_edge(delta)
+	_update_corner(delta)
 
 
 var _test_rig: OccupantRig
@@ -302,6 +303,8 @@ func _update_edge(delta: float) -> void:
 		return
 	if space.hunter and space.hunter.active():
 		return
+	if space.scares and space.scares._state in [1, 2]:
+		return
 	if _last == "edge" and not doors.is_empty() and Game.clock - _next_edge < 20.0:
 		_next_edge = Game.clock + 10.0
 		return
@@ -374,3 +377,144 @@ func _show_edge(p: Vector3, eye: Vector3) -> void:
 ## Focus shots: put the figure at the edge of the frame right now.
 func stage_edge() -> bool:
 	return _try_edge()
+
+
+# ------------------------------------------------------------------ round a doorway (S06)
+# Stewart, S06: "entities peeking around corners". A dark shape leans out from behind the edge of
+# a doorway ahead of you: its head, a shoulder, one long arm hanging. The wall hides the rest of it.
+# Look straight at it, or walk toward it, and it is gone, with a rustle of paper.
+
+const CORNER_FIRST := 48.0
+const CORNER_GAP := [70.0, 45.0]
+var _corner: Occupant
+var _corner_on := false
+var _corner_t := 0.0
+var _corner_seen := 0.0
+var _corner_head := Vector3.ZERO
+var _next_corner := CORNER_FIRST
+var _rustle: AudioStreamPlayer3D
+
+
+func _corner_setup() -> void:
+	_corner = Occupant.new()
+	_corner.set_look("silhouette")
+	_corner.set_layers(TapeEvents.LAYER_EYE)
+	_corner.set_shadows(false)
+	_corner.visible = false
+	add_child(_corner)
+	_rustle = AudioStreamPlayer3D.new()
+	_rustle.bus = &"World"
+	_rustle.unit_size = 2.5
+	_rustle.max_distance = 26.0
+	add_child(_rustle)
+
+
+func _update_corner(delta: float) -> void:
+	if _corner == null:
+		_corner_setup()
+	if _corner_on:
+		_corner.shade(0.0, 0.0, 1.0)
+		_corner_t += delta
+		var off := _off_center(_corner_head)
+		var d := Vector2(player.global_position.x - _corner_head.x, player.global_position.z - _corner_head.z).length()
+		if off < 13.0 and _clear_line(player.cam.global_position, _corner_head):
+			_corner_seen += delta
+		if _corner_seen > 0.55 or d < 6.0 or _corner_t > 9.0 or player.camcorder.active:
+			_corner_on = false
+			_corner.visible = false
+			var p := "res://assets/audio/entity/peek_rustle_%02d.wav" % (1 + _rng.randi() % 3)
+			if ResourceLoader.exists(p):
+				_rustle.stream = load(p)
+				_rustle.global_position = _corner_head
+				_rustle.volume_db = -2.0
+				_rustle.play()
+			if log_events:
+				print("[watch] corner figure drew back at t=%.1f seen=%.2f dist=%.1f" % [Game.clock, _corner_seen, d])
+		return
+	if Game.clock < _next_corner or player.camcorder.active or _edge_on:
+		return
+	if (space.hunter and space.hunter.active()) or (space.tape and space.tape.state != TapeEvents.S.IDLE) or space.current_room != null:
+		return
+	if space.scares and space.scares._state in [1, 2]:
+		return
+	if _last == "corner":
+		_last = ""     # never twice the same way in a row
+		_next_corner = Game.clock + 20.0
+		return
+	var late := clampf(Game.clock / 600.0, 0.0, 1.0)
+	if _try_corner():
+		_last = "corner"
+		_next_corner = Game.clock + lerpf(CORNER_GAP[0], CORNER_GAP[1], late) * _rng.randf_range(0.8, 1.3)
+	else:
+		_next_corner = Game.clock + 1.5
+
+
+func _try_corner() -> bool:
+	var cam := player.cam
+	var eye := cam.global_position
+	var pc := Level0World.chunk_of(player.global_position)
+	var cands := []
+	for dx in range(-1, 2):
+		for dz in range(-1, 2):
+			var ch: Level0Chunk = space.chunks.get(pc + Vector2i(dx, dz))
+			if ch == null:
+				continue
+			for dr in ch.L.get("doors", []):
+				if dr.size() > 4:
+					continue    # a crawl hole, not a doorway
+				var a := ch.position + Vector3(dr[0], 0.0, dr[1])
+				var b := ch.position + Vector3(dr[2], 0.0, dr[3])
+				var c := (a + b) * 0.5
+				var dist := Vector2(eye.x - c.x, eye.z - c.z).length()
+				if dist < 6.5 or dist > 15.0:
+					continue
+				var off := _off_center(c + Vector3(0, 1.6, 0))
+				if off < 7.0 or off > 27.0:
+					continue
+				cands.append([a, b, c, dist])
+	cands.shuffle()
+	for cd in cands:
+		var a: Vector3 = cd[0]
+		var b: Vector3 = cd[1]
+		var c: Vector3 = cd[2]
+		var along := (b - a).normalized()
+		var n := along.cross(Vector3.UP).normalized()
+		if n.dot(eye - c) < 0.0:
+			n = -n
+		var j: Vector3 = a if _rng.randf() < 0.5 else b
+		var side := (j - c).normalized()
+		var stand := j + side * 0.3 - n * 0.62
+		if not space.is_walkable(stand) or not space.is_walkable(c - n * 0.8):
+			continue
+		# The edge of the opening on that side must be in plain view through the doorway.
+		if not _clear_line(eye, j - side * 0.25 + Vector3(0, 1.9, 0) - n * 0.2):
+			continue
+		_show_corner(stand, n, side)
+		return true
+	return false
+
+
+func _show_corner(stand: Vector3, n: Vector3, side: Vector3) -> void:
+	_paper_at(_corner, stand)
+	var face := Basis.looking_at(n, Vector3.UP, true)
+	var lean := deg_to_rad(24.0)
+	_corner.global_transform = Transform3D(Basis(n, lean) * face, stand)
+	_corner.hold("idle", _rng.randf_range(0.2, 0.7))
+	_corner.visible = true
+	_corner.shade(0.0, 0.0, 1.0)
+	_corner_on = true
+	_corner_t = 0.0
+	_corner_seen = 0.0
+	await get_tree().process_frame
+	if not _corner_on:
+		return
+	# Lean the other way if that put its head into the wall instead of the opening.
+	if (_corner.head_position() - stand).dot(-side) < 0.0:
+		_corner.global_transform = Transform3D(Basis(n, -lean) * face, stand)
+		await get_tree().process_frame
+	_corner_head = _corner.head_position()
+	space.attention_point = _corner_head
+	space.attention_until = Game.clock + 0.3
+	space.attention_kind = &"peek"
+	if log_events:
+		print("[watch] corner figure at t=%.1f stand=%s head=%s" % [Game.clock, stand, _corner_head])

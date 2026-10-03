@@ -335,7 +335,7 @@ func _update_shown(delta: float, cam_on: bool) -> void:
 				print("[tape] last look over at t=%.1f, light killed=%s" % [Game.clock, _light_fx != null])
 			# You filmed it long enough: now it knows you are here (S06).
 			if space.get("hunter"):
-				space.hunter.soon(14.0)
+				space.hunter.soon(35.0)
 			_vanish(true)
 			return
 	elif d < 8.0:
