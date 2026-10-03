@@ -23,7 +23,13 @@ var main_cam: Camera3D               # the player's camera
 var range_m := 60.0                  # beyond this the far side is not rendered (it is lost in the haze)
 
 var _mat_live: ShaderMaterial        # shows the far side
+var _mat_live_fog: ShaderMaterial    # the same under this side's haze (live_fog_from > 0)
+var live_fog_from := 0.0             # beyond this distance from the opening the live view is fogged
 var _mat_far: ShaderMaterial         # not rendered: dark, and fogged like any distant wall
+var _still_frames := 0               # frames left to settle a still of the far side (request_still)
+var _still_dist := 5.0
+var _still_size := Vector2i(290, 520)
+var has_still := false
 var vp: SubViewport
 var cam: Camera3D
 var surface: MeshInstance3D
@@ -89,10 +95,26 @@ func setup(p_main_cam: Camera3D, src_env: Environment) -> void:
 	if Game.opts.has("portal_desat"):
 		m.set_shader_parameter("desat", float(Game.opts["portal_desat"]))
 	_mat_live = m
+	_mat_live_fog = m.duplicate()
+	_mat_live_fog.shader = preload("res://shaders/portal_view_fog.gdshader")
 	_mat_far = ShaderMaterial.new()
 	_mat_far.shader = preload("res://shaders/portal_far.gdshader")
+	_mat_far.set_shader_parameter("opening", opening)
+	if src_env:
+		_mat_far.set_shader_parameter("agx_contrast", src_env.tonemap_agx_contrast)
+		_mat_far.set_shader_parameter("agx_white", src_env.tonemap_agx_white)
 	surface.material_override = _mat_far
 	add_child(surface)
+
+
+## Photographs the far side once, as seen from `dist` meters in front of the opening, and shows that
+## still while the doorway is too far to render live (S05, L120). Lamps fade out with distance from
+## the camera that draws them, so a live view from far away shows a dark room; the still is taken
+## from close up over a few dozen frames (the far view's GI and haze need time to settle).
+func request_still(dist: float = 5.0, frames: int = 40) -> void:
+	_still_dist = dist
+	_still_frames = frames
+	_still_size = Vector2i(roundi(520.0 * opening.x / opening.y), 520)
 
 
 ## Where a point or frame on this side lands on the far side.
@@ -129,6 +151,9 @@ func _process(_delta: float) -> void:
 		main_cam = get_viewport().get_camera_3d()
 		if main_cam == null:
 			return
+	if _still_frames > 0 and not active:
+		_step_still()
+		return
 	var want := (_wanted() or (Game.opts.has("portal_always") and local_of(main_cam.global_position).length() < range_m)) and not Game.opts.has("portal_never")
 	if want != active:
 		active = want
@@ -138,6 +163,9 @@ func _process(_delta: float) -> void:
 		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if active else SubViewport.UPDATE_DISABLED
 	if not active:
 		return
+	if live_fog_from > 0.0:
+		var dist := -local_of(main_cam.global_position).x
+		surface.material_override = _mat_live_fog if dist > live_fog_from else _mat_live
 	var sz := Vector2i(get_viewport().get_visible_rect().size)
 	var sc := float(Game.opts.get("portal_scale", "0.6"))   # 1.0 cost ~8 ms at 1440p (S04)
 	var want_sz := Vector2i(maxi(int(sz.x * sc), 64), maxi(int(sz.y * sc), 64))
@@ -161,6 +189,31 @@ func _process(_delta: float) -> void:
 	cam.cull_mask = (main_cam.cull_mask & ~(SURFACE_LAYER | hide_layers)) | show_layers
 	if _src_env:
 		_env.volumetric_fog_temporal_reprojection_enabled = _src_env.volumetric_fog_temporal_reprojection_enabled
+
+
+func _step_still() -> void:
+	if vp.render_target_update_mode != SubViewport.UPDATE_ALWAYS:
+		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	if vp.size != _still_size:
+		vp.size = _still_size
+	# An eye straight in front of the opening, looking through it, with the opening exactly filling
+	# the picture (vertical field of view to the top and bottom of the opening).
+	var eye := Transform3D(Basis(Vector3.UP, -PI * 0.5), Vector3(-_still_dist, opening.y * 0.5, 0.0))
+	cam.global_transform = mapping() * (global_transform * eye)
+	cam.fov = rad_to_deg(2.0 * atan(opening.y * 0.5 / _still_dist))
+	cam.near = maxf(_still_dist - 0.05, 0.05)
+	cam.far = main_cam.far
+	cam.cull_mask = (main_cam.cull_mask & ~(SURFACE_LAYER | hide_layers)) | show_layers
+	_still_frames -= 1
+	if _still_frames == 0:
+		var img := vp.get_texture().get_image()
+		if img:
+			_mat_far.set_shader_parameter("still", ImageTexture.create_from_image(img))
+			_mat_far.set_shader_parameter("use_still", true)
+			has_still = true
+		vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		if Game.opts.has("log-portal"):
+			print("[portal] %s still taken at t=%.2f" % [get_parent().name + "/" + name, Game.clock])
 
 
 ## Rendered only while the opening could be on screen, from the near side, within range.

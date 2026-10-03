@@ -33,13 +33,17 @@ uniform sampler2D field_tex : filter_linear, repeat_disable;
 uniform vec2 field_origin = vec2(0.0);
 uniform float field_cell = 0.6;
 uniform vec2 field_size = vec2(1.0);
+uniform mat4 field_to_local = mat4(1.0);   // world -> the space's own frame (a hall is rotated to face its door, S05)
 uniform float ceiling_h = 2.6;
+uniform float base_y = 0.0;   // floor height of this space (a storeroom's hall is under the level, S05)
 uniform float reflect_strength = 0.55;
 
 uniform vec3 world_shift = vec3(0.0);   // a loop copy samples its template's patterns
 
 uniform float roll_width = 3.66;   // 12 ft broadloom rolls (L100)
 uniform float roll_strength = 1.0;
+uniform vec3 carpet_tint = vec3(1.0);   // a hall behind a storeroom door can have its own palette (S05)
+uniform float carpet_sat = 1.0;
 
 varying vec3 wpos;
 varying vec3 wraw;
@@ -157,7 +161,7 @@ void fragment() {
 	rough = mix(rough, 0.6 + 0.08 * n_value(p * 3.0), flood);
 	nrm = mix(nrm, vec3(0.5 + 0.015 * sin(p.x * 9.0 + p.y * 4.0), 0.5, 1.0), flood);
 
-	ALBEDO = alb;
+	ALBEDO = mix(vec3(dot(alb, vec3(0.2126, 0.7152, 0.0722))), alb, carpet_sat) * carpet_tint;
 	ROUGHNESS = rough;
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.25;
@@ -168,8 +172,8 @@ void fragment() {
 		vec3 V = normalize(CAMERA_POSITION_WORLD - wraw);
 		vec3 R = reflect(-V, vec3(0.0, 1.0, 0.0));
 		if (R.y > 0.02) {
-			vec2 pc = wraw.xz + R.xz * ((ceiling_h - wraw.y) / R.y);
-			vec2 t = (pc - field_origin) / field_cell;
+			vec2 pc = wraw.xz + R.xz * ((ceiling_h + base_y - wraw.y) / R.y);
+			vec2 t = ((field_to_local * vec4(pc.x, 0.0, pc.y, 1.0)).xz - field_origin) / field_cell;
 			// Wider blur farther away along the ray (rough, wet fibers smear the image).
 			float spread = 0.6 + 0.25 * length(R.xz) / max(R.y, 0.05);
 			vec3 refl = vec3(0.0);

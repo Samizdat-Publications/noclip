@@ -10,7 +10,10 @@ uniform sampler2D field_tex : filter_nearest, repeat_disable;
 uniform vec2 field_origin = vec2(0.0);
 uniform float field_cell = 0.6;
 uniform vec2 field_size = vec2(1.0);
+uniform mat4 field_to_local = mat4(1.0);   // world -> the space's own frame (a hall is rotated to face its door, S05)
 uniform float ceiling_h = 2.6;
+// Floor height of the space this surface belongs to (a storeroom's hall is built under the level, S05).
+uniform float base_y = 0.0;
 uniform float reveal_glow = 0.9;
 
 varying vec3 wpos;
@@ -18,6 +21,7 @@ varying vec3 wnrm;
 
 void vertex() {
 	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wpos.y -= base_y;
 	wnrm = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
@@ -25,7 +29,7 @@ void fragment() {
 	vec3 lit = vec3(0.0);
 	if (wpos.y > ceiling_h - 0.005) {
 		// Step a few centimeters toward the lens (the reveal faces point inward) and read its level.
-		vec2 p = wpos.xz + wnrm.xz * 0.05;
+		vec2 p = (field_to_local * vec4(wpos + wnrm * 0.05, 1.0)).xz;
 		ivec2 t = ivec2(floor((p - field_origin) / field_cell));
 		t = clamp(t, ivec2(0), ivec2(field_size) - 1);
 		lit = texelFetch(field_tex, t, 0).rgb;

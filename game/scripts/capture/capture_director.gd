@@ -81,7 +81,9 @@ func _run_focus(delta: float) -> void:
 		var hold := FocusHold.new()
 		hold.camcorder = bool(f.get("camcorder", false))
 		player.input = hold
-		var anchor: Array = f.get("anchor", f["pos"])   # a shot inside a hall loads the level round its storeroom
+		var anchor: Array = f.get("anchor", f.get("pos", [0.0, 0.0]))   # a shot inside a hall loads the level round its storeroom
+		if f.has("room") and not f.has("anchor") and player.space.has_method("room_anchor"):
+			anchor = player.space.room_anchor(String(f["room"]))
 		if player.space.has_method("prepare_view"):
 			player.space.prepare_view(Vector3(anchor[0], 0.0, anchor[1]))
 		if player.space.has_method("resolve_focus"):

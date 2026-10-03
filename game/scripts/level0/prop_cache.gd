@@ -37,7 +37,15 @@ static func _collect(n: Node, xf: Transform3D, parts: Array, is_root: bool) -> v
 		var mi := n as MeshInstance3D
 		var ov := []
 		for i in mi.get_surface_override_material_count():
-			ov.append(mi.get_surface_override_material(i))
+			var m: Material = mi.get_surface_override_material(i)
+			# A baked emission map from the source model made the mop bucket glow white in the
+			# dark (critiques 018 and 020, L111, L121). Props never glow from a texture.
+			var sm := (m if m else mi.mesh.surface_get_material(i)) as StandardMaterial3D
+			if sm and sm.emission_enabled and sm.emission_texture != null:
+				sm = sm.duplicate()
+				sm.emission_enabled = false
+				m = sm
+			ov.append(m)
 		parts.append([mi.mesh, here, ov])
 	for c in n.get_children():
 		_collect(c, here, parts, false)

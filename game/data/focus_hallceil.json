@@ -1,0 +1,6 @@
+[
+  {"room": "1:0", "local": [10.0, 50.0], "face": [0.7, -0.7], "pitch": 2.0, "settle": 3.0},
+  {"room": "1:0", "local": [18.0, 30.0], "face": [1.0, 0.0], "pitch": 25.0, "settle": 2.0},
+  {"room": "1:0", "local": [30.0, 30.0], "face": [-1.0, 0.0], "pitch": 25.0, "settle": 2.0},
+  {"room": "1:0", "local": [10.0, 50.0], "face": [0.7, -0.7], "pitch": 2.0, "settle": 2.0, "camcorder": false}
+]

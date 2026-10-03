@@ -46,6 +46,17 @@ static func footprint(door_w: Vector3, nn: Vector2) -> Rect2:
 
 var depth_index := 0
 var plan_rect := Rect2()
+# Each hall has its own palette (S05, L118: "the same mustard everywhere"; L124: papered columns).
+# Colors are sRGB-ish multipliers on the level's own materials; "tube" tints every panel.
+const PALETTES := {
+	"yellow": {"pillar": [0.8, 0.68, 0.34]},
+	"cold": {"wall_tint": [0.98, 1.03, 1.12], "wall_sat": 0.12, "carpet_sat": 0.25, "carpet_tint": [0.86, 0.92, 1.05],
+		"ceil_tint": [0.95, 0.98, 1.04], "pillar": [0.74, 0.76, 0.78], "tube": [0.78, 0.9, 1.0]},
+	"green": {"wall_tint": [0.84, 1.03, 0.86], "wall_sat": 0.35, "carpet_sat": 0.6, "carpet_tint": [0.92, 1.02, 0.9],
+		"pillar": [0.7, 0.78, 0.68], "tube": [0.92, 1.0, 0.86]},
+}
+var palette := "yellow"
+var floor_y := 0.0               # world height of the hall's floor (its shaders shade by height)
 
 
 func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, p_depth: int = 0) -> void:
@@ -57,11 +68,16 @@ func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, 
 	depth_index = p_depth
 	plan_rect = footprint(door_world, n)
 	var dy: float = DEPTHS[p_depth % DEPTHS.size()]
+	floor_y = door_world.y + dy
 	var bx := Vector3(-n.x, 0.0, -n.y)
 	var bz := bx.cross(Vector3.UP)
 	var b := Basis(bx, Vector3.UP, bz)
 	global_transform = Transform3D(b, door_world + Vector3(0, dy, 0) - b * Vector3(0, 0, MID))
 	name = "portal_room_%d_%d" % [c.x, c.y]
+	var pr := Game.rng("hallpalette:%d:%d" % [c.x, c.y]).randf()
+	palette = "cold" if pr < 0.4 else ("yellow" if pr < 0.8 else "green")
+	if Game.opts.has("hall_palette"):
+		palette = String(Game.opts["hall_palette"])
 	pool = FixturePool.new()
 	pool.name = "pool"
 	pool.light_cap = int(Game.opts.get("hall_lights", "32"))
@@ -122,6 +138,28 @@ func _make_portals() -> void:
 	portal_in = _portal("door", Transform3D(b_in, door_world), Transform3D(b_in, hall_door), POCKET, LEVEL, main_cam, env)
 	portal_back = _portal("back", Transform3D(b_out, hall_door), out_frame, LEVEL, POCKET, main_cam, env)
 	portal_far = _portal("far", Transform3D(b_in, far_door), out_frame, LEVEL, POCKET, main_cam, env)
+	# The far door from across the hall (L120: "a flat black rectangle"): beyond 12 m it shows a still
+	# of the lit room behind it (taken when you first come in, Level0World._update_rooms), and a lamp
+	# in that room throws its light into the dark end of the hall.
+	# The still is taken from the hand-over distance and both it and the live view sit under the
+	# hall's haze, so the switch between them is invisible.
+	portal_far.range_m = float(Game.opts.get("far_range", "7"))
+	portal_far.live_fog_from = 2.5
+	var spill := SpotLight3D.new()
+	spill.name = "far_spill"
+	spill.layers = POCKET
+	spill.light_color = Color(1.0, 0.86, 0.6)
+	spill.light_energy = float(Game.opts.get("spill", "2.4"))
+	spill.spot_range = 16.0
+	spill.spot_angle = 38.0
+	spill.spot_attenuation = 1.2
+	spill.spot_angle_attenuation = 1.6
+	spill.shadow_enabled = true
+	spill.light_volumetric_fog_energy = 1.6
+	add_child(spill)
+	# just outside the doorway, aiming back into the hall and a little down
+	spill.position = Vector3(SIDE + 0.9, 1.9, MID)
+	spill.rotation = Vector3(-0.12, PI * 0.5, 0.0)
 
 
 func _portal(nm: String, frame: Transform3D, target: Transform3D, show: int, hide: int, main_cam: Camera3D, env: Environment) -> Portal:
@@ -176,7 +214,7 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 	var L := {
 		"name": "portal_hall_%d_%d_%d_%d" % [c.x, c.y, i, j],
 		"chunk": [10000 + c.x * 7 + i, 10000 + c.y * 7 + j],
-		"size": [24.0, 24.0], "ceiling_height": HALL_H, "plenum_height": HALL_H + 0.7, "wall_thickness": 0.2,
+		"size": [24.0, 24.0], "ceiling_height": HALL_H, "base_y": floor_y, "space_xform": global_transform, "plenum_height": HALL_H + 0.7, "wall_thickness": 0.2,
 		"door_height": 2.1, "tile": 0.6,
 		"walls": [], "edge_walls": [], "doors": [], "pillars": [], "fixtures": [], "rooms": [],
 		"dark_zones": [], "failing_hint": [], "tint_zones": [], "flood_candidates": [], "splices": [],
@@ -230,6 +268,22 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 			if lx2 > 0.7 and lx2 < 23.3 and lz2 > 0.9 and lz2 < 23.1:
 				L["fixtures"].append([lx2, lz2, 0])
 	L["rooms"].append([0.0, 0.0, 24.0, 24.0, "hall"])
+	var pal: Dictionary = PALETTES.get(palette, {})
+	L["palette"] = pal
+	if pal.has("tube"):
+		var tb: Array = pal["tube"]
+		L["tint_zones"].append([0.0, 0.0, 24.0, 24.0, tb[0], tb[1], tb[2]])
+	# The long side walls are not blank (L120): doors set into them at a steady rhythm, every one
+	# without a handle (remembered wrong: the word "door" without the part you open it with).
+	for side_j in [0, N - 1]:
+		if j != side_j:
+			continue
+		var wz := 0.1 if j == 0 else 24.0 - 0.1
+		var nz := 1.0 if j == 0 else -1.0
+		for k in 3:
+			var fx := 4.8 + 7.2 * k + (2.4 if (i + j) % 2 == 1 else 0.0)
+			if fx > 1.5 and fx < 22.5:
+				L["fake_doors"].append([fx, wz, 0.0, nz, 0.0, "nohandle"])
 	# The far third is dark; the exit sign is the only light at the end of the hall.
 	if i == N - 1:
 		L["dark_zones"].append([12.0, 0.0, 24.0, 24.0])

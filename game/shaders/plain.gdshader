@@ -20,11 +20,18 @@ uniform float metallic = 0.0;
 uniform vec2 uv_scale = vec2(1.0);
 // 0..1: hand grime, scuffs and kick marks (door frames and doors).
 uniform float grime = 0.0;
+// The ceiling grid and wall angles catch the same bounce off the lit floor as the tiles (S05).
+#include "res://shaders/field.gdshaderinc"
+uniform float field_bounce_strength = 0.0;
+uniform float ceiling_h = 2.6;
 
+// Floor height of the space this surface belongs to (a storeroom's hall is built under the level, S05).
+uniform float base_y = 0.0;
 varying vec3 wpos;
 
 void vertex() {
 	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wpos.y -= base_y;
 }
 
 void fragment() {
@@ -47,6 +54,9 @@ void fragment() {
 		r = mix(r, r * 1.2, grime * 0.5);
 	}
 	float hz = horizon_fade(VERTEX);
+	if (field_bounce_strength > 0.0 && wpos.y > ceiling_h - 0.12) {
+		EMISSION = a * field_bounce(field_p(wpos)) * field_bounce_strength * hz;
+	}
 	ALBEDO = a * hz;
 	ROUGHNESS = r;
 	METALLIC = metallic;

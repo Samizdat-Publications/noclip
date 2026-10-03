@@ -20,16 +20,20 @@ uniform float tile_size = 0.6;
 // Live fixture levels, one texel per tile (scripts/level0/fixture_field.gd). Blurred here into
 // the glow a lit panel throws on the tiles around it: lens glare plus the bounce from the
 // bright pool on the floor below, which real drop ceilings show strongly.
-uniform sampler2D field_tex : filter_linear, repeat_disable;
-uniform vec2 field_origin = vec2(0.0);
-uniform float field_cell = 0.6;
-uniform vec2 field_size = vec2(1.0);
+#include "res://shaders/field.gdshaderinc"
 uniform float halo_strength = 0.55;
+uniform float bounce_strength = 0.0;
 
 uniform float ceiling_h = 2.6;
+// How much of the tile's own warm color survives (S04: 0.7, a grayish off-white; the reference
+// stills have a warmer, cleaner cream ceiling).
+uniform float ceil_sat = 0.7;
+uniform vec3 ceil_tint = vec3(1.0);
 
 uniform vec3 world_shift = vec3(0.0);   // a loop copy samples its template's patterns
 
+// Floor height of the space this surface belongs to (a storeroom's hall is built under the level, S05).
+uniform float base_y = 0.0;
 varying vec3 wpos;
 varying vec3 wraw;
 varying float wup;
@@ -37,6 +41,7 @@ varying float wup;
 void vertex() {
 	wraw = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	wpos = wraw - world_shift;
+	wpos.y -= base_y;
 	wup = (MODEL_MATRIX * vec4(NORMAL, 0.0)).y;
 }
 
@@ -74,12 +79,12 @@ void fragment() {
 	alb *= 1.0 - 0.35 * sag;
 	// Keep the ceiling a pale, slightly gray off-white so it separates from the yellow walls.
 	float l = dot(alb, vec3(0.2126, 0.7152, 0.0722));
-	alb = mix(vec3(l), alb, 0.7) * 1.06;
+	alb = mix(vec3(l), alb, ceil_sat) * 1.06 * ceil_tint;
 	// A tile that fell onto the wet carpet is dirty and damp, not bright white (critique 006).
 	if (wup > 0.5) { alb *= vec3(0.36, 0.33, 0.28); }
 	ALBEDO = alb;
 	if (wpos.y > ceiling_h - 0.15) {
-		EMISSION = alb * halo_at(wraw.xz) * halo_strength;
+		EMISSION = alb * (halo_at(field_p(wraw)) * halo_strength + field_bounce(field_p(wraw)) * bounce_strength);
 	}
 	ROUGHNESS = use_tex ? textureGrad(rough_tex, uv, gx, gy).r : 0.93;
 	AO = use_tex ? textureGrad(ao_tex, uv, gx, gy).r : 1.0;

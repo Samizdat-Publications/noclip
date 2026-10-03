@@ -26,15 +26,27 @@ uniform vec3 recolor = vec3(1.0);
 // Pushes the printed pattern away from the paper color so it reads at a few meters.
 uniform float pattern_contrast = 2.4;
 uniform vec3 tex_mean = vec3(0.584, 0.474, 0.162);
+// The look toward Stewart's reference stills (S05, M3.6): a cleaner, more saturated yellow paper.
+// paper_sat pushes the paper away from gray; paper_tint is the palette of this space (a hall behind
+// a storeroom door can be papered another color).
+uniform float paper_sat = 1.0;
+uniform vec3 paper_tint = vec3(1.0);
+// Grime gathered in a few places instead of everywhere: 0 = damage everywhere (S01 to S04), 1 = most
+// walls clean, a few stretches stained hard (world-space patches several meters long).
+uniform float grime_zones = 0.0;
+uniform float drift_amount = 1.0;
 
 // Generation loss: a band of wall where the copy slipped sideways like a tracking error.
 uniform vec4 shear_rect = vec4(-100.0, -100.0, -99.0, -99.0);   // x0, z0, x1, z1 (world)
 uniform vec3 shear_band = vec3(1.1, 1.4, 0.07);                 // y0, y1, horizontal slip (m)
 
+// Floor height of the space this surface belongs to (a storeroom's hall is built under the level, S05).
+uniform float base_y = 0.0;
 varying vec3 wpos;
 
 void vertex() {
 	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wpos.y -= base_y;
 }
 
 void fragment() {
@@ -60,17 +72,23 @@ void fragment() {
 		alb *= vec3(1.03, 0.98, 0.94);
 	}
 	alb = max(tex_mean + (alb - tex_mean) * pattern_contrast, vec3(0.0));
+	float pl = dot(alb, vec3(0.2126, 0.7152, 0.0722));
+	alb = max(mix(vec3(pl), alb, paper_sat), vec3(0.0)) * paper_tint;
 	float rough = use_tex ? texture(rough_tex, uv).r : 0.68;
 	float ao = use_tex ? texture(ao_tex, uv).r : 1.0;
 	float s = UV.x + seed_offset.x;   // continuous distance along the wall
 	float y = wpos.y;
+	// Where the dirt is: a slow world-space field, so a whole stretch of wall is stained and the
+	// next one is clean.
+	float zone = smoothstep(0.52, 0.7, n_fbm(wpos.xz * 0.075 + seed_offset * 0.37 + vec2(5.1, 9.7)));
+	float dmg = damage * mix(1.0, 0.12 + 1.25 * zone, grime_zones);
 
 	// Slow tint drift: sun-faded and nicotine-yellowed patches.
 	float drift = n_fbm(vec2(s * 0.23, y * 0.35) + seed_offset);
-	alb *= mix(vec3(0.90, 0.89, 0.86), vec3(1.05, 1.04, 0.99), drift);
+	alb *= mix(vec3(1.0), mix(vec3(0.90, 0.89, 0.86), vec3(1.05, 1.04, 0.99), drift), drift_amount);
 
 	// Water wicking up from the wet carpet: a darker, browner band with a tide line.
-	float stretch = smoothstep(0.42, 0.72, n_fbm3(vec2(s * 0.09, 3.7) + seed_offset)) * damage;
+	float stretch = smoothstep(0.42, 0.72, n_fbm3(vec2(s * 0.09, 3.7) + seed_offset)) * dmg;
 	float band_h = 0.06 + stretch * (0.18 + 0.32 * n_fbm(vec2(s * 0.55, 11.3)));
 	float below = smoothstep(band_h + 0.015, band_h - 0.025, y);
 	float tide = exp(-pow((y - band_h) / 0.012, 2.0)) * stretch;
@@ -79,7 +97,7 @@ void fragment() {
 	rough = mix(rough, rough * 0.82, below * stretch);
 
 	// Staining that runs down from the ceiling in streaks.
-	float leak = smoothstep(0.55, 0.78, n_fbm3(vec2(s * 0.12, 27.0) - seed_offset)) * damage;
+	float leak = smoothstep(0.55, 0.78, n_fbm3(vec2(s * 0.12, 27.0) - seed_offset)) * dmg;
 	float streak = n_fbm(vec2(s * 7.5, y * 0.35 + 4.0));
 	float from_top = smoothstep(ceiling_h - 1.6 * streak, ceiling_h, y);
 	alb = mix(alb, alb * vec3(0.72, 0.62, 0.45), leak * from_top * smoothstep(0.35, 0.6, streak));
@@ -94,9 +112,9 @@ void fragment() {
 	alb = mix(alb, alb * 1.15 + vec3(0.02), lift * 0.6);
 	// Grime where hands and shoulders brush the wall, and scuffs low down from chairs and feet.
 	float hands = smoothstep(0.62, 0.8, n_fbm3(vec2(s * 1.7, y * 2.2) + 41.0)) * smoothstep(0.7, 1.0, y) * smoothstep(1.6, 1.3, y);
-	alb *= 1.0 - 0.12 * hands * damage;
+	alb *= 1.0 - 0.12 * hands * dmg;
 	float scuff = smoothstep(0.7, 0.86, n_value(vec2(s * 9.0, y * 3.0) + 13.0)) * smoothstep(0.55, 0.18, y);
-	alb *= 1.0 - 0.18 * scuff * damage;
+	alb *= 1.0 - 0.18 * scuff * dmg;
 	if (wpos.x > recolor_rect.x && wpos.x < recolor_rect.z && wpos.z > recolor_rect.y && wpos.z < recolor_rect.w) {
 		alb *= recolor;
 	}

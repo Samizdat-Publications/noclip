@@ -601,6 +601,9 @@ func _update_rooms(p: Vector3) -> void:
 			break
 	if r != current_room:
 		current_room = r
+		# The far door's still is taken on the way in, while you are at the other end of the hall.
+		if r and r.portal_far and not r.portal_far.has_still and not Game.opts.has("no_far_still"):
+			r.portal_far.request_still(r.portal_far.range_m)
 		if player_ref:
 			player_ref.hide_layers = PortalRoom.LEVEL if r else PortalRoom.POCKET
 	for room in rooms.values():
@@ -847,6 +850,15 @@ func room_spawn(key: String, lx: float, lz: float, face: Vector2) -> Transform3D
 	var g := resolve_focus({"room": key, "local": [lx, lz], "face": [face.x, face.y], "pos": [0, 0]})
 	var p: Array = g["pos"]
 	return Transform3D(Basis(Vector3.UP, -deg_to_rad(float(g["yaw"]))), Vector3(p[0], float(g.get("y", 0.0)), p[1]))
+
+
+## Where the storeroom of hall `key` ("cx:cz") stands, as [x, z] (focus shots load the level round it).
+func room_anchor(key: String) -> Array:
+	if not _closets.has(key):
+		return [12.0, 12.0]
+	var c: Vector2i = _closets[key][0]
+	var d: Vector2 = _closets[key][1]["door"]
+	return [c.x * CHUNK + d.x, c.y * CHUNK + d.y]
 
 
 ## A focus shot placed inside a storeroom's hall ({"room": key, "local": [x, z], "face": [x, z]}

@@ -7,6 +7,7 @@ extends RefCounted
 ## Updated every frame from the fixtures' flicker levels; only changed texels are written.
 
 var origin := Vector2.ZERO
+var to_local := Transform3D.IDENTITY   # world -> the frame the field's tiles are laid out in (S05)
 var cell := 0.6
 var size := Vector2i.ONE
 var img: Image
@@ -22,7 +23,7 @@ func _init(p_origin: Vector2, p_size_m: Vector2, p_cell: float) -> void:
 	origin = p_origin
 	cell = p_cell
 	size = Vector2i(ceili(p_size_m.x / cell - 0.001), ceili(p_size_m.y / cell - 0.001))
-	img = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	img = Image.create(size.x, size.y, true, Image.FORMAT_RGBA8)   # mips: the ceiling's wide bounce glow (S05)
 	img.fill(Color(0, 0, 0, 1))
 	tex = ImageTexture.create_from_image(img)
 
@@ -54,6 +55,7 @@ func bind(m: ShaderMaterial) -> void:
 	m.set_shader_parameter("field_origin", origin)
 	m.set_shader_parameter("field_cell", cell)
 	m.set_shader_parameter("field_size", Vector2(size))
+	m.set_shader_parameter("field_to_local", Projection(to_local))
 
 
 func update() -> void:
@@ -78,5 +80,6 @@ func update() -> void:
 				img.set_pixelv(q, c)
 		_dirty = true
 	if _dirty:
+		img.generate_mipmaps()
 		tex.update(img)
 		_dirty = false

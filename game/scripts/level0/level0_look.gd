@@ -29,6 +29,16 @@ static func _bind(m: ShaderMaterial, prefix: String, maps: Dictionary) -> void:
 			m.set_shader_parameter(param, t)
 
 
+## "--name=r,g,b" as a Vector3, or the default.
+static func _vec3_opt(name: String, dflt: Vector3) -> Vector3:
+	if not Game.opts.has(name):
+		return dflt
+	var p := String(Game.opts[name]).split(",")
+	if p.size() != 3:
+		return dflt
+	return Vector3(float(p[0]), float(p[1]), float(p[2]))
+
+
 static func make_materials(seed_offset: Vector2) -> Dictionary:
 	var m := {}
 
@@ -37,6 +47,13 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 	var wprefix := "wallpaper_v2" if tex("wallpaper_v2_albedo") != null and not Game.opts.has("wallpaper_v1") else "wallpaper"
 	_bind(wall, wprefix, {"albedo_tex": "albedo", "normal_tex": "normal", "rough_tex": "roughness", "ao_tex": "ao"})
 	wall.set_shader_parameter("seed_offset", seed_offset)
+	# The look toward Stewart's reference stills (S05, M3.6, D038): cleaner, more saturated yellow,
+	# the dirt gathered in a few stretches instead of everywhere.
+	wall.set_shader_parameter("paper_sat", float(Game.opts.get("wall_sat", "1.25")))
+	wall.set_shader_parameter("pattern_contrast", float(Game.opts.get("wall_contrast", "1.8")))
+	wall.set_shader_parameter("grime_zones", float(Game.opts.get("grime_zones", "1.0")))
+	wall.set_shader_parameter("drift_amount", float(Game.opts.get("wall_drift", "0.4")))
+	wall.set_shader_parameter("paper_tint", _vec3_opt("wall_tint", Vector3(1.03, 0.97, 0.86)))
 	m["wall"] = wall
 
 	var carpet := _shader("res://shaders/carpet.gdshader")
@@ -54,7 +71,10 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 		ceil.set_shader_parameter("stain_tex", stain)
 	elif tex("ceiling_tile_albedo"):
 		ceil.set_shader_parameter("stain_tex", tex("ceiling_tile_albedo"))
-	ceil.set_shader_parameter("halo_strength", float(Game.opts.get("halo", "0.8")))
+	ceil.set_shader_parameter("halo_strength", float(Game.opts.get("halo", "1.3")))
+	ceil.set_shader_parameter("bounce_strength", float(Game.opts.get("ceil_bounce", "3.0")))
+	ceil.set_shader_parameter("ceil_sat", float(Game.opts.get("ceil_sat", "0.85")))
+	ceil.set_shader_parameter("ceil_tint", _vec3_opt("ceil_tint", Vector3(1.0, 0.98, 0.92)))
 	m["ceiling"] = ceil
 
 	var lens := _shader("res://shaders/troffer_lens.gdshader")
@@ -65,7 +85,7 @@ static func make_materials(seed_offset: Vector2) -> Dictionary:
 		var ln := tex("troffer_lens_normal")
 		if ln:
 			lens.set_shader_parameter("normal_tex", ln)
-	lens.set_shader_parameter("emission_energy", float(Game.opts.get("lens_e", "2.4")))
+	lens.set_shader_parameter("emission_energy", float(Game.opts.get("lens_e", "3.0")))
 	m["lens"] = lens
 
 	var base := StandardMaterial3D.new()
@@ -240,7 +260,8 @@ static func make_environment(preset: String) -> Environment:
 
 	e.volumetric_fog_enabled = true
 	e.volumetric_fog_density = float(Game.opts.get("fog", "0.017"))
-	e.volumetric_fog_albedo = Color(0.95, 0.92, 0.82)
+	var fa := _vec3_opt("fog_albedo", Vector3(0.95, 0.92, 0.82))
+	e.volumetric_fog_albedo = Color(fa.x, fa.y, fa.z)
 	e.volumetric_fog_emission = Color(0, 0, 0)
 	e.volumetric_fog_anisotropy = float(Game.opts.get("fog_aniso", "0.62"))
 	e.volumetric_fog_length = 36.0
@@ -268,14 +289,14 @@ static func make_environment(preset: String) -> Environment:
 	e.adjustment_enabled = true
 	e.adjustment_brightness = 1.0
 	e.adjustment_contrast = 1.04
-	e.adjustment_saturation = 1.1
+	e.adjustment_saturation = float(Game.opts.get("sat", "1.1"))
 	return e
 
 
 static func make_camera_attributes() -> CameraAttributesPractical:
 	var c := CameraAttributesPractical.new()
 	c.auto_exposure_enabled = true
-	c.auto_exposure_scale = float(Game.opts.get("ae", "0.36"))
+	c.auto_exposure_scale = float(Game.opts.get("ae", "0.42"))
 	c.auto_exposure_speed = 0.55
 	c.auto_exposure_min_sensitivity = 60.0
 	c.auto_exposure_max_sensitivity = float(Game.opts.get("ae_max", "1700"))   # dark rooms stay dark (L032) but not crushed (L045)   # dark rooms stay dark (L032)

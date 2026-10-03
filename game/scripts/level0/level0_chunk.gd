@@ -197,8 +197,18 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	mats["ceiling"] = (shared_mats["ceiling"] as ShaderMaterial).duplicate()
 	mats["housing"] = (shared_mats["housing"] as ShaderMaterial).duplicate()
 	field = FixtureField.new(o, extent, TILE)
+	# The field's tiles are laid out in the space's own frame; a hall is rotated to face its door.
+	if L.has("space_xform"):
+		field.to_local = (L["space_xform"] as Transform3D).affine_inverse()
 	field.bind(mats["ceiling"])
 	field.bind(mats["housing"])
+	# The grid and wall angles take the ceiling's bounce too (S05), so they need this chunk's field.
+	var tb_bounce := float((shared_mats["ceiling"] as ShaderMaterial).get_shader_parameter("bounce_strength"))
+	if tb_bounce > 0.0:
+		mats["tbar"] = (shared_mats["tbar"] as ShaderMaterial).duplicate()
+		field.bind(mats["tbar"])
+		(mats["tbar"] as ShaderMaterial).set_shader_parameter("field_bounce_strength", tb_bounce)
+		(mats["tbar"] as ShaderMaterial).set_shader_parameter("ceiling_h", H)
 	var sb: Array = L.get("shear_bands", [])
 	if sb.size() > 0 or L.has("recolor"):
 		mats["wall"] = (shared_mats["wall"] as ShaderMaterial).duplicate()
@@ -220,6 +230,7 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	if mats["carpet"] == shared_mats["carpet"]:
 		mats["carpet"] = (shared_mats["carpet"] as ShaderMaterial).duplicate()
 	field.bind(mats["carpet"])
+	_apply_palette(shared_mats)
 	# Seams: the patch of wall that only the eye sees uses the wallpaper slipped a few centimeters,
 	# a splice you can spot if you look for it (D022).
 	mats["ao"] = Level0Chunk.ao_material()
@@ -227,6 +238,7 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 		mats["seam_wall"] = (mats["wall"] as ShaderMaterial).duplicate()
 		(mats["seam_wall"] as ShaderMaterial).set_shader_parameter("uv_slip", Vector2(0.0, 0.034))
 		mats["seam_base"] = mats["baseboard"]
+	_set_base_height(shared_mats)
 	_collect_solids()
 	_pick_leaks()
 	var kit := MeshKit.new()
@@ -286,6 +298,61 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 			_build_seam_fx()
 			_build_audio_zones(),
 	]
+
+
+## A chunk of a space built away from the level's floor (a storeroom's hall, D036) tells its shaders
+## where its floor and ceiling are: they shade by height (the damp band at the foot of the walls, the
+## ceiling glow, kick marks), and in the hall every wall had been shaded as if it stood in the flood
+## band (S05: the hall's walls read dark and gray in every capture since S04).
+func _set_base_height(shared_mats: Dictionary) -> void:
+	# The hall passes its floor height in (its first chunk can be set up before it is in the tree).
+	var by := float(L.get("base_y", global_position.y if is_inside_tree() else position.y))
+	if absf(by) < 0.01 and absf(H - 2.6) < 0.01:
+		return
+	for key in ["wall", "seam_wall", "pillar", "carpet", "ceiling", "housing", "tbar", "trim", "door", "baseboard", "seam_base", "plenum", "slot", "plate", "knob"]:
+		if not mats.has(key) or not (mats[key] is ShaderMaterial):
+			continue
+		if mats[key] == shared_mats.get(key):
+			mats[key] = (mats[key] as ShaderMaterial).duplicate()
+		var m := mats[key] as ShaderMaterial
+		m.set_shader_parameter("base_y", by)
+		if key in ["wall", "seam_wall", "pillar", "carpet", "ceiling", "housing", "tbar"]:
+			m.set_shader_parameter("ceiling_h", H)
+
+
+## A space with its own palette (L["palette"], S05, L118): the hall behind a storeroom door can be
+## papered and lit differently from the level, and its columns painted instead of papered (L124).
+func _apply_palette(shared_mats: Dictionary) -> void:
+	var pal: Dictionary = L.get("palette", {})
+	if pal.is_empty():
+		return
+	if mats["wall"] == shared_mats["wall"]:
+		mats["wall"] = (shared_mats["wall"] as ShaderMaterial).duplicate()
+	var wm := mats["wall"] as ShaderMaterial
+	if pal.has("wall_tint"):
+		var wt: Array = pal["wall_tint"]
+		wm.set_shader_parameter("paper_tint", Vector3(wt[0], wt[1], wt[2]))
+	if pal.has("wall_sat"):
+		wm.set_shader_parameter("paper_sat", float(pal["wall_sat"]))
+	if pal.has("carpet_tint"):
+		var ct: Array = pal["carpet_tint"]
+		(mats["carpet"] as ShaderMaterial).set_shader_parameter("carpet_tint", Vector3(ct[0], ct[1], ct[2]))
+	if pal.has("carpet_sat"):
+		(mats["carpet"] as ShaderMaterial).set_shader_parameter("carpet_sat", float(pal["carpet_sat"]))
+	if pal.has("ceil_tint"):
+		var et: Array = pal["ceil_tint"]
+		(mats["ceiling"] as ShaderMaterial).set_shader_parameter("ceil_tint", Vector3(et[0], et[1], et[2]))
+	if pal.has("pillar"):
+		# Painted concrete: the wall shader without the paper (flat paint, the same water damage).
+		var pc: Array = pal["pillar"]
+		var pm := wm.duplicate() as ShaderMaterial
+		pm.set_shader_parameter("use_tex", false)
+		pm.set_shader_parameter("base_color", Vector3(pc[0], pc[1], pc[2]))
+		pm.set_shader_parameter("pattern_contrast", 1.0)
+		pm.set_shader_parameter("paper_sat", 1.0)
+		pm.set_shader_parameter("paper_tint", Vector3.ONE)
+		pm.set_shader_parameter("damage", 0.7)
+		mats["pillar"] = pm
 
 
 ## Everything the seed decided, for other renderers (engine bake-off) and for tests.
@@ -536,6 +603,7 @@ func _build_walls(kit: MeshKit) -> void:
 		if not _touches_tall(r):
 			kit.box("tbar", Vector3(ga.position.x, H - wa, ga.position.y), Vector3(ga.end.x, H, ga.end.y), faces | MeshKit.NY, H)
 	_build_outlets(kit)
+	var pk := "pillar" if mats.has("pillar") else "wall"
 	for p in L["pillars"]:
 		var s: float = p[2]
 		var mode: String = p[4] if p.size() > 4 else ""
@@ -545,7 +613,7 @@ func _build_walls(kit: MeshKit) -> void:
 			var y0p := 0.22 if mode == "hang" else 0.0
 			var y1p := 1.92 if mode == "short" else H
 			var faces_p := MeshKit.SIDES | (MeshKit.NY if mode == "hang" else MeshKit.PY)
-			kit.box("wall", Vector3(p[0] - s * 0.5, y0p, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, y1p, p[1] + s * 0.5), faces_p, H)
+			kit.box(pk, Vector3(p[0] - s * 0.5, y0p, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, y1p, p[1] + s * 0.5), faces_p, H)
 			if mode == "short":
 				_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.62])
 				var qs := s * 0.5 + bb
@@ -555,12 +623,12 @@ func _build_walls(kit: MeshKit) -> void:
 			# A cross-shaped column: two slabs crossing, each a third as thick as it is wide.
 			var th := s / 3.0
 			for slab in [Vector2(s, th), Vector2(th, s)]:
-				kit.box("wall", Vector3(p[0] - slab.x * 0.5, 0.0, p[1] - slab.y * 0.5), Vector3(p[0] + slab.x * 0.5, H, p[1] + slab.y * 0.5), MeshKit.SIDES, H)
+				kit.box(pk, Vector3(p[0] - slab.x * 0.5, 0.0, p[1] - slab.y * 0.5), Vector3(p[0] + slab.x * 0.5, H, p[1] + slab.y * 0.5), MeshKit.SIDES, H)
 				var qb := Vector2(slab.x * 0.5 + 0.012, slab.y * 0.5 + 0.012)
 				kit.box("baseboard", Vector3(p[0] - qb.x, 0.0, p[1] - qb.y), Vector3(p[0] + qb.x, 0.1, p[1] + qb.y), MeshKit.SIDES | MeshKit.PY, 0.1)
 			_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.6])
 			continue
-		kit.box("wall", Vector3(p[0] - s * 0.5, 0.0, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, H, p[1] + s * 0.5), MeshKit.SIDES, H)
+		kit.box(pk, Vector3(p[0] - s * 0.5, 0.0, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, H, p[1] + s * 0.5), MeshKit.SIDES, H)
 		# Soft occlusion on the carpet around each column, so it stands on the floor (L032).
 		_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.62])
 		var q := s * 0.5 + bb
@@ -647,7 +715,11 @@ func _build_fake_doors(kit: MeshKit) -> void:
 		bx.append(["trim", w * 0.5, w * 0.5 + cw, 0.0, DH + cw, 0.0, 0.018])
 		bx.append(["trim", -w * 0.5 - cw, w * 0.5 + cw, DH, DH + cw, 0.0, 0.018])
 		bx.append(["door", -w * 0.5 + 0.004, w * 0.5 - 0.004, 0.006, DH - 0.004, 0.0, 0.012])
-		bx.append(["knob", w * 0.5 - 0.11, w * 0.5 - 0.06, 0.96, 1.01, 0.012, 0.07])
+		# Remembered wrong (VISION, S05): some doors were copied from the word "door", without the
+		# part you open it with.
+		var flags: String = String(fd[5]) if fd.size() > 5 else ""
+		if not "nohandle" in flags:
+			bx.append(["knob", w * 0.5 - 0.11, w * 0.5 - 0.06, 0.96, 1.01, 0.012, 0.07])
 		if y0 > 0.0:
 			# A door copied up the wall still has its threshold: a narrow sill to nothing.
 			bx.append(["trim", -w * 0.5 - 0.1, w * 0.5 + 0.1, -0.06, 0.0, 0.0, 0.16])
