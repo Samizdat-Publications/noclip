@@ -26,6 +26,13 @@ void vertex() {
 
 void fragment() {
 	float hz = horizon_fade(VERTEX);
+	// How tall it is on screen, in pixels: small and far it is a solid black shape (critique 025: a
+	// speckled smudge at 20 m); the streaks, the frayed edge and the after-images are for close up.
+	float tall_px = height * VIEWPORT_SIZE.y * PROJECTION_MATRIX[1][1] / (2.0 * max(length(VERTEX), 0.1));
+	float detail = smoothstep(160.0, 520.0, tall_px);
+	if (fade < 0.99 && detail < 0.6) {
+		discard;
+	}
 	float dith = fract(dot(FRAGCOORD.xy, vec2(0.0671, 0.00584)) * 52.98 + time * 7.0);
 	if (dith > fade * hz) {
 		discard;
@@ -36,13 +43,13 @@ void fragment() {
 	float fr = floor(time * 30.0);
 	// The hole's edge frays: rows near the outline drop in and out from frame to frame.
 	float edge = 1.0 - abs(dot(normalize(NORMAL), normalize(VIEW)));
-	if (edge > 0.9 && n_hash12(vec2(row, fr)) < 0.35) {
+	if (detail > 0.5 && edge > 0.9 && n_hash12(vec2(row, fr)) < 0.35) {
 		discard;
 	}
 	// Mostly black: a few short white dropout streaks, and now and then one long line.
 	float streak = step(0.955, n_hash12(vec2(row, fr))) * step(0.45, n_hash12(vec2(floor(FRAGCOORD.x / (px * 14.0)), row + fr)));
 	float head = smoothstep(height * 0.8, height * 0.9, mpos.y);
 	float line = step(0.99 - head * 0.02, n_hash12(vec2(floor(row / 1.5), fr * 1.7)));
-	vec3 c = vec3(0.008, 0.007, 0.01) + vec3(0.88, 0.88, 0.84) * max(streak * 0.8, line) * streaks;
+	vec3 c = vec3(0.008, 0.007, 0.01) + vec3(0.88, 0.88, 0.84) * max(streak * 0.8 * detail, line * mix(0.35, 1.0, detail)) * streaks;
 	ALBEDO = c;
 }

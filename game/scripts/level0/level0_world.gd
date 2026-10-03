@@ -267,6 +267,7 @@ var _pos_log_t := 0.0
 func _process(delta: float) -> void:
 	for d in _dropped:
 		(d[1] as OmniLight3D).light_energy = 0.4 if fmod(Game.clock, 1.0) < 0.55 else 0.0
+	_found_tape()
 	if Level0Chunk._tear_mat:
 		Level0Chunk._tear_mat.set_shader_parameter("time", Game.clock)
 	if Level0Chunk._rec_mat:
@@ -717,8 +718,22 @@ func after_death() -> void:
 		(orig as AutoplayBot).reset(player_ref)
 	hunter.reset_after_death()
 	catalogue.new_tape()
+	if Game.opts.has("found_test") and replay:
+		get_tree().create_timer(3.0).timeout.connect(replay.play_found)   # builder check of the found tape
 	Game.fear = 0.0
 	Game.drift = 0.0
+
+
+## Your last camcorder, where you died: stand by it and press E and its tape plays (VISION: "pick it
+## up and its footage plays, showing how you died"). Only the newest one still has its tape.
+func _found_tape() -> void:
+	if replay == null or player_ref == null or _dropped.is_empty() or not replay.has_found_tape() or player_ref.caught:
+		return
+	var cam: Node3D = _dropped[-1][0]
+	var near := Vector2(player_ref.global_position.x - cam.global_position.x, player_ref.global_position.z - cam.global_position.z).length() < 1.6 and absf(player_ref.global_position.y - cam.global_position.y) < 1.5
+	replay.show_prompt(near and not replay.playing)
+	if near and Input.is_action_just_pressed("interact") and not Game.autoplay:
+		replay.play_found()
 
 
 func _drop_camcorder(p: Vector3) -> void:

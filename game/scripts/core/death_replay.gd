@@ -88,7 +88,7 @@ func _make_ring() -> bool:
 		tf.width = W
 		tf.height = H
 		tf.format = f.format
-		tf.usage_bits = RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT
+		tf.usage_bits = RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT
 		var rid := _rd.texture_create(tf, RDTextureView.new())
 		_ring.append(rid)
 		var t := Texture2DRD.new()
@@ -198,6 +198,94 @@ func _record(delta: float) -> void:
 	_count = mini(_count + 1, N)
 
 
+var _end_clock := 0.0
+var _found := false                 # playing the tape of the camcorder you dropped (not a death)
+var _saved: Array[RID] = []
+var _saved_tex: Array[Texture2DRD] = []
+var _saved_count := 0
+var _saved_clip := PackedVector2Array()
+var _saved_end := 0.0
+var _prompt: Label
+
+
+## Keeps a copy of this death's tape in the camcorder left where you died (VISION: "pick it up and
+## its footage plays, showing how you died").
+func _keep() -> void:
+	if not _ok or _rd == null:
+		return
+	if _saved.is_empty():
+		var f := _rd.texture_get_format(_ring[0])
+		for i in N:
+			var tf := RDTextureFormat.new()
+			tf.width = W
+			tf.height = H
+			tf.format = f.format
+			tf.usage_bits = RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT
+			var rid := _rd.texture_create(tf, RDTextureView.new())
+			_saved.append(rid)
+			var t := Texture2DRD.new()
+			t.texture_rd_rid = rid
+			_saved_tex.append(t)
+	var srcs: Array[RID] = []
+	for i in _count:
+		srcs.append(_ring[(_head - _count + i + N) % N])
+	var dsts := _saved.slice(0, _count)
+	RenderingServer.call_on_render_thread(func() -> void:
+		for i in srcs.size():
+			_rd.texture_copy(srcs[i], dsts[i], Vector3.ZERO, Vector3.ZERO, Vector3(W, H, 1), 0, 0, 0, 0))
+	_saved_count = _count
+	_saved_clip = _clip.duplicate()
+	_saved_end = _end_clock
+
+
+func has_found_tape() -> bool:
+	return _saved_count > 0
+
+
+## "E  PLAY TAPE" by the camcorder you dropped.
+func show_prompt(on: bool) -> void:
+	if _prompt == null:
+		_prompt = _label((_osd.get_theme_font("font") as Font))
+	_prompt.visible = on and not playing
+	if on:
+		var vp := get_viewport().get_visible_rect().size
+		_prompt.add_theme_font_size_override("font_size", int(vp.y * 0.03))
+		_prompt.text = "E   PLAY TAPE"
+		_prompt.position = Vector2(vp.x * 0.5 - vp.y * 0.12, vp.y * 0.62)
+
+
+## Plays the tape of the camcorder you dropped: straight to PLAY, no crunch, no end card.
+func play_found() -> void:
+	if playing or _saved_count == 0:
+		return
+	playing = true
+	_found = true
+	_frames.clear()
+	for i in _saved_count:
+		_frames.append(_saved_tex[i])
+	_clip = _saved_clip
+	_end_clock = _saved_end
+	if _cap:
+		AudioServer.set_bus_effect_enabled(0, _cap_idx, false)
+	_screen.visible = true
+	get_tree().paused = true
+	for nm in ["World", "UI"]:
+		var b := AudioServer.get_bus_index(nm)
+		if b >= 0:
+			AudioServer.set_bus_mute(b, true)
+	if _prompt:
+		_prompt.visible = false
+	_next_phase(2)
+	_sfx_play("vcr_play_01", -4.0, false)
+	_hiss_play()
+	_clip_pos = 0.0
+	_gen.play()
+	_gen_pb = _gen.get_stream_playback() as AudioStreamGeneratorPlayback
+	_osd.visible = true
+	_counter.visible = true
+	print("[replay] the dropped camcorder's tape: %d frames" % _frames.size())
+
+
 ## The tape ends here: play it back.
 func start() -> void:
 	if playing:
@@ -209,6 +297,9 @@ func start() -> void:
 	_clip = PackedVector2Array()
 	for c in _audio:
 		_clip.append_array(c)
+	_end_clock = Game.clock
+	_found = false
+	_keep()
 	if _cap:
 		AudioServer.set_bus_effect_enabled(0, _cap_idx, false)
 	_t = 0.0
@@ -270,6 +361,9 @@ func _play(delta: float) -> void:
 		3:   # the last frame, shaking
 			_show(nf - 1, 2)
 			_osd.text = "PAUSE"
+			if _found and _t > 1.4:
+				_finish()
+				return
 			if _t > 1.6:
 				_next_phase(4)
 				_osd.visible = false
@@ -305,7 +399,7 @@ func _show(k: int, mode: int) -> void:
 
 ## The tape counter: minutes and seconds into the run at that frame.
 func _stamp(k: int) -> String:
-	var secs := Game.clock - _t - (_frames.size() - 1 - k) / FPS
+	var secs := _end_clock - (_frames.size() - 1 - k) / FPS
 	secs = maxf(secs, 0.0)
 	return "%d:%02d:%02d" % [int(secs / 3600.0), int(secs / 60.0) % 60, int(secs) % 60]
 

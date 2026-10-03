@@ -71,6 +71,11 @@ void fragment() {
 		if (top - bot < height * 0.18) {
 			discard;
 		}
+		// Far away (small on screen) the paper is lost and only the hole is left: a solid shape.
+		float tall_px = height * VIEWPORT_SIZE.y * PROJECTION_MATRIX[1][1] / (2.0 * max(length(VERTEX), 0.1));
+		if (n_hash12(vec2(id, 21.7 + seed)) > smoothstep(140.0, 480.0, tall_px) * 0.9 + 0.1 || (fade < 0.99 && tall_px < 300.0)) {
+			discard;
+		}
 	}
 	if (mpos.y > top || mpos.y < bot) {
 		discard;

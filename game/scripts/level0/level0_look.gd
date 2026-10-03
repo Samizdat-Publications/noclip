@@ -251,17 +251,20 @@ static func make_environment(preset: String) -> Environment:
 
 	e.glow_enabled = true
 	e.glow_normalized = true
-	e.glow_intensity = 0.85
+	e.glow_intensity = float(Game.opts.get("glow_i", "0.85"))
 	e.glow_strength = 1.0
 	e.glow_bloom = float(Game.opts.get("bloom", "0.17"))
-	e.glow_hdr_threshold = 0.95
+	e.glow_hdr_threshold = float(Game.opts.get("glow_th", "1.05"))
 	e.glow_hdr_scale = 2.0
-	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
+	# Critiques 024/025: the panels "look like stickers, no bloom". The halo is a screen blend of the
+	# brightest parts only (the lenses), wider than before; softlight barely showed on bright ceilings.
+	var gb := String(Game.opts.get("glow_blend", "screen"))
+	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SCREEN if gb == "screen" else (Environment.GLOW_BLEND_MODE_ADDITIVE if gb == "add" else Environment.GLOW_BLEND_MODE_SOFTLIGHT)
 	e.set_glow_level(0, 0.0)
 	e.set_glow_level(1, 0.6)
 	e.set_glow_level(2, 1.0)
-	e.set_glow_level(3, 0.8)
-	e.set_glow_level(4, 0.4)
+	e.set_glow_level(3, float(Game.opts.get("glow_l3", "0.9")))
+	e.set_glow_level(4, float(Game.opts.get("glow_l4", "0.55")))
 	e.set_glow_level(5, 0.0)
 
 	e.volumetric_fog_enabled = true

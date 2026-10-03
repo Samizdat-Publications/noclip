@@ -61,6 +61,10 @@ var _voice: AudioStreamPlayer3D
 var _drone: AudioStreamPlayer
 var _step_bank: AudioStreamRandomizer
 var _kill_t := 0.0
+var _paper_snd: AudioStreamPlayer3D   # paper tearing: it is made of the walls' paper (Gemini 025)
+var _tear_bank: AudioStreamRandomizer
+var _tear_t := 6.0
+var _breath_t := 3.0
 var _caught_called := false
 
 
@@ -90,6 +94,15 @@ func _ready() -> void:
 	if rl:
 		_rustle.stream = rl
 	_voice = _player3d(3.0, 50.0)
+	_paper_snd = _player3d(2.2, 30.0)
+	_paper_snd.max_polyphony = 2
+	_tear_bank = AudioStreamRandomizer.new()
+	_tear_bank.random_pitch = 1.12
+	_tear_bank.random_volume_offset_db = 2.5
+	for i in 4:
+		var tp := "res://assets/audio/entity/occ_tear_%02d.wav" % (i + 1)
+		if ResourceLoader.exists(tp):
+			_tear_bank.add_stream(-1, load(tp))
 	_drone = AudioStreamPlayer.new()
 	_drone.bus = &"Master"
 	var dl := _loop("res://assets/audio/entity/chase_drone_loop.wav")
@@ -395,6 +408,12 @@ func _notice(delta: float) -> void:
 		if space.director:
 			space.director.hunt_shock(global_position)
 		_voice_play("res://assets/audio/entity/occ_shriek_%02d.wav" % (1 + _rng.randi() % 2), -2.0)
+		if _tear_bank.streams_count > 0:
+			_paper_snd.stream = _tear_bank
+			_paper_snd.global_position = _head()
+			_paper_snd.volume_db = 3.0
+			_paper_snd.play()
+		_tear_t = 0.5
 		rig.tear = 1.0
 		rig.hold_all("scream", 0.45)
 		# The lights between you go out, toward you.
@@ -682,6 +701,28 @@ func _drone_to(db: float, delta: float, rate: float) -> void:
 
 func _tells(delta: float) -> void:
 	_rustle.global_position = global_position + Vector3(0, 1.4, 0)
+	var rv := -15.0
+	match state:
+		S.SEARCH:
+			rv = -8.0
+		S.NOTICE, S.CHASE, S.KILL:
+			rv = -3.0
+	_rustle.volume_db = lerpf(_rustle.volume_db, rv, 1.0 - exp(-2.0 * delta))
+	# Paper tearing: soft and rare while it follows, harsh while it runs.
+	_tear_t -= delta
+	if _tear_t <= 0.0 and _tear_bank.streams_count > 0:
+		var chase := state == S.CHASE or state == S.KILL
+		_tear_t = _rng.randf_range(0.7, 1.4) if chase else _rng.randf_range(7.0, 13.0)
+		if state != S.LEAVE:
+			_paper_snd.stream = _tear_bank
+			_paper_snd.global_position = _head() - Vector3(0, 0.5, 0)
+			_paper_snd.volume_db = 0.0 if chase else -9.0
+			_paper_snd.play()
+	if state == S.SEARCH:
+		_breath_t -= delta
+		if _breath_t <= 0.0:
+			_breath_t = _rng.randf_range(4.0, 6.5)
+			_voice_play("res://assets/audio/entity/occ_breath_%02d.wav" % (1 + _rng.randi() % 2), -4.0)
 	# The panel over it hiccups as it passes (not every time).
 	if state == S.STALK or state == S.SEARCH:
 		var fx := space.fixture_near(global_position, 1.5)

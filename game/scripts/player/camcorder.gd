@@ -62,6 +62,22 @@ func _ready() -> void:
 	var r := Game.rng("camcorder")
 	_start_minutes = 23 * 60 + r.randi_range(2, 50)
 	visible = false
+	# The eyecup closing in as you lift the camera (S06), on its own layer under the camcorder's.
+	_cup_layer = CanvasLayer.new()
+	_cup_layer.layer = 4
+	_cup = ColorRect.new()
+	_cup.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_cup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var cm := ShaderMaterial.new()
+	cm.shader = load("res://shaders/eyecup.gdshader")
+	_cup.material = cm
+	_cup_layer.add_child(_cup)
+	# Beside the camcorder, not inside it: the camcorder's layer is hidden until the camera is up.
+	get_parent().add_child.call_deferred(_cup_layer)
+
+
+var _cup_layer: CanvasLayer
+var _cup: ColorRect
 
 
 func _label(font: Font, col: Color) -> Label:
@@ -140,9 +156,15 @@ func _update_viewmodel() -> void:
 		r = float(Game.opts["vm_hold"])   # look-dev: photograph the camera mid-lift
 	if lcd_mat:
 		lcd_mat.set_shader_parameter("time", Game.clock)
-	# Out of sight for the first part of the lift (L092: seen low and pointing forward, the body
-	# read as a pistol); it comes up from below the frame with its side screen turned to you.
-	viewmodel.visible = r > 0.22 and not active
+	if _cup:
+		var vp := get_viewport().get_visible_rect().size
+		var cm := _cup.material as ShaderMaterial
+		cm.set_shader_parameter("amount", 0.0 if active else smoothstep(0.15, 1.0, r))
+		cm.set_shader_parameter("aspect", vp.x / maxf(vp.y, 1.0))
+	# The held model is only shown on request (--show_vm): from behind, low and pointing forward, it
+	# read as a pistol in five critiques even turned the right way round (L092, L125, 025). The
+	# eyecup above is the lift now.
+	viewmodel.visible = r > 0.22 and not active and Game.opts.has("show_vm")
 	if not viewmodel.visible:
 		return
 	var e := 1.0 - pow(1.0 - r, 1.6)   # quick to come into view, settles onto the eye

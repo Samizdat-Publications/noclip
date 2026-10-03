@@ -151,12 +151,19 @@ func _build_corner_ao(kit: MeshKit) -> void:
 		if (pl.size() > 4 and pl[4] == "hang") or (pl.size() > 3 and pl[3] == "plus"):
 			continue
 		var c := Vector3(pl[0], e, pl[1])
+		# Wider than at the walls: a column stands free, so its foot is all the grounding it gets
+		# (critique 025: "pillars barely meet the floor"); and its top, where it meets the ceiling.
+		var top := _ceil_at(Vector2(pl[0], pl[1])) - e
 		for d in [Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
 			var t := Vector3(d.z, 0, -d.x)
-			var a2: Vector3 = c + d * (hs + e) - t * hs
-			var b2: Vector3 = c + d * (hs + e) + t * hs
-			strip.call(a2, b2, d * ff)
-			strip.call(a2, b2, Vector3(0, wf, 0))
+			var a2: Vector3 = c + d * (hs + e) - t * (hs + 0.02)
+			var b2: Vector3 = c + d * (hs + e) + t * (hs + 0.02)
+			strip.call(a2, b2, d * ff * 1.6)
+			strip.call(a2, b2, Vector3(0, wf * 1.5, 0))
+			var a3 := Vector3(a2.x, top, a2.z)
+			var b3 := Vector3(b2.x, top, b2.z)
+			strip.call(a3, b3, Vector3(0, -cf * 1.4, 0))
+			strip.call(a3, b3, d * cf * 1.4)
 
 
 ## True if a wall rect borders a tall room (its ceiling trim would cross the tall walls).
