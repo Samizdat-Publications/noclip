@@ -83,3 +83,4 @@ Session 05 total: about $0.36 of Gemini (four video critiques 021 to 024); no im
 | 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 026_gemini.md | 1 | $0.10 (27642 in / 3449 out tokens) |
 | 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 027_gemini.md | 1 | $0.09 (27642 in / 2628 out tokens) |
 | 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 028_gemini.md | 1 | $0.09 (27643 in / 2988 out tokens) |
+| 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 029_gemini.md | 1 | $0.10 (27640 in / 3658 out tokens) |

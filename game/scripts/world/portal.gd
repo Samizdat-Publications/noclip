@@ -298,5 +298,13 @@ func _wanted() -> bool:
 func _exit_tree() -> void:
 	if _still_rid.is_valid():
 		var rd := RenderingServer.get_rendering_device()
-		if rd:
-			rd.free_rid(_still_rid)
+		if _mat_far:
+			_mat_far.set_shader_parameter("use_still", false)
+			_mat_far.set_shader_parameter("still", null)
+		var rid := _still_rid
+		_still_rid = RID()
+		# Not now: the material may still be drawn this frame (QA S06).
+		if rd and is_inside_tree():
+			get_tree().create_timer(0.5, true).timeout.connect(rd.free_rid.bind(rid))   # bound to the device, not to this freed node
+		elif rd:
+			rd.free_rid(rid)

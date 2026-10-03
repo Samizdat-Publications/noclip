@@ -385,7 +385,7 @@ func stage_edge() -> bool:
 # a doorway ahead of you: its head, a shoulder, one long arm hanging. The wall hides the rest of it.
 # Look straight at it, or walk toward it, and it is gone, with a rustle of paper.
 
-const CORNER_FIRST := 48.0
+const CORNER_FIRST := 30.0      # before the hunt usually starts (QA S06: at 48 s the hunt had always begun)
 const CORNER_GAP := [70.0, 45.0]
 var _corner: Occupant
 var _corner_on := false

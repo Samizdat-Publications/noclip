@@ -483,7 +483,8 @@ func _finish() -> void:
 
 func _exit_tree() -> void:
 	if _rd:
-		for rid in _ring:
+		for rid in _ring + _saved:
 			if rid.is_valid():
 				_rd.free_rid(rid)
 	_ring.clear()
+	_saved.clear()
