@@ -1,0 +1,17 @@
+{
+ "tag": "s07_stair_arrive",
+ "params": {
+  "text": "a heavy steel door at the bottom of a stairwell closing with a deep boom and long echo No music.",
+  "duration_seconds": 3.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_stair_arrive_030caba72e60.pcm",
+ "format": "pcm_48000",
+ "credits": 16.0,
+ "est_usd": 0.0048,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

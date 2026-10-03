@@ -1,0 +1,17 @@
+{
+ "tag": "s07c_crw_drag_loop",
+ "params": {
+  "text": "slow continuous sound of bare skin dragging and squeaking along wallpapered walls and wet carpet, something huge crawling slowly, faint creaks of joints No roar, no growl, no voice, no words, no music.",
+  "duration_seconds": 8.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": true
+ },
+ "file": "s07c_crw_drag_loop_39ffb7032311.pcm",
+ "format": "pcm_48000",
+ "credits": 44.0,
+ "est_usd": 0.0132,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

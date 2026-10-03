@@ -1,0 +1,17 @@
+{
+ "tag": "s07_shout_muffled_01",
+ "params": {
+  "text": "a man shouting a warning through a rubber respirator mask, muffled and unintelligible, in a large echoing office hall No music.",
+  "duration_seconds": 2.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_shout_muffled_01_4a8c15cac02a.pcm",
+ "format": "pcm_48000",
+ "credits": 11.0,
+ "est_usd": 0.0033,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

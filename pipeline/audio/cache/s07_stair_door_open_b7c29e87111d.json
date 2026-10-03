@@ -1,0 +1,17 @@
+{
+ "tag": "s07_stair_door_open",
+ "params": {
+  "text": "a heavy steel fire door: push bar clunk, the door swings open with a low creak, echo of a deep concrete stairwell No music.",
+  "duration_seconds": 2.5,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_stair_door_open_b7c29e87111d.pcm",
+ "format": "pcm_48000",
+ "credits": 14.0,
+ "est_usd": 0.0042,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

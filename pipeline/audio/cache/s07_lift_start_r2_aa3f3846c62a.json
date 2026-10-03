@@ -1,0 +1,17 @@
+{
+ "tag": "s07_lift_start_r2",
+ "params": {
+  "text": "an old industrial freight elevator: the cage gate slammed shut with a rattle, a motor starting with a heavy clunk, then a long mechanical hum as it moves No music.",
+  "duration_seconds": 6.0,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_lift_start_r2_aa3f3846c62a.pcm",
+ "format": "pcm_48000",
+ "credits": 33.0,
+ "est_usd": 0.0099,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

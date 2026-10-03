@@ -70,6 +70,12 @@ func _ready() -> void:
 		add_child(rp)
 		(space as Level0World).replay = rp
 		rp.catalogue = (space as Level0World).catalogue
+		if not Game.opts.has("no_descent"):
+			# The run loop: the Landing, the stairwells, salvage, the kit (D050).
+			var rd := RunDirector.new()
+			rd.name = "run_director"
+			add_child(rd)
+			rd.attach(space as Level0World, player)
 	if Game.is_capture():
 		var cd := CaptureDirector.new()
 		cd.process_mode = Node.PROCESS_MODE_ALWAYS   # keeps shooting while the death replay plays

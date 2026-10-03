@@ -1,0 +1,17 @@
+{
+ "tag": "s07_flare_die_01",
+ "params": {
+  "text": "a road flare sputtering out: the fizz chokes, pops twice and stops No music.",
+  "duration_seconds": 2.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_flare_die_01_d3ef2860d175.pcm",
+ "format": "pcm_48000",
+ "credits": 11.0,
+ "est_usd": 0.0033,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

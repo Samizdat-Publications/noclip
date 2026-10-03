@@ -1,0 +1,17 @@
+{
+ "tag": "s07_flash_pop_01",
+ "params": {
+  "text": "a vintage photographic flashbulb firing in a quiet office corridor: a sharp electric pop with a bright crackle, very short, slight room echo No music.",
+  "duration_seconds": 0.8,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_flash_pop_01_e612d6ae60c1.pcm",
+ "format": "pcm_48000",
+ "credits": 4.0,
+ "est_usd": 0.0012,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

@@ -1,0 +1,1152 @@
+{
+ "asset": "audio_s07",
+ "sample_rate": 48000,
+ "bit_depth": 16,
+ "channels": 1,
+ "elevenlabs": {
+  "model_id": "eleven_text_to_sound_v2",
+  "endpoint": "POST /v1/sound-generation"
+ },
+ "files": {
+  "descent/flash_pop_01.wav": {
+   "prompt": "a vintage photographic flashbulb firing in a quiet office corridor: a sharp electric pop with a bright crackle, very short, slight room echo No music.",
+   "duration_s": 0.8,
+   "target_duration_s": 0.8,
+   "loop": false,
+   "target_lufs": -14,
+   "final_lufs": -14.0,
+   "final_peak_dbfs": -1.55,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flash_pop_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -2.7,
+    "duration_s": 0.8,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/flash_pop_02.wav": {
+   "prompt": "a vintage photographic flashbulb firing in a quiet office corridor: a sharp electric pop with a bright crackle, very short, slight room echo No music. Slight variation.",
+   "duration_s": 0.8,
+   "target_duration_s": 0.8,
+   "loop": false,
+   "target_lufs": -14,
+   "final_lufs": -14.0,
+   "final_peak_dbfs": -3.2,
+   "prompt_influence": 0.55,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flash_pop_02",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -12.0,
+    "duration_s": 0.8,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/flash_charge.wav": {
+   "prompt": "a 1990s camera flash unit recharging: a thin rising high-pitched electronic whine that ends in a soft click No music.",
+   "duration_s": 1.6,
+   "target_duration_s": 1.6,
+   "loop": false,
+   "target_lufs": -24,
+   "final_lufs": -24.0,
+   "final_peak_dbfs": -14.68,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flash_charge",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -4.5,
+    "duration_s": 1.6,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/flare_ignite_01.wav": {
+   "prompt": "a road flare struck and ignited: a rough scrape, a pop, then an intense fizzing hiss No music.",
+   "duration_s": 2.48,
+   "target_duration_s": 2.5,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -7.22,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flare_ignite_01_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 2.48,
+    "clip_samples": 88,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/flare_burn_loop.wav": {
+   "prompt": "a road flare burning steadily on the floor: constant crackling fizz and sputter, no music",
+   "duration_s": 6.0,
+   "target_duration_s": 6.0,
+   "loop": true,
+   "target_lufs": -24,
+   "final_lufs": -24.0,
+   "final_peak_dbfs": -4.34,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flare_burn_loop",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -8.1,
+    "duration_s": 6.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, 40 Hz HP, 0.4 s equal-power crossfade loop cut, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/flare_land_01.wav": {
+   "prompt": "a lit road flare tossed onto damp carpet: a soft thump, a short roll, fizzing No music.",
+   "duration_s": 1.0,
+   "target_duration_s": 1.0,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -3.21,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flare_land_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -22.9,
+    "duration_s": 1.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/flare_die_01.wav": {
+   "prompt": "a road flare sputtering out: the fizz chokes, pops twice and stops No music.",
+   "duration_s": 2.0,
+   "target_duration_s": 2.0,
+   "loop": false,
+   "target_lufs": -22,
+   "final_lufs": -22.0,
+   "final_peak_dbfs": -7.43,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flare_die_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -14.2,
+    "duration_s": 2.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/stair_door_open.wav": {
+   "prompt": "a heavy steel fire door: push bar clunk, the door swings open with a low creak, echo of a deep concrete stairwell No music.",
+   "duration_s": 2.48,
+   "target_duration_s": 2.5,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -1.99,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_stair_door_open",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -4.6,
+    "duration_s": 2.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/stair_descend_loop.wav": {
+   "prompt": "footsteps walking steadily down concrete stairs in a huge echoing stairwell, damp shoes, a steady pace, no music",
+   "duration_s": 8.0,
+   "target_duration_s": 8.0,
+   "loop": true,
+   "target_lufs": -26,
+   "final_lufs": -26.0,
+   "final_peak_dbfs": -3.01,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_stair_descend_loop",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -6.6,
+    "duration_s": 8.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, 40 Hz HP, 0.4 s equal-power crossfade loop cut, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/stair_arrive.wav": {
+   "prompt": "a heavy steel door at the bottom of a stairwell closing with a deep boom and long echo No music.",
+   "duration_s": 3.0,
+   "target_duration_s": 3.0,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -1.58,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_stair_arrive",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -6.7,
+    "duration_s": 3.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/stair_draft_loop.wav": {
+   "prompt": "cold air moaning up a very deep concrete stairwell, a low hollow whistle, distant and steady No music.",
+   "duration_s": 8.0,
+   "target_duration_s": 8.0,
+   "loop": true,
+   "target_lufs": -28,
+   "final_lufs": -28.0,
+   "final_peak_dbfs": -14.86,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_stair_draft_loop",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -8.2,
+    "duration_s": 8.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, 40 Hz HP, 0.4 s equal-power crossfade loop cut, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/lift_start.wav": {
+   "prompt": "an old industrial freight elevator: the cage gate slammed shut with a rattle, a motor starting with a heavy clunk, then a long mechanical hum as it moves No music.",
+   "duration_s": 6.0,
+   "target_duration_s": 6.0,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -7.1,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_lift_start_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 6.0,
+    "clip_samples": 227,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/lift_arrive.wav": {
+   "prompt": "an old freight elevator stopping with a heavy clunk and its metal cage gate dragged open with a rattle No music.",
+   "duration_s": 3.0,
+   "target_duration_s": 3.0,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -6.53,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_lift_arrive_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -0.0,
+    "duration_s": 3.0,
+    "clip_samples": 3,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/locker_open.wav": {
+   "prompt": "a dented metal storage locker door opened, rattling hinges No music.",
+   "duration_s": 1.48,
+   "target_duration_s": 1.5,
+   "loop": false,
+   "target_lufs": -22,
+   "final_lufs": -22.0,
+   "final_peak_dbfs": -3.26,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_locker_open",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -6.9,
+    "duration_s": 1.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/kit_buy.wav": {
+   "prompt": "a heavy rubber stamp slammed onto paper, then a plastic cassette tape dropped into a plastic crate No music.",
+   "duration_s": 1.48,
+   "target_duration_s": 1.5,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -2.53,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_kit_buy",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -1.3,
+    "duration_s": 1.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/appraise_tick.wav": {
+   "prompt": "a VCR tape counter clicking and whirring quickly, then stopping No music.",
+   "duration_s": 1.2,
+   "target_duration_s": 1.2,
+   "loop": false,
+   "target_lufs": -24,
+   "final_lufs": -24.0,
+   "final_peak_dbfs": -2.58,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_appraise_tick",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -5.8,
+    "duration_s": 1.2,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/occ_flashed_01.wav": {
+   "prompt": "a large unseen creature recoiling: a dry rasping hiss tangled with violently crumpling wet paper, cut off sharply, no voice, no words No music.",
+   "duration_s": 1.48,
+   "target_duration_s": 1.5,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -8.3,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_occ_flashed_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -0.7,
+    "duration_s": 1.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "descent/occ_flashed_02.wav": {
+   "prompt": "a large unseen creature recoiling: a dry rasping hiss tangled with violently crumpling wet paper, cut off sharply, no voice, no words No music. Slight variation.",
+   "duration_s": 1.48,
+   "target_duration_s": 1.5,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -7.4,
+   "prompt_influence": 0.55,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_occ_flashed_02",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 1.48,
+    "clip_samples": 1,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/radio_01.wav": {
+   "prompt": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Urgent. No music.",
+   "duration_s": 2.48,
+   "target_duration_s": 2.5,
+   "loop": false,
+   "target_lufs": -22,
+   "final_lufs": -22.0,
+   "final_peak_dbfs": -12.62,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_radio_01_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 2.48,
+    "clip_samples": 317,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/radio_02.wav": {
+   "prompt": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Calm. No music.",
+   "duration_s": 2.48,
+   "target_duration_s": 2.5,
+   "loop": false,
+   "target_lufs": -22,
+   "final_lufs": -22.0,
+   "final_peak_dbfs": -4.04,
+   "prompt_influence": 0.65,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_radio_02_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -0.0,
+    "duration_s": 2.48,
+    "clip_samples": 2,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/radio_03.wav": {
+   "prompt": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Distant and faint. No music.",
+   "duration_s": 2.48,
+   "target_duration_s": 2.5,
+   "loop": false,
+   "target_lufs": -22,
+   "final_lufs": -22.0,
+   "final_peak_dbfs": -7.86,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_radio_03",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -1.8,
+    "duration_s": 2.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/shout_muffled_01.wav": {
+   "prompt": "a man shouting a warning through a rubber respirator mask, muffled and unintelligible, in a large echoing office hall No music.",
+   "duration_s": 2.0,
+   "target_duration_s": 2.0,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -8.56,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_shout_muffled_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -1.7,
+    "duration_s": 2.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/shout_muffled_02.wav": {
+   "prompt": "a man shouting a warning through a rubber respirator mask, muffled and unintelligible, in a large echoing office hall. Shorter, more panicked. No music.",
+   "duration_s": 2.0,
+   "target_duration_s": 2.0,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -11.11,
+   "prompt_influence": 0.65,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_shout_muffled_02_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -0.0,
+    "duration_s": 2.0,
+    "clip_samples": 9,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/scream_drag_01.wav": {
+   "prompt": "a man in a respirator mask screaming muffled while being dragged away across carpet, the scream fading into the distance, frantic scuffling No music.",
+   "duration_s": 4.0,
+   "target_duration_s": 4.0,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -5.65,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_scream_drag_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -0.1,
+    "duration_s": 4.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "halden/flare_gun_pop.wav": {
+   "prompt": "a flare pistol fired in a long corridor: a hollow pop and whoosh, then a fizzing flare No music.",
+   "duration_s": 2.0,
+   "target_duration_s": 2.0,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -3.45,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07_flare_gun_pop",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -1.7,
+    "duration_s": 2.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  }
+ },
+ "paid_calls": [
+  {
+   "tag": "s07_flash_pop_01",
+   "params": {
+    "text": "a vintage photographic flashbulb firing in a quiet office corridor: a sharp electric pop with a bright crackle, very short, slight room echo No music.",
+    "duration_seconds": 0.8,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flash_pop_01_e612d6ae60c1.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flash_pop_02",
+   "params": {
+    "text": "a vintage photographic flashbulb firing in a quiet office corridor: a sharp electric pop with a bright crackle, very short, slight room echo No music. Slight variation.",
+    "duration_seconds": 0.8,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flash_pop_02_f3c818713fb0.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flash_charge",
+   "params": {
+    "text": "a 1990s camera flash unit recharging: a thin rising high-pitched electronic whine that ends in a soft click No music.",
+    "duration_seconds": 1.6,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flash_charge_29610dbcf464.pcm",
+   "format": "pcm_48000",
+   "credits": 9.0,
+   "est_usd": 0.0027,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flare_ignite_01",
+   "params": {
+    "text": "a road flare struck and ignited: a rough scrape, a pop, then an intense fizzing hiss No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flare_ignite_01_f6d37b15d0a1.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flare_ignite_01_r2",
+   "params": {
+    "text": "a road flare struck and ignited: a rough scrape, a pop, then an intense fizzing hiss No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flare_ignite_01_r2_3b7ba7f6d0bf.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flare_burn_loop",
+   "params": {
+    "text": "a road flare burning steadily on the floor: constant crackling fizz and sputter, no music",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s07_flare_burn_loop_95e0388fa5ac.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flare_land_01",
+   "params": {
+    "text": "a lit road flare tossed onto damp carpet: a soft thump, a short roll, fizzing No music.",
+    "duration_seconds": 1.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flare_land_01_3c7e5589476e.pcm",
+   "format": "pcm_48000",
+   "credits": 5.0,
+   "est_usd": 0.0015,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flare_die_01",
+   "params": {
+    "text": "a road flare sputtering out: the fizz chokes, pops twice and stops No music.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flare_die_01_d3ef2860d175.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_stair_door_open",
+   "params": {
+    "text": "a heavy steel fire door: push bar clunk, the door swings open with a low creak, echo of a deep concrete stairwell No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_stair_door_open_b7c29e87111d.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_stair_descend_loop",
+   "params": {
+    "text": "footsteps walking steadily down concrete stairs in a huge echoing stairwell, damp shoes, a steady pace, no music",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s07_stair_descend_loop_fe4285ac571c.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_stair_arrive",
+   "params": {
+    "text": "a heavy steel door at the bottom of a stairwell closing with a deep boom and long echo No music.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_stair_arrive_030caba72e60.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_stair_draft_loop",
+   "params": {
+    "text": "cold air moaning up a very deep concrete stairwell, a low hollow whistle, distant and steady No music.",
+    "duration_seconds": 10.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s07_stair_draft_loop_ae7c5c163878.pcm",
+   "format": "pcm_48000",
+   "credits": 55.0,
+   "est_usd": 0.0165,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_lift_start",
+   "params": {
+    "text": "an old industrial freight elevator: the cage gate slammed shut with a rattle, a motor starting with a heavy clunk, then a long mechanical hum as it moves No music.",
+    "duration_seconds": 6.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_lift_start_91bdbfa0a02e.pcm",
+   "format": "pcm_48000",
+   "credits": 33.0,
+   "est_usd": 0.0099,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_lift_start_r2",
+   "params": {
+    "text": "an old industrial freight elevator: the cage gate slammed shut with a rattle, a motor starting with a heavy clunk, then a long mechanical hum as it moves No music.",
+    "duration_seconds": 6.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_lift_start_r2_aa3f3846c62a.pcm",
+   "format": "pcm_48000",
+   "credits": 33.0,
+   "est_usd": 0.0099,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_lift_arrive",
+   "params": {
+    "text": "an old freight elevator stopping with a heavy clunk and its metal cage gate dragged open with a rattle No music.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_lift_arrive_75baea3b1fe7.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_lift_arrive_r2",
+   "params": {
+    "text": "an old freight elevator stopping with a heavy clunk and its metal cage gate dragged open with a rattle No music.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_lift_arrive_r2_2f49fd778631.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_locker_open",
+   "params": {
+    "text": "a dented metal storage locker door opened, rattling hinges No music.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_locker_open_0ffd9dad7805.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_kit_buy",
+   "params": {
+    "text": "a heavy rubber stamp slammed onto paper, then a plastic cassette tape dropped into a plastic crate No music.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_kit_buy_fc8a1e3b6c3a.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_appraise_tick",
+   "params": {
+    "text": "a VCR tape counter clicking and whirring quickly, then stopping No music.",
+    "duration_seconds": 1.2,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_appraise_tick_78c707043a4f.pcm",
+   "format": "pcm_48000",
+   "credits": 7.0,
+   "est_usd": 0.0021,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_occ_flashed_01",
+   "params": {
+    "text": "a large unseen creature recoiling: a dry rasping hiss tangled with violently crumpling wet paper, cut off sharply, no voice, no words No music.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_occ_flashed_01_82a48a09e56a.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_occ_flashed_02",
+   "params": {
+    "text": "a large unseen creature recoiling: a dry rasping hiss tangled with violently crumpling wet paper, cut off sharply, no voice, no words No music. Slight variation.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_occ_flashed_02_702e77d52a46.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_radio_01",
+   "params": {
+    "text": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Urgent. No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_radio_01_227e299e5482.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_radio_01_r2",
+   "params": {
+    "text": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Urgent. No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_radio_01_r2_f854f8c6fd3a.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_radio_02",
+   "params": {
+    "text": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Calm. No music. Slight variation.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_radio_02_90eb4f0c1871.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_radio_02_r2",
+   "params": {
+    "text": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Calm. No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.65,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_radio_02_r2_dd14bdbc0500.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_radio_03",
+   "params": {
+    "text": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Distant and faint. No music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_radio_03_40ec16a2f178.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_shout_muffled_01",
+   "params": {
+    "text": "a man shouting a warning through a rubber respirator mask, muffled and unintelligible, in a large echoing office hall No music.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_shout_muffled_01_4a8c15cac02a.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_shout_muffled_02",
+   "params": {
+    "text": "a man shouting a warning through a rubber respirator mask, muffled and unintelligible, in a large echoing office hall. Shorter, more panicked. No music. Slight variation.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_shout_muffled_02_53cf20e5a5b0.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_shout_muffled_02_r2",
+   "params": {
+    "text": "a man shouting a warning through a rubber respirator mask, muffled and unintelligible, in a large echoing office hall. Shorter, more panicked. No music.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.65,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_shout_muffled_02_r2_1ec58fc29c83.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_scream_drag_01",
+   "params": {
+    "text": "a man in a respirator mask screaming muffled while being dragged away across carpet, the scream fading into the distance, frantic scuffling No music.",
+    "duration_seconds": 4.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_scream_drag_01_cbaf00a761bb.pcm",
+   "format": "pcm_48000",
+   "credits": 22.0,
+   "est_usd": 0.0066,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07_flare_gun_pop",
+   "params": {
+    "text": "a flare pistol fired in a long corridor: a hollow pop and whoosh, then a fizzing flare No music.",
+    "duration_seconds": 2.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07_flare_gun_pop_dac03559eb3a.pcm",
+   "format": "pcm_48000",
+   "credits": 11.0,
+   "est_usd": 0.0033,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  }
+ ],
+ "failed": [
+  {
+   "name": "flare_ignite_01",
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 2.48,
+    "clip_samples": 88,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  },
+  {
+   "name": "lift_start",
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 6.0,
+    "clip_samples": 227,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  },
+  {
+   "name": "lift_arrive",
+   "checks": {
+    "raw_peak_dbfs": -0.0,
+    "duration_s": 3.0,
+    "clip_samples": 3,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  },
+  {
+   "name": "radio_01",
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 2.48,
+    "clip_samples": 317,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  },
+  {
+   "name": "shout_muffled_02",
+   "checks": {
+    "raw_peak_dbfs": -0.0,
+    "duration_s": 2.0,
+    "clip_samples": 9,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  }
+ ],
+ "cost": {
+  "paid_calls": 31,
+  "est_total_usd": 0.1554,
+  "credits": 518.0
+ }
+}

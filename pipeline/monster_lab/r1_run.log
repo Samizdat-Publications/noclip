@@ -1,0 +1,11 @@
+model gemini-3-pro-image
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+A ok
+B ok
+C ok
+D ok
+E ok
+F ok
+G ok
+H ok
+key {'option_1': 'B', 'option_2': 'D', 'option_3': 'E', 'option_4': 'A', 'option_5': 'F', 'option_6': 'G', 'option_7': 'H', 'option_8': 'C', 'option_9': 'I'}

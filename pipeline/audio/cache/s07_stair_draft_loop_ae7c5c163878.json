@@ -1,0 +1,17 @@
+{
+ "tag": "s07_stair_draft_loop",
+ "params": {
+  "text": "cold air moaning up a very deep concrete stairwell, a low hollow whistle, distant and steady No music.",
+  "duration_seconds": 10.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": true
+ },
+ "file": "s07_stair_draft_loop_ae7c5c163878.pcm",
+ "format": "pcm_48000",
+ "credits": 55.0,
+ "est_usd": 0.0165,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

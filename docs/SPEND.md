@@ -86,3 +86,18 @@ Session 05 total: about $0.36 of Gemini (four video critiques 021 to 024); no im
 | 2026-10-03 | S06 | Gemini (gemini-3.1-pro-preview) | video critic -> 029_gemini.md | 1 | $0.10 (27640 in / 3658 out tokens) |
 
 Session 06 total: about $0.91 in dollars (Gemini about $0.60: one concept image and five video critiques; ElevenLabs about $0.31 for 29 sounds) plus 62 Meshy credits (the Halden technician model, rig and nine clips; NOCLIP has used 154 of Stewart's 1,500-credit budget). Well under the $40 cap.
+
+## Session 07
+| Date | Session | Service | Purpose | Calls | Est. cost |
+|---|---|---|---|---|---|
+| 2026-10-03 | S07 | Gemini (gemini-3-pro-image) | Monster Lab round 1 concepts (concepts_r1.py) | 8 | ~$1.07 |
+| 2026-10-03 | S07 | Gemini (gemini-3.1-pro-preview) | monster panel -> monster_r1_gemini.md | 1 | $0.05 (10404 in / 2658 out tokens) |
+| 2026-10-03 | S07 | ElevenLabs (eleven_text_to_sound_v2) | Descent and Halden sounds (build_s07.py) | 31 | ~$0.16 (518 credits) |
+| 2026-10-03 | S07 | Gemini (gemini-3-pro-image) | Monster Lab round 2 concepts (concepts_r2.py) | 9 | ~$1.21 |
+| 2026-10-03 | S07 | Gemini (gemini-3.1-pro-preview) | monster panel -> monster_r2_gemini.md | 1 | $0.05 (9339 in / 2448 out tokens) |
+| 2026-10-03 | S07 | Gemini (gemini-3-pro-image, 2K, 1 reference image) | Crawler concept model sheet (build_crawler.py) | 1 | ~$0.13 |
+| 2026-10-03 | S07 | Gemini (gemini-3-pro-image, 2K, 1 reference image) | Crawler concept model sheet (build_crawler.py) | 1 | ~$0.13 |
+| 2026-10-03 | S07 | Meshy (meshy-7.1 image-to-3D) | Crawler model, 30k tris, 2k PBR (build_crawler.py) | 1 | 30 credits |
+| 2026-10-03 | S07 | Meshy (rigging) | Crawler rig, 1.9 m | 1 | 5 credits |
+| 2026-10-03 | S07 | Meshy (animations, 9 action_ids in one task) | Crawler clips: crawl_slow crawl_fast crawl_idle look lunge listen crouch_walk turn grab; balance 1230 to 1136 | 1 | 27 credits |
+| 2026-10-03 | S07 | ElevenLabs (eleven_text_to_sound_v2) | Crawler creature sounds (build_s07_crawler.py) | 28 | ~$0.08 (251 credits) |

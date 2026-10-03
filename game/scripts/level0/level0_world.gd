@@ -48,12 +48,20 @@ var portal_jumps := 0
 var _last_eye := Vector3.ZERO
 var _have_eye := false
 var build_log: Array = []     # [frame, coord, step, msec] for profiling
+# The Descent (D050): which depth this is, its way down, the Landing (or lift cage) where you wake,
+# the flares burning, and the run director that owns the loop (set by main).
+var depth := 1
+var stairwell: Stairwell
+var landing: Landing
+var flares: Array = []
+var run: RunDirector
 
 
 func build(p_seed: int) -> void:
 	super.build(p_seed)
 	space_id = &"level0"
-	gen = Level0Gen.new(p_seed, float(Game.opts.get("fidelity", "0.9")))
+	depth = Game.depth
+	_make_gen(p_seed)
 	# 320 tiles = 192 m: wider than everything that is ever loaded at once, so no two loaded panels
 	# share a texel.
 	field = FixtureField.new(Vector2.ZERO, Vector2(192.0, 192.0), 0.6)
@@ -100,6 +108,118 @@ func build(p_seed: int) -> void:
 		_build_now(c)
 	_finish_rooms()
 	_player = get_spawn_transform().origin
+	_make_landing()
+
+
+## The generator for this depth: its kept layout seed, its fidelity, and where its stairwell is.
+func _make_gen(p_seed: int) -> void:
+	var row := Depths.get_row(depth)
+	var lseed := p_seed
+	if not Game.opts.has("no_descent"):
+		lseed = Game.progress.depth_seed(depth) if depth > 1 or not Game.autoplay else p_seed
+	gen = Level0Gen.new(lseed, float(Game.opts.get("fidelity", str(row.get("fidelity", 0.9)))))
+	if Game.opts.has("wrong"):
+		gen.forced_wrong = Array(String(Game.opts["wrong"]).split(","))
+	if not Game.opts.has("no_descent"):
+		gen.pick_stair(int(Game.opts.get("stair_ring", str(row.get("ring", 2)))))
+		if Game.opts.has("log-run") or Game.opts.has("log-hunt"):
+			print("[run] depth %d seed %d stairwell in chunk %s" % [depth, lseed, gen.stair_chunk])
+
+
+## The depth's own paper, light and air written into a chunk's layout before it is built.
+func _depthify(L: Dictionary) -> void:
+	if depth <= 1:
+		return
+	var row := Depths.get_row(depth)
+	if row.has("pal") and not L.has("palette"):
+		L["palette"] = row["pal"]
+	if row.has("tube"):
+		var t: Array = row["tube"]
+		L["tint_zones"] = [[0.0, 0.0, CHUNK, CHUNK, t[0], t[1], t[2]]] + Array(L.get("tint_zones", []))
+	L["light_gain"] = float(L.get("light_gain", 1.0)) * float(row.get("gain", 1.0))
+
+
+func _apply_depth_air() -> void:
+	var we := get_tree().root.find_child("WorldEnvironment", true, false) as WorldEnvironment if is_inside_tree() else null
+	if we == null or we.environment == null:
+		return
+	var row := Depths.get_row(depth)
+	var fc: Array = row.get("fog", [0.95, 0.92, 0.82])
+	we.environment.volumetric_fog_albedo = Color(fc[0], fc[1], fc[2])
+
+
+func in_flare(p: Vector3) -> bool:
+	for fl in flares:
+		if is_instance_valid(fl) and (fl as Flare).guards(p):
+			return true
+	return false
+
+
+## Where you wake on this depth: the Landing on depth 1, a lift cage below it.
+func _make_landing() -> void:
+	if Game.opts.has("no_descent"):
+		return
+	if landing and is_instance_valid(landing):
+		landing.queue_free()
+	landing = Landing.new()
+	add_child(landing)
+	landing.setup(self, get_spawn_transform(), depth == 1)
+	if run:
+		run.landing = landing
+
+
+## Go to another depth: everything here is let go, the next depth is built round its start (behind a
+## black screen: the long stairs, the lift, the END OF TAPE card), the hunt starts over.
+func goto_depth(d: int) -> void:
+	var t0 := Time.get_ticks_msec()
+	depth = d
+	Game.depth = d
+	current_room = null
+	for k in rooms.keys():
+		(rooms[k] as PortalRoom).queue_free()
+	rooms.clear()
+	if _building_chunk:
+		_building_chunk.queue_free()
+		_building_chunk = null
+		_building_coord = Vector2i(1 << 20, 0)
+	_steps.clear()
+	_queue.clear()
+	for c in chunks.keys():
+		_unload(c)
+	_closets.clear()
+	for fl in flares:
+		if is_instance_valid(fl):
+			(fl as Node).queue_free()
+	flares.clear()
+	if stairwell:
+		stairwell.queue_free()
+		stairwell = null
+	for dd in _dropped:
+		(dd[0] as Node).queue_free()
+	_dropped.clear()
+	_loop_dir = 0
+	_loop_start = 1 << 20
+	_last_chunk = Vector2i(1 << 20, 0)
+	mats = Level0Look.make_materials(seed_offset)
+	_make_gen(Game.run_seed)
+	_apply_depth_air()
+	var start := Vector3(12, 0, 12)
+	_player = start
+	for c in _wanted(start):
+		_build_now(c)
+	_finish_rooms()
+	_player = get_spawn_transform().origin
+	_make_landing()
+	# your camcorder, where you were last caught, if it was here
+	var dth: Dictionary = Game.progress.deaths
+	if int(dth.get("depth", 0)) == d and dth.has("pos"):
+		var dp: Array = dth["pos"]
+		_drop_camcorder(Vector3(dp[0], dp[1], dp[2]))
+	hunter.reset_after_death()
+	hunter.configure(d)
+	hunter.pins = 0
+	if Game.opts.has("log-run") or Game.opts.has("log-hunt"):
+		print("[run] t=%.1f built depth %d in %d ms" % [Game.clock, d, Time.get_ticks_msec() - t0])
 
 
 # ------------------------------------------------------------------ chunk bookkeeping
@@ -152,6 +272,7 @@ func _salt(c: Vector2i, L: Dictionary) -> String:
 func _build_now(c: Vector2i) -> void:
 	var ch := _new_chunk(c)
 	var L := gen.generate(c.x, c.y)
+	_depthify(L)
 	ch.build(L, _salt(c, L), mats, seed_offset)
 	_finish(c, ch)
 
@@ -161,6 +282,15 @@ func _finish(c: Vector2i, ch: Level0Chunk) -> void:
 	if watchers:
 		watchers.add_chunk(ch)
 	for cl in ch.L.get("closets", []):
+		if cl.get("stair", false):
+			# the way down, not a hall (D050)
+			if stairwell == null:
+				stairwell = Stairwell.new()
+				add_child(stairwell)
+				stairwell.setup(ch.position, cl)
+				if Game.opts.has("log-run"):
+					print("[run] t=%.1f stairwell built at %s (door %s, out %s, hole %s)" % [Game.clock, c, stairwell.door_world, stairwell.n, stairwell.hole])
+			continue
 		_closets["%d:%d" % [c.x, c.y]] = [c, cl]
 	for fx in ch.fixtures:
 		director.fixtures.append(fx)
@@ -234,6 +364,9 @@ func _unload(c: Vector2i) -> void:
 		(rooms[key] as PortalRoom).queue_free()
 		rooms.erase(key)
 	_closets.erase(key)
+	if c == gen.stair_chunk and stairwell:
+		stairwell.queue_free()
+		stairwell = null
 	var ch: Level0Chunk = chunks[c]
 	if watchers:
 		watchers.remove_chunk(ch)
@@ -311,6 +444,7 @@ func _process(delta: float) -> void:
 			_building_coord = c
 			_building_chunk = _new_chunk(c)
 			var L := gen.generate(c.x, c.y)
+			_depthify(L)
 			_steps = _building_chunk.begin_build(L, _salt(c, L), mats, seed_offset)
 		else:
 			var t0 := Time.get_ticks_usec()
@@ -395,6 +529,9 @@ func get_interest_points() -> Array:
 					e["closet"] = (it["closet"] as Vector3) + ch.position
 					e["n"] = it["n"]
 				out.append(e)
+	if stairwell and Vector2(stairwell.door_world.x - _player.x, stairwell.door_world.z - _player.z).length() < 40.0:
+		var look := stairwell.door_world + Vector3(stairwell.n.x, 0, stairwell.n.y) * 2.2
+		out.append({"name": "stairwell_d%d" % depth, "pos": look, "closet": stairwell.door_world, "n": stairwell.n, "stair": true})
 	return out
 
 
@@ -699,6 +836,8 @@ func _on_caught() -> void:
 	_death_pos = player_ref.global_position
 	if Game.opts.has("log-hunt"):
 		print("[hunt] t=%.1f the tape ends (death %d) at %s" % [Game.clock, deaths, _death_pos])
+	if run and not Game.opts.has("no_descent"):
+		run.on_caught()     # Halden's appraisal goes on the END OF TAPE card (D050)
 	if replay:
 		# The rebuild round the start happens while the END OF TAPE card is up (its loading moment
 		# is a long frame; Gemini 028 saw it as a hitch).
@@ -710,6 +849,9 @@ func _on_caught() -> void:
 
 ## You wake at the start of the level. Your camcorder stays where it got you, its light blinking.
 func after_death() -> void:
+	if run and not Game.opts.has("no_descent"):
+		_after_death_descent()
+		return
 	_drop_camcorder(_death_pos)
 	var orig: PlayerInput = hunter.saved_input
 	var sp := get_spawn_transform()
@@ -722,6 +864,25 @@ func after_death() -> void:
 	catalogue.new_tape()
 	if Game.opts.has("found_test") and replay:
 		get_tree().create_timer(3.0).timeout.connect(replay.play_found)   # builder check of the found tape
+	Game.fear = 0.0
+	Game.drift = 0.0
+
+
+## The Descent (D050): Halden drags you back up to the Landing. Your camcorder stays where it got you,
+## on that depth, for the next time you are there.
+func _after_death_descent() -> void:
+	Game.progress.deaths = {"depth": depth, "pos": [_death_pos.x, _death_pos.y, _death_pos.z]}
+	Game.progress.save()
+	var orig: PlayerInput = hunter.saved_input
+	goto_depth(1)
+	player_ref.spawn(get_spawn_transform())
+	player_ref.input = orig
+	if orig is AutoplayBot:
+		(orig as AutoplayBot).reset(player_ref)
+	catalogue.new_tape()
+	run.new_run(1)
+	if Game.opts.has("found_test") and replay:
+		get_tree().create_timer(3.0).timeout.connect(replay.play_found)
 	Game.fear = 0.0
 	Game.drift = 0.0
 
@@ -1069,6 +1230,10 @@ func room_anchor(key: String) -> Array:
 ## A focus shot placed inside a storeroom's hall ({"room": key, "local": [x, z], "face": [x, z]}
 ## in hall-local meters) turned into a world position, height and yaw, once the hall is built.
 func resolve_focus(f: Dictionary) -> Dictionary:
+	if hunter:
+		hunter.stage_req = f.get("stage", {})
+		if hunter.stage_req.is_empty() and hunter.state == OccupantHunter.S.ABSENT:
+			hunter.rig.visible = false
 	# Watcher shots (S05): open the nearest high door and look up at it, or put a figure at the
 	# edge of the frame once the camera is in place.
 	if String(f.get("watch", "")) == "door":

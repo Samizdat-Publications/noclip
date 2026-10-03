@@ -1,0 +1,11 @@
+{
+ "Crawl_and_Look_Back": "crawl_slow",
+ "Crawl_Backward": "crawl_fast",
+ "push_up": "crawl_idle",
+ "CrouchLookAroundBow": "look",
+ "Run_and_Leap": "lunge",
+ "Crouch_and_Step_Back": "listen",
+ "Cautious_Crouch_Walk_Forward": "crouch_walk",
+ "Idle_Turn_Left": "turn",
+ "Prone_Reach_Help": "grab"
+}

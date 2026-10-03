@@ -185,10 +185,9 @@ func _die_sound(delay: float) -> void:
 	p.max_distance = 22.0
 	p.position = Vector3(0, ceiling_h - 0.05, 0)
 	add_child(p)
-	get_tree().create_timer(delay + 0.05).timeout.connect(func() -> void:
-		if is_instance_valid(p):
-			p.play()
-			p.finished.connect(p.queue_free))
+	# Bound to the player itself, so a fixture freed in the meantime (a new depth) leaves no dangling call.
+	p.finished.connect(p.queue_free)
+	get_tree().create_timer(delay + 0.05).timeout.connect(p.play.bind(0.0))
 
 
 ## Scripted event: the tube struggles back on, then returns to its normal behavior.

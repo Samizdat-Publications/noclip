@@ -1,0 +1,17 @@
+{
+ "tag": "s07c_crw_breath_01",
+ "params": {
+  "text": "very slow deep breathing through the nose like someone asleep, huge chest, close and intimate, faint wet whistle No roar, no growl, no voice, no words, no music.",
+  "duration_seconds": 3.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07c_crw_breath_01_2effd08e6d4c.pcm",
+ "format": "pcm_48000",
+ "credits": 16.0,
+ "est_usd": 0.0048,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

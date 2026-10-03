@@ -33,6 +33,8 @@ var pitch := 0.0
 var hide_layers := 1 << 12
 const VIEW_LAYER := 1 << 14
 var base_fov := 70.0   # 78 stretched the walls at the screen edges (critique 006, L024)
+var quiet := 1.0              # overshoes (Kit, D050): how far your steps carry, as a share
+var stamina_drain := 0.11     # overshoes: sprint stamina used per second
 
 var _eye := EYE
 var _phase := 0.0
@@ -234,7 +236,7 @@ func _physics_process(delta: float) -> void:
 	elif input.sprint and _stamina > 0.1 and input.move.y > 0.3:
 		want = SPRINT
 	_sprinting = want == SPRINT
-	_stamina = clampf(_stamina + (-0.11 if _sprinting else 0.07) * delta, 0.0, 1.0)
+	_stamina = clampf(_stamina + (-stamina_drain if _sprinting else 0.07) * delta, 0.0, 1.0)
 	# Ladders (S04): walk into one facing it and you climb; forward goes up (down if you look
 	# down), back goes down; at the top, keep pushing to step off onto the ledge.
 	var lad: Dictionary = space.ladder_at(global_position) if space and space.has_method("ladder_at") else {}
@@ -360,7 +362,7 @@ func is_low() -> bool:
 func _footstep() -> void:
 	_kick = 0.008 if _sprinting else 0.004
 	var wet := space.floor_wetness(global_position) if space else 0.0
-	stepped.emit(noise_radius() + (2.5 if wet > 0.3 else 0.0))
+	stepped.emit((noise_radius() + (2.5 if wet > 0.3 else 0.0)) * quiet)
 	if _step_player == null:
 		return
 	# The carpet never dries (critiques 006 to 008: steps sounded like shoes on dry concrete).

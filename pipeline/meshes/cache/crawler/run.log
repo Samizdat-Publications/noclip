@@ -1,0 +1,32 @@
+image-to-3d 01a1035d IN_PROGRESS 99
+image-to-3d 01a1035d SUCCEEDED 100
+rigging 01a10360 IN_PROGRESS 0
+rigging 01a10360 IN_PROGRESS 31
+rigging 01a10360 SUCCEEDED 100
+animations 01a10360 IN_PROGRESS 1
+animations 01a10360 IN_PROGRESS 72
+animations 01a10360 IN_PROGRESS 80
+animations 01a10360 IN_PROGRESS 82
+animations 01a10360 IN_PROGRESS 85
+animations 01a10360 SUCCEEDED 100
+mes": [0.0, 165.60000610351562], "fps": 24, "seconds": 6.9, "hips_travel_m": [0.034, -3.206, 0.036], "hips_end_z_m": 0.614}, "crawl_fast": {"action": "Crawl_Backward", "frames": [0.0, 23.19999885559082], "fps": 24, "seconds": 0.97, "hips_travel_m": [-0.005, 0.342, 0.001], "hips_end_z_m": 0.356}, "crawl_idle": {"action": "push_up", "frames": [0.0, 36.0], "fps": 24, "seconds": 1.5, "hips_travel_m": [-0.001, -0.0, -0.001], "hips_end_z_m": 0.27}, "look": {"action": "CrouchLookAroundBow", "frames": [0.0, 140.0], "fps": 24, "seconds": 5.83, "hips_travel_m": [-0.0, -0.0, -0.0], "hips_end_z_m": 0.591}, "lunge": {"action": "Run_and_Leap", "frames": [0.0, 64.0], "fps": 24, "seconds": 2.67, "hips_travel_m": [0.0, -3.61, 0.0], "hips_end_z_m": 1.014}, "listen": {"action": "Crouch_and_Step_Back", "frames": [0.0, 64.0], "fps": 24, "seconds": 2.67, "hips_travel_m": [-0.0, 1.914, -0.0], "hips_end_z_m": 1.019}, "crouch_walk": {"action": "Cautious_Crouch_Walk_Forward", "frames": [0.0, 27.200000762939453], "fps": 24, "seconds": 1.13, "hips_travel_m": [0.001, -1.623, 0.001], "hips_end_z_m": 0.894}, "turn": {"action": "Idle_Turn_Left", "frames": [0.0, 22.399999618530273], "fps": 24, "seconds": 0.93, "hips_travel_m": [0.054, 0.055, -0.001], "hips_end_z_m": 1.058}, "grab": {"action": "Prone_Reach_Help", "frames": [0.0, 441.5999755859375], "fps": 24, "seconds": 18.4, "hips_travel_m": [-0.0, -0.0, -0.0], "hips_end_z_m": 0.232}}
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit
+ 
+balance 1230 -> 1136
+O: glTF import finished in 0.02s
+00:16.015  render           | Saved: 'C:\Users\stewa\ClaudeProjects\Noclip\pipeline\meshes\cache\crawler\preview\crouch_walk.png'
+16:08:37 | INFO: Data are loaded, start creating Blender stuff
+16:08:37 | INFO: glTF import finished in 0.01s
+00:16.203  render           | Saved: 'C:\Users\stewa\ClaudeProjects\Noclip\pipeline\meshes\cache\crawler\preview\turn.png'
+16:08:38 | INFO: Data are loaded, start creating Blender stuff
+16:08:38 | INFO: glTF import finished in 0.06s
+00:16.594  render           | Saved: 'C:\Users\stewa\ClaudeProjects\Noclip\pipeline\meshes\cache\crawler\preview\grab.png'
+PREVIEW {"crawl_slow": {"bone_min_z": -41.73, "bone_max_z": 26.4, "x_span": 0.86, "y_span": 0.35}, "crawl_fast": {"bone_min_z": -24.23, "bone_max_z": 18.68, "x_span": 0.75, "y_span": 1.87}, "crawl_idle": {"bone_min_z": -29.16, "bone_max_z": 9.45, "x_span": 0.59, "y_span": 1.67}, "look": {"bone_min_z": -39.76, "bone_max_z": 18.46, "x_span": 0.55, "y_span": 1.16}, "lunge": {"bone_min_z": -38.99, "bone_max_z": 24.66, "x_span": 1.16, "y_span": 0.71}, "listen": {"bone_min_z": -37.69, "bone_max_z": 23.14, "x_span": 0.64, "y_span": 0.87}, "crouch_walk": {"bone_min_z": -31.93, "bone_max_z": 17.1, "x_span": 0.68, "y_span": 1.25}, "turn": {"bone_min_z": -40.33, "bone_max_z": 25.27, "x_span": 0.63, "y_span": 0.63}, "grab": {"bone_min_z": -14.27, "bone_max_z": 2.59, "x_span": 1.16, "y_span": 1.9}}
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+
+Blender quit
+ 
+progress: 0259_2026-10-03_1608_s07_s07-crawler-clips.jpg
+preview C:\Users\stewa\ClaudeProjects\Noclip\pipeline\meshes\cache\crawler\preview\clips_grid.png

@@ -3,6 +3,14 @@
 Highest-priority critic. Claude reads this at the start of every session and turns each note into a LEDGER item.
 Write anything here after you play: what felt good, what felt off, what scared you, what bored you. Newest at the top. No need to be technical.
 
+## 2026-10-03 (from chat at the start of session 7, not a play session; Claude copied it here)
+- Progression must be central: a roguelite where you die every round, often quickly, but the further you get the easier the next run (classically higher-tier gear, power-ups). Be creative, it does not have to be exactly that. Consider weapons to fend the monster off. The camera catalogue is good but too shallow: keep it secondary. High scores and collectibles are not the progression he wants. (LEDGER L201, D050)
+- The goal is not only escaping the monster but exploring the construct. Maybe like a dungeon crawler: an exit staircase down to the next zone or level, and that is part of the progression. (L202, D050)
+- Most important: get the monster right. Make several versions, run them by the critic early before they are fully rendered, let it pick, render it up, show it again, until it chooses the ones it likes most. Maybe different monsters on different levels or depths. (L203, D051)
+- Hazmat guys (Halden) should sometimes be seen battling the monster and losing and getting dragged away, and sometimes come to your aid. (L204)
+- Asked which engine (Godot 4.7) and whether plugins would help (answered: no plugin needed; close other GPU programs while Claude works unattended; his play notes matter most).
+- He plays tonight after this session.
+
 ## 2026-10-03 (from chat at the start of session 6, not a play session; Claude copied it here)
 - Colours: "fine with the colors as they are", the hall behind each storeroom door shifting colour "almost like different dimensions" from the yellow. Keep it. (closes the colour question, L138)
 - Meshy budget raised from 1,000 to 1,500 credits in total for NOCLIP.

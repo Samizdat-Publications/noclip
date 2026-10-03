@@ -383,6 +383,8 @@ func _play(delta: float) -> void:
 			_mat.set_shader_parameter("mode", 4)
 			if not _end.visible:
 				_card_text = "END OF TAPE   %s\n\n%s" % [_stamp(nf - 1), catalogue.tape_label() if catalogue else ""]
+				if Game.appraisal != "":
+					_card_text += "\n\n" + Game.appraisal   # what Halden paid for it (D050)
 				_end.visible = true
 				card_up.emit()
 			_end.text = _card_text

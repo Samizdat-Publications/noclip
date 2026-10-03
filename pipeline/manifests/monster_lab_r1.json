@@ -1,0 +1,95 @@
+{
+  "round": 1,
+  "concepts": {
+    "A": {
+      "name": "papered",
+      "bg": "corridor",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. About six metres down the corridor stands a very tall, emaciated figure, about 2.4 metres, stooped so its head nearly touches the ceiling tiles. Its whole body is skinned in the same damp mustard-yellow striped wallpaper as the walls: the paper is pasted onto a body of real volume, sagging and wet, split along seams, with peeling flaps that show grey backing paper and dark damp underneath. Its head is a smooth blank oval with no face; the wallpaper stripes run across it slightly out of alignment with the stripes on its neck. Its arms hang past its knees, hands too long. It stands still, facing the camera.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:23:48"
+    },
+    "B": {
+      "name": "cutout",
+      "bg": "corridor",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. On the left wall about five metres away there is a person-shaped hole torn right through the wall, with broken gypsum board edges, torn wallpaper and pink fibreglass insulation showing. The thing that came out of that hole stands in the corridor in front of it: a heavy, slab-like body made of the wall itself, a front surface of mustard wallpaper on thick gypsum, chalky white broken plaster edges, insulation spilling from its joints, uneven thick limbs, a flat squarish head with no features. Crumbs and dust of plaster lie on the carpet around its feet. It is turned slightly toward the camera, mid-step.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:24:19"
+    },
+    "C": {
+      "name": "lamp",
+      "bg": "pillars",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. Between two columns about eight metres away, one ceiling tile is missing and a very thin, pale, hairless, elongated creature hangs head-down out of the dark hole in the ceiling. Its arms are so long that its hands rest flat on the carpet. Its skin is thin and translucent like wax paper, and inside its narrow ribcage a fluorescent tube is lit, glowing cold white through the skin and throwing light and long shadows across the carpet and nearby columns. The ceiling panel right above it is dead, so its own body is the light source in that spot.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:24:47"
+    },
+    "D": {
+      "name": "chairs",
+      "bg": "pillars",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. Low in the hall about six metres away crouches a wide, animal-like creature built out of office chairs: black mesh chair backs overlapping like vertebrae along its spine, chrome gas-lift cylinders as long thin legs with too many joints, five-star chair bases with castor wheels as its feet, a seat cushion for a head turned toward the camera. It is about chest high and as long as a car, low and coiled like it is about to move. Real chrome reflections, scuffed black plastic, dusty fabric, solid shadows under it on the carpet.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:25:14"
+    },
+    "E": {
+      "name": "dub",
+      "bg": "corridor",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. About six metres down the corridor stands a figure in plain grey 1990s office clothes that is several overlapping solid copies of the same person offset in time, like a multiple-exposure photograph made physical: five bodies in slightly different stages of one step, overlapping and passing through each other, each fully lit and shaded, the front one sharpest and the ones behind it fainter and grainier. Their faces are smooth and smeared like a paused tape. The arms are slightly too long.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:26:06"
+    },
+    "F": {
+      "name": "carpet",
+      "bg": "pillars",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. About seven metres away the wet brown carpet has been torn up off the floor in a long strip, showing bare grey concrete, and the strip rises at its end into a tall standing shape, much too tall and thin for a person, draped in the heavy soaked carpet like a sheet over something, carpet hanging off it in folds, brown water dripping from its hem into a puddle. Something beneath pushes the carpet out at the shoulders and at the top, where it bends forward toward the camera.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:26:34"
+    },
+    "G": {
+      "name": "fixtures",
+      "bg": "corridor",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. Coming along the ceiling of the corridor about six metres away is a creature made of detached ceiling fixtures: two fluorescent light troffers and a tangle of aluminium ceiling-grid rails form its body, held up against the ceiling, and long hanging electrical cables and bent grid rails serve as its legs, reaching down to the carpet like a huge spider. Several ceiling tiles behind it are missing where it has torn itself out. One of its tubes is still lit and flickering, throwing hard cold light down onto the carpet; the other is dark.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:27:03"
+    },
+    "H": {
+      "name": "folded",
+      "bg": "corridor",
+      "prompt": "Edit this video-game screenshot. Keep the room, the camera, the framing, the lens, the light, the colours and the film grain exactly as they are, and add one creature into the scene as described below. The creature must look physically present: lit by the same overhead fluorescent panels as the room, with real shading, volume, surface detail and weight, casting soft shadows on the carpet and walls and touching the floor where it stands. Photoreal, like a frame from a high-end horror game, not a painting, not a cartoon, not a glitch effect, not a silhouette. No text, no logos, no gore, no blood. The creature is fully original and must not resemble any existing film, game or internet creature. About seven metres down the corridor something far too big for it is folded into the corridor: an enormous pale figure crouched with its shoulders pressed against the ceiling tiles and its head bent sideways under the ceiling, its long arms resting on the carpet, its back filling the width between the walls. Its skin is smooth, dry and grey-beige like old office plastic, with seams like a moulded mannequin that has grown. It has no eyes, only a faint moulded brow. Its fingers are long and splayed on the carpet.",
+      "model": "gemini-3-pro-image",
+      "calls": 1,
+      "cost_usd": 0.134,
+      "ok": true,
+      "when": "2026-10-03T14:27:34"
+    },
+    "I": {
+      "name": "control",
+      "bg": "control_current",
+      "prompt": null,
+      "calls": 0,
+      "cost_usd": 0.0,
+      "when": "2026-10-03T14:27:34",
+      "ok": true
+    }
+  },
+  "model": "gemini-3-pro-image"
+}

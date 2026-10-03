@@ -1,0 +1,17 @@
+{
+ "tag": "s07_stair_descend_loop",
+ "params": {
+  "text": "footsteps walking steadily down concrete stairs in a huge echoing stairwell, damp shoes, a steady pace, no music",
+  "duration_seconds": 10.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": true
+ },
+ "file": "s07_stair_descend_loop_fe4285ac571c.pcm",
+ "format": "pcm_48000",
+ "credits": 55.0,
+ "est_usd": 0.0165,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

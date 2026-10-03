@@ -1,0 +1,301 @@
+{
+  "concept": {
+    "prompt": "Full body character model sheet for 3D modelling: a single enormous, gaunt-but-heavy, hairless adult humanoid, front view, centered, standing upright in a relaxed A-pose (arms angled about 30 degrees down from horizontal, away from the body, legs slightly apart), feet flat, the whole figure in frame from the crown of the head to the soles of the feet with margin above and below, plain flat light grey seamless background, even neutral light, no harsh shadows and no cast shadow on the floor, straight-on camera at chest height, no text, no watermark. Realistic and photographic, not stylized, not a cartoon. The attached reference image shows the creature: keep ITS face, bald head and skin, but pose it standing for a model sheet. Skin: smooth, dry, grey-beige, slightly waxy, like an old shop mannequin that has grown, with faint fine moulding seams running down the upper arms and down both sides of the torso, and a faint seam round the neck and the wrists. Body: emaciated and tall like a thin person scaled up, ribs and collarbones faintly visible, NOT a muscular bodybuilder; a slightly too-long neck, long arms reaching to the knees, hands and fingers far too long with grey nails. Face: calm, slack, human-ish, eyes CLOSED (lids shut), mouth relaxed. Unclothed like a bare shop mannequin: completely smooth plastic-like groin with no genitals and no underwear, no nipples detail beyond a faint mould mark. No clothes, no hair, no eyebrows, no tattoos, no wounds, no gore, no armor, no props, no horns, no extra limbs; it is a plain eerie mannequin-like giant.",
+    "reference": "pipeline/monster_lab/r2/H1.png",
+    "attempts": [
+      {
+        "model": "gemini-3-pro-image",
+        "ok": true,
+        "when": "2026-10-03T15:56:50",
+        "cost_usd": 0.134
+      },
+      {
+        "model": "gemini-3-pro-image",
+        "ok": true,
+        "when": "2026-10-03T16:02:21",
+        "cost_usd": 0.134
+      }
+    ],
+    "model": "gemini-3-pro-image"
+  },
+  "balance_before": 1230,
+  "model": {
+    "request_body": {
+      "ai_model": "meshy-7.1",
+      "pose_mode": "a-pose",
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "should_remesh": true,
+      "topology": "triangle",
+      "target_polycount": 30000,
+      "origin_at": "bottom",
+      "target_formats": [
+        "glb",
+        "fbx"
+      ],
+      "image_enhancement": true,
+      "remove_lighting": true,
+      "moderation": false,
+      "image_url": "<concept_1.jpg, sent as 1030x1536 JPEG base64>"
+    },
+    "task_id": "01a1035d-6703-73bd-8247-16c43148baf4",
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "task_error": null,
+    "model_urls": {
+      "glb": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/model.glb",
+      "fbx": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/model.fbx"
+    },
+    "texture_urls": [
+      {
+        "base_color": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/texture_0.png",
+        "metallic": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/texture_0_metallic.png",
+        "roughness": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/texture_0_roughness.png",
+        "normal": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/texture_0_normal.png"
+      }
+    ],
+    "thumbnail_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a1035d-6703-73bd-8247-16c43148baf4/output/preview.png",
+    "files": {
+      "glb": "pipeline/meshes/cache/crawler/model/crawler.glb",
+      "fbx": "pipeline/meshes/cache/crawler/model/crawler.fbx",
+      "tex0_base_color": "pipeline/meshes/cache/crawler/model/crawler_tex0_base_color.png",
+      "tex0_metallic": "pipeline/meshes/cache/crawler/model/crawler_tex0_metallic.png",
+      "tex0_roughness": "pipeline/meshes/cache/crawler/model/crawler_tex0_roughness.png",
+      "tex0_normal": "pipeline/meshes/cache/crawler/model/crawler_tex0_normal.png"
+    }
+  },
+  "rig": {
+    "request_body": {
+      "input_task_id": "01a1035d-6703-73bd-8247-16c43148baf4",
+      "height_meters": 1.9
+    },
+    "task_id": "01a10360-15bc-70ff-9aca-e2ca0639d461",
+    "status": "SUCCEEDED",
+    "task_error": null,
+    "result": {
+      "rigged_character_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Character_output.fbx",
+      "rigged_character_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Character_output.glb",
+      "basic_animations": {
+        "walking_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Animation_Walking_withSkin.glb",
+        "walking_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Animation_Walking_withSkin.fbx",
+        "walking_armature_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Animation_Walking_withSkin_armature.glb",
+        "running_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Animation_Running_withSkin.glb",
+        "running_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Animation_Running_withSkin.fbx",
+        "running_armature_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-15bc-70ff-9aca-e2ca0639d461/output/Animation_Running_withSkin_armature.glb"
+      }
+    },
+    "consumed_credits": 5,
+    "files": {
+      "rigged_character_glb_url": "pipeline/meshes/cache/crawler/rig/rigged_character_glb_url.glb"
+    }
+  },
+  "anims": {
+    "chosen": {
+      "crawl_slow": {
+        "action_id": 340,
+        "why": "Crawl and Look Back: the only forward crawl in the library, on hands and knees with a glance back"
+      },
+      "crawl_fast": {
+        "action_id": 549,
+        "why": "Crawl Backward: the only other true crawl; it travels BACKWARD, so play it with a negative speed_scale (or reversed) for a faster forward scramble; no forward fast crawl exists"
+      },
+      "crawl_idle": {
+        "action_id": 329,
+        "why": "Push Up: hands and feet on the floor, body bobbing; nearest to a still, breathing all-fours hold"
+      },
+      "look": {
+        "action_id": 258,
+        "why": "CrouchLookAroundBow: crouched, head turning to scan (bow aim in the hands is an unavoidable extra)"
+      },
+      "lunge": {
+        "action_id": 402,
+        "why": "Run and Leap: a forward leap, the nearest to a pounce"
+      },
+      "listen": {
+        "action_id": 404,
+        "why": "Crouch and Step Back: a crouch; no head-to-the-floor clip exists in the library"
+      },
+      "crouch_walk": {
+        "action_id": 524,
+        "why": "Cautious Crouch Walk Forward: low sneaking walk, forward"
+      },
+      "turn": {
+        "action_id": 576,
+        "why": "Idle Turn Left: standing turn in place; no all-fours turn exists, so it is a standing turn"
+      },
+      "grab": {
+        "action_id": 372,
+        "why": "Prone Reach Help: lying prone on the floor and reaching an arm forward"
+      }
+    },
+    "request_body": {
+      "rig_task_id": "01a10360-15bc-70ff-9aca-e2ca0639d461",
+      "action_ids": [
+        340,
+        549,
+        329,
+        258,
+        402,
+        404,
+        524,
+        576,
+        372
+      ]
+    },
+    "task_id": "01a10360-7fc1-7153-8eae-74f7728d5a77",
+    "status": "SUCCEEDED",
+    "task_error": null,
+    "result": {
+      "animation_glb_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-7fc1-7153-8eae-74f7728d5a77/output/merged_animations.glb",
+      "animation_fbx_url": "https://assets.meshy.ai/google-oauth2%7C107148985755307501993/tasks/01a10360-7fc1-7153-8eae-74f7728d5a77/output/merged_animations.fbx",
+      "processed_usdz_url": "",
+      "processed_armature_fbx_url": "",
+      "processed_animation_fps_fbx_url": ""
+    },
+    "consumed_credits": 27,
+    "files": {
+      "glb": "pipeline/meshes/cache/crawler/anims/merged_animations.glb"
+    },
+    "clips": {
+      "crawl_slow": {
+        "action": "Crawl_and_Look_Back",
+        "frames": [
+          0.0,
+          165.60000610351562
+        ],
+        "fps": 24,
+        "seconds": 6.9,
+        "hips_travel_m": [
+          0.034,
+          -3.206,
+          0.036
+        ],
+        "hips_end_z_m": 0.614
+      },
+      "crawl_fast": {
+        "action": "Crawl_Backward",
+        "frames": [
+          0.0,
+          23.19999885559082
+        ],
+        "fps": 24,
+        "seconds": 0.97,
+        "hips_travel_m": [
+          -0.005,
+          0.342,
+          0.001
+        ],
+        "hips_end_z_m": 0.356
+      },
+      "crawl_idle": {
+        "action": "push_up",
+        "frames": [
+          0.0,
+          36.0
+        ],
+        "fps": 24,
+        "seconds": 1.5,
+        "hips_travel_m": [
+          -0.001,
+          -0.0,
+          -0.001
+        ],
+        "hips_end_z_m": 0.27
+      },
+      "look": {
+        "action": "CrouchLookAroundBow",
+        "frames": [
+          0.0,
+          140.0
+        ],
+        "fps": 24,
+        "seconds": 5.83,
+        "hips_travel_m": [
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        "hips_end_z_m": 0.591
+      },
+      "lunge": {
+        "action": "Run_and_Leap",
+        "frames": [
+          0.0,
+          64.0
+        ],
+        "fps": 24,
+        "seconds": 2.67,
+        "hips_travel_m": [
+          0.0,
+          -3.61,
+          0.0
+        ],
+        "hips_end_z_m": 1.014
+      },
+      "listen": {
+        "action": "Crouch_and_Step_Back",
+        "frames": [
+          0.0,
+          64.0
+        ],
+        "fps": 24,
+        "seconds": 2.67,
+        "hips_travel_m": [
+          -0.0,
+          1.914,
+          -0.0
+        ],
+        "hips_end_z_m": 1.019
+      },
+      "crouch_walk": {
+        "action": "Cautious_Crouch_Walk_Forward",
+        "frames": [
+          0.0,
+          27.200000762939453
+        ],
+        "fps": 24,
+        "seconds": 1.13,
+        "hips_travel_m": [
+          0.001,
+          -1.623,
+          0.001
+        ],
+        "hips_end_z_m": 0.894
+      },
+      "turn": {
+        "action": "Idle_Turn_Left",
+        "frames": [
+          0.0,
+          22.399999618530273
+        ],
+        "fps": 24,
+        "seconds": 0.93,
+        "hips_travel_m": [
+          0.054,
+          0.055,
+          -0.001
+        ],
+        "hips_end_z_m": 1.058
+      },
+      "grab": {
+        "action": "Prone_Reach_Help",
+        "frames": [
+          0.0,
+          441.5999755859375
+        ],
+        "fps": 24,
+        "seconds": 18.4,
+        "hips_travel_m": [
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        "hips_end_z_m": 0.232
+      }
+    }
+  },
+  "balance_after": 1136,
+  "credits_spent": 94,
+  "spend_logged": true
+}

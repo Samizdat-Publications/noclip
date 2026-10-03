@@ -1,0 +1,17 @@
+{
+ "tag": "s07c_crw_step_02",
+ "params": {
+  "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A slap then a thud. No roar, no growl, no voice, no words, no music. Slight variation.",
+  "duration_seconds": 0.7,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07c_crw_step_02_529c2e0c3f34.pcm",
+ "format": "pcm_48000",
+ "credits": 4.0,
+ "est_usd": 0.0012,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

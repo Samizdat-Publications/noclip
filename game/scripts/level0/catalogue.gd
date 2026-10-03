@@ -9,6 +9,7 @@ extends Node
 
 ## Every Level 0 entry: id -> label. Order is the shelf's order.
 const ENTRIES := {
+	"crawler": "THE ONE TOO BIG FOR THE HALLS",
 	"occupant": "THE ONE MADE OF WALLPAPER",
 	"high_door": "THE DOOR HIGH ON THE WALL",
 	"halden_body": "HALDEN TECHNICIAN, TAKEN",
@@ -124,7 +125,7 @@ func _targets() -> Array:
 	if space.tape and space.tape.figure and space.tape.figure.visible:
 		out.append(["occupant", space.tape.figure.global_position + Vector3(0, 1.5, 0), 30.0])
 	if space.hunter and space.hunter.active():
-		out.append(["occupant", space.hunter.global_position + Vector3(0, 1.4, 0), 25.0])
+		out.append(["crawler" if space.hunter.crawler else "occupant", space.hunter.global_position + Vector3(0, 1.2, 0), 25.0])
 	if space.watchers and space.watchers._door_state == 1 and not space.watchers._door.is_empty():
 		var fr: Transform3D = space.watchers._door["frame"]
 		out.append(["high_door", fr * Vector3(0, float(space.watchers._door["dh"]) * 0.6, 0.2), 25.0])

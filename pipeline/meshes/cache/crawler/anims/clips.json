@@ -1,0 +1,137 @@
+{
+ "crawl_slow": {
+  "action": "Crawl_and_Look_Back",
+  "frames": [
+   0.0,
+   165.60000610351562
+  ],
+  "fps": 24,
+  "seconds": 6.9,
+  "hips_travel_m": [
+   0.034,
+   -3.206,
+   0.036
+  ],
+  "hips_end_z_m": 0.614
+ },
+ "crawl_fast": {
+  "action": "Crawl_Backward",
+  "frames": [
+   0.0,
+   23.19999885559082
+  ],
+  "fps": 24,
+  "seconds": 0.97,
+  "hips_travel_m": [
+   -0.005,
+   0.342,
+   0.001
+  ],
+  "hips_end_z_m": 0.356
+ },
+ "crawl_idle": {
+  "action": "push_up",
+  "frames": [
+   0.0,
+   36.0
+  ],
+  "fps": 24,
+  "seconds": 1.5,
+  "hips_travel_m": [
+   -0.001,
+   -0.0,
+   -0.001
+  ],
+  "hips_end_z_m": 0.27
+ },
+ "look": {
+  "action": "CrouchLookAroundBow",
+  "frames": [
+   0.0,
+   140.0
+  ],
+  "fps": 24,
+  "seconds": 5.83,
+  "hips_travel_m": [
+   -0.0,
+   -0.0,
+   -0.0
+  ],
+  "hips_end_z_m": 0.591
+ },
+ "lunge": {
+  "action": "Run_and_Leap",
+  "frames": [
+   0.0,
+   64.0
+  ],
+  "fps": 24,
+  "seconds": 2.67,
+  "hips_travel_m": [
+   0.0,
+   -3.61,
+   0.0
+  ],
+  "hips_end_z_m": 1.014
+ },
+ "listen": {
+  "action": "Crouch_and_Step_Back",
+  "frames": [
+   0.0,
+   64.0
+  ],
+  "fps": 24,
+  "seconds": 2.67,
+  "hips_travel_m": [
+   -0.0,
+   1.914,
+   -0.0
+  ],
+  "hips_end_z_m": 1.019
+ },
+ "crouch_walk": {
+  "action": "Cautious_Crouch_Walk_Forward",
+  "frames": [
+   0.0,
+   27.200000762939453
+  ],
+  "fps": 24,
+  "seconds": 1.13,
+  "hips_travel_m": [
+   0.001,
+   -1.623,
+   0.001
+  ],
+  "hips_end_z_m": 0.894
+ },
+ "turn": {
+  "action": "Idle_Turn_Left",
+  "frames": [
+   0.0,
+   22.399999618530273
+  ],
+  "fps": 24,
+  "seconds": 0.93,
+  "hips_travel_m": [
+   0.054,
+   0.055,
+   -0.001
+  ],
+  "hips_end_z_m": 1.058
+ },
+ "grab": {
+  "action": "Prone_Reach_Help",
+  "frames": [
+   0.0,
+   441.5999755859375
+  ],
+  "fps": 24,
+  "seconds": 18.4,
+  "hips_travel_m": [
+   -0.0,
+   -0.0,
+   -0.0
+  ],
+  "hips_end_z_m": 0.232
+ }
+}

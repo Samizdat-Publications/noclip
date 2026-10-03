@@ -37,6 +37,28 @@ func _init(p_seed: int, p_fidelity: float = 0.9) -> void:
 	fidelity = p_fidelity
 
 
+## The way down (D050): one storeroom per depth is a stairwell instead of a hall, `ring` chunks out
+## from the start in a direction the seed picks. Its chunk is tested here (a layout is pure data), so
+## a chunk that cannot fit a storeroom is passed over for the next direction.
+var stair_chunk := Vector2i(1 << 20, 0)
+
+
+func pick_stair(ring: int) -> void:
+	var r := _rng("stair")
+	var a0 := r.randf() * TAU
+	for k in 24:
+		var a := a0 + k * TAU / 24.0
+		var c := Vector2i(roundi(cos(a) * ring), roundi(sin(a) * ring))
+		if c == Vector2i.ZERO or c == Vector2i(1, 0) or loop_index(c.x, c.y) >= 0:
+			continue
+		stair_chunk = c
+		var L := generate(c.x, c.y)
+		for cl in L["closets"]:
+			if cl.get("stair", false):
+				return
+	stair_chunk = Vector2i(1 << 20, 0)
+
+
 func _rng(salt: String) -> RandomNumberGenerator:
 	var r := RandomNumberGenerator.new()
 	r.seed = hash("%d:%s" % [world_seed, salt])
@@ -205,6 +227,7 @@ func generate(cx: int, cz: int) -> Dictionary:
 		"ladders": [],
 		"free_frames": [],
 		"floor_holes": [],
+		"stair_holes": [],
 	}
 	var spawn_chunk := cx == 0 and cz == 0
 	# --- boundary: build west and north, know east and south
@@ -829,6 +852,8 @@ func _pick_pocket_room(cx: int, cz: int, leaves: Array, spawn_chunk: bool) -> vo
 
 
 func closet_roll(cx: int, cz: int) -> bool:
+	if cx == stair_chunk.x and cz == stair_chunk.y:
+		return true
 	if cx == 1 and cz == 0:
 		return true
 	if (cx == 0 and cz == 0) or loop_index(cx, cz) >= 0:
@@ -1030,7 +1055,23 @@ func _closet(L: Dictionary, rr: Rect2, size: int = POCKET) -> Vector2:
 	L["doors"].append(door)
 	L["pocket_zones"].append([x0, z0, x1, z1])   # its own panels stay dark (nobody ever sees them)
 	var dc := Vector2((door[0] + door[2]) * 0.5, (door[1] + door[3]) * 0.5)
-	L["closets"].append({"door": dc, "n": n, "block": [x0, z0, x1, z1]})
+	var cl := {"door": dc, "n": n, "block": [x0, z0, x1, z1]}
+	if L["chunk"][0] == stair_chunk.x and L["chunk"][1] == stair_chunk.y and size >= POCKET:
+		# The stairwell: the far two thirds of the storeroom open onto stairs going down.
+		cl["stair"] = true
+		var inner := Rect2(x0 + 0.25, z0 + 0.25, ps - 0.5, ps - 0.5)
+		var hole := inner
+		if n.x < -0.5:
+			hole = Rect2(inner.position.x + 1.1, inner.position.y, inner.size.x - 1.1, inner.size.y)
+		elif n.x > 0.5:
+			hole = Rect2(inner.position.x, inner.position.y, inner.size.x - 1.1, inner.size.y)
+		elif n.y < -0.5:
+			hole = Rect2(inner.position.x, inner.position.y + 1.1, inner.size.x, inner.size.y - 1.1)
+		else:
+			hole = Rect2(inner.position.x, inner.position.y, inner.size.x, inner.size.y - 1.1)
+		cl["hole"] = [hole.position.x, hole.position.y, hole.end.x, hole.end.y]
+		L["stair_holes"].append(cl["hole"])
+	L["closets"].append(cl)
 	var look := dc + n * minf(2.6, room_in_front * 0.6)
 	L["interest"].append({"name": "closet_%d_%d" % [int(look.x * 10), int(look.y * 10)], "p": [look.x, look.y], "closet": [dc.x, dc.y], "n": [n.x, n.y]})
 	return look

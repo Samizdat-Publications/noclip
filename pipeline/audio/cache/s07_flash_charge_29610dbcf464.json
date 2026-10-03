@@ -1,0 +1,17 @@
+{
+ "tag": "s07_flash_charge",
+ "params": {
+  "text": "a 1990s camera flash unit recharging: a thin rising high-pitched electronic whine that ends in a soft click No music.",
+  "duration_seconds": 1.6,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_flash_charge_29610dbcf464.pcm",
+ "format": "pcm_48000",
+ "credits": 9.0,
+ "est_usd": 0.0027,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

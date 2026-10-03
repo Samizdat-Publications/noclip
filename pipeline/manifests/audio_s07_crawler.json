@@ -1,0 +1,954 @@
+{
+ "asset": "audio_s07_crawler",
+ "sample_rate": 48000,
+ "bit_depth": 16,
+ "channels": 1,
+ "elevenlabs": {
+  "model_id": "eleven_text_to_sound_v2",
+  "endpoint": "POST /v1/sound-generation"
+ },
+ "files": {
+  "crawler/crw_step_01.wav": {
+   "prompt": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A slap. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 0.68,
+   "target_duration_s": 0.7,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -1.38,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_step_01_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -28.8,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_step_02.wav": {
+   "prompt": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A slap then a thud. No roar, no growl, no voice, no words, no music. Slight variation.",
+   "duration_s": 0.68,
+   "target_duration_s": 0.7,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -1.55,
+   "prompt_influence": 0.55,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_step_02",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -18.4,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_step_03.wav": {
+   "prompt": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A knuckle drag. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 0.68,
+   "target_duration_s": 0.7,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -2.87,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_step_03",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -26.1,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_step_04.wav": {
+   "prompt": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Heavier. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 0.68,
+   "target_duration_s": 0.7,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -1.52,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_step_04_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -1.3,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_step_05.wav": {
+   "prompt": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Slower, wetter slap. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 0.68,
+   "target_duration_s": 0.7,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -3.2,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_step_05_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -46.3,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": false,
+    "ok_no_clip": true,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_step_06.wav": {
+   "prompt": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Heavy slap-thud, deeper. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 0.68,
+   "target_duration_s": 0.7,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -1.65,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_step_06_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -11.9,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_drag_loop.wav": {
+   "prompt": "slow continuous sound of bare skin dragging and squeaking along wallpapered walls and wet carpet, something huge crawling slowly, faint creaks of joints No roar, no growl, no voice, no words, no music.",
+   "duration_s": 6.0,
+   "target_duration_s": 6.0,
+   "loop": true,
+   "target_lufs": -26,
+   "final_lufs": -26.0,
+   "final_peak_dbfs": -10.19,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_drag_loop",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -12.1,
+    "duration_s": 6.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, 40 Hz HP, 0.4 s equal-power crossfade loop cut, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_breath_01.wav": {
+   "prompt": "very slow deep breathing through the nose like someone asleep, huge chest, close and intimate, faint wet whistle No roar, no growl, no voice, no words, no music.",
+   "duration_s": 3.0,
+   "target_duration_s": 3.0,
+   "loop": false,
+   "target_lufs": -26,
+   "final_lufs": -26.0,
+   "final_peak_dbfs": -11.57,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_breath_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -10.3,
+    "duration_s": 3.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_breath_02.wav": {
+   "prompt": "very slow deep breathing through the nose like someone asleep, huge chest, close and intimate, faint wet whistle No roar, no growl, no voice, no words, no music. Slight variation.",
+   "duration_s": 3.0,
+   "target_duration_s": 3.0,
+   "loop": false,
+   "target_lufs": -26,
+   "final_lufs": -26.0,
+   "final_peak_dbfs": -9.11,
+   "prompt_influence": 0.55,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_breath_02",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -3.0,
+    "duration_s": 3.0,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_notice_01.wav": {
+   "prompt": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.76,
+   "target_duration_s": 1.8,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -1.67,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_notice_01_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 1.76,
+    "clip_samples": 605,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_notice_02.wav": {
+   "prompt": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.76,
+   "target_duration_s": 1.8,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -1.44,
+   "prompt_influence": 0.65,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_notice_02_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 1.76,
+    "clip_samples": 393,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_tear_01.wav": {
+   "prompt": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.2,
+   "target_duration_s": 1.2,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -2.45,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_tear_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -11.0,
+    "duration_s": 1.2,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_tear_02.wav": {
+   "prompt": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. Mostly plaster crumbling. No roar, no growl, no voice, no words, no music. Slight variation.",
+   "duration_s": 1.2,
+   "target_duration_s": 1.2,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -3.07,
+   "prompt_influence": 0.55,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_tear_02",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -7.6,
+    "duration_s": 1.2,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_tear_03.wav": {
+   "prompt": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. Mostly wallpaper ripping. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.2,
+   "target_duration_s": 1.2,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -7.33,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_tear_03",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -1.2,
+    "duration_s": 1.2,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_tear_04.wav": {
+   "prompt": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. A heavy crack and crumble. No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.2,
+   "target_duration_s": 1.2,
+   "loop": false,
+   "target_lufs": -20,
+   "final_lufs": -20.0,
+   "final_peak_dbfs": -4.29,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_tear_04",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -0.9,
+    "duration_s": 1.2,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_flashed_01.wav": {
+   "prompt": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.48,
+   "target_duration_s": 1.5,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -2.86,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_flashed_01_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -4.9,
+    "duration_s": 1.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_flashed_02.wav": {
+   "prompt": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.48,
+   "target_duration_s": 1.5,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -3.82,
+   "prompt_influence": 0.65,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_flashed_02_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": -0.0,
+    "duration_s": 1.48,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_grab_01.wav": {
+   "prompt": "a huge hand clamping down hard on a person, fabric and body crushed, a heavy wet slap and a long slow exhale close to the microphone No roar, no growl, no voice, no words, no music.",
+   "duration_s": 2.48,
+   "target_duration_s": 2.5,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -1.49,
+   "prompt_influence": 0.6,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_grab_01_r2",
+   "attempts": 2,
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 2.48,
+    "clip_samples": 108,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  },
+  "crawler/crw_lunge_01.wav": {
+   "prompt": "a sudden heavy scrambling burst across wet carpet, palms slapping fast, a body sliding No roar, no growl, no voice, no words, no music.",
+   "duration_s": 1.2,
+   "target_duration_s": 1.2,
+   "loop": false,
+   "target_lufs": -18,
+   "final_lufs": -18.0,
+   "final_peak_dbfs": -1.65,
+   "prompt_influence": 0.5,
+   "model_id": "eleven_text_to_sound_v2",
+   "cache_tag": "s07c_crw_lunge_01",
+   "attempts": 1,
+   "checks": {
+    "raw_peak_dbfs": -16.3,
+    "duration_s": 1.2,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": true,
+    "ok": true
+   },
+   "method": "ElevenLabs take, trimmed to target, 3 ms/60 ms fades, loudness-normalised, peaks under -1 dBFS"
+  }
+ },
+ "paid_calls": [
+  {
+   "tag": "s07c_crw_step_01",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A slap. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_01_83794b4a13de.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_01_r2",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A slap. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_01_r2_414823360da1.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_02",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A slap then a thud. No roar, no growl, no voice, no words, no music. Slight variation.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_02_529c2e0c3f34.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_03",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. A knuckle drag. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_03_667cd9a2024a.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_04",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Heavier. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_04_3b4082cfb359.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_04_r2",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Heavier. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_04_r2_12f91291f751.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_05",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Slower, wetter slap. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_05_cec716637812.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_05_r2",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Slower, wetter slap. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_05_r2_27947476f030.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_06",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Heavy slap-thud, deeper. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_06_7c878752c725.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_step_06_r2",
+   "params": {
+    "text": "a single heavy bare palm slapping down flat on soaked carpet, then a dull knee thud, a huge person crawling, wet and deliberate, close. Heavy slap-thud, deeper. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_step_06_r2_867b4952b986.pcm",
+   "format": "pcm_48000",
+   "credits": 4.0,
+   "est_usd": 0.0012,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_drag_loop",
+   "params": {
+    "text": "slow continuous sound of bare skin dragging and squeaking along wallpapered walls and wet carpet, something huge crawling slowly, faint creaks of joints No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 8.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": true
+   },
+   "file": "s07c_crw_drag_loop_39ffb7032311.pcm",
+   "format": "pcm_48000",
+   "credits": 44.0,
+   "est_usd": 0.0132,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_breath_01",
+   "params": {
+    "text": "very slow deep breathing through the nose like someone asleep, huge chest, close and intimate, faint wet whistle No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_breath_01_2effd08e6d4c.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_breath_02",
+   "params": {
+    "text": "very slow deep breathing through the nose like someone asleep, huge chest, close and intimate, faint wet whistle No roar, no growl, no voice, no words, no music. Slight variation.",
+    "duration_seconds": 3.0,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_breath_02_9920d7f053bd.pcm",
+   "format": "pcm_48000",
+   "credits": 16.0,
+   "est_usd": 0.0048,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_notice_01",
+   "params": {
+    "text": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.8,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_notice_01_cdd43834288f.pcm",
+   "format": "pcm_48000",
+   "credits": 10.0,
+   "est_usd": 0.003,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_notice_01_r2",
+   "params": {
+    "text": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.8,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_notice_01_r2_55a5c40c3c02.pcm",
+   "format": "pcm_48000",
+   "credits": 10.0,
+   "est_usd": 0.003,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_notice_02",
+   "params": {
+    "text": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music. Slight variation.",
+    "duration_seconds": 1.8,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_notice_02_b3176e946dba.pcm",
+   "format": "pcm_48000",
+   "credits": 10.0,
+   "est_usd": 0.003,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_notice_02_r2",
+   "params": {
+    "text": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.8,
+    "prompt_influence": 0.65,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_notice_02_r2_fd02ba1a030b.pcm",
+   "format": "pcm_48000",
+   "credits": 10.0,
+   "est_usd": 0.003,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_tear_01",
+   "params": {
+    "text": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.2,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_tear_01_42a9bc6f8c6c.pcm",
+   "format": "pcm_48000",
+   "credits": 7.0,
+   "est_usd": 0.0021,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_tear_02",
+   "params": {
+    "text": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. Mostly plaster crumbling. No roar, no growl, no voice, no words, no music. Slight variation.",
+    "duration_seconds": 1.2,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_tear_02_3e58eae865fe.pcm",
+   "format": "pcm_48000",
+   "credits": 7.0,
+   "est_usd": 0.0021,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_tear_03",
+   "params": {
+    "text": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. Mostly wallpaper ripping. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.2,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_tear_03_e8cc23d68e8d.pcm",
+   "format": "pcm_48000",
+   "credits": 7.0,
+   "est_usd": 0.0021,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_tear_04",
+   "params": {
+    "text": "wallpaper and drywall plaster tearing and crumbling as something huge squeezes past, short. A heavy crack and crumble. No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.2,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_tear_04_c49f8e613606.pcm",
+   "format": "pcm_48000",
+   "credits": 7.0,
+   "est_usd": 0.0021,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_flashed_01",
+   "params": {
+    "text": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_flashed_01_c38172d02548.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_flashed_01_r2",
+   "params": {
+    "text": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_flashed_01_r2_9675e359557e.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_flashed_02",
+   "params": {
+    "text": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music. Slight variation.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.55,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_flashed_02_58b59454bd80.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_flashed_02_r2",
+   "params": {
+    "text": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.5,
+    "prompt_influence": 0.65,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_flashed_02_r2_6111676347a2.pcm",
+   "format": "pcm_48000",
+   "credits": 8.0,
+   "est_usd": 0.0024,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_grab_01",
+   "params": {
+    "text": "a huge hand clamping down hard on a person, fabric and body crushed, a heavy wet slap and a long slow exhale close to the microphone No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_grab_01_e3b7ec24c463.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_grab_01_r2",
+   "params": {
+    "text": "a huge hand clamping down hard on a person, fabric and body crushed, a heavy wet slap and a long slow exhale close to the microphone No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 2.5,
+    "prompt_influence": 0.6,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_grab_01_r2_31f7015c121a.pcm",
+   "format": "pcm_48000",
+   "credits": 14.0,
+   "est_usd": 0.0042,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  },
+  {
+   "tag": "s07c_crw_lunge_01",
+   "params": {
+    "text": "a sudden heavy scrambling burst across wet carpet, palms slapping fast, a body sliding No roar, no growl, no voice, no words, no music.",
+    "duration_seconds": 1.2,
+    "prompt_influence": 0.5,
+    "model_id": "eleven_text_to_sound_v2",
+    "loop": false
+   },
+   "file": "s07c_crw_lunge_01_4a19ae41654e.pcm",
+   "format": "pcm_48000",
+   "credits": 7.0,
+   "est_usd": 0.0021,
+   "http_attempts": 1,
+   "date": "2026-10-03"
+  }
+ ],
+ "failed": [
+  {
+   "name": "crw_step_05",
+   "checks": {
+    "raw_peak_dbfs": -46.3,
+    "duration_s": 0.68,
+    "clip_samples": 0,
+    "ok_duration": true,
+    "ok_not_silent": false,
+    "ok_no_clip": true,
+    "ok": false
+   }
+  },
+  {
+   "name": "crw_notice_01",
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 1.76,
+    "clip_samples": 605,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  },
+  {
+   "name": "crw_notice_02",
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 1.76,
+    "clip_samples": 393,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  },
+  {
+   "name": "crw_grab_01",
+   "checks": {
+    "raw_peak_dbfs": 0.0,
+    "duration_s": 2.48,
+    "clip_samples": 108,
+    "ok_duration": true,
+    "ok_not_silent": true,
+    "ok_no_clip": false,
+    "ok": false
+   }
+  }
+ ],
+ "cost": {
+  "paid_calls": 28,
+  "est_total_usd": 0.0753,
+  "credits": 251.0
+ }
+}

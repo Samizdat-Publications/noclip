@@ -38,6 +38,12 @@ var duck_target: float = 0.0
 ## A second pull on the world sound that the Occupant owns (the hum dies near it, S06).
 var duck_extra: float = 0.0
 
+## The Descent (D050): what carries between runs, the depth you are on, and the appraisal of the tape
+## that just ended (shown on the END OF TAPE card).
+var progress: Progress
+var depth := 1
+var appraisal := ""
+
 
 func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -60,6 +66,8 @@ func _enter_tree() -> void:
 	reduced_flicker = opts.has("reduced-flicker")
 	_setup_input()
 	_setup_audio_buses()
+	progress = Progress.new()
+	depth = int(opts.get("depth", "1"))
 	print("[NOCLIP] seed=%d preset=%s autoplay=%s capture=%s perf=%s" % [run_seed, preset, autoplay, capture_dir, perf_out])
 
 
@@ -102,6 +110,10 @@ func _setup_input() -> void:
 	_keys("interact", [KEY_E])
 	_keys("toggle_perf", [KEY_F3])
 	_keys("pause", [KEY_ESCAPE])
+	_keys("flash", [KEY_F])
+	_keys("flare", [KEY_G])
+	_keys("ui_up_kit", [KEY_W, KEY_UP])
+	_keys("ui_down_kit", [KEY_S, KEY_DOWN])
 	if not InputMap.has_action("camcorder"):
 		InputMap.add_action("camcorder")
 		var mb := InputEventMouseButton.new()

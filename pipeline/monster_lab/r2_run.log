@@ -1,0 +1,12 @@
+model gemini-3-pro-image
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+H1 error 'NoneType' object is not iterable
+H1 ok
+H2 ok
+C1 ok
+C2 ok
+G1 ok
+G2 ok
+E1 ok
+E2 ok
+key {'option_1': 'G1', 'option_2': 'E1', 'option_3': 'H1', 'option_4': 'C1', 'option_5': 'C2', 'option_6': 'E2', 'option_7': 'G2', 'option_8': 'H2'}

@@ -1,0 +1,8 @@
+[
+  {"pos": [3.0, 10.8], "yaw": 90, "pitch": 2, "settle": 2.0, "camcorder": false, "stage": {"dist": 7.0, "clip": "walk", "t": 0.3}},
+  {"pos": [3.0, 10.8], "yaw": 90, "pitch": 2, "settle": 2.0, "camcorder": true, "stage": {"dist": 7.0, "clip": "walk", "t": 0.6}},
+  {"pos": [3.0, 10.8], "yaw": 90, "pitch": -4, "settle": 2.0, "camcorder": false, "stage": {"dist": 1.8, "clip": "idle", "t": 0.5, "by_face": true, "look": 0.8}},
+  {"pos": [3.0, 10.8], "yaw": 90, "pitch": -6, "settle": 2.0, "camcorder": true, "stage": {"dist": 1.05, "clip": "idle", "t": 0.5, "eyes": true, "by_face": true, "look": 0.85}},
+  {"pos": [3.0, 10.8], "yaw": 270, "pitch": 2, "settle": 2.0, "camcorder": false, "stage": {"dist": 12.0, "clip": "walk", "t": 0.1}},
+  {"pos": [3.0, 10.8], "yaw": 270, "pitch": 0, "settle": 2.0, "camcorder": false, "stage": {"dist": 4.5, "clip": "scream", "t": 0.2, "side": 0.3}}
+]

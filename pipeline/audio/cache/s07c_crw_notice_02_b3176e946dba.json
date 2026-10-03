@@ -1,0 +1,17 @@
+{
+ "tag": "s07c_crw_notice_02",
+ "params": {
+  "text": "a sudden sharp deep intake of breath followed by a rapid series of loud joint cracks and knuckle pops, like a huge body tensing to pounce No roar, no growl, no voice, no words, no music. Slight variation.",
+  "duration_seconds": 1.8,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07c_crw_notice_02_b3176e946dba.pcm",
+ "format": "pcm_48000",
+ "credits": 10.0,
+ "est_usd": 0.003,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

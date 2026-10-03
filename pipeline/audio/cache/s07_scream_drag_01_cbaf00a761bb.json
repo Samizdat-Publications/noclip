@@ -1,0 +1,17 @@
+{
+ "tag": "s07_scream_drag_01",
+ "params": {
+  "text": "a man in a respirator mask screaming muffled while being dragged away across carpet, the scream fading into the distance, frantic scuffling No music.",
+  "duration_seconds": 4.0,
+  "prompt_influence": 0.5,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_scream_drag_01_cbaf00a761bb.pcm",
+ "format": "pcm_48000",
+ "credits": 22.0,
+ "est_usd": 0.0066,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

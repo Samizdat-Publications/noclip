@@ -1,0 +1,17 @@
+{
+ "tag": "s07_radio_02_r2",
+ "params": {
+  "text": "a muffled walkie-talkie burst: squelch, a man's voice speaking in short clipped unintelligible words through heavy static, squelch again. Calm. No music.",
+  "duration_seconds": 2.5,
+  "prompt_influence": 0.65,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_radio_02_r2_dd14bdbc0500.pcm",
+ "format": "pcm_48000",
+ "credits": 14.0,
+ "est_usd": 0.0042,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

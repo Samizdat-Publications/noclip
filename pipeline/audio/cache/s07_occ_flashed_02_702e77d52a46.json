@@ -1,0 +1,17 @@
+{
+ "tag": "s07_occ_flashed_02",
+ "params": {
+  "text": "a large unseen creature recoiling: a dry rasping hiss tangled with violently crumpling wet paper, cut off sharply, no voice, no words No music. Slight variation.",
+  "duration_seconds": 1.5,
+  "prompt_influence": 0.55,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07_occ_flashed_02_702e77d52a46.pcm",
+ "format": "pcm_48000",
+ "credits": 8.0,
+ "est_usd": 0.0024,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

@@ -479,6 +479,8 @@ func _build_shell(kit: MeshKit) -> void:
 	var floor_rects: Array[Rect2] = [Rect2(Vector2.ZERO, extent)]
 	for fh in L.get("floor_holes", []):
 		floor_rects = _rects_minus(floor_rects, Rect2(fh[0], fh[1], fh[2] - fh[0], fh[3] - fh[1]))
+	for sh in L.get("stair_holes", []):
+		floor_rects = _rects_minus(floor_rects, Rect2(sh[0], sh[1], sh[2] - sh[0], sh[3] - sh[1]))
 	for rc in floor_rects:
 		kit.face("carpet", [Vector3(rc.position.x, 0, rc.position.y), Vector3(rc.end.x, 0, rc.position.y), Vector3(rc.end.x, 0, rc.end.y), Vector3(rc.position.x, 0, rc.end.y)], Vector3.UP, 0.0)
 	var ph := float(L["plenum_height"])

@@ -1,0 +1,17 @@
+{
+ "tag": "s07c_crw_flashed_01_r2",
+ "params": {
+  "text": "a huge creature flinching from a bright flash: a startled wet gasp and a heavy body thumping back against a wall, no voice No roar, no growl, no voice, no words, no music.",
+  "duration_seconds": 1.5,
+  "prompt_influence": 0.6,
+  "model_id": "eleven_text_to_sound_v2",
+  "loop": false
+ },
+ "file": "s07c_crw_flashed_01_r2_9675e359557e.pcm",
+ "format": "pcm_48000",
+ "credits": 8.0,
+ "est_usd": 0.0024,
+ "credits_from_header": true,
+ "http_attempts": 1,
+ "date": "2026-10-03"
+}

@@ -50,6 +50,8 @@ var _closet: Dictionary = {}   # the storeroom being visited (D036): name, look,
 var _closet_step := 0
 var _closet_t := 0.0
 var _closet_tries := 0
+var _stair_set := false
+var _depth_t0 := 0.0
 
 
 func _init() -> void:
@@ -60,6 +62,12 @@ func _init() -> void:
 
 static func yaw_of(d: Vector3) -> float:
 	return atan2(-d.x, -d.z)
+
+
+## Seconds on a depth before it goes looking for the way down (the first depth: --bot_stairs_after).
+func _stairs_after() -> float:
+	var after := float(Game.opts.get("bot_stairs_after", "35")) if Game.depth == 1 else 60.0
+	return _depth_t0 + after
 
 
 func _pick_target(player: Player) -> void:
@@ -94,6 +102,12 @@ func _pick_target(player: Player) -> void:
 			# A door into a storeroom that shows a hall far too big for it: anyone would go in.
 			if p.has("closet") and not _closets_done.has(p["name"]) and d < 30.0:
 				score *= 40.0
+			# The way down (D050): after a while a person who hears the draft goes and looks.
+			if Game.clock > _stairs_after():
+				if p.has("stair"):
+					score *= 200.0
+				elif p.has("closet"):
+					score *= 0.01      # past the storerooms now: it is looking for the way down
 			if String(p["name"]).contains("_tall_") and not _seam_looked_up.has(p["name"]) and d < 24.0:
 				score *= 8.0
 			# Inside a corridor that keeps repeating, a person keeps walking on for a while.
@@ -228,6 +242,12 @@ func update_move(player: Node, delta: float) -> void:
 				best_s = sc
 				best_h = hd
 		_heading = best_h
+	# After a while it follows the draft toward the way down (D050).
+	if Game.clock > _stairs_after() and "gen" in space and space.gen and space.gen.stair_chunk.x < (1 << 19):
+		var sc2: Vector2i = space.gen.stair_chunk
+		var to_s := Vector3(sc2.x * 24.0 + 12.0 - pl.global_position.x, 0.0, sc2.y * 24.0 + 12.0 - pl.global_position.z)
+		if to_s.length() > 1.0:
+			_heading = to_s.normalized()
 
 	if _hunt_react(pl, delta):
 		return
@@ -292,6 +312,22 @@ func update_move(player: Node, delta: float) -> void:
 		return
 
 	# WALK
+	# The way down (D050): once it can hear the stairwell's draft it goes straight there.
+	if not _stair_set and Game.clock > _stairs_after() and "stairwell" in space and space.stairwell:
+		var sw: Stairwell = space.stairwell
+		if pl.global_position.distance_to(sw.door_world) < 36.0:
+			var look := sw.door_world + Vector3(sw.n.x, 0.0, sw.n.y) * 2.2
+			var pth := space.find_path(pl.global_position, look)
+			if not pth.is_empty():
+				_stair_set = true
+				target_name = "stairwell"
+				_seam = {}
+				_closet = {"name": "stairwell", "look": look, "door": sw.door_world, "door0": sw.door_world, "n": sw.n}
+				_closet_tries = 0
+				path = pth
+				path_i = 1 if pth.size() > 1 else 0
+				if Game.opts.has("log-bot"):
+					print("[bot] t=%.1f heading for the stairwell (%.1f m)" % [Game.clock, pl.global_position.distance_to(sw.door_world)])
 	if path.is_empty() or path_i >= path.size():
 		if not _seam.is_empty() and pl.global_position.distance_to(_seam["look"]) < 1.2:
 			mode = Mode.SEAM
@@ -473,6 +509,9 @@ func _clear_line(pl: Player, a: Vector3, b: Vector3) -> bool:
 
 ## After the death replay you wake at the start: begin again, a little wiser.
 func reset(pl: Player) -> void:
+	_stair_set = false
+	_depth_t0 = Game.clock
+	_closet = {}
 	path = PackedVector3Array()
 	path_i = 0
 	mode = Mode.PAUSE

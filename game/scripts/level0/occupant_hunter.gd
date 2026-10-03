@@ -66,15 +66,22 @@ var _tear_bank: AudioStreamRandomizer
 var _tear_t := 6.0
 var _breath_t := 3.0
 var _caught_called := false
+# The Descent (D050): each depth tunes it (Depths), the flashbulb pins it, flares keep it off.
+var first_at := FIRST_AT
+var chase_speed := CHASE_SPEED
+var gap_mult := 1.0
+var _pinned := 0.0
+var pins := 0
 
 
 func _ready() -> void:
 	_rng = Game.rng("occupant:hunt")
 	log_events = Game.opts.has("log-hunt")
-	_next = float(Game.opts.get("hunt_at", str(FIRST_AT)))
-	if Game.opts.has("no_hunt") or not Occupant.available():
+	configure(Game.depth)
+	if Game.opts.has("no_hunt") or not _body_ok():
 		_next = 1e9
-	rig = OccupantRig.new()
+	crawler = Crawler.available() and not Game.opts.has("occupant_hunts")
+	rig = CrawlerRig.new() if crawler else OccupantRig.new()
 	rig.name = "occupant_rig"
 	rig.top_level = true
 	add_child(rig)
@@ -83,14 +90,14 @@ func _ready() -> void:
 	_step_bank.random_pitch = 1.06
 	_step_bank.random_volume_offset_db = 2.0
 	for i in 6:
-		var p := "res://assets/audio/entity/occ_step_%02d.wav" % (i + 1)
+		var p := _snd("step") % (i + 1)
 		if ResourceLoader.exists(p):
 			_step_bank.add_stream(-1, load(p))
 	_steps = _player3d(1.6, 34.0)
 	_steps.stream = _step_bank
 	_steps.max_polyphony = 2
 	_rustle = _player3d(1.0, 12.0)
-	var rl := _loop("res://assets/audio/entity/occ_rustle_loop.wav")
+	var rl := _loop(_snd("rustle"))
 	if rl:
 		_rustle.stream = rl
 	_voice = _player3d(3.0, 50.0)
@@ -100,7 +107,7 @@ func _ready() -> void:
 	_tear_bank.random_pitch = 1.12
 	_tear_bank.random_volume_offset_db = 2.5
 	for i in 4:
-		var tp := "res://assets/audio/entity/occ_tear_%02d.wav" % (i + 1)
+		var tp := _snd("tear") % (i + 1)
 		if ResourceLoader.exists(tp):
 			_tear_bank.add_stream(-1, load(tp))
 	_drone = AudioStreamPlayer.new()
@@ -110,6 +117,96 @@ func _ready() -> void:
 		_drone.stream = dl
 	_drone.volume_db = -80.0
 	add_child(_drone)
+
+
+## Look-dev (builder only, focus shots with "stage"): the body posed in front of the camera,
+## {"dist": m, "side": m, "clip": name, "t": 0..1, "eyes": bool}.
+var stage_req := {}
+
+
+func _do_stage() -> void:
+	var fwd := -player.cam.global_transform.basis.z
+	fwd.y = 0.0
+	fwd = fwd.normalized()
+	var side := fwd.cross(Vector3.UP)
+	var p := player.global_position + fwd * float(stage_req.get("dist", 5.0)) + side * float(stage_req.get("side", 0.0))
+	global_position = Vector3(p.x, player.global_position.y, p.z)
+	_face(player.global_position)
+	if rig is CrawlerRig and stage_req.get("by_face", false):
+		var ho := (rig as CrawlerRig).head_position() - rig.global_position
+		ho.y = 0.0
+		global_position -= ho
+	rig.visible = true
+	rig.global_transform = global_transform
+	rig.hold_all(String(stage_req.get("clip", "walk")), float(stage_req.get("t", 0.3)))
+	rig.snap()
+	rig.presence = 1.0
+	if rig is CrawlerRig:
+		(rig as CrawlerRig).open_eyes(bool(stage_req.get("eyes", false)))
+		(rig as CrawlerRig).look_at_point(player.cam.global_position, float(stage_req.get("look", 0.0)))
+
+
+## Which body hunts (D052): the Crawler, the Monster Lab's pick, unless --occupant_hunts.
+var crawler := false
+const SND_OCC := {"step": "res://assets/audio/entity/occ_step_%02d.wav", "rustle": "res://assets/audio/entity/occ_rustle_loop.wav",
+	"tear": "res://assets/audio/entity/occ_tear_%02d.wav", "breath": "res://assets/audio/entity/occ_breath_%02d.wav",
+	"shriek": "res://assets/audio/entity/occ_shriek_%02d.wav", "kill": "res://assets/audio/entity/kill_tape_01.wav",
+	"flashed": "res://assets/audio/descent/occ_flashed_%02d.wav"}
+const SND_CRW := {"step": "res://assets/audio/crawler/crw_step_%02d.wav", "rustle": "res://assets/audio/crawler/crw_drag_loop.wav",
+	"tear": "res://assets/audio/crawler/crw_tear_%02d.wav", "breath": "res://assets/audio/crawler/crw_breath_%02d.wav",
+	"shriek": "res://assets/audio/crawler/crw_notice_%02d.wav", "kill": "res://assets/audio/crawler/crw_grab_01.wav",
+	"flashed": "res://assets/audio/crawler/crw_flashed_%02d.wav"}
+
+
+func _body_ok() -> bool:
+	return Crawler.available() or Occupant.available()
+
+
+## Its sounds: the Crawler's own where they exist, the Occupant's otherwise.
+func _snd(kind: String) -> String:
+	if crawler:
+		var c: String = SND_CRW[kind]
+		var probe := c % 1 if c.contains("%") else c
+		if ResourceLoader.exists(probe):
+			return c
+	return SND_OCC[kind]
+
+
+## A new depth (or a new run): its timing and speed from the depth table.
+func configure(depth: int) -> void:
+	var row := Depths.get_row(depth)
+	first_at = float(row.get("first_at", FIRST_AT))
+	chase_speed = float(row.get("chase", CHASE_SPEED))
+	gap_mult = float(row.get("gap", 1.0))
+	_next = Game.clock + float(Game.opts.get("hunt_at", str(first_at)))
+	if Game.opts.has("no_hunt") or not _body_ok():
+		_next = 1e9
+
+
+## The flashbulb went off at `from`, looking along `dir`. If it is caught in the flash (in front, near
+## enough, nothing between) it is pinned where it stands for a few seconds, then it has lost you.
+func flashed(from: Vector3, dir: Vector3) -> bool:
+	if state == S.ABSENT or state == S.KILL or state == S.LEAVE:
+		return false
+	var to := _head() - Vector3(0, 0.6, 0) - from
+	if to.length() > 16.0:
+		return false
+	if rad_to_deg(acos(clampf(dir.normalized().dot(to.normalized()), -1.0, 1.0))) > 32.0:
+		return false
+	if not _clear(from, from + to * 0.97):
+		return false
+	_pinned = 3.6
+	pins += 1
+	_close = false
+	_close_done = true
+	_speed = 0.0
+	suspicion = 0.0
+	rig.presence = 1.0
+	rig.tear = 1.0
+	rig.hold_all("scream", 0.3)
+	_voice_play(_snd("flashed") % (1 + _rng.randi() % 2), 2.0)
+	_log("pinned by the flash (%.1f m)" % to.length())
+	return true
 
 
 func _player3d(unit: float, maxd: float) -> AudioStreamPlayer3D:
@@ -265,8 +362,22 @@ func _process(delta: float) -> void:
 	if player == null or space == null:
 		return
 	_st += delta
+	if not stage_req.is_empty():
+		_do_stage()
+		return
 	_trail_update()
 	_echo_steps()
+	if _pinned > 0.0:
+		_pinned -= delta
+		_speed = 0.0
+		_drone_to(-30.0, delta, 1.0)
+		Game.duck_extra = move_toward(Game.duck_extra, 0.2, delta)
+		rig.global_position = global_position
+		rig.global_basis = global_basis
+		if _pinned <= 0.0:
+			_log("the flash let go: it has lost you")
+			_set_state(S.LEAVE)
+		return
 	match state:
 		S.ABSENT:
 			Game.duck_extra = move_toward(Game.duck_extra, 0.0, delta * 0.3)
@@ -409,7 +520,7 @@ func _start_close() -> bool:
 			if fx and not _killed.has(fx):
 				fx.kill(0.2)
 				_killed.append(fx)
-			_voice_play("res://assets/audio/entity/occ_breath_%02d.wav" % (1 + _rng.randi() % 2), -3.0)
+			_voice_play(_snd("breath") % (1 + _rng.randi() % 2), -3.0)
 			_log("right behind you (%.1f m)" % _dist())
 			return true
 	return false
@@ -418,6 +529,8 @@ func _start_close() -> bool:
 func _close_beat(delta: float) -> void:
 	_close_t += delta
 	_face(player.global_position)
+	if rig is CrawlerRig:
+		(rig as CrawlerRig).look_at_point(player.cam.global_position, 0.9)
 	Game.duck_extra = move_toward(Game.duck_extra, 0.85, delta * 1.5)
 	Game.fear = maxf(Game.fear, 0.7)
 	if _being_filmed():
@@ -494,8 +607,12 @@ func _stalk(delta: float) -> void:
 		want = CATCHUP_SPEED
 	elif left > back:
 		want = STALK_SPEED
-	if _player_sees(_head(), 38.0) and d < 22.0:
+	var seen_now := _player_sees(_head(), 38.0) and d < 22.0
+	if seen_now:
 		want = 0.0         # it stops when you turn round (by eye it is hardly there)
+	if rig is CrawlerRig:
+		# caught looking: it stops, and its face comes up to you
+		(rig as CrawlerRig).look_at_point(player.cam.global_position, 0.7 if seen_now else 0.0)
 	_speed = move_toward(_speed, want, delta * 2.0)
 	_advance(delta)
 	rig.set_clip("walk" if _speed > 0.2 else "look", 0.85)
@@ -512,7 +629,7 @@ func _notice(delta: float) -> void:
 		Game.fear = 1.0
 		if space.director:
 			space.director.hunt_shock(global_position)
-		_voice_play("res://assets/audio/entity/occ_shriek_%02d.wav" % (1 + _rng.randi() % 2), -2.0)
+		_voice_play(_snd("shriek") % (1 + _rng.randi() % 2), -2.0)
 		if _tear_bank.streams_count > 0:
 			_paper_snd.stream = _tear_bank
 			_paper_snd.global_position = _head()
@@ -541,13 +658,13 @@ func _chase(delta: float) -> void:
 		_lost = 0.0
 	else:
 		_lost += delta
-	if space.in_pocket(player.global_position):
+	if space.in_pocket(player.global_position) or space.in_flare(player.global_position):
 		_lost += delta * 2.0
 	# Lost you, or you kept ahead of it long enough: it stops and searches.
 	if (_lost > 4.0 and d > 8.0) or (_st > 15.0 and d > 3.5):
 		_set_state(S.SEARCH)
 		return
-	if d < CATCH_R and not player.caught and _st > 1.0:
+	if d < CATCH_R and not player.caught and _st > 1.0 and not space.in_flare(player.global_position):
 		_caught()
 		return
 	_repath -= delta
@@ -555,7 +672,7 @@ func _chase(delta: float) -> void:
 		_repath = 0.3
 		_path = _route_to(player.global_position if seen or _lost < 1.5 else last_known)
 		_path_i = 1 if _path.size() > 1 else 0
-	_speed = move_toward(_speed, CHASE_SPEED * (1.0 if _st > 1.2 else 0.6), delta * 3.0)
+	_speed = move_toward(_speed, chase_speed * (1.0 if _st > 1.2 else 0.6), delta * 3.0)
 	_advance(delta)
 	rig.set_clip("run", 1.0)
 	rig.presence = 1.0
@@ -631,7 +748,7 @@ func _gone() -> void:
 			fx.restore(1.0 + k * _rng.randf_range(0.3, 0.8))
 		k += 1
 	_killed.clear()
-	_next = Game.clock + _rng.randf_range(GAP[0], GAP[1]) * (0.8 if hunts > 1 else 1.0)
+	_next = Game.clock + _rng.randf_range(GAP[0], GAP[1]) * (0.8 if hunts > 1 else 1.0) * gap_mult
 	suspicion = 0.0
 	_set_state(S.ABSENT)
 
@@ -708,6 +825,10 @@ func _advance(delta: float) -> void:
 		var wp := _path[_path_i]
 		var to := Vector3(wp.x - global_position.x, 0.0, wp.z - global_position.z)
 		var l := to.length()
+		# Red light: it will not step into a burning flare's pool.
+		if l > 0.01 and space.in_flare(global_position + to / l * minf(left + 0.6, l)) and not space.in_flare(global_position):
+			_speed = 0.0
+			break
 		if l <= left:
 			global_position = Vector3(wp.x, global_position.y, wp.z)
 			left -= l
@@ -833,7 +954,7 @@ func _tells(delta: float) -> void:
 		_breath_t -= delta
 		if _breath_t <= 0.0:
 			_breath_t = _rng.randf_range(4.0, 6.5)
-			_voice_play("res://assets/audio/entity/occ_breath_%02d.wav" % (1 + _rng.randi() % 2), -4.0)
+			_voice_play(_snd("breath") % (1 + _rng.randi() % 2), -4.0)
 	# The panel over it hiccups as it passes (not every time).
 	if state == S.STALK or state == S.SEARCH:
 		var fx := space.fixture_near(global_position, 1.5)
@@ -878,9 +999,10 @@ func _caught() -> void:
 	saved_input = player.input
 	player.input = DeathInput.new()
 	(player.input as DeathInput).target = self
+	(player.input as DeathInput).look_h = 1.2 if crawler else 1.9
 	_speed = 0.0
 	Game.fear = 1.0
-	_voice_play("res://assets/audio/entity/occ_shriek_%02d.wav" % (1 + _rng.randi() % 2), 2.0)
+	_voice_play(_snd("shriek") % (1 + _rng.randi() % 2), 2.0)
 
 
 func _kill(delta: float) -> void:
@@ -889,18 +1011,33 @@ func _kill(delta: float) -> void:
 	var fwd := -cam.global_transform.basis.z
 	fwd.y = 0.0
 	fwd = fwd.normalized()
-	var want := Vector3(cam.global_position.x, player.global_position.y, cam.global_position.z) + fwd * 0.95
-	global_position = global_position.lerp(want, 1.0 - exp(-14.0 * delta))
-	_face(player.global_position)
-	rig.global_position = global_position
-	rig.hold_all("scream", 0.4 + 0.1 * sin(Game.clock * 9.0))
+	if crawler:
+		# The Crawler leans its face in, slowly, eyes shut, until it fills the lens; then they open.
+		var lean := clampf(_st / 1.05, 0.0, 1.0)
+		# placed by its face, not its hips: the face comes to rest just in front of the lens
+		var head_off := (rig as CrawlerRig).head_position() - global_position
+		head_off.y = 0.0
+		var want_c := Vector3(cam.global_position.x, player.global_position.y, cam.global_position.z) + fwd * lerpf(1.8, 1.05, lean) - head_off
+		global_position = global_position.lerp(want_c, 1.0 - exp(-8.0 * delta))
+		_face(player.global_position)
+		rig.global_position = global_position
+		rig.global_basis = global_basis
+		rig.hold_all("idle", 0.5 + 0.04 * sin(Game.clock * 2.0))
+		(rig as CrawlerRig).open_eyes(_st > 0.8)
+		(rig as CrawlerRig).look_at_point(cam.global_position, clampf(_st * 1.2, 0.0, 0.85))
+	else:
+		var want := Vector3(cam.global_position.x, player.global_position.y, cam.global_position.z) + fwd * 0.95
+		global_position = global_position.lerp(want, 1.0 - exp(-14.0 * delta))
+		_face(player.global_position)
+		rig.global_position = global_position
+		rig.hold_all("scream", 0.4 + 0.1 * sin(Game.clock * 9.0))
 	rig.skip_gap = Vector2(0.04, 0.09)
 	rig.tear = 1.0
 	player.camcorder.degrade = 0.6
 	_drone_to(0.0, delta, 4.0)
 	if _st > 1.05 and not _caught_called:
 		_caught_called = true
-		_voice_play("res://assets/audio/entity/kill_tape_01.wav", 4.0)
+		_voice_play(_snd("kill"), 4.0)
 		player.camcorder.glitch()
 		if on_caught.is_valid():
 			on_caught.call()
@@ -917,6 +1054,9 @@ func reset_after_death() -> void:
 	_echo.clear()
 	Game.duck_extra = 0.0
 	rig.skip_gap = Vector2(0.18, 0.42)
+	if rig is CrawlerRig:
+		(rig as CrawlerRig).open_eyes(false)
+		(rig as CrawlerRig).look_at_point(Vector3.INF, 0.0)
 	_gone()
 	_next = Game.clock + _rng.randf_range(GAP[0], GAP[1])
 
@@ -925,6 +1065,7 @@ func reset_after_death() -> void:
 class DeathInput:
 	extends PlayerInput
 	var target: Node3D
+	var look_h := 1.9
 
 	func update_move(_p: Node, _d: float) -> void:
 		move = Vector2.ZERO
@@ -937,7 +1078,7 @@ class DeathInput:
 		look_delta = Vector2.ZERO
 		if target == null:
 			return
-		var to := (target.global_position + Vector3(0, 1.9, 0)) - pl.cam.global_position
+		var to := (target.global_position + Vector3(0, look_h, 0)) - pl.cam.global_position
 		var want_yaw := atan2(-to.x, -to.z)
 		var want_pitch := atan2(to.y, Vector2(to.x, to.z).length())
 		var dy := angle_difference(pl.yaw, want_yaw)
