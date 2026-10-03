@@ -1774,7 +1774,9 @@ func _build_props() -> void:
 			if PROPS.get(pr[0], {}).has("tint"):
 				var tt: Array = PROPS[pr[0]]["tint"]
 				_tint(inst0, Color(tt[0], tt[1], tt[2]))
-			_contact_shadow(Vector3(pr[1], 0.0, pr[2]), half0)
+			# Chairs stand on thin legs: a big soft blob under one read as a smeared, detached shadow
+			# and the chair as hovering (L116, critique 022); a tighter one.
+			_contact_shadow(Vector3(pr[1], 0.0, pr[2]), half0 * (0.7 if pname.contains("chair") else 1.0))
 			solids.append(Rect2(pr[1] - half0, pr[2] - half0, half0 * 2.0, half0 * 2.0))
 		return
 	var names := PROPS.keys()

@@ -162,6 +162,14 @@ A REJECT that returns in 2 later critiques must become FIX or go to NEEDS_STEWAR
 | L135 | 021 | gemini | hurts | Corners where walls meet floor and ceiling have no darkening (repeat of L049, L079, L093) | FIX (S05) | Corner strips stronger; the brighter look had washed them out |
 | L136 | 021 | gemini | hurts | Carpet looks and sounds dry ("carpet that never dries"; repeat of L027, L081, L105) | DEFER M3 polish | Returned 3+ times: next sound pass gets squelch on every step on wet patches and a wet specular glint; recorded here so it is not lost |
 | L137 | 021 | gemini | nitpick | Ceiling lights look like stark white stickers without glare | FIX (small, S05) | A little more bloom on the lenses |
+| L138 | 022 | claude | hurts | Everything one mustard: this seed's hall was yellow too, no area has its own colour (repeat of L118) | FIX (S05, 787061f) | Hall palettes weighted away from yellow (cold 45, green 25, yellow 30 percent); the level's own room moods stay; revisit room colour variety in the level next |
+| L139 | 022 | claude | hurts | Nothing moves: no flicker, no light dying, no movement in the distance | FIX (partial, S05) | The watchers add the door that opens and the figure at the edge; failing tubes exist but the bot rarely frames them; more motion next session |
+| L140 | 022 | claude | nitpick | Dark diamond patches at column bases look like rendering mistakes | FIX (S05, 787061f) | No round contact blob under square columns |
+| L141 | 022 | claude | nitpick | A folding chair hovers over a detached blob shadow (repeat of L116) | FIX (S05) | Model sits at y = 0; the 0.65 m soft blob under a thin-legged chair read as detached: chairs get a tighter one |
+| L142 | 022 | claude | nitpick | Missing ceiling tiles show flat orange cards | FIX (S05, 787061f) | The plenum above was catching the new ceiling glow; the grid's glow now stops at the ceiling |
+| L143 | 022 | gemini | ruins it | Pillar room lighting flat, pillars cast zero shadows (repeat of L134) | FIX (S05, 787061f) | Sparse grid of stronger panels in the hall: verified shadows on frames (progress s05-hall-sparse-lights) |
+| L144 | 022 | gemini | hurts | Monster a static untextured black mannequin (repeat of L130) | FIX (S05, 787061f) | The Occupant |
+| L145 | 022 | gemini | hurts | Materials lack normal maps and specular; carpet matte (repeat of L136) | DEFER M7 | Wallpaper and carpet do have normal maps; the wet sheen is subtle on video. Next sound and material polish |
 
 ## Closed
 
