@@ -1,6 +1,6 @@
 // The live fixture field (scripts/level0/fixture_field.gd): one texel per ceiling tile holding the
 // light level and tint of the panel there. Shared by the ceiling, the T-bar grid and the housings.
-uniform sampler2D field_tex : filter_linear_mipmap, repeat_disable;
+uniform sampler2D field_tex : filter_linear_mipmap, repeat_enable;   // shared fields wrap (S05)
 uniform vec2 field_origin = vec2(0.0);
 uniform float field_cell = 0.6;
 uniform vec2 field_size = vec2(1.0);

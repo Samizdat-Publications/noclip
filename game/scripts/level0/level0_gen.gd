@@ -1018,7 +1018,8 @@ func _tall_cues(L: Dictionary, rr: Rect2) -> void:
 	var hz := rr.position.y + T * 0.5 if along_x else c.y
 	var hx := c.x if along_x else rr.position.x + T * 0.5
 	var hn := Vector2(0, 1) if along_x else Vector2(1, 0)
-	L["fake_doors"].append([hx, hz, hn.x, hn.y, 2.85])
+	# It is a watcher's door (S05, VISION "Being watched"): it opens a crack while you are not looking.
+	L["fake_doors"].append([hx, hz, hn.x, hn.y, 2.85, "watch"])
 	# Stairs along the opposite long wall, when it is long enough and no door is in the way.
 	var steps_len := 19 * 0.28
 	if along_x and rr.size.x >= steps_len + 1.2:

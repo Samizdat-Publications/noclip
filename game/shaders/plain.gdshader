@@ -54,7 +54,8 @@ void fragment() {
 		r = mix(r, r * 1.2, grime * 0.5);
 	}
 	float hz = horizon_fade(VERTEX);
-	if (field_bounce_strength > 0.0 && wpos.y > ceiling_h - 0.12) {
+	// only the grid at the ceiling, never the plenum above a missing tile (critique 022: flat orange cards)
+	if (field_bounce_strength > 0.0 && wpos.y > ceiling_h - 0.12 && wpos.y < ceiling_h + 0.05) {
 		EMISSION = a * field_bounce(field_p(wpos)) * field_bounce_strength * hz;
 	}
 	ALBEDO = a * hz;

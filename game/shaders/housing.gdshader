@@ -31,7 +31,7 @@ void fragment() {
 		// Step a few centimeters toward the lens (the reveal faces point inward) and read its level.
 		vec2 p = (field_to_local * vec4(wpos + wnrm * 0.05, 1.0)).xz;
 		ivec2 t = ivec2(floor((p - field_origin) / field_cell));
-		t = clamp(t, ivec2(0), ivec2(field_size) - 1);
+		t = ivec2(mod(vec2(t), field_size));   // shared fields wrap (S05)
 		lit = texelFetch(field_tex, t, 0).rgb;
 		// Brightest at the lens edge, fading up into the recess.
 		lit *= mix(1.0, 0.45, clamp((wpos.y - ceiling_h) / 0.03, 0.0, 1.0));

@@ -28,6 +28,8 @@ var pool: FixturePool
 var director: Level0Director
 var tape: TapeEvents
 var rearranger: Rearranger
+var watchers: Watchers
+var field: FixtureField          # one wrapping glow field for every chunk (S05)
 var _player := Vector3.ZERO
 var _stream_t := 0.0
 # Rooms bigger inside than outside (M2b, D036): "cx:cz" -> PortalRoom, built under the level
@@ -46,6 +48,10 @@ func build(p_seed: int) -> void:
 	super.build(p_seed)
 	space_id = &"level0"
 	gen = Level0Gen.new(p_seed, float(Game.opts.get("fidelity", "0.9")))
+	# 320 tiles = 192 m: wider than everything that is ever loaded at once, so no two loaded panels
+	# share a texel.
+	field = FixtureField.new(Vector2.ZERO, Vector2(192.0, 192.0), 0.6)
+	field.wrap = true
 	if Game.opts.has("wrong"):
 		gen.forced_wrong = Array(String(Game.opts["wrong"]).split(","))
 	var r := Game.rng("level0:look")
@@ -65,6 +71,10 @@ func build(p_seed: int) -> void:
 	rearranger.name = "rearranger"
 	rearranger.space = self
 	add_child(rearranger)
+	watchers = Watchers.new()
+	watchers.name = "watchers"
+	watchers.space = self
+	add_child(watchers)
 	# The first ring is built at once (this is the loading moment); the rest streams.
 	var start := Vector3(12, 0, 12)
 	_player = start
@@ -108,6 +118,7 @@ func _new_chunk(c: Vector2i) -> Level0Chunk:
 	ch.name = "chunk_%d_%d" % [c.x, c.y]
 	ch.pooled = true
 	ch.own_far_edges = false
+	ch.shared_field = field
 	ch.position = Vector3(c.x * CHUNK, 0.0, c.y * CHUNK)
 	add_child(ch)
 	return ch
@@ -129,6 +140,8 @@ func _build_now(c: Vector2i) -> void:
 
 func _finish(c: Vector2i, ch: Level0Chunk) -> void:
 	chunks[c] = ch
+	if watchers:
+		watchers.add_chunk(ch)
 	for cl in ch.L.get("closets", []):
 		_closets["%d:%d" % [c.x, c.y]] = [c, cl]
 	for fx in ch.fixtures:
@@ -204,7 +217,11 @@ func _unload(c: Vector2i) -> void:
 		rooms.erase(key)
 	_closets.erase(key)
 	var ch: Level0Chunk = chunks[c]
+	if watchers:
+		watchers.remove_chunk(ch)
 	for fx in ch.fixtures:
+		if fx.field:
+			fx.field.remove(fx)
 		pool.release(fx)
 		pool.fixtures.erase(fx)
 		director.fixtures.erase(fx)
@@ -625,6 +642,7 @@ func _update_rooms(p: Vector3) -> void:
 
 func attach_player(p: Player) -> void:
 	tape.player = p
+	watchers.player = p
 	rearranger.player = p
 	player_ref = p
 
@@ -749,6 +767,10 @@ func get_focus_shots(n: int = 8) -> Array:
 	if Game.opts.has("focus_wrong"):
 		return _wrong_shots(n)
 	var out := []
+	# The watchers first when asked (--focus_first=watch): the high door open a crack, a figure at
+	# the edge of a long view (S05).
+	if String(Game.opts.get("focus_first", "")) == "watch":
+		out.append_array(_watch_shots())
 	# The opening view down the spawn hall.
 	var spawn_xf := get_spawn_transform()
 	out.append({"pos": [spawn_xf.origin.x, spawn_xf.origin.z], "yaw": rad_to_deg(-spawn_xf.basis.get_euler().y), "pitch": 1.0, "settle": 2.5})
@@ -863,6 +885,36 @@ func _wrong_marks(L: Dictionary) -> Array:
 	return marks
 
 
+func _watch_shots() -> Array:
+	var out := []
+	var keys := chunks.keys()
+	keys.sort_custom(func(a, b): return a.length_squared() < b.length_squared())
+	for c in keys:
+		var ch: Level0Chunk = chunks[c]
+		if ch.watch_doors.size() > 0:
+			var fr: Transform3D = ch.global_transform * (ch.watch_doors[0]["frame"] as Transform3D)
+			out.append({"watch": "door", "pos": [fr.origin.x, fr.origin.z], "pitch": 31.0, "settle": 3.5})
+			break
+	for it in get_interest_points():
+		var p: Vector3 = it["pos"]
+		if not is_walkable(p):
+			continue
+		var best_yaw := 0.0
+		var best_d := -1.0
+		for k in 12:
+			var d := view_depth(p, TAU * k / 12.0, 30.0)
+			if d > best_d:
+				best_d = d
+				best_yaw = TAU * k / 12.0
+		# an open room: long views to either side of the best one too, so the edge has floor
+		var side_l := view_depth(p, best_yaw + deg_to_rad(42.0), 20.0)
+		var side_r := view_depth(p, best_yaw - deg_to_rad(42.0), 20.0)
+		if best_d > 14.0 and maxf(side_l, side_r) > 9.0:
+			out.append({"watch": "edge", "pos": [p.x, p.z], "yaw": rad_to_deg(-best_yaw), "pitch": 0.0, "settle": 2.5})
+			break
+	return out
+
+
 ## Builder look-dev: only the remembered-wrong things nearest the start (--focus_wrong).
 func _wrong_shots(n: int) -> Array:
 	var out := []
@@ -905,6 +957,23 @@ func room_anchor(key: String) -> Array:
 ## A focus shot placed inside a storeroom's hall ({"room": key, "local": [x, z], "face": [x, z]}
 ## in hall-local meters) turned into a world position, height and yaw, once the hall is built.
 func resolve_focus(f: Dictionary) -> Dictionary:
+	# Watcher shots (S05): open the nearest high door and look up at it, or put a figure at the
+	# edge of the frame once the camera is in place.
+	if String(f.get("watch", "")) == "door":
+		var p0: Array = f.get("pos", [12.0, 12.0])
+		var d := watchers.stage_door(Vector3(p0[0], 0.0, p0[1]))
+		if not d.is_empty():
+			var fr: Transform3D = d["frame"]
+			var base := fr.origin - Vector3(0, fr.origin.y, 0) + fr.basis.z * 0.2
+			var pose := _pose_toward(base, 31.0, 1.4)
+			if not pose.is_empty():
+				var g0 := f.duplicate()
+				g0.merge(pose, true)
+				return g0
+		return f
+	if String(f.get("watch", "")) == "edge":
+		watchers.stage_edge_pending = true
+		return f
 	if not f.has("room") or not rooms.has(String(f["room"])):
 		return f
 	var rm: PortalRoom = rooms[String(f["room"])]

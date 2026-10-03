@@ -46,6 +46,7 @@ var _was_bright: bool = true
 var _orig_state: int = -1
 
 const LIGHT_ENERGY := 2.2
+static var _light_e := float(Game.opts.get("light_e", str(LIGHT_ENERGY)))
 
 
 ## The light every ceiling troffer uses (also lent out by FixturePool): a wide, soft, shadowed
@@ -105,7 +106,7 @@ func apply() -> void:
 		field.mark(field_index)
 	if light:
 		# A panel three times too high still has to reach the floor (a tall room, D023).
-		light.light_energy = LIGHT_ENERGY * base_energy * level * pow(ceiling_h / 2.6, 1.0)
+		light.light_energy = _light_e * base_energy * level * pow(ceiling_h / 2.6, 1.0)
 		light.visible = level > 0.002
 	if lens:
 		lens.set_instance_shader_parameter("light_level", level * base_energy)

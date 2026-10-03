@@ -50,6 +50,7 @@ var _final_t := 0.0
 var _drop: AudioStreamPlayer
 var _breath: AudioStreamPlayer
 var _drone: AudioStreamPlayer
+var _occ: Occupant        # the figure's body since S05 (L108, L130): the Occupant on tape
 
 
 func _ready() -> void:
@@ -106,6 +107,23 @@ func _ui_player(pattern: String, n: int, db: float) -> AudioStreamPlayer:
 func _make_figure() -> Node3D:
 	var root := Node3D.new()
 	root.name = "tape_figure"
+	if Occupant.available() and not Game.opts.has("old_figure"):
+		# The Occupant (D035): a person-shaped thing of loose wallpaper strips, lit by the room,
+		# frozen mid-move on every frame skip. Critics called the old body "a guy in jeans" and
+		# "a shadow-man cutout" (L108, L130).
+		_occ = Occupant.new()
+		_occ.set_layers(LAYER_TAPE)
+		_occ.set_shadows(false)
+		root.add_child(_occ)
+		var ctex := "res://assets/textures/level0/decal_contact.png"
+		if ResourceLoader.exists(ctex):
+			var cd := Decal.new()
+			cd.texture_albedo = load(ctex)
+			cd.size = Vector3(1.0, 0.6, 1.0)
+			cd.modulate = Color(1, 1, 1, 0.9)
+			cd.layers = LAYER_TAPE
+			root.add_child(cd)
+		return root
 	if not ResourceLoader.exists(MESH):
 		return root
 	var inst := (load(MESH) as PackedScene).instantiate() as Node3D
@@ -235,7 +253,16 @@ const POSES := [
 ]
 
 
+## The Occupant's held poses: one frame of a clip each, matched to the old pose list (0 to 3 wander,
+## 4 the close final look, 5 reaching toward you).
+const OCC_POSES := [["idle", 0.35], ["look", 0.3], ["look", 0.72], ["twitch", 0.5], ["scream", 0.45], ["lunge", 0.3]]
+
+
 func _apply_pose(k: int, breath: float) -> void:
+	if _occ:
+		var op: Array = OCC_POSES[k]
+		_occ.hold(op[0], float(op[1]) + _rng.randf_range(-0.12, 0.12))
+		return
 	if _skel == null:
 		return
 	var p: Dictionary = POSES[k]
@@ -263,6 +290,8 @@ func _apply_pose(k: int, breath: float) -> void:
 
 func _process(delta: float) -> void:
 	_mat.set_shader_parameter("time", Game.clock)
+	if _occ:
+		_occ.shade(1.0, _tear)
 	# While it is out there, the hum around you fades and a low drone comes up (M3, D026).
 	var present := state != S.IDLE
 	Game.duck_target = 0.85 if state == S.SHOWN else (0.5 if state == S.HIDDEN else 0.0)

@@ -29,7 +29,7 @@ uniform vec4 flood_rect = vec4(-100.0, -100.0, -99.0, -99.0);
 // Live panel levels of this chunk (scripts/level0/fixture_field.gd): wet carpet shows a soft,
 // blurred reflection of the panels overhead, found by bouncing the view ray off the floor up to
 // the ceiling plane. Never a hot spot (critique 007, L034).
-uniform sampler2D field_tex : filter_linear, repeat_disable;
+uniform sampler2D field_tex : filter_linear, repeat_enable;
 uniform vec2 field_origin = vec2(0.0);
 uniform float field_cell = 0.6;
 uniform vec2 field_size = vec2(1.0);

@@ -57,6 +57,7 @@ const PALETTES := {
 }
 var palette := "yellow"
 var floor_y := 0.0               # world height of the hall's floor (its shaders shade by height)
+var field: FixtureField
 
 
 func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, p_depth: int = 0) -> void:
@@ -75,9 +76,15 @@ func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, 
 	global_transform = Transform3D(b, door_world + Vector3(0, dy, 0) - b * Vector3(0, 0, MID))
 	name = "portal_room_%d_%d" % [c.x, c.y]
 	var pr := Game.rng("hallpalette:%d:%d" % [c.x, c.y]).randf()
-	palette = "cold" if pr < 0.4 else ("yellow" if pr < 0.8 else "green")
+	# Weighted away from yellow (critique 022: "everything is the same mustard"; L118): the hall is
+	# somewhere else.
+	palette = "cold" if pr < 0.45 else ("green" if pr < 0.7 else "yellow")
 	if Game.opts.has("hall_palette"):
 		palette = String(Game.opts["hall_palette"])
+	# The hall's own glow field, in its own (rotated) frame, shared by its nine chunks (S05).
+	field = FixtureField.new(Vector2.ZERO, Vector2(76.8, 76.8), 0.6)
+	field.wrap = true
+	field.to_local = global_transform.affine_inverse()
 	pool = FixturePool.new()
 	pool.name = "pool"
 	pool.light_cap = int(Game.opts.get("hall_lights", "32"))
@@ -88,7 +95,7 @@ func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, 
 	# The hall's own air: thicker haze than the level's, so its far end is lost and its light hangs
 	# in shafts (critique 021: the hall had turned clean and flat, L128, L134). Only cameras that
 	# show the hall draw it.
-	var fogd := float(Game.opts.get("hall_fog", "0.011"))
+	var fogd := float(Game.opts.get("hall_fog", "0.008"))
 	if fogd > 0.0:
 		var fv := FogVolume.new()
 		fv.name = "hall_air"
@@ -107,6 +114,7 @@ func setup(p_world: Level0World, c: Vector2i, closet: Dictionary, salt: String, 
 			var ch := Level0Chunk.new()
 			ch.name = "hall_%d_%d" % [i, j]
 			ch.pooled = true
+			ch.shared_field = field
 			ch.own_far_edges = i == N - 1 or j == N - 1
 			ch.position = Vector3(i * 24.0, 0.0, j * 24.0)
 			add_child(ch)
@@ -302,15 +310,21 @@ func _layout(i: int, j: int, c: Vector2i) -> Dictionary:
 			if fx > 1.5 and fx < 22.5:
 				L["fake_doors"].append([fx, wz, 0.0, nz, 0.0, "nohandle"])
 	# The far third is dark; the exit sign is the only light at the end of the hall.
-	# The lights thin out toward the far end instead of stopping at a line (L127), and in patches
-	# and rows everywhere, so the columns throw shadows across pools of light (L134).
+	# Fewer, stronger panels on a sparse grid (every other one each way), so each column has one
+	# light that dominates it and throws a shadow you can read, with pools of dark between them
+	# (critiques 020 to 022: "the pillars cast zero shadows", L134; with every panel lit, four
+	# overlapping lights filled each other's shadows). The lights thin out toward the far end
+	# instead of stopping at a line (L127).
 	var lr := Game.rng("halllights:%s:%d:%d" % [key, i, j])
+	L["light_gain"] = float(Game.opts.get("hall_gain", "1.8"))
 	for f in L["fixtures"]:
 		var gx: float = f[0] + ox
-		var p_dead := 0.22 if gx < 20.0 else (0.38 if gx < 44.0 else (0.6 if gx < 60.0 else 0.85))
-		if int(round((f[1] + oz - MID) / 4.8)) % 3 == 0 and gx > 12.0:
-			p_dead += 0.25   # every third row darker
-		f.append("dead" if lr.randf() < p_dead else "on")
+		var kx := int(round((gx - 2.7) / 4.8))
+		var kz := int(round((f[1] + oz - MID) / 4.8))
+		var lit := (kx % 2 == 0 and kz % 2 == 0) or lr.randf() < 0.06
+		if gx > 44.0 and lr.randf() < (0.35 if gx < 60.0 else 0.8):
+			lit = false
+		f.append("on" if lit else "dead")
 	if i == N - 1:
 		L["dark_zones"].append([18.0, 0.0, 24.0, 24.0])
 	if i == 0 and mid_row:

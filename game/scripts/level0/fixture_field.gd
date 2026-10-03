@@ -5,6 +5,9 @@ extends RefCounted
 ## lit panel throws on the tiles around it, and the troffer housing uses it to light its own
 ## reveal, so the panels stop reading as flat stickers (critique 006, LEDGER L021).
 ## Updated every frame from the fixtures' flicker levels; only changed texels are written.
+## S05: one field is shared by every chunk of a space and wraps round (texel = world tile index
+## modulo its size), so the glow is continuous across chunk edges; a chunk's sharp-edged own field
+## showed as a beam or a floating shelf on the ceiling where two chunks met (critiques 021, 022).
 
 var origin := Vector2.ZERO
 var to_local := Transform3D.IDENTITY   # world -> the frame the field's tiles are laid out in (S05)
@@ -17,6 +20,8 @@ var _cells: Array = []     # per fixture: Array of Vector2i texels
 var _last: Array[Color] = []
 var _dirty := true
 var _pending := {}         # fixture indices whose level changed since the last update
+var wrap := false          # shared, wrapping field: cells are taken modulo the size
+var _frame := -1
 
 
 func _init(p_origin: Vector2, p_size_m: Vector2, p_cell: float) -> void:
@@ -36,6 +41,8 @@ func add(fx: Fixture, cells: Array) -> void:
 	fx.field = self
 	fx.field_index = _fixtures.size()
 	_fixtures.append(fx)
+	if wrap:
+		cells = cells.map(func(c): return Vector2i(posmod(c.x, size.x), posmod(c.y, size.y)))
 	_cells.append(cells)
 	_last.append(Color(-1, -1, -1, 1))
 	_pending[fx.field_index] = true
@@ -43,6 +50,23 @@ func add(fx: Fixture, cells: Array) -> void:
 
 func mark(i: int) -> void:
 	_pending[i] = true
+
+
+## A chunk is going away: its fixtures' texels go dark and their slots are freed.
+func remove(fx: Fixture) -> void:
+	var i := fx.field_index
+	if fx.field != self or i < 0 or i >= _fixtures.size() or _fixtures[i] != fx:
+		return
+	for t in _cells[i]:
+		var q: Vector2i = t
+		if q.x >= 0 and q.y >= 0 and q.x < size.x and q.y < size.y:
+			img.set_pixelv(q, Color(0, 0, 0, 0))
+	_fixtures[i] = null
+	_cells[i] = []
+	_pending.erase(i)
+	_dirty = true
+	fx.field = null
+	fx.field_index = -1
 
 
 func has_pending() -> bool:
@@ -59,12 +83,18 @@ func bind(m: ShaderMaterial) -> void:
 
 
 func update() -> void:
-	if _pending.is_empty():
+	if wrap:
+		if Engine.get_process_frames() == _frame:
+			return     # shared: the first chunk to ask updates it for everyone
+		_frame = Engine.get_process_frames()
+	if _pending.is_empty() and not _dirty:
 		return
 	var todo := _pending.keys()
 	_pending.clear()
 	for i in todo:
 		var fx := _fixtures[i]
+		if fx == null or not is_instance_valid(fx):
+			continue
 		var v := clampf(fx.level * fx.base_energy, 0.0, 1.0)
 		var c := Color(fx.tint.r * v, fx.tint.g * v, fx.tint.b * v, 1.0)
 		# A dead tube's glowing cathodes tint the tiles next to it orange (critique 008, L044).

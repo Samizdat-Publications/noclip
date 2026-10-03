@@ -28,7 +28,10 @@ var extent := Vector2(30, 30)
 var mats: Dictionary
 var fixtures: Array[Fixture] = []
 var movables: Array[Node3D] = []   # chairs the Rearranger may turn while unseen (D025)
+var watch_doors: Array = []        # hinged high doors the Watchers open a crack (S05)
 var field: FixtureField
+var shared_field: FixtureField     # the space's own wrapping field (S05), set before begin_build
+var _tile_off := Vector2i.ZERO     # this chunk's first tile in the shared field
 var seed_offset := Vector2.ZERO
 var solids: Array[Rect2] = []
 var _edge_solids: Array[Rect2] = []   # built by a neighbor chunk: no collision here
@@ -196,10 +199,14 @@ func begin_build(layout: Dictionary, p_salt: String, shared_mats: Dictionary, p_
 	var o := origin2()
 	mats["ceiling"] = (shared_mats["ceiling"] as ShaderMaterial).duplicate()
 	mats["housing"] = (shared_mats["housing"] as ShaderMaterial).duplicate()
-	field = FixtureField.new(o, extent, TILE)
-	# The field's tiles are laid out in the space's own frame; a hall is rotated to face its door.
-	if L.has("space_xform"):
-		field.to_local = (L["space_xform"] as Transform3D).affine_inverse()
+	if shared_field:
+		field = shared_field
+		_tile_off = Vector2i(roundi(o.x / TILE), roundi(o.y / TILE))
+	else:
+		field = FixtureField.new(o, extent, TILE)
+		# The field's tiles are laid out in the space's own frame; a hall is rotated to face its door.
+		if L.has("space_xform"):
+			field.to_local = (L["space_xform"] as Transform3D).affine_inverse()
 	field.bind(mats["ceiling"])
 	field.bind(mats["housing"])
 	# The grid and wall angles take the ceiling's bounce too (S05), so they need this chunk's field.
@@ -653,11 +660,10 @@ func _build_walls(kit: MeshKit) -> void:
 				kit.box(pk, Vector3(p[0] - slab.x * 0.5, 0.0, p[1] - slab.y * 0.5), Vector3(p[0] + slab.x * 0.5, H, p[1] + slab.y * 0.5), MeshKit.SIDES, H)
 				var qb := Vector2(slab.x * 0.5 + 0.012, slab.y * 0.5 + 0.012)
 				kit.box("baseboard", Vector3(p[0] - qb.x, 0.0, p[1] - qb.y), Vector3(p[0] + qb.x, 0.1, p[1] + qb.y), MeshKit.SIDES | MeshKit.PY, 0.1)
-			_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.6])
 			continue
 		kit.box(pk, Vector3(p[0] - s * 0.5, 0.0, p[1] - s * 0.5), Vector3(p[0] + s * 0.5, H, p[1] + s * 0.5), MeshKit.SIDES, H)
-		# Soft occlusion on the carpet around each column, so it stands on the floor (L032).
-		_pending_contacts.append([Vector3(p[0], 0.0, p[1]), s * 0.62])
+		# (S05: no round contact blob under a square column: half hidden by the column it showed as
+		# dark diamonds at the corners, critique 022. The corner strips ground it.)
 		var q := s * 0.5 + bb
 		kit.box("baseboard", Vector3(p[0] - q, 0.0, p[1] - q), Vector3(p[0] + q, bh, p[1] + q), MeshKit.SIDES | MeshKit.PY, bh)
 
@@ -741,12 +747,15 @@ func _build_fake_doors(kit: MeshKit) -> void:
 		bx.append(["trim", -w * 0.5 - cw, -w * 0.5, 0.0, DH + cw, 0.0, 0.018])
 		bx.append(["trim", w * 0.5, w * 0.5 + cw, 0.0, DH + cw, 0.0, 0.018])
 		bx.append(["trim", -w * 0.5 - cw, w * 0.5 + cw, DH, DH + cw, 0.0, 0.018])
-		bx.append(["door", -w * 0.5 + 0.004, w * 0.5 - 0.004, 0.006, DH - 0.004, 0.0, 0.012])
 		# Remembered wrong (VISION, S05): some doors were copied from the word "door", without the
 		# part you open it with.
 		var flags: String = String(fd[5]) if fd.size() > 5 else ""
-		if not "nohandle" in flags:
-			bx.append(["knob", w * 0.5 - 0.11, w * 0.5 - 0.06, 0.96, 1.01, 0.012, 0.07])
+		if "watch" in flags:
+			_build_watch_door(p, n, t, y0, w, not "nohandle" in flags)
+		else:
+			bx.append(["door", -w * 0.5 + 0.004, w * 0.5 - 0.004, 0.006, DH - 0.004, 0.0, 0.012])
+			if not "nohandle" in flags:
+				bx.append(["knob", w * 0.5 - 0.11, w * 0.5 - 0.06, 0.96, 1.01, 0.012, 0.07])
 		if y0 > 0.0:
 			# A door copied up the wall still has its threshold: a narrow sill to nothing.
 			bx.append(["trim", -w * 0.5 - 0.1, w * 0.5 + 0.1, -0.06, 0.0, 0.0, 0.16])
@@ -760,6 +769,45 @@ func _build_fake_doors(kit: MeshKit) -> void:
 			var c0 := p + t * a0 + n * o0
 			var c1 := p + t * a1 + n * o1
 			kit.box(b[0], Vector3(minf(c0.x, c1.x), y0 + yb0, minf(c0.y, c1.y)), Vector3(maxf(c0.x, c1.x), y0 + yb1, maxf(c0.y, c1.y)), MeshKit.ALL, H)
+
+
+## The high door of a tall room as a real hinged slab with a dark void behind it, for the Watchers
+## (S05): frame x across the door (hinge at -x), y up from its sill, z out of the wall.
+func _build_watch_door(p: Vector2, n: Vector2, t: Vector2, y0: float, w: float, knob: bool) -> void:
+	var basis := Basis(Vector3(t.x, 0, t.y), Vector3.UP, Vector3(n.x, 0, n.y))
+	var frame := Transform3D(basis, Vector3(p.x, y0, p.y))
+	var void_q := MeshInstance3D.new()
+	var q := QuadMesh.new()
+	q.size = Vector2(w, DH)
+	void_q.mesh = q
+	var vm := StandardMaterial3D.new()
+	vm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	vm.albedo_color = Color(0.012, 0.01, 0.008)
+	void_q.material_override = vm
+	void_q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	void_q.transform = frame * Transform3D(Basis.IDENTITY, Vector3(0, DH * 0.5, 0.002))
+	add_child(void_q)
+	var pivot := Node3D.new()
+	pivot.name = "watch_door"
+	pivot.transform = frame * Transform3D(Basis.IDENTITY, Vector3(-w * 0.5 + 0.004, 0.0, 0.009))
+	add_child(pivot)
+	var slab := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	var sw := w - 0.008
+	bm.size = Vector3(sw, DH - 0.01, 0.012)
+	slab.mesh = bm
+	slab.material_override = mats["door"]
+	slab.position = Vector3(sw * 0.5, 0.006 + (DH - 0.01) * 0.5, 0.0)
+	pivot.add_child(slab)
+	if knob:
+		var kn := MeshInstance3D.new()
+		var kb := BoxMesh.new()
+		kb.size = Vector3(0.05, 0.05, 0.06)
+		kn.mesh = kb
+		kn.material_override = mats["knob"]
+		kn.position = Vector3(sw - 0.085, 0.985, 0.036)
+		pivot.add_child(kn)
+	watch_doors.append({"pivot": pivot, "frame": frame, "w": w, "dh": DH, "swing": -1.0})
 
 
 ## Exit signs: a lit box above a doorway with a faint red glow on the wall around it.
@@ -978,7 +1026,7 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	for tz in L.get("tint_zones", []):
 		if Rect2(tz[0], tz[1], tz[2] - tz[0], tz[3] - tz[1]).has_point(c):
 			tint = Color(tz[4], tz[5], tz[6])   # a stretch where every tube is a cold replacement
-	var energy := r.randf_range(0.82, 1.04)
+	var energy := r.randf_range(0.82, 1.04) * float(L.get("light_gain", 1.0))
 	if dim:
 		energy *= 0.32
 	if hint == "dim":
@@ -1032,7 +1080,7 @@ func _make_fixture(kit: MeshKit, r: RandomNumberGenerator, cells: Dictionary, c:
 	fx.setup(st, _rng("fixture:" + id), energy, tint)
 	fx.apply()
 	fixtures.append(fx)
-	field.add(fx, [Vector2i(ix, iz), c2])
+	field.add(fx, [Vector2i(ix, iz) + _tile_off, c2 + _tile_off])
 
 
 static func fx_failing(st: int) -> bool:

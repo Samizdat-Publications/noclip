@@ -168,6 +168,11 @@ func _process(delta: float) -> void:
 		if d < BUZZ_R and fx.is_failing():
 			buzz.append([d, fx])
 	_assign(lit, light_cap, "light", _lights)
+	if Game.opts.has("log-pool") and Game.frame % 60 < 13:
+		var vis := _lights.filter(func(l): return l.visible)
+		if vis.size() > 0:
+			var l0: SpotLight3D = vis[0]
+			print("[pool] %s lit=%d first: pos=%s rot=%s shadow=%s e=%.2f range=%.1f fade_sh=%.1f layers=%d cull=%d" % [name, vis.size(), l0.global_position, l0.global_rotation_degrees, l0.shadow_enabled, l0.light_energy, l0.spot_range, l0.distance_fade_shadow, l0.layers, l0.light_cull_mask])
 	_assign(hum, hum_cap, "hum", _hums)
 	_assign(buzz, BUZZES, "buzz", _buzzes)
 	_occlude()
