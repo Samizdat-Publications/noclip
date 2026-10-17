@@ -31,3 +31,6 @@
 *.js text eol=lf
 *.mjs text eol=lf
 *.json text eol=lf
+# Showcase media stays plain git (GitHub README and the landing page cannot use LFS files)
+site/media/** -filter -diff -merge -text
+docs/media/** -filter -diff -merge -text

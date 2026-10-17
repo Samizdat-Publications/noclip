@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOCLIP</title>
+<meta name="description" content="First-person surreal horror in the Backrooms. Your camcorder sees what you can't. In development.">
+<meta property="og:title" content="NOCLIP">
+<meta property="og:description" content="First-person surreal horror in the Backrooms. Your camcorder sees what you can't.">
+<meta property="og:image" content="https://noclip.pages.dev/media/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0a07">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230b0a07'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%23e0352b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500&family=Archivo+Narrow:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<header class="bar">
+  <a class="mark" href="#top">NOCLIP</a>
+  <nav>
+    <a href="#tape">The tape</a>
+    <a href="#made">How it was made</a>
+    <a class="gh" href="https://github.com/Samizdat-Publications/noclip">Source on GitHub</a>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <video class="hero-video" autoplay muted loop playsinline poster="media/hero.jpg" aria-label="Walking a yellow office corridor on camcorder footage">
+    <source src="media/hero.mp4" type="video/mp4">
+  </video>
+  <div class="vf" aria-hidden="true">
+    <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+    <span class="rec"><i></i>REC</span>
+    <span class="batt">&#9646;&#9646;&#9646;&#9647;</span>
+    <span class="stamp"><b id="clock">PM 11:49:07</b><br>OCT. 14 1996</span>
+  </div>
+  <div class="hero-copy">
+    <span class="pill"><i></i>In development</span>
+    <h1 class="wordmark">NOCLIP</h1>
+    <p class="pitch">You were closing up the furniture store when you found a wall outlined in duct tape. You walked through it. Your camcorder still works. It sees things you can't.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/Samizdat-Publications/noclip">Source on GitHub</a>
+      <a class="btn" href="#tape">Watch the tape</a>
+    </div>
+    <p class="note">First-person surreal horror for one player. Built in Godot 4.7. No public build yet.</p>
+  </div>
+  <a class="cue" href="#tape" aria-label="Scroll to the footage">&#9660;</a>
+</section>
+
+<main>
+  <section class="intro" id="tape">
+    <p class="kicker">Recovered tape, Level 0</p>
+    <h2>Carpet that never dries. A hum that never stops. Rooms nobody built.</h2>
+    <p>Every place down here is a copy of a real place, dubbed from a dub until the details slip. Doors with no handles, signs that almost read, a corridor a little narrower each time you walk it. The deeper you go, the worse the copy.</p>
+  </section>
+
+  <section class="beat">
+    <figure class="clip">
+      <video data-inview muted loop playsinline preload="none" poster="media/camcorder.jpg" aria-label="Through the camcorder, a chalk outline of a door appears on a blank wall">
+        <source src="media/camcorder.mp4" type="video/mp4">
+      </video>
+      <figcaption>Through the viewfinder, a door that isn't there.</figcaption>
+    </figure>
+    <div class="text">
+      <p class="kicker">01 / The camcorder</p>
+      <h3>It sees the seams</h3>
+      <p>Raise the camcorder and the place shows what it really is: chalk outlines of doors in solid walls, marks left by people who came before you, and the shape of the thing that lives here. Lower it and the wall is just a wall again. Walk through anyway.</p>
+    </div>
+  </section>
+
+  <section class="beat flip">
+    <figure class="clip">
+      <video data-inview muted loop playsinline preload="none" poster="media/hunt.jpg" aria-label="Something moves across the ceiling of a corridor">
+        <source src="media/hunt.mp4" type="video/mp4">
+      </video>
+      <figcaption>It hears you run.</figcaption>
+    </figure>
+    <div class="text">
+      <p class="kicker">02 / The thing in the halls</p>
+      <h3>Far too big for them</h3>
+      <p>It stalks by sound and by sight, and on tape it barely holds together. You carry what the company at the entrance sells you: a flashbulb that pins it in place for a few seconds, road flares, quieter shoes. Mostly you carry your nerve.</p>
+    </div>
+  </section>
+
+  <section class="beat">
+    <figure class="clip">
+      <video data-inview muted loop playsinline preload="none" poster="media/descent.jpg" aria-label="A red exit sign over a stairwell, then the cold rooms below">
+        <source src="media/descent.mp4" type="video/mp4">
+      </video>
+      <figcaption>Depth 2: the cold rooms.</figcaption>
+    </figure>
+    <div class="text">
+      <p class="kicker">03 / The descent</p>
+      <h3>Find the stairwell. Go deeper.</h3>
+      <p>You will die down here, often. Your dropped camcorder plays back how it happened, and your tapes sell for salvage. Each depth is darker, stranger and a worse copy of the one above, and the Backrooms remember the marks you left last time.</p>
+    </div>
+  </section>
+
+  <section class="sound">
+    <p class="kicker">Sound on</p>
+    <h2>Fifty seconds of one run, with the audio</h2>
+    <p>An autoplay bot recorded this on a random seed. Nothing is staged. Headphones help.</p>
+    <figure class="clip wide">
+      <video controls playsinline preload="none" poster="media/run.jpg" aria-label="Fifty seconds of gameplay with sound">
+        <source src="media/run.mp4" type="video/mp4">
+      </video>
+    </figure>
+  </section>
+
+  <section class="stills" aria-label="Screenshots">
+    <figure><img src="media/camcorder-door.jpg" alt="A chalk door outline glowing on a wall in the camcorder view" loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/hallway-figure.jpg" alt="A dark figure standing at the end of a yellow corridor" loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/tape-figure.jpg" alt="A smeared figure breaking up in tape noise" loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/exit.jpg" alt="A red EXIT sign glowing over a stairwell door" loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/dark-office.jpg" alt="A dark open office with a lone pillar" loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/corridor.jpg" alt="A long fluorescent-lit yellow corridor" loading="lazy" width="1280" height="720"></figure>
+  </section>
+
+  <section class="made" id="made">
+    <p class="kicker">How it was made</p>
+    <h2>Seven sessions, three days, two blind critics</h2>
+    <p class="lead">NOCLIP is built by an AI lead developer (Claude) working in Godot 4.7 with Stewart as the director. Every session ends the same way: a bot plays a fresh random level, a capture tool records stills, motion sheets and a video with sound, and two critics who have never seen the code judge it like players. Whatever they hate gets fixed next.</p>
+
+    <ol class="log">
+      <li>
+        <img src="media/log-s01.jpg" alt="A grid of early look-development renders of yellow office rooms" loading="lazy">
+        <div><b>Session 1, Oct 1</b><p>Engine bake-off between Godot and three.js WebGPU, judged blind. Godot won. First hero slice of Level 0, the camcorder view and the capture harness.</p></div>
+      </li>
+      <li>
+        <img src="media/log-s04.jpg" alt="A pale faceless humanoid concept standing against a yellow wall" loading="lazy">
+        <div><b>Sessions 2 to 4, Oct 1 to 2</b><p>Infinite streamed Level 0 with loops and rooms bigger inside, a full sound pass, then the monster: concept rounds, a rigged model, and a hunter that stalks by sound and sight.</p></div>
+      </li>
+      <li>
+        <img src="media/log-s07.jpg" alt="Six look-development frames of a pale crawling creature in a corridor" loading="lazy">
+        <div><b>Sessions 5 to 7, Oct 2 to 3</b><p>The run loop, the death replay tape, the company post that buys your tapes, kit upgrades, stairwells down to deeper levels, and a blind "Monster Lab" where a panel of AI judges picked the crawler for depth 1.</p></div>
+      </li>
+    </ol>
+
+    <div class="facts">
+      <div><b>Engine</b><span>Godot 4.7, Forward+, GDScript, realtime global illumination and volumetric fog</span></div>
+      <div><b>World</b><span>Seeded procedural generation: one seed rebuilds a level exactly</span></div>
+      <div><b>Assets</b><span>Blender run headless by script, CC-BY props from Sketchfab, the creature rigged through Meshy, generated audio</span></div>
+      <div><b>Review loop</b><span>31 critic rounds so far, logged with scores in the repository</span></div>
+    </div>
+  </section>
+
+  <section class="credits">
+    <p class="kicker">Credits</p>
+    <p>Props are Sketchfab models used under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, rescaled and re-exported for the game. Full list with changes in the <a href="https://github.com/Samizdat-Publications/noclip#credits">README</a>.</p>
+    <ul class="cc">
+      <li><a href="https://sketchfab.com/3d-models/crt-monitor-remodel-95f4083ec9f4443c8d4bd10473c669ff">CRT Monitor (remodel)</a> by ECEL_GAMES</li>
+      <li><a href="https://sketchfab.com/3d-models/box-3c8b08023b61484aa583994da991274c">Box</a> by Artem Goyko</li>
+      <li><a href="https://sketchfab.com/3d-models/office-chair-used-e004c2eb29444df689bef4018f9409d5">Office chair (used)</a> by SlagPerch 3D</li>
+      <li><a href="https://sketchfab.com/3d-models/simple-metal-foldable-chair-c5bc470c3c9b4dc190f654cd7ac1405b">Simple metal foldable chair</a> by neverfollow81</li>
+      <li><a href="https://sketchfab.com/3d-models/eric-rigged-001-rigged-3d-business-man-a46bc9f67aaa415bb4f3241eef900e7f">Eric Rigged 001</a> by Renderpeople</li>
+      <li><a href="https://sketchfab.com/3d-models/camera-with-tripod-cc324baf6dc548de965c3a47b87f1e27">Camera With Tripod</a> by FatWasHere</li>
+      <li><a href="https://sketchfab.com/3d-models/retro-vhs-tape-game-ready-92de31c367ca4f5794f8fb12dce68111">Retro Vhs Tape (Game Ready)</a> by erlangga da</li>
+      <li><a href="https://sketchfab.com/3d-models/plastic-crate-7b9426222f0c4838bfbc13850095bb3f">Plastic Crate</a> by Dabbre</li>
+      <li><a href="https://sketchfab.com/3d-models/industrial-work-light-ff0abe17dc64498191bb41c905d00ab0">Industrial Work Light</a> by denis_cliofas</li>
+      <li><a href="https://sketchfab.com/3d-models/work-light-278dd26f90d544a8941d347bef0ebf40">Work Light</a> by HippoStance</li>
+      <li><a href="https://sketchfab.com/3d-models/panasonic-nv-g120-vhs-c-camera-802d634fb1f745f2b528109661acd2c9">Panasonic NV-G120 VHS-C Camera</a> by PetyaPetr</li>
+      <li><a href="https://sketchfab.com/3d-models/water-cooler-52946497074c4c669d620ce5f431a3da">Water-Cooler</a> by GroundZer0</li>
+      <li><a href="https://sketchfab.com/3d-models/rusty-filing-cabinet-619484b78fbe449ea5c0cdb68e8f2bd6">Rusty Filing Cabinet</a> by Amiel Goco</li>
+      <li><a href="https://sketchfab.com/3d-models/step-ladder-670ef4373d544ea5ab577ef00161ffc3">Step Ladder</a> by louis-muir</li>
+      <li><a href="https://sketchfab.com/3d-models/mop-bucket-safety-cones-props-54a8250e1de8426e9cf2bf35fd099a10">Mop Bucket &amp; Safety Cones | Props</a> by GAMICO</li>
+      <li><a href="https://sketchfab.com/3d-models/mop-420bddb8730c4e3aa7653e5f7c5a5a7c">Mop</a> by ZachWilkins1997</li>
+      <li><a href="https://sketchfab.com/3d-models/office-desk-7-mb-18abda12d33b4231aa13f92a291c717e">Office Desk_7_MB</a> by Mehdi Shahsavan</li>
+      <li><a href="https://sketchfab.com/3d-models/office-desk-18mb-2039a113435b47d585b2c51e4f3a096d">Office Desk - 18MB</a> by Mehdi Shahsavan</li>
+      <li><a href="https://sketchfab.com/3d-models/aged-plastic-garden-chair-4a92b3b9964c446cb5ec9eff053d830c">Aged Plastic Garden Chair</a> by Nikoleta.Zhecheva</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="pill"><i></i>In development</span>
+  <p>NOCLIP is an original game inspired by Backrooms internet folklore. Code is MIT licensed; third-party assets keep their own licences.</p>
+  <p><a href="https://github.com/Samizdat-Publications/noclip">Source on GitHub</a> &middot; Samizdat Publications</p>
+</footer>
+
+<div class="grain" aria-hidden="true"></div>
+<script src="site.js"></script>
+</body>
+</html>

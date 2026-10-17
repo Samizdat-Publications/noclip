@@ -1,0 +1,25 @@
+{
+  "name": "NOCLIP",
+  "repo": "noclip",
+  "pitch": "First-person surreal horror in the Backrooms, where your camcorder sees the doors, marks and monster you can't.",
+  "status": "in-development",
+  "version": "0.7.0",
+  "kind": "game",
+  "started": "2026-10-01",
+  "updated": "2026-10-03",
+  "tech": ["Godot 4.7", "GDScript", "Blender", "Meshy", "ElevenLabs", "Gemini"],
+  "links": {
+    "landing": "https://noclip.pages.dev",
+    "play": "",
+    "devlog": "https://noclip.pages.dev/#made"
+  },
+  "hero": {
+    "gif": "docs/media/hero.gif",
+    "poster": "site/media/hero.jpg",
+    "clip": "site/media/hero.mp4"
+  },
+  "credits": [
+    { "what": "Code, levels, shaders, procedural generation", "who": "Stewart Gregerson with Claude", "licence": "MIT" },
+    { "what": "Props (19 Sketchfab models, listed in README)", "who": "Various Sketchfab authors", "licence": "CC BY 4.0" }
+  ]
+}

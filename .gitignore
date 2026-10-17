@@ -21,3 +21,6 @@ tools/capture/out/
 spike/threejs/out/
 *.tmp
 review/archive/bakeoff/
+
+# Landing page build output
+site-dist/
